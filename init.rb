@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'net/http'
-
+require 'net/https'
 WREST_ROOT = File.dirname(__FILE__)
 
 ["/lib/**/*.rb"].each{|directory|
