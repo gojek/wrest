@@ -8,23 +8,27 @@ module Wrest
     end
     
     def get(resource_path, headers = {})
-      Response.new uri(resource_path).get(headers)
+      response uri(resource_path).get(headers)
     end
   
     def put(resource_path, body = '', headers = {})
-      Response.new uri(resource_path).put(body, headers)
+      response uri(resource_path).put(body, headers)
     end
   
     def post(resource_path, body = '', headers = {})
-      Response.new uri(resource_path).post(body, headers)
+      response uri(resource_path).post(body, headers)
     end
   
     def delete(resource_path, headers = {})
-      Response.new uri(resource_path).delete(headers)
+      response uri(resource_path).delete(headers)
+    end
+    
+    def response(http_response)
+      Wrest::Response.new http_response, @translator_klass
     end
     
     def uri(resource_path)
-      Uri.new(host_url+resource_path)
+      Wrest::Uri.new(host_url+resource_path)
     end
   end
 end

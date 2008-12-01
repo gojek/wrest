@@ -5,7 +5,7 @@ module Wrest
         @response = response
       end
       
-      def to_hash
+      def deserialise
       end
     end
   end
