@@ -5,7 +5,6 @@ module Wrest
     end
     
     def get(headers = {})
-      # http.request(Net::HTTP::Get.new(@uri.path, headers))
       http.get(@uri.path, headers)
     end
   

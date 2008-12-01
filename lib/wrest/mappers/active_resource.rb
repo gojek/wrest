@@ -1,27 +1,22 @@
 module Wrest
   module Mappers
     class ActiveResource < Wrest::Resource
-      class << self
-        def resource_host(host_url)
-          @resource_host = host_url
-        end
-        
-        def default_translator(translator_klass)
-          @translator_klass = translator_klass
-        end
+      def self.resource_host(host_url)
+        @@host_url = host_url
+      end
+
+      def self.translator(translator_klass)
+        @@translator_klass = translator_klass
       end
 
       def initialize(attributes = {})
-        translator_klass = attributes.delete['translator_klass'] || @@translator_klass
-        super
-      end
-      
-      def find_all
-        
+        translator_klass = attributes.delete('translator_klass') || @@translator_klass
+        host_url = attributes.delete('host_url') || @@host_url
+        super(translator_klass, host_url)
       end
     end
   end
 end
-  
-  
-  
+
+
+

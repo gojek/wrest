@@ -16,9 +16,5 @@ module Wrest
     it "should know when it is not https" do
       Uri.new('http://localhost').should_not be_https
     end
-    
-    it "should ooga" do
-      response = Uri.new('http://localhost:3000/default_zones/1.xml?x=y').get('Ooga' => 'booga')
-    end
   end
 end
