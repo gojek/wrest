@@ -5,16 +5,20 @@ module Wrest
     end
     
     def get(headers = {})
-      http.request(Net::HTTP::Get.new(@uri.path, headers))
+      # http.request(Net::HTTP::Get.new(@uri.path, headers))
+      http.get(@uri.path, headers)
     end
   
     def put(body = '', headers = {})
+      http.put(@uri.path, body.to_s, headers)
     end
   
     def post(body = '', headers = {})
+      http.post(@uri.path, body.to_s, headers)
     end
   
     def delete(headers = {})
+      http.delete(@uri.path, headers)
     end
     
     def https?
