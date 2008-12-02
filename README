@@ -1,3 +1,5 @@
 REST client
 
-* Basic structure should be standalone
+* Basic request structure should be stand-alone
+* Should allow access to request/response objects
+* Should be easy to extend modify wrt to both serialisation/deserialisation as well as object creation
