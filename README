@@ -1,6 +1,7 @@
 REST client
 
-* Basic request structure should be stand-alone
+* Basic infrastructure entities should be stand-alone and usable as such
 * Should allow access to request/response objects
-* Should be easy to extend and modify wrt to both serialisation/deserialisation as well as object creation
-* Ultimately, one should be able to re-implement ActiveResource almost trivially over Wrest (but a more flexible version :))
+* Should be easy to extend and modify behaviour WRT to both serialisation/deserialisation as well as object creation
+* Should have _no_ dependencies on Rails (usable in a pure Ruby application)
+* The infrastructure should be structured so that higher level abstractions (like, say, ActiveResource) can be built over it

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 entry_point = "#{File.dirname(__FILE__)}/../init"
-require entry_point
+version = "#{File.dirname(__FILE__)}/../lib/wrest/version"
 
 irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
 
@@ -15,5 +15,6 @@ end
 libs =  " -r irb/completion"
 libs << " -r #{entry_point}"
 
+require version
 puts "Loading (Wrest #{Wrest::VERSION::STRING})"
 exec "#{options[:irb]} #{libs} --simple-prompt"

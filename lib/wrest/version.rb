@@ -7,7 +7,7 @@ module Wrest
 
       STRING = [MAJOR, MINOR, TINY].join('.')
 
-      SUMMARY = "rspec #{STRING}"
+      SUMMARY = "wrest #{STRING}"
     end
   end
 end
