@@ -1,1 +1,0 @@
-require "#{WREST_ROOT}/lib/core_ext/module/alias_method_chain"
