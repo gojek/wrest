@@ -22,7 +22,7 @@ end
 Wrest.logger = Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
 
-["/lib/core_ext/*.rb", "/lib/wrest/*.rb"].each{|directory|
+["/lib/wrest/core_ext/*.rb", "/lib/wrest/*.rb"].each{|directory|
   Dir["#{File.expand_path(File.dirname(__FILE__) + directory)}"].each { |file|
     require file
   }
