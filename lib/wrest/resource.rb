@@ -1,17 +1,14 @@
 module Wrest
-  class Resource
-    attr_reader :host_url
+  class Resource    
+    attr_reader :uri
     
-    def initialize(host_url)
-      @host_url = host_url
+    def initialize(uri)
+      @uri = uri
     end
     
-    def request(resource_path, body = '', header = {})
-      Wrest::Request.new uri(resource_path), body, header
-    end
-    
-    def uri(resource_path)
-      Wrest::Uri.new(host_url+resource_path)
+    protected
+    def request(body = '', header = {})
+      Wrest::Request.new uri, body, header
     end
   end
 end

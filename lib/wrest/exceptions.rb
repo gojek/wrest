@@ -1,0 +1,1 @@
+require 'exceptions/unsupported_mime_type_exception'

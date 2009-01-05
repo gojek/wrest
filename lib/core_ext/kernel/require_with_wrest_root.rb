@@ -4,7 +4,7 @@ module Kernel
       begin
         require_without_wrest_root(string) 
       rescue LoadError => e
-        Wrest.logger.debug "#{e}: require '#{string}' invoked from #{caller[0]} failed, trying within #{WREST_ROOT}/lib/wrest..."
+        # Wrest.logger.debug "#{e}: require '#{string}' invoked from #{caller[0]} failed, trying within #{WREST_ROOT}/lib/wrest..."
         require_without_wrest_root("#{WREST_ROOT}/lib/wrest/#{string}")
       end  
     rescue Exception => e
