@@ -1,2 +1,2 @@
-require "#{WREST_ROOT}/lib/core_ext/module/alias_method_chain"
-require "#{WREST_ROOT}/lib/core_ext/kernel/require_with_wrest_root"
+require "#{WREST_ROOT}/lib/wrest/core_ext/module"
+require "#{WREST_ROOT}/lib/wrest/core_ext/kernel/require_with_wrest_root"

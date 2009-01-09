@@ -1,3 +1,5 @@
+require 'xmlsimple'
+
 module Wrest
   module Translators
     class Xml
@@ -10,11 +12,10 @@ module Wrest
       end
       
       def deserialise
-        @response.body
-      end
-      
-      def serialise(hash)
-        Request.new Uri.new()
+        XmlSimple.xml_in(
+          @response.body,
+          'keeproot'  => true
+        )
       end
     end
   end

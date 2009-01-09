@@ -1,4 +1,4 @@
-require "#{WREST_ROOT}/lib/wrest/core_ext/string/to_uri"
+require "#{WREST_ROOT}/lib/wrest/core_ext/string/conversions"
 
 class String
   include Wrest::CoreExt::String::Conversions
