@@ -1,0 +1,1 @@
+require "#{WREST_ROOT}/lib/wrest/core_ext/rails/module/alias_method_chain"
