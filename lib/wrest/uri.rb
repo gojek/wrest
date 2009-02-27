@@ -5,19 +5,19 @@ module Wrest
     end
 
     def get(headers = {})
-      response http.get(@uri.path, headers)
+      response http.get(@uri.request_uri, headers)
     end
 
     def put(body = '', headers = {})
-      response http.put(@uri.path, body.to_s, headers)
+      response http.put(@uri.request_uri, body.to_s, headers)
     end
 
     def post(body = '', headers = {})
-      response http.post(@uri.path, body.to_s, headers)
+      response http.post(@uri.request_uri, body.to_s, headers)
     end
 
     def delete(headers = {})
-      response http.delete(@uri.path, headers)
+      response http.delete(@uri.request_uri, headers)
     end
 
     def https?

@@ -1,4 +1,5 @@
 require 'translators/xml'
+require 'translators/json'
 require 'translators/mime_types'
 
 module Wrest
