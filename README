@@ -12,4 +12,4 @@ USAGE
 Get Yahoo news as hash map:
 "http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get.deserialise
 
-You can do try this in the console without having to require the library by running script/console.
+You can try this in the console without having to require Wrest as a library by running script/console.
