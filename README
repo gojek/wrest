@@ -1,4 +1,4 @@
-Wrestis a REST client which allows you to quickly build object oriented wrappers around any web service.
+Wrest is a REST client which allows you to quickly build object oriented wrappers around any web service.
 
 * Basic infrastructure should be stand-alone and usable as such
 * Should allow access to request/response objects
