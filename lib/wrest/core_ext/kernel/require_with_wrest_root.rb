@@ -1,4 +1,7 @@
 module Kernel
+  # Does a normal require, followed by a
+  # require which prefixes the location of
+  # the wrest source.
   def require_with_wrest_root(string)
     begin
       begin

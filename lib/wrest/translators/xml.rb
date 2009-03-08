@@ -2,22 +2,12 @@ require 'xmlsimple'
 
 module Wrest
   module Translators
-    class Xml
-      def mime_type
-        'application/xml'
-      end
-      
-      def initialize(response)
-        @response = response
-      end
-      
-      def deserialise
+    Xml = lambda{|response|
         XmlSimple.xml_in(
-          @response.body,
+          response.body,
           'keeproot'  => true
         )
-      end
-    end
+    }
   end
 end
     

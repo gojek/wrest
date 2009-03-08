@@ -10,7 +10,11 @@ module Wrest
     end
     
     def deserialise
-      Wrest::Translators.build(@http_response).deserialise
+      deserialise_using(Wrest::Translators.load(@http_response.content_type))
+    end
+    
+    def deserialise_using(translator)
+      translator.call(@http_response)
     end
   end
 end

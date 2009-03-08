@@ -1,4 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Wrest::Resource do  
+module Wrest
+  describe Resource do
+  end
 end

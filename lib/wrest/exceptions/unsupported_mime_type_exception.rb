@@ -1,2 +1,0 @@
-class UnsupportedMimeTypeException < StandardError
-end

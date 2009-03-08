@@ -1,6 +1,6 @@
 module Wrest
   module Translators
-    MIME_TYPES = {
+    CONTENT_TYPES = {
       'application/xml' => Wrest::Translators::Xml,
       'text/xml' => Wrest::Translators::Xml,
       'text/javascript' => Wrest::Translators::Json

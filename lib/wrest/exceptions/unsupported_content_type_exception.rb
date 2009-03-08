@@ -1,0 +1,2 @@
+class UnsupportedContentTypeException < StandardError
+end
