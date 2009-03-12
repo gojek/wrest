@@ -1,0 +1,4 @@
+--text-report
+--html
+--exclude-only  ^\/usr,^\/Library,^\/System,spec\/
+--output coverage

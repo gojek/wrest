@@ -8,5 +8,5 @@ require 'spec'
 }
 
 Spec::Runner.configure do |config|
-  # config.include(CustomMatchers)
+  config.include(CustomMatchers)
 end

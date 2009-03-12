@@ -12,3 +12,10 @@ Get Yahoo news as hash map (needs the JSON gem - gem install json):
 "http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get.deserialise
 
 You can try this in the console without having to require Wrest as a library by running script/console.
+
+DEPENDENCIES
+gems
+xmlsimple
+json
+rspec
+rcov
