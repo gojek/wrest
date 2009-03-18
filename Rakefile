@@ -32,5 +32,5 @@ Spec::Rake::SpecTask.new(:rcov) do |t|
   t.rcov_opts = lambda do
     IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
   end
-  t.verbose = true
+  # t.verbose = true
 end

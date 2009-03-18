@@ -1,6 +1,6 @@
 module Wrest
   module Mappers
-    class SuperDuper
+    class Simple
     end
   end
 end

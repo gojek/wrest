@@ -5,15 +5,17 @@ module Kernel
   def require_with_wrest_root(string)
     begin
       begin
-        require_without_wrest_root(string) 
+        # Wrest.logger.debug "requiring '#{string}' invoked from #{caller[0]} ..."
+        require_without_wrest_root(string)
       rescue LoadError => e
-        # Wrest.logger.debug "#{e}: require '#{string}' invoked from #{caller[0]} failed, trying within #{WREST_ROOT}/lib/wrest..."
-        require_without_wrest_root("#{WREST_ROOT}/lib/wrest/#{string}")
-      end  
+        with_root = "#{WREST_ROOT}/lib/wrest/#{string}"
+        # Wrest.logger.warn "#{e}: require '#{string}' invoked from #{caller[0]} failed, trying with #{with_root} ..."
+        require_without_wrest_root(with_root)
+      end
     rescue Exception => e
-      Wrest.logger.info "#{e}: require '#{string}' invoked from #{caller[0]} failed!"
+      Wrest.logger.error "#{e}: require '#{string}' invoked from #{caller[0]} failed!"
       raise e
-    end  
+    end
   end
   alias_method_chain :require, :wrest_root
 end
