@@ -5,18 +5,22 @@ module Wrest
     end
 
     def get(headers = {})
+      Wrest.logger.debug  "GET -> #{@uri.request_uri}"
       response http.get(@uri.request_uri, headers)
     end
 
     def put(body = '', headers = {})
+      Wrest.logger.debug  "PUT -> #{@uri.request_uri}"
       response http.put(@uri.request_uri, body.to_s, headers)
     end
 
     def post(body = '', headers = {})
+      Wrest.logger.debug  "POST -> #{@uri.request_uri}"
       response http.post(@uri.request_uri, body.to_s, headers)
     end
 
     def delete(headers = {})
+      Wrest.logger.debug  "DELETE -> #{@uri.request_uri}"
       response http.delete(@uri.request_uri, headers)
     end
 

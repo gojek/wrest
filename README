@@ -19,3 +19,4 @@ xmlsimple
 json
 rspec
 rcov
+active_support (If you're planning to use Wrest::Resource, an alternative to ActiveResource)

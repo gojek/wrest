@@ -7,6 +7,8 @@ require 'spec'
   }
 }
 
+Wrest.logger = Logger.new(File.open("#{WREST_ROOT}/log/test.log", 'a'))
+
 Spec::Runner.configure do |config|
   config.include(CustomMatchers)
 end
