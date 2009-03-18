@@ -1,4 +1,4 @@
-# This client is targetted at Rails REST apps
+# This client is targetted at Rails REST apps.
 # It is intended as a replacement for ActiveResource
 class Wrest::Mappers::Resource::Base
   class << self

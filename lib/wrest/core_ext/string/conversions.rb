@@ -1,4 +1,4 @@
-module Wrest #:nodoc:
+module Wrest
   module CoreExt #:nodoc:
     module String #:nodoc:
       # Makes it easier to build other objects from a String

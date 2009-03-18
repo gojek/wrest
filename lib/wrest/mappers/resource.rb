@@ -1,5 +1,5 @@
-module Wrest::Mappers
-  module Resource
+module Wrest::Mappers #:nodoc:
+  module Resource #:nodoc:
   end
 end
 

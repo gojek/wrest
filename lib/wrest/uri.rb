@@ -1,4 +1,4 @@
-module Wrest
+module Wrest #:nodoc:
   class Uri
     def initialize(uri_string)
       @uri = URI.parse(uri_string)
