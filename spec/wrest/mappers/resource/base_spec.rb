@@ -24,7 +24,9 @@ module Wrest::Mappers
       before(:each) do
         @Bottle = Class.new(Resource::Base)
       end
-
+      
+      it "should know how to create an instance using deserilised attributes"
+      
       it "should have a method to set the host url" do
         @Bottle.should respond_to(:host=)
       end

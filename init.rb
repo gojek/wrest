@@ -1,3 +1,5 @@
+# (c) Copyright 2009 Sidu Ponnappa. All Rights Reserved. 
+
 require 'rubygems'
 require 'net/http'
 require 'net/https'

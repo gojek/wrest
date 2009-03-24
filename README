@@ -1,22 +1,37 @@
-Wrest is a REST client which allows you to quickly build object oriented wrappers around any web service.
+(c) Copyright 2009 Sidu Ponnappa. All Rights Reserved.
 
-* Basic infrastructure should be stand-alone and usable as such
-* Should allow access to request/response objects
-* Should be easy to extend and modify behaviour WRT to both serialisation/deserialisation as well as object creation
-* Should have _no_ dependencies on Rails (usable in a pure Ruby application)
-* The infrastructure should be designed so that higher level abstractions (like, say, ActiveResource) can be built over it
+Wrest is a REST client which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource
 
+Wrest Core
 
-USAGE
-Get Yahoo news as hash map (needs the JSON gem - gem install json):
+* Designed to be used as a library, not just a command line REST client
+* Provides basic infrastructure and convenient HTTP wrappers
+* Is easy to extend and modify both serialisation/deserialisation as well as object creation
+* Has _no_ dependencies on Rails (usable in a pure Ruby application)
+* Can be used both stand alone as well as to build object oriented abstractions around web services. Wrest::Resource is an example of the latter.
+
+Example: Get Yahoo news as hash map (needs the JSON gem - gem install json). You can try this in the console without having to require Wrest as a library by running script/console.
+
 "http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get.deserialise
 
-You can try this in the console without having to require Wrest as a library by running script/console.
 
-DEPENDENCIES
+Wrest::Resource (An alternative to ActiveResource which targets Rails REST services; currently under development)
+
+* Out of the box support for collections
+* Out of the box support for collection pagination (including support for WillPaginate), both header based and xml attribute based
+* Out of the box support for operations on all the records on the collection
+* Out of the box support for nested resources
+* Better extensibility - allows access to request/response objects, avoid class variables etc.
+
+Dependencies
+
 gems
 xmlsimple
 json
 rspec
 rcov
-active_support (If you're planning to use Wrest::Resource, an alternative to ActiveResource)
+active_support (only if you're planning to use Wrest::Resource)
+
+Licence
+
+Wrest is released under the Apache 2.0 licence
