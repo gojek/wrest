@@ -21,6 +21,7 @@ Wrest::Resource (An alternative to ActiveResource which targets Rails REST servi
 * Out of the box support for collection pagination (including support for WillPaginate), both header based and xml attribute based
 * Out of the box support for operations on all the records on the collection
 * Out of the box support for nested resources
+* Consistent API, favours symbols over strings
 * Better extensibility - allows access to request/response objects, avoid class variables etc.
 
 Dependencies

@@ -11,7 +11,7 @@ require 'ostruct'
 
 module Wrest
   module Mappers
-    class Simple < OpenStruct
+    class Simple < OpenStruct #:nodoc:
     end
   end
 end

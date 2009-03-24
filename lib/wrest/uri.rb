@@ -8,6 +8,9 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 module Wrest #:nodoc:
+  # Wrest::Uri provides a simple api for
+  # REST calls. String#to_uri is a convenience
+  # method to build a Wrest::Uri from a string url.
   class Uri
     def initialize(uri_string)
       @uri = URI.parse(uri_string)
