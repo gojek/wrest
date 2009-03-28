@@ -1,10 +1,10 @@
-= Wrest
+= WRest
 
 (c) Copyright 2009 Sidu Ponnappa. All Rights Reserved.
 
 Wrest is a REST client which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource.
 
-== Wrest Core
+== WRest Core
 
 * Designed to be used as a library, not just a command line REST client
 * Provides basic infrastructure (including an interactive shell) and convenient HTTP wrappers
@@ -14,8 +14,7 @@ Wrest is a REST client which allows you to quickly build object oriented wrapper
 
 Example: Get Yahoo news as hash map (needs the JSON gem - gem install json). You can try this in the console by running script/console.
 
-<tt>"http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get.deserialise</tt>
-
+	"http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get.deserialise
 
 == Wrest::Resource 
 
@@ -37,6 +36,10 @@ Wrest::Resource is an alternative to ActiveResource which targets Rails REST ser
 * rspec
 * rcov
 * active_support (only if you're planning to use Wrest::Resource)
+
+== Support
+
+This project uses Assembla for ticketing: http://www.assembla.com/spaces/wrest/tickets
 
 == Licence
 
