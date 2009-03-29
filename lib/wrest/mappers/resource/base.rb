@@ -11,6 +11,9 @@ module Wrest::Mappers::Resource #:nodoc:
   # Resource::Base is the equivalent of ActiveResource::Base.
   # It is a REST client targetted at Rails REST apps.
   class Base
+    include Wrest::Mappers::AttributesContainer
+    attr_reader :attributes
+
     class << self
       def host=(host_url)
         self.class_eval "def self.host; '#{host_url.clone}';end"
@@ -32,36 +35,6 @@ module Wrest::Mappers::Resource #:nodoc:
         else
           response_hash
         end
-      end
-    end
-    attr_reader :attributes
-
-    def initialize(attributes)
-      @attributes = attributes.symbolize_keys
-      @interface = Module.new
-      self.extend @interface
-    end
-
-    def respond_to?(method_name, include_private = false)
-      super(method_name, include_private) ? true : attributes.include?(method_name.to_s.gsub(/(\?$)|(=$)/, '').to_sym)
-    end
-
-    def method_missing(method_sym, *arguments)
-      method_name = method_sym.to_s
-      attribute_name = method_name.gsub(/(\?$)|(=$)/, '')
-      
-      if attributes.include?(attribute_name.to_sym) || method_name.last == '='
-        case method_name.last
-        when '='
-          @interface.module_eval "def #{attribute_name}=(value);attributes[:#{attribute_name}] = value;end"
-        when '?'
-          @interface.module_eval "def #{attribute_name}?;not attributes[:#{attribute_name}].nil?;end"
-        else
-          @interface.module_eval "def #{attribute_name};attributes[:#{attribute_name}];end"
-        end
-        send(method_sym, *arguments)
-      else
-        super(method_sym, *arguments)
       end
     end
   end

@@ -1,10 +1,10 @@
-= WRest
+= Wrest
 
 (c) Copyright 2009 Sidu Ponnappa. All Rights Reserved.
 
 Wrest is a REST client which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource.
 
-== WRest Core
+== Wrest Core
 
 * Designed to be used as a library, not just a command line REST client
 * Provides basic infrastructure (including an interactive shell) and convenient HTTP wrappers

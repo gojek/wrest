@@ -26,6 +26,10 @@ module Wrest::Mappers
 
       it "should know how to create an instance using deserilised attributes"
 
+      it "should allow instantiation with no attributes" do
+        lambda{ @BottledUniverse.new }.should_not raise_error
+      end
+      
       it "should have a method to set the host url" do
         @BottledUniverse.should respond_to(:host=)
       end

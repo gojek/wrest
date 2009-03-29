@@ -16,4 +16,6 @@ module Wrest #:nodoc:
   end
 end
 
+require 'mappers/attributes_container'
+require 'mappers/simple_resource'
 require 'mappers/resource'

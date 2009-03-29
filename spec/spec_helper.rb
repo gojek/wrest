@@ -9,6 +9,10 @@ require 'spec'
 
 Wrest.logger = Logger.new(File.open("#{WREST_ROOT}/log/test.log", 'a'))
 
+def p(*args)
+ super *(args << caller[0])
+end
+
 Spec::Runner.configure do |config|
   config.include(CustomMatchers)
 end
