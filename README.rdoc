@@ -12,9 +12,20 @@ Wrest is a REST client which allows you to quickly build object oriented wrapper
 * Has _no_ dependencies on Rails (usable in a pure Ruby application)
 * Can be used both stand alone as well as to build object oriented abstractions around web services (Wrest::Resource is an example of the latter)
 
-Example: Get Yahoo news as hash map (needs the JSON gem - gem install json). You can try this in the console by running script/console.
+Example: A couple of ways to get the Yahoo news as hash map (needs the JSON gem - gem install json). You can try this in the console by running script/console.
 
+* This example simply does a get on a uri and figures out the appropriate deserialiser using the content-type (in this case 'text/javascript')
  "http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get.deserialise
+
+* This example does a get on a base uri with several paramers passed to it, resulting in a uri essentially the same as the one above, but returning xml instead of json. It also shows how you can use a custom deserialiser to produce a hash-map from the response. 
+ "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
+									:appid  => 'YahooDemo', 
+									:output => 'xml',
+									:query  => 'India',
+									:results=> '3',
+									:start  => '1'
+								).deserialise_using(Wrest::Translators::Xml)
+
 
 == Wrest::Resource 
 
@@ -25,8 +36,8 @@ Wrest::Resource is an alternative to ActiveResource which targets Rails REST ser
 * Out of the box support for operations on all the records on the collection
 * Out of the box support for nested resources
 * Out of the box support for cached resources
-* Consistent API, favours symbols over strings
-* Better extensibility - allows access to request/response objects, avoid class variables etc.
+* No communication via exceptions for http error status codes
+* Better extensibility - allows access to request/response objects, avoids class variables, favours symbols over strings etc.
 
 == Dependencies
 
@@ -35,7 +46,7 @@ Wrest::Resource is an alternative to ActiveResource which targets Rails REST ser
 * json
 * rspec
 * rcov
-* active_support (only if you're planning to use Wrest::Resource)
+* active_support
 
 == Support
 
