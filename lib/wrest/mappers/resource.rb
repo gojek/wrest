@@ -14,5 +14,4 @@ module Wrest
   end
 end
 
-require 'active_support'
 require 'mappers/resource/base'

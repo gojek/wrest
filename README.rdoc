@@ -9,7 +9,7 @@ Wrest is a REST client which allows you to quickly build object oriented wrapper
 * Designed to be used as a library, not just a command line REST client
 * Provides basic infrastructure (including an interactive shell) and convenient HTTP wrappers
 * Makes it easy to extend and modify both serialisation, deserialisation and object creation
-* Has _no_ dependencies on Rails (usable in a pure Ruby application)
+* Has _no_ dependencies on Rails (usable in a pure Ruby application to consume any REST api)
 * Can be used both stand alone as well as to build object oriented abstractions around web services (Wrest::Resource is an example of the latter)
 
 Example: A couple of ways to get the Yahoo news as hash map (needs the JSON gem - gem install json). You can try this in the console by running script/console.
