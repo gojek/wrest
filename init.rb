@@ -11,7 +11,7 @@ require 'logger'
 require 'benchmark'
 require 'active_support'
 
-WREST_ROOT = File.dirname(__FILE__)
+::WREST_ROOT = File.dirname(__FILE__)
 
 module Wrest
   def self.logger=(logger)

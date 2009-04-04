@@ -1,8 +1,14 @@
 = Wrest
 
-(c) Copyright 2009 Sidu Ponnappa. All Rights Reserved.
+(c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
 Wrest is a REST client which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource.
+
+== Installation
+
+The source is available at git://github.com/kaiwren/wrest.git
+
+To install as a Rails plugin, do <tt>script/plugin install git://github.com/kaiwren/wrest.git</tt>
 
 == Wrest Core
 
@@ -32,7 +38,8 @@ A couple of ways to get the Yahoo news as hash map (needs the JSON gem - gem ins
 
 === Logging
 
-The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT.
+The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT. If you're using Wrest in a Rails application, you can configure logging by placing the following line in your environment file:
+  Wrest.logger = ActiveRecord::Base.logger
 
 === Build
 
