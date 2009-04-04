@@ -15,42 +15,44 @@ module Wrest #:nodoc:
     def initialize(uri_string)
       @uri = URI.parse(uri_string)
     end
-
+    
     def get(parameters = {}, headers = {})
-      Wrest.logger.debug  "GET -> #{@uri.request_uri}"
-      response http.get(@uri.request_uri << '?' << parameters.to_query, headers.stringify_keys)
+      do_request 'get', parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys
     end
 
     def put(body = '', headers = {})
-      Wrest.logger.debug  "PUT -> #{@uri.request_uri}"
-      response http.put(@uri.request_uri, body.to_s, headers)
+      do_request 'put', @uri.request_uri, body.to_s, headers.stringify_keys
     end
 
     def post(body = '', headers = {})
-      Wrest.logger.debug  "POST -> #{@uri.request_uri}"
-      response http.post(@uri.request_uri, body.to_s, headers)
+      do_request 'post', @uri.request_uri, body.to_s, headers.stringify_keys
     end
 
     def delete(headers = {})
-      Wrest.logger.debug  "DELETE -> #{@uri.request_uri}"
-      response http.delete(@uri.request_uri, headers)
+      do_request 'delete', @uri.request_uri, headers.stringify_keys
     end
+    
+    def do_request(method, url, *args)
+      response = nil
 
+      Wrest.logger.info  "#{method} -> #{url}"
+      time = Benchmark.realtime { response = Wrest::Response.new(http.send(method, url, *args)) }
+      Wrest.logger.info "--> %d %s (%d %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
+
+      response
+    end
+    
     def https?
       @uri.is_a?(URI::HTTPS)
     end
 
     def http
-      http             = Net::HTTP.new(@uri.host, @uri.port)
+      http = Net::HTTP.new(@uri.host, @uri.port)
       if https?
         http.use_ssl     = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
       http
-    end
-
-    def response(http_response)
-      Wrest::Response.new http_response
     end
   end
 end

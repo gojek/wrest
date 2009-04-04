@@ -24,7 +24,7 @@ module Wrest
 end
 
 Wrest.logger = Logger.new(STDOUT)
-Wrest.logger.level = Logger::DEBUG
+Wrest.logger.level = Logger::INFO
 
 source_dirs = ["/lib/wrest/core_ext/*.rb", "/lib/wrest/*.rb"]
 
