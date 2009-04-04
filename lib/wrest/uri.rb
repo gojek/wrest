@@ -16,6 +16,8 @@ module Wrest #:nodoc:
       @uri = URI.parse(uri_string)
     end
     
+    # Make a HTTP get request to this URI.
+    # Remember to escape the parameter srings using URI.escape 
     def get(parameters = {}, headers = {})
       do_request 'get', parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys
     end
