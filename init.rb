@@ -13,7 +13,7 @@ require 'active_support'
 
 ::WREST_ROOT = File.dirname(__FILE__)
 
-module Wrest
+module ::Wrest
   def self.logger=(logger)
     @logger = logger
   end

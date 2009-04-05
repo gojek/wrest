@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../../../spec_helper'
 
 class Glassware < Wrest::Mappers::Resource::Base
-  self.host= "http://localhost:3000"
+  set_host "http://localhost:3000"
 end
 
 class BottledUniverse < Glassware
-  self.host= "http://localhost:3001"
+  set_host "http://localhost:3001"
 end
 
 module Wrest::Mappers
@@ -24,29 +24,33 @@ module Wrest::Mappers
         @BottledUniverse = Class.new(Resource::Base)
       end
 
-      it "should know how to create an instance using deserilised attributes"
+      it "should know its own name"
+      
+      it "should know how to create an instance using deserilised attributes" do
+        {"bottled-universe"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]} 
+      end
 
       it "should allow instantiation with no attributes" do
         lambda{ @BottledUniverse.new }.should_not raise_error
       end
       
       it "should have a method to set the host url" do
-        @BottledUniverse.should respond_to(:host=)
+        @BottledUniverse.should respond_to(:set_host)
       end
 
       it "should have a method to retrive the host url after it is set" do
-        @BottledUniverse.class_eval{ self.host= "http://localhost:3000" }
+        @BottledUniverse.class_eval{ set_host "http://localhost:3000" }
         @BottledUniverse.should respond_to(:host)
       end
 
       it "should know what its site is" do
-        @BottledUniverse.class_eval{ self.host= "http://localhost:3000" }
+        @BottledUniverse.class_eval{ set_host "http://localhost:3000" }
         @BottledUniverse.host.should == "http://localhost:3000"
       end
 
       it "should not use the same string" do
         url = "http://localhost:3000"
-        @BottledUniverse.class_eval{ self.host=  url }
+        @BottledUniverse.class_eval{ set_host  url }
         url.upcase!
         @BottledUniverse.host.should == "http://localhost:3000"
       end

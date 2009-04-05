@@ -15,7 +15,8 @@ module Wrest::Mappers::Resource #:nodoc:
     attr_reader :attributes
 
     class << self
-      def host=(host_url)
+      
+      def set_host(host_url)
         self.class_eval "def self.host; '#{host_url.clone}';end"
       end
 
@@ -35,6 +36,9 @@ module Wrest::Mappers::Resource #:nodoc:
         else
           response_hash
         end
+      end
+      
+      def objectify(hash)
       end
     end
   end
