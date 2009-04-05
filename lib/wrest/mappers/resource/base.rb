@@ -15,29 +15,51 @@ module Wrest::Mappers::Resource #:nodoc:
     attr_reader :attributes
 
     class << self
+      def inherited(klass)
+        klass.set_resource_name klass.name
+      end
       
-      def set_host(host_url)
-        self.class_eval "def self.host; '#{host_url.clone}';end"
+      # Allows the resource name to be configured and creates
+      # a getter method for it. 
+      # This is a useful feature when using anonymous classes like
+      # we often do while writing tests.
+      # By default, the resource name is set to the name of the class.
+      def set_resource_name(resource_name)
+        self.class_eval "def self.resource_name; '#{resource_name}';end"
+      end
+      
+      # Allows the host url at which the resource is found to be configured
+      # and creates a getter method for it. 
+      # For example in the url
+      #  http://localhost:3000/users/1/settings
+      # you would set 
+      #  http://localhost:3000
+      # as the host url.
+      def set_host(host)
+        self.class_eval "def self.host; '#{host}';end"
       end
 
       def resource_path
-        @resource_path ||= "/#{self.name.underscore.pluralize}"
+        @resource_path ||= "/#{resource_name.underscore.pluralize}"
       end
 
+      def resource_url
+        "#{host}#{resource_path}"
+      end
+      
       def find_all
-        Wrest::Uri.new("#{host}#{resource_path}").get.deserialise
       end
 
       def find(id)
-        response_hash = Wrest::Uri.new("#{host}#{resource_path}/#{id}").get.deserialise
+        response_hash = "#{resource_url}/#{id}".to_uri.get.deserialise
         resource_type = response_hash.keys.first
         if(resource_type.underscore.camelize == self.name)
-          self.new(response_hash[resource_type])
+          self.new(response_hash[resource_type].first)
         else
           response_hash
         end
       end
-      
+
       def objectify(hash)
       end
     end

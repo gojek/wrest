@@ -22,18 +22,27 @@ module Wrest::Mappers
     describe 'subclasses' do
       before(:each) do
         @BottledUniverse = Class.new(Resource::Base)
+        @BottledUniverse.class_eval do
+          set_resource_name 'BottledUniverse'
+        end
       end
 
-      it "should know its own name"
-      
-      it "should know how to create an instance using deserilised attributes" do
-        {"bottled-universe"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]} 
+      it "should know its name as a resource by default" do
+        BottledUniverse.resource_name.should == 'BottledUniverse'
+      end
+
+      it "should allow its name as a resource to be configured for anonymous classes" do
+        @BottledUniverse.resource_name.should == 'BottledUniverse'
+      end
+
+      it "should know how to create an instance using deserialised attributes" do
+        # @BottledUniverse.new {"bottled-universe"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]}
       end
 
       it "should allow instantiation with no attributes" do
         lambda{ @BottledUniverse.new }.should_not raise_error
       end
-      
+
       it "should have a method to set the host url" do
         @BottledUniverse.should respond_to(:set_host)
       end
