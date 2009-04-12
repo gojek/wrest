@@ -56,13 +56,17 @@ namespace (:benchmark) do
   
   desc "Benchmark when objects are created each time before getting data; i.e there are few queries per instantiation"
   task :create_and_get => :setup_test_classes do |t|    
+    
     n = 10000
+    puts "Running #{n} times per report"
     Benchmark.bmbm(10) do |rpt|
       rpt.report("Wrest::Resource") do
         n.times { 
           ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
           ooga.profession
+          ooga.profession?
           ooga.enhanced_by 
+          ooga.enhanced_by? 
         }
       end
 
@@ -70,7 +74,9 @@ namespace (:benchmark) do
         n.times { 
           booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
           booga.profession
-          booga.enhanced_by
+          booga.profession?
+          booga.enhanced_by 
+          booga.enhanced_by?
         }
       end
     end
@@ -79,14 +85,18 @@ namespace (:benchmark) do
   desc "Benchmark when objects are created beforehand; i.e there are many queries per instantiation"
   task :create_once_and_get => :setup_test_classes do |t|    
 
-    n = 10
+    n = 10000
+    puts "Running #{n} times per report"
+    
     Benchmark.bmbm(10) do |rpt|      
       rpt.report("Wrest::Resource") do
         ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
         
         n.times { 
           ooga.profession
+          ooga.profession?
           ooga.enhanced_by 
+          ooga.enhanced_by?
         }
       end
 
@@ -95,7 +105,73 @@ namespace (:benchmark) do
                 
         n.times { 
           booga.profession
-          booga.enhanced_by
+          booga.profession?
+          booga.enhanced_by 
+          booga.enhanced_by?
+        }
+      end
+    end
+  end
+  
+  desc "Benchmark objects respond_to? performance without invocation"
+  task :responds_to_before => :setup_test_classes do |t|    
+
+    n = 10000
+    puts "Running #{n} times per report"
+    
+    Benchmark.bmbm(10) do |rpt|      
+      rpt.report("Wrest::Resource") do
+        ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+        
+        n.times { 
+          ooga.respond_to?(:profession)
+          ooga.respond_to?(:profession?)
+          ooga.respond_to?(:profession=)
+        }
+      end
+
+      rpt.report("ActiveResource") do
+        booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+                
+        n.times { 
+          booga.respond_to?(:profession)
+          booga.respond_to?(:profession?)
+          booga.respond_to?(:profession=)
+        }
+      end
+    end
+  end
+
+  desc "Benchmark objects respond_to? performance after invocation"
+  task :responds_to_after => :setup_test_classes do |t|    
+
+    n = 10000
+    puts "Running #{n} times per report"
+    
+    Benchmark.bmbm(10) do |rpt|      
+      rpt.report("Wrest::Resource") do
+        ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+        ooga.profession
+        ooga.profession?
+        ooga.profession = ''
+        
+        n.times { 
+          ooga.respond_to?(:profession)
+          ooga.respond_to?(:profession?)
+          ooga.respond_to?(:profession=)
+        }
+      end
+
+      rpt.report("ActiveResource") do
+        booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+        booga.profession
+        booga.profession?
+        booga.profession = ''
+                        
+        n.times { 
+          booga.respond_to?(:profession)
+          booga.respond_to?(:profession?)
+          booga.respond_to?(:profession=)
         }
       end
     end
