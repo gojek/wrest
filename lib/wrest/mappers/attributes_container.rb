@@ -15,13 +15,16 @@ module Wrest::Mappers #:nodoc:
   # If you're implementing your own initialize method
   # remember to delegate to the default initialize 
   # of AttributesContainer by invoking <tt>super(attributes)</tt>
+  # Also keep in mind that any existing methods whose names
+  # clash with attribute getters will be overridden.
+  
   module AttributesContainer
     def self.included(klass) #:nodoc:
       klass.class_eval{ include AttributesContainer::InstanceMethods }
     end
 
     module InstanceMethods 
-      # Sets up a class to_s act like
+      # Sets up any class to act like
       # an attributes container by creating
       # two variables, @attributes and @interface.
       # Remember not to use these two variable names

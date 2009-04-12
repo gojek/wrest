@@ -7,10 +7,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
  
-require 'translators/xml'
-require 'translators/json'
-require 'translators/content_types'
-
 module Wrest
   # Contains strategies/lambdas which know how to deserialise
   # different content types.
@@ -23,3 +19,8 @@ module Wrest
     end
   end
 end
+
+require 'translators/xml'
+require 'translators/json'
+require 'translators/content_types'
+require 'translators/typed_hash'

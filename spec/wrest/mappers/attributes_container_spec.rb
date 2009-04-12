@@ -21,9 +21,9 @@ module Wrest::Mappers
     
     describe 'provides an attributes interface which' do
       before :each do
-        @li_piao = HumanBeing.new( :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+        @li_piao = HumanBeing.new( :id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
       end
-      
+            
       it "should fail when getter methods for attributes that don't exist are invoked" do
         lambda{ @li_piao.ooga }.should raise_error(NoMethodError)
       end
@@ -80,6 +80,12 @@ module Wrest::Mappers
       it "should not respond to query methods for attributes that don't exist" do
         @li_piao.should_not respond_to(:theronic?)
       end
+      
+      it "should override methods which already exist on the container" do
+        @li_piao.id.should == 5
+        @li_piao.id = 6
+        @li_piao.id.should == 6
+      end      
     end
   end
 end

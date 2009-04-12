@@ -54,6 +54,7 @@ Wrest::Resource is an alternative to ActiveResource which targets Rails REST ser
 * Out of the box support for operations on all the records on the collection
 * Out of the box support for nested resources
 * Out of the box support for cached resources
+* Out of the box support for type-casting data that comes in as parameter strings
 * No communication via exceptions for http error status codes
 * Better extensibility - allows access to request/response objects, avoids class variables, favours symbols over strings etc.
 

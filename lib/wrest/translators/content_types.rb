@@ -13,6 +13,7 @@ module Wrest
     CONTENT_TYPES = {
       'application/xml' => Wrest::Translators::Xml,
       'text/xml' => Wrest::Translators::Xml,
+      'application/json' => Wrest::Translators::Json,
       'text/javascript' => Wrest::Translators::Json
     }
   end
