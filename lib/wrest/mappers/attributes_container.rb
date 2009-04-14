@@ -12,17 +12,28 @@ module Wrest::Mappers #:nodoc:
   # Adds behaviour allowing a class to
   # contain attributes and providing support
   # for dynamic getters, setters and query methods.
+  # These methods are added at runtime, on the first
+  # invocation and on a per instance basis.   
+  # <tt>respond_to?</tt> however will respond as though they are all already present.
+  # This means that two different instances of the same 
+  # <tt>AttributesContainer</tt> could well have
+  # different attribute getters/setters/query methods.
+  #
   # If you're implementing your own initialize method
   # remember to delegate to the default initialize 
   # of AttributesContainer by invoking <tt>super(attributes)</tt>
-  # Also keep in mind that any existing methods whose names
-  # clash with attribute getters will be overridden.
-  
+  # Also keep in mind that attribute getter/setter/query methods
+  # will _not_ override any existing methods on the class.
+  #
+  # In situations where this is a problem, such as a Rails client,
+  # where <tt>id</tt> is a common attribute and clashes with
+  # Object#id it is recommended to create getter/setter/query methods
+  # on the class (which affects all instances).
   module AttributesContainer
     def self.included(klass) #:nodoc:
       klass.class_eval{ include AttributesContainer::InstanceMethods }
     end
-
+    
     module InstanceMethods 
       # Sets up any class to act like
       # an attributes container by creating
@@ -35,7 +46,15 @@ module Wrest::Mappers #:nodoc:
         @interface = Module.new
         self.extend @interface
       end
-
+      
+      def [](key)
+        @attributes[key.to_sym]
+      end
+      
+      def []=(key, value)
+        @attributes[key.to_sym] = value
+      end
+      
       def respond_to?(method_name, include_private = false)
         super(method_name, include_private) ? true : @attributes.include?(method_name.to_s.gsub(/(\?$)|(=$)/, '').to_sym)
       end

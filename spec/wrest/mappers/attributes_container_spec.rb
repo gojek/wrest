@@ -21,9 +21,24 @@ module Wrest::Mappers
     
     describe 'provides an attributes interface which' do
       before :each do
-        @li_piao = HumanBeing.new( :id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+        @li_piao = HumanBeing.new(:id => 5, :profession => 'Natural Magician', 'enhanced_by' => 'Kai Wren')
       end
-            
+      
+      it "should provide a generic key based getter that requires symbols" do
+        @li_piao[:profession].should == "Natural Magician"
+        @li_piao['profession'].should == "Natural Magician"
+      end      
+      
+      it "should provide a generic key based getter that understands symbols" do
+        @li_piao[:enhanced_by] = "Viss"
+        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
+      end      
+      
+      it "should provide a generic key based getter that translates strings to symbols" do
+        @li_piao['enhanced_by'] = "Viss"
+        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
+      end      
+      
       it "should fail when getter methods for attributes that don't exist are invoked" do
         lambda{ @li_piao.ooga }.should raise_error(NoMethodError)
       end
