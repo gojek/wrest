@@ -12,8 +12,10 @@ module Wrest::Mappers::Resource #:nodoc:
   # It is a REST client targetted at Rails REST apps.
   class Base
     include Wrest::Mappers::AttributesContainer
-    attr_reader :attributes
 
+    has_attributes  :id
+    attr_reader     :attributes
+    
     class << self
       def inherited(klass)
         klass.set_resource_name klass.name
