@@ -12,8 +12,22 @@ module Wrest #:nodoc:
   # REST calls. String#to_uri is a convenience
   # method to build a Wrest::Uri from a string url.
   class Uri
+    attr_reader :uri
     def initialize(uri_string)
       @uri = URI.parse(uri_string)
+    end
+    
+    def eql?(other)
+      self == other
+    end
+    
+    def ==(other)
+      return false if other.class != self.class
+      return other.uri == self.uri
+    end
+    
+    def hash
+      self.uri.hash + self.class.object_id
     end
     
     # Make a HTTP get request to this URI.
