@@ -10,6 +10,15 @@ The source is available at git://github.com/kaiwren/wrest.git
 
 To install as a Rails plugin, do <tt>script/plugin install git://github.com/kaiwren/wrest.git</tt>
 
+To install the Wrest gem, you'll need to add GitHub to you gem sources if you haven't already done so:
+
+  gem sources -a http://gems.github.com
+
+Then to install Wrest and its dependencies:
+
+  sudo gem install kaiwren-wrest
+
+
 == Wrest Core
 
 * Designed to be used as a library, not just a command line REST client
