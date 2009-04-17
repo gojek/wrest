@@ -8,7 +8,15 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 module Wrest #:nodoc:
-  # Decorates a response providing support for deserialisation.
+  # Decorates a response providing support for deserialisation. 
+  #
+  # The following methods are also available (unlisted by rdoc because they're forwarded):
+  #
+  # <tt>:@http_response,  :code, :message, :body, :http_version, 
+  # :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
+  # :get_fields, :key?, :type_params</tt>
+  #
+  # They behave exactly like their Net::HTTPResponse equivalents.
   class Response
     extend Forwardable
     def_delegators  :@http_response,  :code, :message, :body, :http_version, 
