@@ -46,7 +46,6 @@ Gem::Specification.new do |s|
     "spec/wrest/mappers/attributes_container_spec.rb",
     "spec/wrest/mappers/resource/base_spec.rb",
     "spec/wrest/mappers/simple_resource_spec.rb",
-    "spec/wrest/meh_spec.rb",
     "spec/wrest/response_spec.rb",
     "spec/wrest/translators/typed_hash_spec.rb",
     "spec/wrest/translators/xml_spec.rb",

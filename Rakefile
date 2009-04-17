@@ -58,6 +58,7 @@ begin
     gemspec.platform = Gem::Platform::RUBY
     gemspec.executables = ['wrest']
     gemspec.require_path = "lib"
+    gemspec.files.exclude 'spec/wrest/meh_spec.rb'
     gemspec.add_dependency('activesupport', '>= 2.1.0')    
     gemspec.add_dependency('json', '>= 1.1.3')    
     gemspec.add_dependency('xml-simple', '>= 1.0.11')    
