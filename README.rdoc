@@ -70,7 +70,7 @@ The Wrest logger can be set and accessed through Wrest.logger and is configured 
 
 === Build
 
-Standard options are available. Use rake:rcov for coverage and rake:rdoc to generate documentation.
+Standard options are available and can be listed using <tt>rake -T</tt>. Use rake:rcov for coverage and rake:rdoc to generate documentation.
 
 == Wrest::Resource 
 
