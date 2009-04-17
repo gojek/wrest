@@ -1,4 +1,4 @@
-require "#{WREST_ROOT}/lib/wrest/core_ext/string/conversions"
+require "#{WREST_ROOT}/wrest/core_ext/string/conversions"
 
 class String #:nodoc:
   include Wrest::CoreExt::String::Conversions

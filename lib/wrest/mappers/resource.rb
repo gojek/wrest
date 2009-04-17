@@ -14,4 +14,4 @@ module Wrest
   end
 end
 
-require 'mappers/resource/base'
+require "#{WREST_ROOT}/wrest/mappers/resource/base"

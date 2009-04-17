@@ -20,7 +20,7 @@ module Wrest
   end
 end
 
-require 'translators/xml'
-require 'translators/json'
-require 'translators/content_types'
-require 'translators/typed_hash'
+require "#{WREST_ROOT}/wrest/translators/xml"
+require "#{WREST_ROOT}/wrest/translators/json"
+require "#{WREST_ROOT}/wrest/translators/content_types"
+require "#{WREST_ROOT}/wrest/translators/typed_hash"

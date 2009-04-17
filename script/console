@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-entry_point = "#{File.dirname(__FILE__)}/../init"
+entry_point = "#{File.dirname(__FILE__)}/../lib/wrest.rb"
 version = "#{File.dirname(__FILE__)}/../lib/wrest/version"
 
 irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'

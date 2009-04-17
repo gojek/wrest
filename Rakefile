@@ -44,6 +44,28 @@ Spec::Rake::SpecTask.new(:rcov) do |t|
   # t.verbose = true
 end
 
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "wrest"
+    gemspec.version = "0.0.3"
+    gemspec.summary = "REST client library for Ruby."
+    gemspec.description = "Wrest is a REST client library which allows you to quickly build object oriented wrappers around any web service. It has two main components - Wrest Core and Wrest::Resource."
+    gemspec.authors = ["Sidu Ponnappa"]
+    gemspec.email = "ckponnappa@gmail.com"
+    gemspec.homepage = "http://github.com/kaiwren/wrest"
+    gemspec.has_rdoc = true
+    gemspec.platform = Gem::Platform::RUBY
+    gemspec.executables = ['wrest']
+    gemspec.require_path = "lib"
+    gemspec.add_dependency('activesupport', '>= 2.1.0')    
+    gemspec.add_dependency('json', '>= 1.1.3')    
+    gemspec.add_dependency('xmlsimple', '>= 1.0.11')    
+  end
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+end
+
 namespace (:benchmark) do
   desc "Create classes to be used in Wrest::Resource vs. ActiveResource"
   task :setup_test_classes do

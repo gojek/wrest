@@ -1,1 +1,1 @@
-require 'exceptions/unsupported_content_type_exception'
+require "#{WREST_ROOT}/wrest/exceptions/unsupported_content_type_exception"
