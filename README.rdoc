@@ -30,6 +30,8 @@ Then to install Wrest and its dependencies:
 === Usage: Shell
 
 You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking <tt>wrest</tt> from your prompt if you've installed the gem.
+  $ wrest
+  >> "http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get
 
 === Usage: Library
 
