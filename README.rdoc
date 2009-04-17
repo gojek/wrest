@@ -24,14 +24,15 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 
 === Usage: Library
 
+  require 'rubygems'
   require 'wrest'
-  "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
+  y "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
 									:appid  => 'YahooDemo', 
 									:output => 'xml',
 									:query  => 'India',
 									:results=> '3',
 									:start  => '1'
-								).deserialise
+								)
 === Basic Http Calls
 
 ==== Get
