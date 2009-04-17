@@ -1,4 +1,5 @@
 coverage
 doc
+pkg
 spec/wrest/meh_spec.rb
 .DS_Store
