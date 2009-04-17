@@ -2,7 +2,7 @@
 
 (c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
-Wrest is a REST client which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource.
+Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource.
 
 == Installation
 
