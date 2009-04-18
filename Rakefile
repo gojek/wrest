@@ -48,13 +48,13 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "wrest"
-    gemspec.version = "0.0.3"
     gemspec.summary = "REST client library for Ruby."
     gemspec.description = "Wrest is a REST client library which allows you to quickly build object oriented wrappers around any web service. It has two main components - Wrest Core and Wrest::Resource."
     gemspec.authors = ["Sidu Ponnappa"]
     gemspec.email = "ckponnappa@gmail.com"
     gemspec.homepage = "http://github.com/kaiwren/wrest"
     gemspec.has_rdoc = true
+    gemspec.rubyforge_project = 'wrest'
     gemspec.platform = Gem::Platform::RUBY
     gemspec.executables = ['wrest']
     gemspec.require_path = "lib"
@@ -67,6 +67,33 @@ begin
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
+
+begin
+  require 'rake/contrib/sshpublisher'
+  namespace :rubyforge do
+
+    desc "Release gem and RDoc documentation to RubyForge"
+    task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
+
+    namespace :release do
+      desc "Publish RDoc to RubyForge."
+      task :docs => [:rdoc] do
+        config = YAML.load(
+            File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+        )
+
+        host = "#{config['username']}@rubyforge.org"
+        remote_dir = "/var/www/gforge-projects/the-perfect-gem/"
+        local_dir = 'rdoc'
+
+        Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
+      end
+    end
+  end
+rescue LoadError
+  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
+end
+
 
 namespace (:benchmark) do
   desc "Create classes to be used in Wrest::Resource vs. ActiveResource"

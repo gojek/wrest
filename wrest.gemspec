@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2009-04-18}
+  s.date = %q{2009-04-19}
   s.default_executable = %q{wrest}
   s.description = %q{Wrest is a REST client library which allows you to quickly build object oriented wrappers around any web service. It has two main components - Wrest Core and Wrest::Resource.}
   s.email = %q{ckponnappa@gmail.com}
@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/kaiwren/wrest}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{wrest}
   s.rubygems_version = %q{1.3.2}
   s.summary = %q{REST client library for Ruby.}
   s.test_files = [
