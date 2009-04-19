@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{wrest}
-  s.version = "0.0.4"
+  s.version = "0.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2009-04-19}
+  s.date = %q{2009-04-20}
   s.default_executable = %q{wrest}
   s.description = %q{Wrest is a REST client library which allows you to quickly build object oriented wrappers around any web service. It has two main components - Wrest Core and Wrest::Resource.}
   s.email = %q{ckponnappa@gmail.com}
@@ -20,16 +20,15 @@ Gem::Specification.new do |s|
     "VERSION.yml",
     "bin/wrest",
     "lib/wrest.rb",
+    "lib/wrest/components.rb",
+    "lib/wrest/components/attributes_container.rb",
     "lib/wrest/core_ext/string.rb",
     "lib/wrest/core_ext/string/conversions.rb",
     "lib/wrest/exceptions.rb",
     "lib/wrest/exceptions/unsupported_content_type_exception.rb",
-    "lib/wrest/mappers.rb",
-    "lib/wrest/mappers/attributes_container.rb",
-    "lib/wrest/mappers/resource.rb",
-    "lib/wrest/mappers/resource/base.rb",
-    "lib/wrest/mappers/resource/collection.rb",
-    "lib/wrest/mappers/simple_resource.rb",
+    "lib/wrest/resource.rb",
+    "lib/wrest/resource/base.rb",
+    "lib/wrest/resource/collection.rb",
     "lib/wrest/response.rb",
     "lib/wrest/translators.rb",
     "lib/wrest/translators/content_types.rb",
@@ -43,9 +42,9 @@ Gem::Specification.new do |s|
     "spec/rcov.opts",
     "spec/spec.opts",
     "spec/spec_helper.rb",
-    "spec/wrest/mappers/attributes_container_spec.rb",
-    "spec/wrest/mappers/resource/base_spec.rb",
-    "spec/wrest/mappers/simple_resource_spec.rb",
+    "spec/wrest/components/attributes_container_spec.rb",
+    "spec/wrest/core_ext/string_spec.rb",
+    "spec/wrest/resource/base_spec.rb",
     "spec/wrest/response_spec.rb",
     "spec/wrest/translators/typed_hash_spec.rb",
     "spec/wrest/translators/xml_spec.rb",
@@ -63,9 +62,9 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/custom_matchers/custom_matchers.rb",
     "spec/spec_helper.rb",
-    "spec/wrest/mappers/attributes_container_spec.rb",
-    "spec/wrest/mappers/resource/base_spec.rb",
-    "spec/wrest/mappers/simple_resource_spec.rb",
+    "spec/wrest/components/attributes_container_spec.rb",
+    "spec/wrest/core_ext/string_spec.rb",
+    "spec/wrest/resource/base_spec.rb",
     "spec/wrest/response_spec.rb",
     "spec/wrest/translators/typed_hash_spec.rb",
     "spec/wrest/translators/xml_spec.rb",
