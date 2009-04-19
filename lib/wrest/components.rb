@@ -16,3 +16,4 @@ module Wrest #:nodoc:
 end
 
 require "#{WREST_ROOT}/wrest/components/attributes_container"
+require "#{WREST_ROOT}/wrest/components/mutators"

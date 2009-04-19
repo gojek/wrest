@@ -6,20 +6,26 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License 
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
- 
-module Wrest
-  # Contains strategies/lambdas which know how to deserialise
-  # different content types.
-  module Translators
-    # Loads the appropriate desirialisation strategy based on
-    # the content type
-    def self.load(content_type)
-      translator = CONTENT_TYPES[content_type]
-      translator || (raise UnsupportedContentTypeException.new("Unsupported content type #{content_type}"))
+
+# This mutator undertands how do type casting
+# using the type data embedded in a hash
+# created by deserialising an xml using
+# xml-simple
+class Wrest::Components::Mutators::XmlSimpleTypeCaster
+  def mutate(tuple)
+    out_key = tuple.first.underscore
+    in_value = tuple.last[0]
+    out_value = in_value
+    
+    case in_value
+    when Hash
+      if in_value["nil"] == "true"
+        out_value = nil
+      elsif in_value["type"] == "integer"
+        out_value = in_value["content"].to_i
+      end
     end
+      
+    [out_key, out_value]
   end
 end
-
-require "#{WREST_ROOT}/wrest/translators/xml"
-require "#{WREST_ROOT}/wrest/translators/json"
-require "#{WREST_ROOT}/wrest/translators/content_types"

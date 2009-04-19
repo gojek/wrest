@@ -6,20 +6,17 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License 
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
- 
-module Wrest
-  # Contains strategies/lambdas which know how to deserialise
-  # different content types.
-  module Translators
-    # Loads the appropriate desirialisation strategy based on
-    # the content type
-    def self.load(content_type)
-      translator = CONTENT_TYPES[content_type]
-      translator || (raise UnsupportedContentTypeException.new("Unsupported content type #{content_type}"))
+
+require File.dirname(__FILE__) + '/../../../spec_helper'
+
+describe Hash, 'conversions' do
+  it "should know how to build a mutated hash given a hash mutator" do
+    class StringToSymbolMutator < Wrest::Components::Mutators::Base
+      def mutate(pair)
+        [pair.first.to_sym, pair.last]
+      end
     end
+    
+    {'ooga' => 'booga'}.to_mutated_hash(StringToSymbolMutator.new).should == {:ooga => 'booga'}
   end
 end
-
-require "#{WREST_ROOT}/wrest/translators/xml"
-require "#{WREST_ROOT}/wrest/translators/json"
-require "#{WREST_ROOT}/wrest/translators/content_types"

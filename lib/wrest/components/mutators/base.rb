@@ -6,20 +6,22 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License 
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
- 
-module Wrest
-  # Contains strategies/lambdas which know how to deserialise
-  # different content types.
-  module Translators
-    # Loads the appropriate desirialisation strategy based on
-    # the content type
-    def self.load(content_type)
-      translator = CONTENT_TYPES[content_type]
-      translator || (raise UnsupportedContentTypeException.new("Unsupported content type #{content_type}"))
-    end
+
+# This is a Null Object implementation of a
+# hash mutator that will leave the contents
+# of any hash it is applied to unchanged.
+class Wrest::Components::Mutators::Base
+  # This method operates on a tuple (well, pair)
+  # from a hash map.
+  # Iterating over any hash using each injects
+  # each key/value pair from the hash in the
+  # form of an array.
+  # Thus the tuple this method expects 
+  # is simply [:key, :value]
+  #
+  # Since this is a Null Object, this method
+  # simply returns the tuple unchanged
+  def mutate(tuple)
+    tuple
   end
 end
-
-require "#{WREST_ROOT}/wrest/translators/xml"
-require "#{WREST_ROOT}/wrest/translators/json"
-require "#{WREST_ROOT}/wrest/translators/content_types"
