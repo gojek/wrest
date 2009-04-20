@@ -7,6 +7,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+require 'rubygems'
 gem 'rspec'
 require 'rake'
 require 'rake/rdoctask'
@@ -61,14 +62,20 @@ begin
     gemspec.homepage = "http://github.com/kaiwren/wrest"
     gemspec.has_rdoc = true
     gemspec.rubyforge_project = 'wrest'
-    gemspec.platform = Gem::Platform::RUBY
     gemspec.executables = ['wrest']
     gemspec.require_path = "lib"
     gemspec.files.exclude 'spec/wrest/meh_spec.rb'
     gemspec.test_files.exclude 'spec/wrest/meh_spec.rb'
     gemspec.add_dependency('activesupport', '>= 2.1.0')
-    gemspec.add_dependency('json', '>= 1.1.3')
     gemspec.add_dependency('xml-simple', '>= 1.0.11')
+    case RUBY_PLATFORM
+    when /java/
+      gemspec.add_dependency('json-jruby', '>= 1.1.3')  
+      gemspec.platform = 'java'
+    else
+      gemspec.add_dependency('json', '>= 1.1.3')  
+      gemspec.platform = Gem::Platform::RUBY
+    end
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
