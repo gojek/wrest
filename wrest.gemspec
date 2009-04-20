@@ -3,7 +3,6 @@
 Gem::Specification.new do |s|
   s.name = %q{wrest}
   s.version = "0.0.5"
-  s.platform = %q{java}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
@@ -66,40 +65,40 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{wrest}
-  s.rubygems_version = %q{1.3.1}
+  s.rubygems_version = %q{1.3.2}
   s.summary = %q{REST client library for Ruby.}
   s.test_files = [
-    "spec/spec_helper.rb",
     "spec/custom_matchers/custom_matchers.rb",
-    "spec/wrest/response_spec.rb",
-    "spec/wrest/translators_spec.rb",
-    "spec/wrest/uri_spec.rb",
-    "spec/wrest/uri_template_spec.rb",
+    "spec/spec_helper.rb",
     "spec/wrest/components/attributes_container_spec.rb",
     "spec/wrest/components/mutators/base_spec.rb",
     "spec/wrest/components/mutators/xml_simple_type_caster_spec.rb",
     "spec/wrest/core_ext/hash/conversions_spec.rb",
     "spec/wrest/core_ext/string/conversions_spec.rb",
     "spec/wrest/resource/base_spec.rb",
-    "spec/wrest/translators/xml_spec.rb"
+    "spec/wrest/response_spec.rb",
+    "spec/wrest/translators/xml_spec.rb",
+    "spec/wrest/translators_spec.rb",
+    "spec/wrest/uri_spec.rb",
+    "spec/wrest/uri_template_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
+    s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.1.0"])
       s.add_runtime_dependency(%q<xml-simple>, [">= 1.0.11"])
-      s.add_runtime_dependency(%q<json-jruby>, [">= 1.1.3"])
+      s.add_runtime_dependency(%q<json>, [">= 1.1.3"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.1.0"])
       s.add_dependency(%q<xml-simple>, [">= 1.0.11"])
-      s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
+      s.add_dependency(%q<json>, [">= 1.1.3"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.1.0"])
     s.add_dependency(%q<xml-simple>, [">= 1.0.11"])
-    s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
+    s.add_dependency(%q<json>, [">= 1.1.3"])
   end
 end
