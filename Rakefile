@@ -12,8 +12,8 @@ require 'rake'
 require 'rake/rdoctask'
 require 'spec'
 require 'spec/rake/spectask'
-require 'rcov'
-require 'rcov/rcovtask'
+
+puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
 desc 'Default: run spec tests.'
 task :default => :spec
@@ -33,15 +33,21 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-desc "Run all specs in spec directory with RCov"
-Spec::Rake::SpecTask.new(:rcov) do |t|
-  t.spec_opts = ['--options', "spec/spec.opts"]
-  t.spec_files = FileList["spec/wrest/**/*_spec.rb"]
-  t.rcov = true
-  t.rcov_opts = lambda do
-    IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
+begin
+  require 'rcov'
+  require 'rcov/rcovtask'
+  desc "Run all specs in spec directory with RCov"
+  Spec::Rake::SpecTask.new(:rcov) do |t|
+    t.spec_opts = ['--options', "spec/spec.opts"]
+    t.spec_files = FileList["spec/wrest/**/*_spec.rb"]
+    t.rcov = true
+    t.rcov_opts = lambda do
+      IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
+    end
+    # t.verbose = true
   end
-  # t.verbose = true
+rescue LoadError
+  puts "Rcov not available."
 end
 
 begin
@@ -60,9 +66,9 @@ begin
     gemspec.require_path = "lib"
     gemspec.files.exclude 'spec/wrest/meh_spec.rb'
     gemspec.test_files.exclude 'spec/wrest/meh_spec.rb'
-    gemspec.add_dependency('activesupport', '>= 2.1.0')    
-    gemspec.add_dependency('json', '>= 1.1.3')    
-    gemspec.add_dependency('xml-simple', '>= 1.0.11')    
+    gemspec.add_dependency('activesupport', '>= 2.1.0')
+    gemspec.add_dependency('json', '>= 1.1.3')
+    gemspec.add_dependency('xml-simple', '>= 1.0.11')
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
@@ -79,7 +85,7 @@ begin
       desc "Publish RDoc to RubyForge."
       task :docs => [:rdoc] do
         config = YAML.load(
-            File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+        File.read(File.expand_path('~/.rubyforge/user-config.yml'))
         )
 
         host = "#{config['username']}@rubyforge.org"
@@ -100,131 +106,131 @@ namespace (:benchmark) do
   task :setup_test_classes do
     require 'active_resource'
     require 'wrest'
-    
+
     class Ooga < Wrest::Mappers::Resource::Base;end
-    class Booga < ActiveResource::Base; self.site='';end
-  end
-  
-  desc "Benchmark when objects are created each time before getting data; i.e there are few queries per instantiation"
-  task :create_and_get => :setup_test_classes do |t|    
-    
-    n = 10000
-    puts "Running #{n} times per report"
-    Benchmark.bmbm(10) do |rpt|
-      rpt.report("Wrest::Resource") do
-        n.times { 
-          ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-          ooga.profession
-          ooga.profession?
-          ooga.enhanced_by 
-          ooga.enhanced_by? 
-        }
+      class Booga < ActiveResource::Base; self.site='';end
       end
 
-      rpt.report("ActiveResource") do
-        n.times { 
-          booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-          booga.profession
-          booga.profession?
-          booga.enhanced_by 
-          booga.enhanced_by?
-        }
+      desc "Benchmark when objects are created each time before getting data; i.e there are few queries per instantiation"
+      task :create_and_get => :setup_test_classes do |t|
+
+        n = 10000
+        puts "Running #{n} times per report"
+        Benchmark.bmbm(10) do |rpt|
+          rpt.report("Wrest::Resource") do
+            n.times {
+              ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+              ooga.profession
+              ooga.profession?
+              ooga.enhanced_by
+              ooga.enhanced_by?
+            }
+          end
+
+          rpt.report("ActiveResource") do
+            n.times {
+              booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+              booga.profession
+              booga.profession?
+              booga.enhanced_by
+              booga.enhanced_by?
+            }
+          end
+        end
+      end
+
+      desc "Benchmark when objects are created beforehand; i.e there are many queries per instantiation"
+      task :create_once_and_get => :setup_test_classes do |t|
+
+        n = 10000
+        puts "Running #{n} times per report"
+
+        Benchmark.bmbm(10) do |rpt|
+          rpt.report("Wrest::Resource") do
+            ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+
+            n.times {
+              ooga.profession
+              ooga.profession?
+              ooga.enhanced_by
+              ooga.enhanced_by?
+            }
+          end
+
+          rpt.report("ActiveResource") do
+            booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+
+            n.times {
+              booga.profession
+              booga.profession?
+              booga.enhanced_by
+              booga.enhanced_by?
+            }
+          end
+        end
+      end
+
+      desc "Benchmark objects respond_to? performance without invocation"
+      task :responds_to_before => :setup_test_classes do |t|
+
+        n = 10000
+        puts "Running #{n} times per report"
+
+        Benchmark.bmbm(10) do |rpt|
+          rpt.report("Wrest::Resource") do
+            ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+
+            n.times {
+              ooga.respond_to?(:profession)
+              ooga.respond_to?(:profession?)
+              ooga.respond_to?(:profession=)
+            }
+          end
+
+          rpt.report("ActiveResource") do
+            booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+
+            n.times {
+              booga.respond_to?(:profession)
+              booga.respond_to?(:profession?)
+              booga.respond_to?(:profession=)
+            }
+          end
+        end
+      end
+
+      desc "Benchmark objects respond_to? performance after invocation"
+      task :responds_to_after => :setup_test_classes do |t|
+
+        n = 10000
+        puts "Running #{n} times per report"
+
+        Benchmark.bmbm(10) do |rpt|
+          rpt.report("Wrest::Resource") do
+            ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+            ooga.profession
+            ooga.profession?
+            ooga.profession = ''
+
+            n.times {
+              ooga.respond_to?(:profession)
+              ooga.respond_to?(:profession?)
+              ooga.respond_to?(:profession=)
+            }
+          end
+
+          rpt.report("ActiveResource") do
+            booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
+            booga.profession
+            booga.profession?
+            booga.profession = ''
+
+            n.times {
+              booga.respond_to?(:profession)
+              booga.respond_to?(:profession?)
+              booga.respond_to?(:profession=)
+            }
+          end
+        end
       end
     end
-  end
-  
-  desc "Benchmark when objects are created beforehand; i.e there are many queries per instantiation"
-  task :create_once_and_get => :setup_test_classes do |t|    
-
-    n = 10000
-    puts "Running #{n} times per report"
-    
-    Benchmark.bmbm(10) do |rpt|      
-      rpt.report("Wrest::Resource") do
-        ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-        
-        n.times { 
-          ooga.profession
-          ooga.profession?
-          ooga.enhanced_by 
-          ooga.enhanced_by?
-        }
-      end
-
-      rpt.report("ActiveResource") do
-        booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-                
-        n.times { 
-          booga.profession
-          booga.profession?
-          booga.enhanced_by 
-          booga.enhanced_by?
-        }
-      end
-    end
-  end
-  
-  desc "Benchmark objects respond_to? performance without invocation"
-  task :responds_to_before => :setup_test_classes do |t|    
-
-    n = 10000
-    puts "Running #{n} times per report"
-    
-    Benchmark.bmbm(10) do |rpt|      
-      rpt.report("Wrest::Resource") do
-        ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-        
-        n.times { 
-          ooga.respond_to?(:profession)
-          ooga.respond_to?(:profession?)
-          ooga.respond_to?(:profession=)
-        }
-      end
-
-      rpt.report("ActiveResource") do
-        booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-                
-        n.times { 
-          booga.respond_to?(:profession)
-          booga.respond_to?(:profession?)
-          booga.respond_to?(:profession=)
-        }
-      end
-    end
-  end
-
-  desc "Benchmark objects respond_to? performance after invocation"
-  task :responds_to_after => :setup_test_classes do |t|    
-
-    n = 10000
-    puts "Running #{n} times per report"
-    
-    Benchmark.bmbm(10) do |rpt|      
-      rpt.report("Wrest::Resource") do
-        ooga = Ooga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-        ooga.profession
-        ooga.profession?
-        ooga.profession = ''
-        
-        n.times { 
-          ooga.respond_to?(:profession)
-          ooga.respond_to?(:profession?)
-          ooga.respond_to?(:profession=)
-        }
-      end
-
-      rpt.report("ActiveResource") do
-        booga = Booga.new(:id => 5, :profession => 'Natural Magician', :enhanced_by => 'Kai Wren')
-        booga.profession
-        booga.profession?
-        booga.profession = ''
-                        
-        n.times { 
-          booga.respond_to?(:profession)
-          booga.respond_to?(:profession?)
-          booga.respond_to?(:profession=)
-        }
-      end
-    end
-  end
-end
