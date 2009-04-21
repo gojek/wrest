@@ -10,11 +10,27 @@
 module Wrest
   module CoreExt #:nodoc:
     module Hash #:nodoc:
-      # Makes it easier to build other objects from a String
+      # Makes it easier to build other objects from a Hash
       module Conversions
 
-        # A convenience method equivalent to Wrest::Uri.new(string)
-        def to_mutated_hash(mutator)
+        # This method accepts a hash mutator (found in Wrest::Compononents)
+        # to build a new hash map by making changes to an existing one.
+        # No, this method does not mutate the hash it is invoked on.
+        # Yes, the name is misleading in that respect. However, one 
+        # hopes the absence of an exclamation mark will increase clarity.
+        #
+        # Uses include mutating the hash produced by xml-simple
+        # by using the meta data in the hash to type cast values.
+        # 
+        # Example:
+        # "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
+        #                           :appid  => 'YahooDemo', 
+        #                           :output => 'xml',
+        #                           :query  => 'India',
+        #                           :results=> '3',
+        #                           :start  => '1'
+        #                         ).deserialise.mutate_using(XmlSimpleTypeCaster.new)
+        def mutate_using(mutator)
           returning({})do |mutated_hash|
             self.each{|tuple| mutated_hash.store(*mutator.mutate(tuple))}
           end

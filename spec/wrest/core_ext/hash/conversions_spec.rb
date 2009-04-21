@@ -17,6 +17,6 @@ describe Hash, 'conversions' do
       end
     end
     
-    {'ooga' => 'booga'}.to_mutated_hash(StringToSymbolMutator.new).should == {:ooga => 'booga'}
+    {'ooga' => 'booga'}.mutate_using(StringToSymbolMutator.new).should == {:ooga => 'booga'}
   end
 end
