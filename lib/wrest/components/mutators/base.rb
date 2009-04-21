@@ -13,7 +13,7 @@
 class Wrest::Components::Mutators::Base
   # This method operates on a tuple (well, pair)
   # from a hash map.
-  # Iterating over any hash using each injects
+  # Iterating over any hash using <tt>each</tt> injects
   # each key/value pair from the hash in the
   # form of an array.
   # Thus the tuple this method expects 

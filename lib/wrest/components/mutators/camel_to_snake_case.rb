@@ -7,16 +7,8 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
 
-module Wrest #:nodoc:
-  module Components
-    # A mutator understands how to transform
-    # one tuple(key/value pair) from a hash
-    # into another
-    module Mutators
-    end
+class Wrest::Components::Mutators::CamelToSnakeCase
+  def mutate(tuple)
+    [tuple.first.underscore, tuple.last]
   end
 end
-
-require "#{WREST_ROOT}/wrest/components/mutators/base"
-require "#{WREST_ROOT}/wrest/components/mutators/xml_simple_type_caster"
-require "#{WREST_ROOT}/wrest/components/mutators/camel_to_snake_case"

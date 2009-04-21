@@ -16,26 +16,32 @@ module Wrest::Components
     end
 
     # {"lead-bottle"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]}
-    it "should underscore the key in a tuple" do
-      @mutator.mutate(["universe-id", ["1"]]).should == ["universe_id", "1"]
-    end
 
     it "should typecast a nil value in a tuple" do
       @mutator.mutate(
-        ["universe-id", [{"type"=>"integer", "nil"=>"true"}]]
-      ).should == ["universe_id", nil]
+      ["universe-id", [{"type"=>"integer", "nil"=>"true"}]]
+      ).should == ["universe-id", nil]
     end
 
     it "should leave a string value in a tuple unchanged" do
       @mutator.mutate(
-        ["name", ["Wooz"]]
+      ["name", ["Wooz"]]
       ).should == ["name", "Wooz"]
     end
-    
+
     it "should cast an integer value in a tuple" do
       @mutator.mutate(
-        ["id", [{"type"=>"integer", "content"=>"1"}]]
+      ["id", [{"type"=>"integer", "content"=>"1"}]]
       ).should == ["id", 1]
+    end
+    
+    it "should step into a value if it is a hash" do
+      @mutator.mutate(
+        ["Result", [{
+                      "PublishDate"=>["1240326000"], 
+                      "NewsSource"=>[{"Online" => ["PC via News"], "UniqueId" => [{"type"=>"integer", "content"=>"1"}]}]
+                    }]]
+      ).should == ["Result", {"PublishDate" => "1240326000", "NewsSource" => {"Online"=>"PC via News", "UniqueId"=>1}}]
     end
   end
 end

@@ -13,16 +13,18 @@
 # xml-simple
 class Wrest::Components::Mutators::XmlSimpleTypeCaster
   def mutate(tuple)
-    out_key = tuple.first.underscore
+    out_key = tuple.first
     in_value = tuple.last[0]
     out_value = in_value
     
     case in_value
     when Hash
-      if in_value["nil"] == "true"
+      if in_value['nil'] == 'true'
         out_value = nil
-      elsif in_value["type"] == "integer"
-        out_value = in_value["content"].to_i
+      elsif in_value.key?('type')
+        out_value = ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING[in_value['type']].call(in_value['content'])
+      else
+        out_value = in_value.to_mutated_hash(self.clone)
       end
     end
       
