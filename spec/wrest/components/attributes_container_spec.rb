@@ -20,6 +20,38 @@ module Wrest::Components
       lambda{ HumanBeing.new }.should_not raise_error
     end
 
+    describe 'typecast' do
+      before :each do
+        @Demon = Class.new
+        @Demon.class_eval{include AttributesContainer}
+      end
+
+      it "should know how to apply a lambda to the string value of a given key casting it to a new type" do
+        @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
+        kai_wren = @Demon.new('age' => '1')
+        kai_wren.age.should == 1
+      end
+
+      it "should not apply a lambda to the value of a given key if it is not a string" do
+        @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
+        kai_wren = @Demon.new('age' => :ooga)
+        kai_wren.age.should == :ooga
+      end
+
+      it "should leave nils unchanged" do
+        @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
+        kai_wren = @Demon.new('age' => nil)
+        kai_wren.age.should be_nil
+      end
+
+
+      it "should provide helpers for typcasting common types" do
+        @Demon.class_eval{ typecast :age => as_integer }
+        kai_wren = @Demon.new('age' => '1')
+        kai_wren.age.should == 1
+      end
+    end
+
     describe 'has_attributes' do
       describe 'method creation' do
         before :each do
@@ -68,7 +100,7 @@ module Wrest::Components
           @Demon.class_eval{
             include AttributesContainer
             has_attributes :trainer
-            
+
             def method_missing(method_name, *args)
               # Ensuring that the instance level
               # attribute methods don't kick in
@@ -107,16 +139,6 @@ module Wrest::Components
         @li_piao['profession'].should == "Natural Magician"
       end
 
-      it "should provide a generic key based getter that understands symbols" do
-        @li_piao[:enhanced_by] = "Viss"
-        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
-      end
-
-      it "should provide a generic key based getter that translates strings to symbols" do
-        @li_piao['enhanced_by'] = "Viss"
-        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
-      end
-
       it "should fail when getter methods for attributes that don't exist are invoked" do
         lambda{ @li_piao.ooga }.should raise_error(NoMethodError)
       end
@@ -133,6 +155,16 @@ module Wrest::Components
 
       it "should not respond to getter methods for attributes that don't exist" do
         @li_piao.should_not respond_to(:gods)
+      end
+
+      it "should provide a generic key based setter that understands symbols" do
+        @li_piao[:enhanced_by] = "Viss"
+        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
+      end
+
+      it "should provide a generic key based setter that translates strings to symbols" do
+        @li_piao['enhanced_by'] = "Viss"
+        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
       end
 
       it "should create a setter method when one is invoked for attributes that don't exist" do

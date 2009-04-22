@@ -109,9 +109,9 @@ module Wrest
       http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
 
-      http.should_receive(:delete).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(build_ok_response(nil))
+      http.should_receive(:delete).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(build_ok_response(nil))
 
-      uri.delete(:page => '2', :per_page => '5')
+      uri.delete({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
     end
 
     it "should not mutate state of the uri across requests" do

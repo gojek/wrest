@@ -17,7 +17,7 @@ module Wrest::Components #:nodoc:
   # <tt>respond_to?</tt> however will respond as though 
   # they are all already present.
   # This means that two different instances of the same 
-  # <tt>AttributesContainer</tt> could well have
+  # AttributesContainer could well have
   # different attribute getters/setters/query methods.
   # 
   # Note that this means the first call to a particular
@@ -37,6 +37,7 @@ module Wrest::Components #:nodoc:
   module AttributesContainer
     def self.included(klass) #:nodoc:
       klass.extend AttributesContainer::ClassMethods
+      klass.extend TypecastHelpers
       klass.class_eval{ include AttributesContainer::InstanceMethods }
     end
     
@@ -70,6 +71,32 @@ module Wrest::Components #:nodoc:
           ) 
         end
       end
+      
+      # Accepts a set of attribute-name/lambda pairs which are used
+      # to typecast string values injected through the constructor.
+      # Typically needed when populating an +AttributesContainer+
+      # directly from request params. Typecasting kicks in for
+      # a given value _only_ if it is a string.
+      #
+      # Common typecasts such as integer, float, datetime etc. are
+      # available through predefined helpers. See TypecastHelpers
+      # for a full list.
+      #
+      # Example:
+      #
+      #  class Demon
+      #    include Wrest::Components::AttributesContainer
+      #    typecast :age => as_integer
+      #  end
+      #  kai_wren = Demon.new('age' => '1500')
+      #  kai_wren.age # => 1500      
+      def typecast(cast_map)
+        @typecast_map = @typecast_map ? @typecast_map.merge(cast_map.symbolize_keys) : cast_map.symbolize_keys
+      end
+      
+      def typecast_map #:nodoc:
+        @typecast_map || {}
+      end  
     end
        
     module InstanceMethods
@@ -81,6 +108,10 @@ module Wrest::Components #:nodoc:
       # own class.
       def initialize(attributes = {})
         @attributes = attributes.symbolize_keys
+        self.class.typecast_map.each do |key, typecaster| 
+          value = @attributes[key]
+          @attributes[key] = typecaster.call(value) if value.is_a?(String)
+        end
         @interface = Module.new
         self.extend @interface
       end

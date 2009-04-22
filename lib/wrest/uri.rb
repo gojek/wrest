@@ -27,7 +27,7 @@ module Wrest #:nodoc:
     end
     
     def hash
-      self.uri.hash + self.class.object_id
+      self.uri.hash + 20090423
     end
     
     # Make a HTTP get request to this URI.
@@ -44,8 +44,8 @@ module Wrest #:nodoc:
       do_request 'post', @uri.request_uri, body.to_s, headers.stringify_keys
     end
 
-    def delete(headers = {})
-      do_request 'delete', @uri.request_uri, headers.stringify_keys
+    def delete(parameters = {}, headers = {})
+      do_request 'delete', parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys
     end
     
     def do_request(method, url, *args)

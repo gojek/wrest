@@ -15,5 +15,6 @@ module Wrest #:nodoc:
   end
 end
 
+require "#{WREST_ROOT}/wrest/components/typecast_helpers"
 require "#{WREST_ROOT}/wrest/components/attributes_container"
 require "#{WREST_ROOT}/wrest/components/mutators"

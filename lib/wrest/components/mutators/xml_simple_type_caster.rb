@@ -25,7 +25,7 @@ module Wrest::Components
         elsif in_value.key?('type')
           out_value = ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING[in_value['type']].call(in_value['content'])
         else
-          out_value = in_value.mutate_using(self.clone)
+          out_value = in_value.mutate_using(self)
         end
       end
 
