@@ -14,6 +14,7 @@ module Wrest::Resource #:nodoc:
     include Wrest::Components::AttributesContainer
 
     has_attributes  :id
+    typecast        :id => as_integer
     attr_reader     :attributes
     
     class << self

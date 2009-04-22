@@ -44,11 +44,34 @@ module Wrest::Components
         kai_wren.age.should be_nil
       end
 
-
       it "should provide helpers for typcasting common types" do
         @Demon.class_eval{ typecast :age => as_integer }
-        kai_wren = @Demon.new('age' => '1')
-        kai_wren.age.should == 1
+        kai_wren = @Demon.new('age' => '1500')
+        kai_wren.age.should == 1500
+      end
+
+      describe 'in subclasses' do
+        before :each do
+          @Sidhe = Class.new
+          @Sidhe.class_eval{
+            include AttributesContainer
+            typecast :age => as_integer
+          }
+        end
+
+        it "should inherit all defined typecasts" do
+          @ChineseSidhe = Class.new(@Sidhe)
+          kai_wren = @ChineseSidhe.new('age' => '1500')
+          kai_wren.age.should == 1500
+        end
+        
+        it "should discard all typecasts from parent if defined in child" do
+          @ChineseSidhe = Class.new(@Sidhe)
+          @ChineseSidhe.class_eval{ typecast :born_in => as_integer }
+          kai_wren = @ChineseSidhe.new('age' => '1500', 'born_in' => '509')
+          kai_wren.age.should == '1500'
+          kai_wren.born_in.should == 509
+        end
       end
     end
 

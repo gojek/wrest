@@ -78,6 +78,11 @@ module Wrest::Components #:nodoc:
       # directly from request params. Typecasting kicks in for
       # a given value _only_ if it is a string.
       #
+      # Typcast information is inherited by subclasses; however be
+      # aware that explicitly invoking +typecast+ in a subclass will
+      # discard inherited typecast information leaving only the casts
+      # defined in the subclass.
+      #
       # Common typecasts such as integer, float, datetime etc. are
       # available through predefined helpers. See TypecastHelpers
       # for a full list.
@@ -95,7 +100,13 @@ module Wrest::Components #:nodoc:
       end
       
       def typecast_map #:nodoc:
-        @typecast_map || {}
+        if defined?(@typecast_map)
+          @typecast_map
+        elsif superclass != Object && superclass.respond_to?(:typecast_map)
+          superclass.typecast_map
+        else
+          {}  
+        end
       end  
     end
        
@@ -108,7 +119,7 @@ module Wrest::Components #:nodoc:
       # own class.
       def initialize(attributes = {})
         @attributes = attributes.symbolize_keys
-        self.class.typecast_map.each do |key, typecaster| 
+        self.class.typecast_map.each do |key, typecaster|
           value = @attributes[key]
           @attributes[key] = typecaster.call(value) if value.is_a?(String)
         end

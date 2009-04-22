@@ -38,7 +38,7 @@ module Wrest
       it "should know how to create an instance using deserialised attributes" do
         # Json => {"lead_bottle"=>{"name"=>"Wooz", "id"=>1, "universe_id"=>nil}}
         # Xml =>  {"lead-bottle"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]}
-        universe = @BottledUniverse.new "name"=>"Wooz", "id"=>1, "universe_id"=>nil, 'owner_id'=>nil
+        universe = @BottledUniverse.new "name"=>"Wooz", "id"=>'1', "universe_id"=>nil, 'owner_id'=>nil
         universe.name.should == "Wooz"
         universe.owner_id.should be_nil
         universe.id.should == 1
