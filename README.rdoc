@@ -2,7 +2,8 @@
 
 (c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
-Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource.
+Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. 
+Since no single framework can provide object oriented wrappers for _all_ available web services, it follows that Wrest should focus on providing you with the tools to roll your own. Wrest::Resource is an example of this - an object oriented wrapper for the kind of REST APIs exposed by Rails applications.
 
 == Installation
 
@@ -15,8 +16,7 @@ To install the Wrest gem, do <tt>sudo gem install wrest</tt>; Wrest is also avai
 == Wrest Core
 
 * Designed to be used as a library, not just a command line REST client
-* Provides basic infrastructure (including an interactive shell) and convenient HTTP wrappers
-* Makes it easy to extend and modify both serialisation, deserialisation and object creation
+* Provides infrastructure components such as convenient HTTP wrappers api, caching, redirect handling, serialisation, deserialisation etc.
 * Isn't coupled to Rails (usable in a pure Ruby application to consume any REST api)
 * Can be used both stand alone as well as to build object oriented abstractions around web services (Wrest::Resource is an example of the latter)
 
@@ -71,8 +71,9 @@ Wrest RDocs can be found at http://wrest.rubyforge.org
 
 == Wrest::Resource 
 
-Wrest::Resource is an alternative to ActiveResource which targets Rails REST services; it is currently under development.
+Wrest::Resource is an alternative to ActiveResource. It targets Rails REST services and is currently under development.
 
+* No more pretending that REST resources are the same as database records
 * Out of the box support for collections
 * Out of the box support for collection pagination (including support for WillPaginate), both header based and xml attribute based
 * Out of the box support for operations on all the records on the collection

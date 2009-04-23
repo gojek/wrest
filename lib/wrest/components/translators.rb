@@ -15,7 +15,7 @@ module Wrest::Components #:nodoc:
     # the content type
     def self.lookup(content_type)
       translator = CONTENT_TYPES[content_type]
-      translator || (raise Wrest::UnsupportedContentTypeException.new("Unsupported content type #{content_type}"))
+      translator || (raise Wrest::Exceptions::UnsupportedContentTypeException.new("Unsupported content type #{content_type}"))
     end
   end
 end

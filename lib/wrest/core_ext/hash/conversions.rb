@@ -15,7 +15,10 @@ module Wrest
 
         # This method accepts a hash mutator (found in Wrest::Compononents)
         # to build a new hash map by making changes to an existing one.
-        # No, this method does not mutate the hash it is invoked on.
+        #
+        # No, this method does not mutate the state of the hash it is invoked on, 
+        # but rather builds a new one.
+        #
         # Yes, the name is misleading in that respect. However, one 
         # hopes the absence of an exclamation mark will increase clarity.
         #

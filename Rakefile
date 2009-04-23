@@ -10,7 +10,7 @@
 require 'rubygems'
 gem 'rspec'
 require 'rake'
-require 'rake/rdoctask'
+require 'hanna/rdoctask'
 require 'spec'
 require 'spec/rake/spectask'
 
@@ -28,7 +28,7 @@ end
 desc 'Generate documentation for Wrest'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = 'WRest'
+  rdoc.title = 'Wrest Documentation'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')

@@ -9,6 +9,10 @@
 
 module Wrest::Components
   class Mutators::CamelToSnakeCase < Mutators::Base
+    # Converts the key to snake case
+    #
+    # Example:
+    #  Mutators::CamelToSnakeCase.new.mutate(['Spirit-Sword', 'true'])  # => ['spirit_sword', 'true']
     def do_mutate(tuple)
       [tuple.first.underscore, tuple.last]
     end

@@ -24,8 +24,8 @@ class Wrest::Components::Mutators::Base
   # Iterating over any hash using <tt>each</tt> injects
   # each key/value pair from the hash in the
   # form of an array.
-  # Thus the tuple this method expects 
-  # is simply [:key, :value]
+  # This method expects of this form as an argument, i.e.
+  # an array with the structure [:key, :value]
   #
   # The implementation of the mutation is achieved by
   # overriding the <tt>do_mutate</tt> method in a subclass.
@@ -38,6 +38,6 @@ class Wrest::Components::Mutators::Base
   
   protected
   def do_mutate(tuple)
-    raise Wrest::MethodNotOverriddenException
+    raise Wrest::Exceptions::MethodNotOverriddenException
   end
 end

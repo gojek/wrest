@@ -41,7 +41,10 @@ module Wrest::Resource #:nodoc:
       def set_host(host)
         self.class_eval "def self.host; '#{host}';end"
       end
-
+      
+      def set_redirect_handler(method_object)
+      end
+      
       def resource_path
         @resource_path ||= "/#{resource_name.underscore.pluralize}"
       end
