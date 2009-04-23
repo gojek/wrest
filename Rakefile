@@ -10,7 +10,6 @@
 require 'rubygems'
 gem 'rspec'
 require 'rake'
-require 'hanna/rdoctask'
 require 'spec'
 require 'spec/rake/spectask'
 
@@ -25,6 +24,12 @@ Spec::Rake::SpecTask.new(:spec) do |task|
   task.spec_opts = ['--options', 'spec/spec.opts']
 end
 
+begin
+  require 'hanna/rdoctask'
+rescue LoadError
+  puts 'Hanna not available, using standard Rake rdoctask. Fix this by running gem install mislav-hanna.'
+  require 'rake/rdoctask'
+end  
 desc 'Generate documentation for Wrest'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
