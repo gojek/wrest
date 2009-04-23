@@ -6,20 +6,15 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License 
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
- 
-module Wrest
-  # Contains strategies/lambdas which know how to deserialise
-  # different content types.
+
+module Wrest::Components 
   module Translators
-    # Loads the appropriate desirialisation strategy based on
-    # the content type
-    def self.load(content_type)
-      translator = CONTENT_TYPES[content_type]
-      translator || (raise UnsupportedContentTypeException.new("Unsupported content type #{content_type}"))
-    end
+    # Maps content types to deserialisers
+    CONTENT_TYPES = {
+      'application/xml' => Wrest::Translators::Xml,
+      'text/xml' => Wrest::Translators::Xml,
+      'application/json' => Wrest::Translators::Json,
+      'text/javascript' => Wrest::Translators::Json
+    }
   end
 end
-
-require "#{WREST_ROOT}/wrest/translators/xml"
-require "#{WREST_ROOT}/wrest/translators/json"
-require "#{WREST_ROOT}/wrest/translators/content_types"

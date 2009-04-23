@@ -28,7 +28,7 @@ module Wrest #:nodoc:
     end
     
     def deserialise
-      deserialise_using(Wrest::Translators.load(@http_response.content_type))
+      deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type))
     end
     
     def deserialise_using(translator)

@@ -18,3 +18,4 @@ end
 require "#{WREST_ROOT}/wrest/components/typecast_helpers"
 require "#{WREST_ROOT}/wrest/components/attributes_container"
 require "#{WREST_ROOT}/wrest/components/mutators"
+require "#{WREST_ROOT}/wrest/components/translators"

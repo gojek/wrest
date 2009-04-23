@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{wrest}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2009-04-21}
+  s.date = %q{2009-04-23}
   s.default_executable = %q{wrest}
   s.description = %q{Wrest is a REST client library which allows you to quickly build object oriented wrappers around any web service. It has two main components - Wrest Core and Wrest::Resource.}
   s.email = %q{ckponnappa@gmail.com}
@@ -26,12 +26,15 @@ Gem::Specification.new do |s|
     "lib/wrest/components/attributes_container.rb",
     "lib/wrest/components/mutators.rb",
     "lib/wrest/components/mutators/base.rb",
+    "lib/wrest/components/mutators/camel_to_snake_case.rb",
     "lib/wrest/components/mutators/xml_simple_type_caster.rb",
+    "lib/wrest/components/typecast_helpers.rb",
     "lib/wrest/core_ext/hash.rb",
     "lib/wrest/core_ext/hash/conversions.rb",
     "lib/wrest/core_ext/string.rb",
     "lib/wrest/core_ext/string/conversions.rb",
     "lib/wrest/exceptions.rb",
+    "lib/wrest/exceptions/method_not_overridden_exception.rb",
     "lib/wrest/exceptions/unsupported_content_type_exception.rb",
     "lib/wrest/resource.rb",
     "lib/wrest/resource/base.rb",
@@ -50,6 +53,7 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb",
     "spec/wrest/components/attributes_container_spec.rb",
     "spec/wrest/components/mutators/base_spec.rb",
+    "spec/wrest/components/mutators/camel_to_snake_spec.rb",
     "spec/wrest/components/mutators/xml_simple_type_caster_spec.rb",
     "spec/wrest/core_ext/hash/conversions_spec.rb",
     "spec/wrest/core_ext/string/conversions_spec.rb",
@@ -72,6 +76,7 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb",
     "spec/wrest/components/attributes_container_spec.rb",
     "spec/wrest/components/mutators/base_spec.rb",
+    "spec/wrest/components/mutators/camel_to_snake_spec.rb",
     "spec/wrest/components/mutators/xml_simple_type_caster_spec.rb",
     "spec/wrest/core_ext/hash/conversions_spec.rb",
     "spec/wrest/core_ext/string/conversions_spec.rb",
