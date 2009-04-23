@@ -3,7 +3,8 @@
 (c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
 Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. 
-Since no single framework can provide object oriented wrappers for _all_ available web services, it follows that Wrest should focus on providing you with the tools to roll your own. Wrest::Resource is an example of this - an object oriented wrapper for the kind of REST APIs exposed by Rails applications.
+
+Since no single framework can provide an object oriented wrapper suitable for _all_ available web services, it follows that Wrest should focus on providing you with the tools to help you roll your own with ease. Wrest::Resource is an example of this - an object oriented wrapper for the kind of REST APIs exposed by Rails applications built using Wrest Core.
 
 == Installation
 
@@ -46,14 +47,22 @@ A couple of ways to get the Yahoo news as hash map (needs the JSON gem - gem ins
 * This example simply does a get on a uri and figures out the appropriate deserialiser using the content-type (in this case 'text/javascript', which uses Wrest::Translators::Json). See content_types.rb under lib/wrest/mappers/translators.
  "http://search.yahooapis.com/NewsSearchService/V1/newsSearch?appid=YahooDemo&output=json&query=India&results=3&start=1".to_uri.get.deserialise
 
-* This example does a get on a base uri with several parameters passed to it, resulting in a uri essentially the same as the one above. It also shows how you can use a custom deserialiser to produce a hash-map from the response. 
- "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
-									:appid  => 'YahooDemo', 
-									:output => 'xml',
-									:query  => 'India',
-									:results=> '3',
-									:start  => '1'
-								).deserialise_using(Wrest::Translators::Xml)
+* This example does a get on a base uri with several parameters passed to it, resulting in a uri essentially the same as the one above. It also shows how you can specify a custom deserialiser to produce a hash-map from the response, as well as a hash mutator to clean up the deserialised hash.
+  require 'rubygems'
+  require 'wrest'
+
+  include Wrest::Components
+  p "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
+																			  :appid  => 'YahooDemo', 
+																			  :output => 'xml',
+																			  :query  => 'India',
+																			  :results=> '3',
+																			  :start  => '1'
+																			).deserialise_using(
+																			  Translators::Xml
+																			).mutate_using(
+																			  Mutators::XmlSimpleTypeCaster.new
+																			)
 
 
 === Logging

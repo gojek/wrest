@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2009-04-23}
+  s.date = %q{2009-04-24}
   s.default_executable = %q{wrest}
   s.description = %q{Wrest is a REST client library which allows you to quickly build object oriented wrappers around any web service. It has two main components - Wrest Core and Wrest::Resource.}
   s.email = %q{ckponnappa@gmail.com}
@@ -28,6 +28,10 @@ Gem::Specification.new do |s|
     "lib/wrest/components/mutators/base.rb",
     "lib/wrest/components/mutators/camel_to_snake_case.rb",
     "lib/wrest/components/mutators/xml_simple_type_caster.rb",
+    "lib/wrest/components/translators.rb",
+    "lib/wrest/components/translators/content_types.rb",
+    "lib/wrest/components/translators/json.rb",
+    "lib/wrest/components/translators/xml.rb",
     "lib/wrest/components/typecast_helpers.rb",
     "lib/wrest/core_ext/hash.rb",
     "lib/wrest/core_ext/hash/conversions.rb",
@@ -40,10 +44,6 @@ Gem::Specification.new do |s|
     "lib/wrest/resource/base.rb",
     "lib/wrest/resource/collection.rb",
     "lib/wrest/response.rb",
-    "lib/wrest/translators.rb",
-    "lib/wrest/translators/content_types.rb",
-    "lib/wrest/translators/json.rb",
-    "lib/wrest/translators/xml.rb",
     "lib/wrest/uri.rb",
     "lib/wrest/uri_template.rb",
     "lib/wrest/version.rb",
@@ -55,12 +55,12 @@ Gem::Specification.new do |s|
     "spec/wrest/components/mutators/base_spec.rb",
     "spec/wrest/components/mutators/camel_to_snake_spec.rb",
     "spec/wrest/components/mutators/xml_simple_type_caster_spec.rb",
+    "spec/wrest/components/translators/xml_spec.rb",
+    "spec/wrest/components/translators_spec.rb",
     "spec/wrest/core_ext/hash/conversions_spec.rb",
     "spec/wrest/core_ext/string/conversions_spec.rb",
     "spec/wrest/resource/base_spec.rb",
     "spec/wrest/response_spec.rb",
-    "spec/wrest/translators/xml_spec.rb",
-    "spec/wrest/translators_spec.rb",
     "spec/wrest/uri_spec.rb",
     "spec/wrest/uri_template_spec.rb"
   ]
@@ -78,12 +78,12 @@ Gem::Specification.new do |s|
     "spec/wrest/components/mutators/base_spec.rb",
     "spec/wrest/components/mutators/camel_to_snake_spec.rb",
     "spec/wrest/components/mutators/xml_simple_type_caster_spec.rb",
+    "spec/wrest/components/translators/xml_spec.rb",
+    "spec/wrest/components/translators_spec.rb",
     "spec/wrest/core_ext/hash/conversions_spec.rb",
     "spec/wrest/core_ext/string/conversions_spec.rb",
     "spec/wrest/resource/base_spec.rb",
     "spec/wrest/response_spec.rb",
-    "spec/wrest/translators/xml_spec.rb",
-    "spec/wrest/translators_spec.rb",
     "spec/wrest/uri_spec.rb",
     "spec/wrest/uri_template_spec.rb"
   ]

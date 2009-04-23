@@ -102,10 +102,12 @@ module Wrest::Components #:nodoc:
       #
       #  class Demon
       #    include Wrest::Components::AttributesContainer
-      #    typecast :age => as_integer
+      #    typecast :age  =>  as_integer,
+      #             :chi  =>  lambda{|chi| Chi.new(chi)}  
       #  end
-      #  kai_wren = Demon.new('age' => '1500')
-      #  kai_wren.age # => 1500      
+      #  kai_wren = Demon.new('age' => '1500', 'chi' => '1024')
+      #  kai_wren.age # => 1500   
+      #  kai_wren.chi # => #<Chi:0x113af8c @count="1024">   
       def typecast(cast_map)
         @typecast_map = @typecast_map ? @typecast_map.merge(cast_map.symbolize_keys) : cast_map.symbolize_keys
       end
