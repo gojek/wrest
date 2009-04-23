@@ -11,10 +11,10 @@ module Wrest::Components
   module Translators
     # Maps content types to deserialisers
     CONTENT_TYPES = {
-      'application/xml' => Wrest::Translators::Xml,
-      'text/xml' => Wrest::Translators::Xml,
-      'application/json' => Wrest::Translators::Json,
-      'text/javascript' => Wrest::Translators::Json
+      'application/xml' => Wrest::Components::Translators::Xml,
+      'text/xml' => Wrest::Components::Translators::Xml,
+      'application/json' => Wrest::Components::Translators::Json,
+      'text/javascript' => Wrest::Components::Translators::Json
     }
   end
 end

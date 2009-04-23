@@ -32,7 +32,7 @@ module Wrest #:nodoc:
     end
     
     def deserialise_using(translator)
-      translator.call(@http_response)
+      translator.deserialise(@http_response)
     end
   end
 end
