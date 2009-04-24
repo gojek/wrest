@@ -72,7 +72,6 @@ begin
     gemspec.files.exclude 'spec/wrest/meh_spec.rb'
     gemspec.test_files.exclude 'spec/wrest/meh_spec.rb'
     gemspec.add_dependency('activesupport', '>= 2.3.2')
-    gemspec.add_dependency('xml-simple', '>= 1.0.11')
     case RUBY_PLATFORM
     when /java/
       gemspec.add_dependency('json-jruby', '>= 1.1.3')  

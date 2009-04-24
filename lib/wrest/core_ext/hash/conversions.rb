@@ -22,7 +22,7 @@ module Wrest
         # Yes, the name is misleading in that respect. However, one 
         # hopes the absence of an exclamation mark will increase clarity.
         #
-        # Uses include mutating the hash produced by xml-simple
+        # Uses include mutating the hash produced by deserialising xml
         # by using the meta data in the hash to type cast values.
         # 
         # Example:
