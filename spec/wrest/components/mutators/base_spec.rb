@@ -33,6 +33,10 @@ module Wrest::Components
       }]]
       ).should == ["result", {"publish_date" => "1240326000", "news_source" => {"online"=>"PC via News", "unique_id"=>1}}]
     end
-
+    
+    it "should register all subclasses in the registry" do
+      class SomeMutator < Mutators::Base; end
+      Mutators::REGISTRY[:some_mutator].should == SomeMutator
+    end
   end
 end

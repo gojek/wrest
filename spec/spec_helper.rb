@@ -11,7 +11,8 @@ Wrest.logger = Logger.new(File.open("#{WREST_ROOT}/../log/test.log", 'a'))
 
 def p(*args)
  # super *(args << caller[0])
- super *(args << '<br>')
+ super *(args << '<br/>')
+ # super *args
 end
 
 Spec::Runner.configure do |config|

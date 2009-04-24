@@ -7,17 +7,12 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require 'xmlsimple'
-
 module Wrest::Components::Translators
   module Xml
     extend self
-
+    
     def deserialise(response)
-      XmlSimple.xml_in(
-      response.body,
-      'keeproot'  => true
-      )
+      ActiveSupport::XmlMini.parse(response.body)
     end
 
     def serialise(hash)

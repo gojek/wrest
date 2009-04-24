@@ -13,7 +13,16 @@
 # template method.
 class Wrest::Components::Mutators::Base
   attr_reader :next_mutator
-    
+  
+  # Registers all subclasses of Mutators::Base in
+  # Mutators::REGISTRY making it easy to reference
+  # and chain them later.
+  #
+  # See Mutators#chain for more information.
+  def self.inherited(subklass)
+    Wrest::Components::Mutators::REGISTRY[subklass.name.demodulize.underscore.to_sym] = subklass unless subklass.name.blank?
+  end
+  
   def initialize(next_mutator = nil)
     @next_mutator = next_mutator
   end

@@ -6,7 +6,7 @@ module Wrest::Components::Translators
       http_response = mock('Http Reponse')
       http_response.should_receive(:body).and_return("<ooga><age>12</age></ooga>")
 
-      Xml.deserialise(http_response).should == {"ooga"=>[{"age"=>["12"]}]}
+      Xml.deserialise(http_response).should == {"ooga"=>{"age"=>{"__content__" => "12"}}}
     end
   end
 end

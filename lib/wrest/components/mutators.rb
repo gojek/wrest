@@ -13,10 +13,27 @@ module Wrest #:nodoc:
     # one tuple(key/value pair) from a hash
     # into another
     module Mutators
+      # All sublasses of Mutators::Base are automatically
+      # registered here by underscored, symbolised class name.
+      REGISTRY = {}
+      
+      # Makes referencing and chaining mutators easy.
+      # 
+      # Example:
+      #  Mutators.chain(:xml_mini_type_caster, :camel_to_snake_case)
+      # is equivalent to
+      #  Wrest::Components::Mutators::XmlMiniTypeCaster.new(Wrest::Components::Mutators::CamelToSnakeCase.new)
+      def self.chain(*mutator_keys)
+        mutator_key = mutator_keys.pop
+        mutator_keys.reverse.inject(REGISTRY[mutator_key].new) do |next_instance, next_key| 
+          REGISTRY[next_key].new(next_instance)
+        end
+      end
     end
   end
 end
 
 require "#{WREST_ROOT}/wrest/components/mutators/base"
 require "#{WREST_ROOT}/wrest/components/mutators/xml_simple_type_caster"
+require "#{WREST_ROOT}/wrest/components/mutators/xml_mini_type_caster"
 require "#{WREST_ROOT}/wrest/components/mutators/camel_to_snake_case"
