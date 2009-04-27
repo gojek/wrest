@@ -110,7 +110,7 @@ Wrest::Resource is an alternative to ActiveResource. It targets Rails REST (well
 * gems
 * json (json-jruby on JRuby)
 * active_support
-* ruby-libxml (recommended, will fall back to REXML if absent)
+* ruby-libxml (recommended, will fall back to REXML if absent; be aware that this uses ActiveSupport::XmlMini, so if you're using Wrest as a plugin in a Rails application, all xml parsing will switch to using libxml if available)
 
 === Build
 * rspec
