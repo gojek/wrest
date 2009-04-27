@@ -7,6 +7,8 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 require 'rubygems'
+gem 'activesupport', '>= 2.3.2'
+
 require 'net/http'
 require 'net/https'
 require 'forwardable'
@@ -29,8 +31,15 @@ module Wrest
   end
 end
 
-Wrest.logger = Logger.new(STDOUT)
+Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
+
+begin
+  gem 'libxml-ruby', '>= 1.1.3'
+  ActiveSupport::XmlMini.backend='LibXML'
+rescue Gem::LoadError
+  Wrest.logger.warn "LibXML >= 1.1.3 not found, falling back to #{ActiveSupport::XmlMini.backend}. To install LibXML run `sudo gem install ruby-libxml`"
+end
 
 source_dirs = ["/wrest/core_ext/*.rb", "/wrest/*.rb"]
 

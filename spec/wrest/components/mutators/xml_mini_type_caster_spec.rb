@@ -46,7 +46,11 @@ module Wrest::Components
                           "PublishDate"=>{"__content__"=>"20090424", "type" => "date"}, 
                           "Language"=>{"__content__"=>"en"}, 
                           "Title"=>{"__content__"=>"Wootler: Wook focus should be Klingon, not India"}, 
-                          "ClickUrl"=>{"__content__"=>"http://news.ooga.com/s/ap/20090424/ap_on_go_ca_st_pe/us_us_wookieland_5"}, 
+                          "ClickUrls"=>[
+                                      {"One" => {"__content__"=>"http://news.ooga.com/s/ap/20090424/ap_on_go_ca_st_pe/us_us_wookieland_5"}},
+                                      {"Two" => {"__content__"=>"http://news.ooga.com/s/ap/20090424/ap_on_go_ca_st_pe/us_us_wookieland_6"}},
+                                    ]
+                                       
                         }
                       }
         ]
@@ -59,7 +63,10 @@ module Wrest::Components
                           "PublishDate"=>Date.parse("20090424"),
                           "Language"=>"en", 
                           "Title"=>"Wootler: Wook focus should be Klingon, not India", 
-                          "ClickUrl"=>"http://news.ooga.com/s/ap/20090424/ap_on_go_ca_st_pe/us_us_wookieland_5" 
+                          "ClickUrls"=>[
+                                      {"One" => "http://news.ooga.com/s/ap/20090424/ap_on_go_ca_st_pe/us_us_wookieland_5"},
+                                      {"Two" => "http://news.ooga.com/s/ap/20090424/ap_on_go_ca_st_pe/us_us_wookieland_6"},
+                                    ]
                         }
                       }
         ]
