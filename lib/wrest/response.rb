@@ -34,5 +34,9 @@ module Wrest #:nodoc:
     def deserialise_using(translator)
       translator.deserialise(@http_response)
     end
+    
+    def headers
+      @http_response.to_hash
+    end
   end
 end

@@ -40,7 +40,7 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 								)
 === Basic Http Calls
 
-==== Get
+==== GET
 
 A couple of ways to get the Yahoo news as hash map. 
 
@@ -63,6 +63,12 @@ A couple of ways to get the Yahoo news as hash map.
 									Mutators::XmlSimpleTypeCaster.new
 								)									  
 
+==== OPTIONS
+
+To find out what actions are permitted on a URI:
+
+ 'http://www.yahoo.com'.to_uri.options.headers['allow']
+
 
 === Logging
 
@@ -79,7 +85,7 @@ Wrest RDocs can be found at http://wrest.rubyforge.org
 
 == Wrest::Resource 
 
-Wrest::Resource is an alternative to ActiveResource. It targets Rails REST services and is currently under development.
+Wrest::Resource is an alternative to ActiveResource. It targets Rails REST (well, POX - turns out Rails isn't really REST) services and is currently under development.
 
 * No more pretending that REST resources are the same as records in a database (yeah, no more freaking ActiveResource::Connection)
 * Treat put as 'create or update,' not just 'update'
