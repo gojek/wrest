@@ -33,13 +33,13 @@ module Wrest
       Uri.new('https://localhost:3000').should_not == Uri.new('http://localhost:3000')
       Uri.new('http://localhost:3000').should == Uri.new('http://localhost:3000')
     end
-    
-    
+
+
     it "should have the same hash code if it is the same uri" do
       Uri.new('https://localhost:3000').hash.should == Uri.new('https://localhost:3000').hash
       Uri.new('https://localhost:3001').hash.should_not == Uri.new('https://localhost:3000').hash
     end
-    
+
     describe 'Get' do
       it "should know how to get" do
         uri = "http://localhost:3000/glassware".to_uri
@@ -77,7 +77,7 @@ module Wrest
         uri.get(:owner => 'Kai', :type => 'bottle')
       end
     end
-    
+
     it "should know how to post" do
       uri = "http://localhost:3000/glassware".to_uri
       uri.should_not be_https
@@ -112,6 +112,18 @@ module Wrest
       http.should_receive(:delete).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(build_ok_response(nil))
 
       uri.delete({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
+    end
+
+    it "should know how to ask for options on a URI" do
+      uri = "http://localhost:3000/glassware".to_uri
+      uri.should_not be_https
+
+      http = mock(Net::HTTP)
+      Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
+
+      http.should_receive(:options).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(build_ok_response(nil))
+
+      uri.options
     end
 
     it "should not mutate state of the uri across requests" do

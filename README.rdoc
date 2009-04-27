@@ -81,7 +81,12 @@ Wrest RDocs can be found at http://wrest.rubyforge.org
 
 Wrest::Resource is an alternative to ActiveResource. It targets Rails REST services and is currently under development.
 
-* No more pretending that REST resources are the same as database records
+* No more pretending that REST resources are the same as records in a database (yeah, no more freaking ActiveResource::Connection)
+* Treat put as 'create or update'
+* Response codes result in user defined state transitions; favours state transitions based on response code over arbitrary ones
+* Supports moving toward hypermedia links as opposed to client server collusion through URI templates
+* The header is now exposed as a first-class metadata transport, rather than something you have no control over
+* Out of the box support for If-Unmodified-Since/If-Match+Etag
 * Out of the box support for collections
 * Out of the box support for collection pagination (including support for WillPaginate), both header based and xml attribute based
 * Out of the box support for operations on all the records on the collection
@@ -91,6 +96,7 @@ Wrest::Resource is an alternative to ActiveResource. It targets Rails REST servi
 * More natural mapping of deserialised entities to existing classes
 * No communication via exceptions for http error status codes
 * Better extensibility - allows access to request/response objects, avoids class variables, favours symbols over strings etc.
+* Consider support for OPTIONS and response codes 100/417
 
 == Dependencies
 

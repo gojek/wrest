@@ -47,11 +47,15 @@ module Wrest #:nodoc:
     def delete(parameters = {}, headers = {})
       do_request 'delete', parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys
     end
+
+    def options
+      do_request 'options', @uri.request_uri
+    end
     
     def do_request(method, url, *args)
       response = nil
 
-      Wrest.logger.info  "#{method} -> #{url}"
+      Wrest.logger.info "--> (#{method}) #{@uri.scheme}://#{@uri.host}:#{@uri.port}#{url}"
       time = Benchmark.realtime { response = Wrest::Response.new(http.send(method, url, *args)) }
       Wrest.logger.info "--> %d %s (%d %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
