@@ -13,14 +13,14 @@ module Wrest::Components
   describe AttributesContainer do
     class HumanBeing
       include AttributesContainer
-      has_attributes :id
+      always_has :id
     end
 
     it "should allow instantiation with no attributes" do
       lambda{ HumanBeing.new }.should_not raise_error
     end
 
-    describe 'has_attributes' do
+    describe 'always_has' do
       describe 'method creation' do
         before :each do
           @Demon = Class.new
@@ -32,7 +32,7 @@ module Wrest::Components
 
           @Demon.class_eval{
             include AttributesContainer
-            has_attributes :trainer
+            always_has :trainer
           }
 
           kai_wren.methods.should include('trainer')
@@ -44,7 +44,7 @@ module Wrest::Components
 
           @Demon.class_eval{
             include AttributesContainer
-            has_attributes :trainer
+            always_has :trainer
           }
 
           kai_wren.methods.should include('trainer=')
@@ -56,7 +56,7 @@ module Wrest::Components
 
           @Demon.class_eval{
             include AttributesContainer
-            has_attributes :trainer
+            always_has :trainer
           }
           kai_wren.methods.should include('trainer?')
         end
@@ -67,7 +67,7 @@ module Wrest::Components
           @Demon = Class.new
           @Demon.class_eval{
             include AttributesContainer
-            has_attributes :trainer
+            always_has :trainer
 
             def method_missing(method_name, *args)
               # Ensuring that the instance level

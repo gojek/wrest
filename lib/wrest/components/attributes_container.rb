@@ -37,7 +37,7 @@ module Wrest::Components
   # In situations where this is a problem, such as a client consuming Rails
   # REST services where <tt>id</tt> is a common attribute and clashes with
   # Object#id, it is recommended to create getter/setter/query methods
-  # on the class (which affects all instances) using the +has_attributes+ macro.
+  # on the class (which affects all instances) using the +always_has+ macro.
   #
   # If you're implementing your own initialize method
   # remember to delegate to the default initialize
@@ -48,7 +48,7 @@ module Wrest::Components
   #    include Wrest::Components::AttributesContainer
   #    include Wrest::Components::AttributesContainer::Typecaster
   #
-  #    has_attributes   :id
+  #    always_has   :id
   #    typecast         :id   =>  as_integer
   #  end
   #  coin = ShenCoin.new(:id => '5', :chi_count => 500, :owner => 'Kai Wren')
@@ -80,7 +80,7 @@ module Wrest::Components
       # an attribute named <tt>id</tt> which clashes with Object#id. Also,
       # this can be used as a performance optimisation if the incoming
       # attributes are known beforehand.
-      def has_attributes(*attribute_names)
+      def always_has(*attribute_names)
         attribute_names.each do |attribute_name|
           self.class_eval(
           AttributesContainer.build_attribute_getter(attribute_name) +
