@@ -72,7 +72,7 @@ To find out what actions are permitted on a URI:
 
 === Attributes Container
 
-Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions such as support for typcasting attribute values.
+Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions such as support for typecasting attribute values.
 
 Example:
 
