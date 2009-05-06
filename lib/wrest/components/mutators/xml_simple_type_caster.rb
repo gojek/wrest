@@ -7,29 +7,31 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-# This mutator undertands how do type casting
-# using the type data embedded in a hash
-# created by deserialising an xml using
-# xml-simple
-module Wrest::Components
-  class Mutators::XmlSimpleTypeCaster < Mutators::Base
-    def do_mutate(tuple)
-      out_key = tuple.first
-      in_value = tuple.last[0]
-      out_value = in_value
+module Wrest
+  module Components
+    # This mutator undertands how do type casting
+    # using the type data embedded in a hash
+    # created by deserialising an xml using
+    # xml-simple
+    class Mutators::XmlSimpleTypeCaster < Mutators::Base
+      def do_mutate(tuple)
+        out_key = tuple.first
+        in_value = tuple.last[0]
+        out_value = in_value
 
-      case in_value
-      when Hash
-        if in_value['nil'] == 'true'
-          out_value = nil
-        elsif in_value.key?('type')
-          out_value = ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING[in_value['type']].call(in_value['content'])
-        else
-          out_value = in_value.mutate_using(self)
+        case in_value
+        when Hash
+          if in_value['nil'] == 'true'
+            out_value = nil
+          elsif in_value.key?('type')
+            out_value = ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING[in_value['type']].call(in_value['content'])
+          else
+            out_value = in_value.mutate_using(self)
+          end
         end
-      end
 
-      [out_key, out_value]
+        [out_key, out_value]
+      end
     end
   end
 end

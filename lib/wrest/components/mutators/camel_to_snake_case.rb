@@ -7,14 +7,16 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Components
-  class Mutators::CamelToSnakeCase < Mutators::Base
+module Wrest
+  module Components
     # Converts the key to snake case
     #
     # Example:
-    #  Mutators::CamelToSnakeCase.new.mutate(['Spirit-Sword', 'true'])  # => ['spirit_sword', 'true']
-    def do_mutate(tuple)
-      [tuple.first.underscore, tuple.last]
+    #  Mutators::CamelToSnakeCase.new.mutate(['Spirit-Sword', 'true'])  # => ['spirit_sword', 'true']**
+    class Mutators::CamelToSnakeCase < Mutators::Base
+      def do_mutate(tuple)
+        [tuple.first.underscore, tuple.last]
+      end
     end
   end
 end

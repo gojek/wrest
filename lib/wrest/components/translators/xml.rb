@@ -7,15 +7,17 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Components::Translators
-  module Xml
-    extend self
-    
-    def deserialise(response)
-      ActiveSupport::XmlMini.parse(response.body)
-    end
+module Wrest
+  module Components::Translators
+    module Xml
+      extend self
 
-    def serialise(hash)
+      def deserialise(response)
+        ActiveSupport::XmlMini.parse(response.body)
+      end
+
+      def serialise(hash)
+      end
     end
   end
 end

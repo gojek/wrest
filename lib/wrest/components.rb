@@ -7,7 +7,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
 
-module Wrest #:nodoc:
+module Wrest
   # A component is a building block that can
   # be used while building an object oriented wrapper
   # around a REST service
@@ -15,7 +15,6 @@ module Wrest #:nodoc:
   end
 end
 
-require "#{WREST_ROOT}/wrest/components/typecast_helpers"
 require "#{WREST_ROOT}/wrest/components/attributes_container"
 require "#{WREST_ROOT}/wrest/components/mutators"
 require "#{WREST_ROOT}/wrest/components/translators"

@@ -7,7 +7,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
 
-module Wrest #:nodoc:
+module Wrest
   module Components
     # A mutator understands how to transform
     # one tuple(key/value pair) from a hash
