@@ -38,7 +38,7 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 									:results=> '3',
 									:start  => '1'
 								)
-=== Basic Http Calls
+=== Usage: Basic Http Calls
 
 ==== GET
 
@@ -70,7 +70,7 @@ To find out what actions are permitted on a URI:
  'http://www.yahoo.com'.to_uri.options.headers['allow']
 
 
-=== Attributes Container
+=== Usage: Attributes Container
 
 Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values.
 
@@ -86,12 +86,12 @@ Example:
  end
 
  kai_wren = Demon.new('id => '1', 'age' => '1500', 'chi' => '1024', 'teacher' => 'Viss')
- kai_wren.id            # => '1'
- kai_wren.age           # => 1500
- kai_wren.chi           # => #<Chi:0x113af8c @count="1024">
+ kai_wren.id			# => '1'
+ kai_wren.age			# => 1500
+ kai_wren.chi			# => #<Chi:0x113af8c @count="1024">
  kai_wren.teacher		# => 'Viss'
 
-=== Logging
+=== Usage: Logging
 
 The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT. If you're using Wrest in a Rails application, you can configure logging by placing the following line in your environment file:
   Wrest.logger = ActiveRecord::Base.logger
