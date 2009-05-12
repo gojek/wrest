@@ -60,7 +60,7 @@ A couple of ways to get the Yahoo news as hash map.
 								).deserialise_using(
 									Translators::Xml
 								).mutate_using(
-									Mutators::XmlSimpleTypeCaster.new
+									Mutators::XmlMiniTypeCaster.new
 								)									  
 
 ==== OPTIONS
