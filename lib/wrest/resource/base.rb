@@ -13,11 +13,21 @@ module Wrest::Resource #:nodoc:
   class Base
     include Wrest::Components::AttributesContainer
     include Wrest::Components::AttributesContainer::Typecaster
-    
-    always_has  :id
+
+    always_has      :id
     typecast        :id => as_integer
     attr_reader     :attributes
-
+    
+    def ==(other)
+      return true if self.equal?(other)
+      return false unless other.class == self.class
+      return self.attributes == other.attributes
+    end
+    
+    def hash
+      id.hash
+    end
+    
     class << self
       def inherited(klass)
         klass.set_resource_name klass.name
@@ -42,11 +52,11 @@ module Wrest::Resource #:nodoc:
       def set_host(host)
         self.class_eval "def self.host; '#{host}';end"
       end
-      
+
       def set_default_format(format)
         self.class_eval "def self.default_format; '#{format.to_s}';end"
       end
-      
+
       def set_redirect_handler(method_object)
       end
 
@@ -65,17 +75,10 @@ module Wrest::Resource #:nodoc:
       end
 
       def find(id)
-        response_hash = "#{resource_collection_url}/#{id}.#{default_format}".to_uri.get.deserialise.mutate_using(
-                                                                                          Wrest::Components::Mutators.chain(
-                                                                                            :xml_mini_type_caster, :camel_to_snake_case
-                                                                                          )
-                                                                                        )
-        resource_type = response_hash.keys.first
-        if(resource_type.underscore.camelize == self.name)
-          self.new(response_hash[resource_type])
-        else
-          response_hash
-        end
+        reponse = "#{resource_collection_url}/#{id}.#{default_format}".to_uri.get
+        self.new(reponse.deserialise.mutate_using(
+          Wrest::Components::Mutators.chain(:xml_mini_type_caster, :camel_to_snake_case)
+        ).shift.last)
       end
 
       def objectify(hash)

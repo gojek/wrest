@@ -5,7 +5,8 @@ class Glassware < Wrest::Resource::Base
 end
 
 class BottledUniverse < Glassware
-  set_host "http://localhost:3001"
+  set_host            "http://localhost:3001"
+  set_default_format  :xml
 end
 
 module Wrest
@@ -23,7 +24,68 @@ module Wrest
       before(:each) do
         @BottledUniverse = Class.new(Resource::Base)
         @BottledUniverse.class_eval do
-          set_resource_name 'BottledUniverse'
+          set_resource_name   'BottledUniverse'
+        end
+      end
+
+      describe 'equality' do
+        it "should be equal if it is the same instance" do
+          universe = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          (universe == universe).should be_true
+        end
+
+        it "should be equal if it has the same state" do
+          (
+            @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1) == @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          ).should be_true
+        end
+
+        it "should not be equal to nil" do
+          (@BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1) == nil).should be_false
+        end
+
+        it "should not be equal if it is not the same class" do
+          (
+            @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1) == Glassware.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          ).should be_false
+        end
+
+        it "should not be equal if it is has a different state" do
+          (
+            @BottledUniverse.new(:universe_id=>3, :name=>"Wooz", :id=>1) == @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          ).should be_false
+        end
+
+        it "should be symmetric" do
+          universe_one = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          universe_two = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          (universe_one == universe_one).should be_true
+          (universe_two == universe_two).should be_true
+        end
+
+        it "should be transitive" do
+          universe_one = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          universe_two = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          universe_three = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          (universe_one == universe_two).should be_true
+          (universe_two == universe_three).should be_true
+          (universe_one == universe_three).should be_true
+        end
+        
+        it "should ensure that the hashcode is a fixnum" do
+          @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1).hash.should be_kind_of(Fixnum)
+        end
+        
+        it "should ensure that instances with the same ids have the same hashcode" do
+          universe_one = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          universe_two = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          universe_one.hash.should == universe_two.hash
+        end
+
+        it "should ensure that instances with different ids have the different hashcodes" do
+          universe_one = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          universe_two = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>2)
+          universe_one.hash.should_not == universe_two.hash
         end
       end
 
@@ -36,8 +98,6 @@ module Wrest
       end
 
       it "should know how to create an instance using deserialised attributes" do
-        # Json => {"lead_bottle"=>{"name"=>"Wooz", "id"=>1, "universe_id"=>nil}}
-        # Xml =>  {"lead-bottle"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]}
         universe = @BottledUniverse.new "name"=>"Wooz", "id"=>'1', "universe_id"=>nil, 'owner_id'=>nil
         universe.name.should == "Wooz"
         universe.owner_id.should be_nil
@@ -71,6 +131,33 @@ module Wrest
 
       it "should know its resource path" do
         Glassware.resource_path.should == '/glasswares'
+      end
+
+      describe 'finders' do
+        # Json =>
+        #         body => {"lead_bottle": {"name": "Wooz", "id": 1, "universe_id": null}}
+        #         hash => {"lead_bottle"=>{"name"=>"Wooz", "id"=>1, "universe_id"=>nil}}
+        # Xml =>
+        #         body =>
+        #         <?xml version="1.0" encoding="UTF-8"?>
+        #         <lead-bottle>
+        #           <id type="integer">1</id>
+        #           <name>Wooz</name>
+        #           <universe-id type="integer" nil="true"></universe-id>
+        #         </lead-bottle>
+        #         hash =>
+        #         {"lead-bottle"=>{"name"=>{"__content__"=>"Wooz"}, "universe-id"=>{"type"=>"integer", "nil"=>"true"}, "id"=>{"__content__"=>"1", "type"=>"integer"}}}
+        #         typecast =>
+        #         {"lead_bottle"=>{"name"=>"Wooz", "id"=>1, "universe_id"=>nil}}
+        it "should know how to find a resource by id" do
+          uri = 'http://localhost:3001/bottled_universe/1.xml'.to_uri
+          Wrest::Uri.should_receive(:new).with('http://localhost:3001/bottled_universes/1.xml').and_return(uri)
+          response = mock(Wrest::Response)
+          uri.should_receive(:get).with(no_args).and_return(response)
+          response.should_receive(:deserialise).and_return({"bottled-universe"=>{"name"=>{"__content__"=>"Wooz"}, "universe-id"=>{"type"=>"integer", "nil"=>"true"}, "id"=>{"__content__"=>"1", "type"=>"integer"}}})
+
+          BottledUniverse.find(1).should == BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+        end
       end
     end
 

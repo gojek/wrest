@@ -123,6 +123,7 @@ Wrest::Resource is an alternative to ActiveResource. It targets Rails REST (well
 * More natural mapping of deserialised entities to existing classes
 * No communication via exceptions for http error status codes
 * Better extensibility - allows access to request/response objects, avoids class variables, favours symbols over strings etc.
+* Content Types in request headers
 * Consider support for OPTIONS and response codes 100/417
 
 == Dependencies
