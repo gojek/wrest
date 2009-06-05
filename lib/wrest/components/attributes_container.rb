@@ -100,8 +100,6 @@ module Wrest::Components
       # own class.
       def initialize(attributes = {})
         @attributes = attributes.symbolize_keys
-        @interface = Module.new
-        self.extend @interface
       end
 
       def [](key)
@@ -124,11 +122,11 @@ module Wrest::Components
         if @attributes.include?(attribute_name.to_sym) || method_name.last == '='
           case method_name.last
           when '='
-            @interface.module_eval AttributesContainer.build_attribute_setter(attribute_name)
+            self.instance_eval AttributesContainer.build_attribute_setter(attribute_name)
           when '?'
-            @interface.module_eval AttributesContainer.build_attribute_queryer(attribute_name)
+            self.instance_eval AttributesContainer.build_attribute_queryer(attribute_name)
           else
-            @interface.module_eval AttributesContainer.build_attribute_getter(attribute_name)
+            self.instance_eval AttributesContainer.build_attribute_getter(attribute_name)
           end
           send(method_sym, *arguments)
         else
