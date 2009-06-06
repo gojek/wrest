@@ -179,6 +179,16 @@ module Wrest::Components
         @li_piao.id = 6
         @li_piao.id.should == 6
       end
+      
+      it "should provide getter and query methods to instance which has corresponding attribute" do
+        zotoh_zhaan = HumanBeing.new(:species => "Delvian")
+        zotoh_zhaan.species.should == "Delvian"
+        zotoh_zhaan.species?.should be_true
+        zotoh_zhaan.species = "Human"
+        lambda{@li_piao.species}.should raise_error(NoMethodError)
+        lambda{@li_piao.species?}.should raise_error(NoMethodError)
+        lambda{@li_piao.species = "Human"}.should raise_error(NoMethodError)
+      end
     end
   end
 end
