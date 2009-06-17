@@ -7,11 +7,16 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require 'rubygems'
-gem 'rspec'
-require 'rake'
-require 'spec'
-require 'spec/rake/spectask'
+if Object.const_defined?('RAILS_ROOT')
+  require File.dirname(__FILE__) + '/../../../config/environment'
+else
+  require 'rubygems'
+  gem 'rspec'
+  require 'rake'
+  require 'spec'
+  require 'spec/rake/spectask'
+  require 'metric_fu'
+end
 
 puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
@@ -29,7 +34,7 @@ begin
 rescue LoadError
   puts 'Hanna not available, using standard Rake rdoctask. Fix this by running gem install mislav-hanna.'
   require 'rake/rdoctask'
-end  
+end
 desc 'Generate documentation for Wrest'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
@@ -74,10 +79,10 @@ begin
     gemspec.add_dependency('activesupport', '>= 2.3.2')
     case RUBY_PLATFORM
     when /java/
-      gemspec.add_dependency('json-jruby', '>= 1.1.3')  
+      gemspec.add_dependency('json-jruby', '>= 1.1.3')
       gemspec.platform = 'java'
     else
-      gemspec.add_dependency('json', '>= 1.1.3')  
+      gemspec.add_dependency('json', '>= 1.1.3')
       gemspec.platform = Gem::Platform::RUBY
     end
   end

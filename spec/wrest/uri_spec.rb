@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 module Wrest
-  describe Uri do
+  describe Wrest::Uri do
     def build_ok_response(body = '')
       returning mock(Net::HTTPOK) do |response|
         response.stub!(:code).and_return('200')

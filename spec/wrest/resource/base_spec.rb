@@ -10,7 +10,7 @@ class BottledUniverse < Glassware
 end
 
 module Wrest
-  describe Resource::Base do
+  describe Wrest::Resource::Base do
     it "should not affect other classes when setting up its macros" do
       Class.should_not respond_to(:host=)
       Object.should_not respond_to(:host=)

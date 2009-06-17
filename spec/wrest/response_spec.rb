@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 module Wrest
-  describe Response do
+  describe Wrest::Response do
     it "should know how to delegate to a translator" do
       http_response = mock('response')
       Components::Translators::Xml.should_receive(:deserialise).with(http_response)

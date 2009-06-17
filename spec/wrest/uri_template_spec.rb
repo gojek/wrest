@@ -10,7 +10,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 module Wrest
-  describe UriTemplate do
+  describe Wrest::UriTemplate do
     it "should not maintain a reference to the string it is initialized with" do
       url_pattern = "http://localhost:3000/:resource/:id.:format"
       template = UriTemplate.new(url_pattern)

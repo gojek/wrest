@@ -187,7 +187,8 @@ module Wrest::Components
         zotoh_zhaan.species = "Human"
         lambda{@li_piao.species}.should raise_error(NoMethodError)
         lambda{@li_piao.species?}.should raise_error(NoMethodError)
-        lambda{@li_piao.species = "Human"}.should raise_error(NoMethodError)
+        @li_piao.should_not respond_to(:species=)
+        @li_piao.methods.grep(/:species=/).should be_empty
       end
     end
   end
