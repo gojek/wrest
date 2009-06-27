@@ -36,7 +36,7 @@ module Wrest
 
         it "should be equal if it has the same state" do
           (
-            @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1) == @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1) == @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
           ).should be_true
         end
 
@@ -46,13 +46,13 @@ module Wrest
 
         it "should not be equal if it is not the same class" do
           (
-            @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1) == Glassware.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1) == Glassware.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
           ).should be_false
         end
 
         it "should not be equal if it is has a different state" do
           (
-            @BottledUniverse.new(:universe_id=>3, :name=>"Wooz", :id=>1) == @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
+          @BottledUniverse.new(:universe_id=>3, :name=>"Wooz", :id=>1) == @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
           ).should be_false
         end
 
@@ -71,11 +71,11 @@ module Wrest
           (universe_two == universe_three).should be_true
           (universe_one == universe_three).should be_true
         end
-        
+
         it "should ensure that the hashcode is a fixnum" do
           @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1).hash.should be_kind_of(Fixnum)
         end
-        
+
         it "should ensure that instances with the same ids have the same hashcode" do
           universe_one = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
           universe_two = @BottledUniverse.new(:universe_id=>nil, :name=>"Wooz", :id=>1)
@@ -90,11 +90,11 @@ module Wrest
       end
 
       it "should know its name as a resource by default" do
-        BottledUniverse.resource_name.should == 'BottledUniverse'
+        BottledUniverse.resource_name.should == 'bottled_universe'
       end
 
       it "should allow its name as a resource to be configured for anonymous classes" do
-        @BottledUniverse.resource_name.should == 'BottledUniverse'
+        @BottledUniverse.resource_name.should == 'bottled_universe'
       end
 
       it "should know how to create an instance using deserialised attributes" do
@@ -129,10 +129,23 @@ module Wrest
         @BottledUniverse.host.should == "http://localhost:3000"
       end
 
-      it "should know its resource path" do
-        Glassware.resource_path.should == '/glasswares'
+      it "should know its resource collection name" do
+        Glassware.resource_collection_name.should == 'glasswares'
       end
 
+      it "should know its uri template for find one" do
+        Glassware.find_one_uri_template.to_uri(
+          :host => 'http://localhost:3000', 
+          :resource_collection_name => 'glasswares',
+          :id => 1,
+          :format => 'json'
+        ).should == 'http://localhost:3000/glasswares/1.json'.to_uri
+      end
+
+      it "should know how to serialise itself to xml" do
+        BottledUniverse.new(:name => 'Foo').to_xml.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bottled-universe>\n  <name>Foo</name>\n</bottled-universe>\n"
+      end
+            
       describe 'finders' do
         # Json =>
         #         body => {"lead_bottle": {"name": "Wooz", "id": 1, "universe_id": null}}
@@ -167,8 +180,23 @@ module Wrest
         BottledUniverse.host.should == "http://localhost:3001"
       end
 
-      it "should know its resource path when it is a subclass of a subclass" do
-        BottledUniverse.resource_path.should == '/bottled_universes'
+      it "should know its resource collection name when it is a subclass of a subclass" do
+        BottledUniverse.resource_collection_name.should == 'bottled_universes'
+      end
+      
+      
+      it "should know how to create a new resource" do
+        uri = mock(Uri)
+        mock_http_response = mock(Net::HTTPResponse)
+        mock_http_response.stub!(:content_type).and_return('application/xml')
+        mock_http_response.stub!(:body).and_return("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bottled-universe>\n  <name>Woot</name>\n <id>1</id>\n </bottled-universe>\n")
+        
+        Uri.should_receive(:new).with("http://localhost:3001/bottled_universes.xml").and_return(uri)
+        uri.should_receive(:post).with(
+                                      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bottled-universe>\n  <name>Woot</name>\n</bottled-universe>\n", 
+                                      'Content-Type' => 'application/xml'
+                                      ).and_return(Wrest::Response.new(mock_http_response))
+        ware = BottledUniverse.create(:name => 'Woot')
       end
     end
 

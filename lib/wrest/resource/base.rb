@@ -17,17 +17,21 @@ module Wrest::Resource #:nodoc:
     always_has      :id
     typecast        :id => as_integer
     attr_reader     :attributes
-    
+
     def ==(other)
       return true if self.equal?(other)
       return false unless other.class == self.class
       return self.attributes == other.attributes
     end
-    
+
     def hash
       id.hash
     end
-    
+
+    def to_xml(options={})
+      attributes.to_xml({:root => self.class.resource_name.gsub('_', '-')}.merge(options))
+    end
+
     class << self
       def inherited(klass)
         klass.set_resource_name klass.name
@@ -39,7 +43,7 @@ module Wrest::Resource #:nodoc:
       # we often do while writing tests.
       # By default, the resource name is set to the name of the class.
       def set_resource_name(resource_name)
-        self.class_eval "def self.resource_name; '#{resource_name}';end"
+        self.class_eval "def self.resource_name; '#{resource_name.underscore}';end"
       end
 
       # Allows the host url at which the resource is found to be configured
@@ -60,28 +64,36 @@ module Wrest::Resource #:nodoc:
       def set_redirect_handler(method_object)
       end
 
-      def resource_path
-        @resource_path ||= "/#{resource_name.underscore.pluralize}"
+      def resource_collection_name
+        @resource_collection_name ||= "#{resource_name.underscore.pluralize}"
       end
 
-      def resource_collection_url
-        "#{host}#{resource_path}"
-      end
-
-      def find_all
-      end
-
-      def find(resource_type = [:one, :collection, :singleton], from = "")
+      def find_one_uri_template
+        @find_one_template ||= Wrest::UriTemplate.new(':host/:resource_collection_name/:id.:format')
       end
 
       def find(id)
-        reponse = "#{resource_collection_url}/#{id}.#{default_format}".to_uri.get
-        self.new(reponse.deserialise.mutate_using(
+        response = find_one_uri_template.to_uri(
+          :host => host,
+          :resource_collection_name => resource_collection_name,
+          :id => id,
+          :format => default_format
+        ).get
+        self.new(response.deserialise.mutate_using(
           Wrest::Components::Mutators.chain(:xml_mini_type_caster, :camel_to_snake_case)
         ).shift.last)
       end
 
-      def objectify(hash)
+      def create(attributes = {})
+        response = Wrest::UriTemplate.new(':host/:resource_collection_name.:format').to_uri(
+          :host => host,
+          :resource_collection_name => resource_collection_name,
+          :format => default_format
+        ).post(self.new(attributes).to_xml, 'Content-Type' => "application/#{default_format}")
+
+        self.new(response.deserialise.mutate_using(
+          Wrest::Components::Mutators.chain(:xml_mini_type_caster, :camel_to_snake_case)
+        ).shift.last)
       end
     end
   end

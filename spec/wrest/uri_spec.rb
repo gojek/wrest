@@ -26,20 +26,23 @@ module Wrest
       Uri.new('http://localhost:3000').should_not be_https
     end
 
-    it "should understand equality" do
-      Uri.new('https://localhost:3000/ooga').should_not == 'https://localhost:3000/ooga'
-      Uri.new('https://localhost:3000/ooga').should_not == Uri.new('https://localhost:3000/booga')
-      Uri.new('https://localhost:3000').should_not == Uri.new('https://localhost:3500')
-      Uri.new('https://localhost:3000').should_not == Uri.new('http://localhost:3000')
-      Uri.new('http://localhost:3000').should == Uri.new('http://localhost:3000')
+    describe 'Equals' do
+      it "should understand equality" do
+        Uri.new('https://localhost:3000/ooga').should_not == nil
+        Uri.new('https://localhost:3000/ooga').should_not == 'https://localhost:3000/ooga'
+        Uri.new('https://localhost:3000/ooga').should_not == Uri.new('https://localhost:3000/booga')
+        Uri.new('https://localhost:3000').should_not == Uri.new('https://localhost:3500')
+        Uri.new('https://localhost:3000').should_not == Uri.new('http://localhost:3000')
+        Uri.new('http://localhost:3000').should == Uri.new('http://localhost:3000')
+      end
+
+
+      it "should have the same hash code if it is the same uri" do
+        Uri.new('https://localhost:3000').hash.should == Uri.new('https://localhost:3000').hash
+        Uri.new('https://localhost:3001').hash.should_not == Uri.new('https://localhost:3000').hash
+      end
     end
-
-
-    it "should have the same hash code if it is the same uri" do
-      Uri.new('https://localhost:3000').hash.should == Uri.new('https://localhost:3000').hash
-      Uri.new('https://localhost:3001').hash.should_not == Uri.new('https://localhost:3000').hash
-    end
-
+    
     describe 'Get' do
       it "should know how to get" do
         uri = "http://localhost:3000/glassware".to_uri
