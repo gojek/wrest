@@ -4,7 +4,7 @@
 
 Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. 
 
-Since no single framework can provide an object oriented wrapper suitable for _all_ available web services, it follows that Wrest should focus on providing you with the tools to help you roll your own with ease. Wrest::Resource is an example of this - an object oriented wrapper for the kind of REST APIs exposed by Rails applications built using Wrest Core.
+Since no single framework can provide an object oriented wrapper suitable for _all_ available web services, it follows that Wrest should focus on providing you with the tools to help you roll your own. Wrest::Resource is an example of this - an object oriented wrapper for the kind of REST APIs exposed by Rails applications, that you would otherwise use ActiveResource to consume.
 
 == Installation
 
@@ -17,7 +17,7 @@ To install the Wrest gem, do <tt>sudo gem install wrest</tt>; Wrest is also avai
 == Wrest Core
 
 * Designed to be used as a library, not just a command line REST client
-* Provides infrastructure components such as convenient HTTP wrappers api, caching, redirect handling, serialisation, deserialisation etc.
+* Provides infrastructure components such as convenient HTTP wrappers api, serialisation, deserialisation with caching, redirect handling in the works.
 * Isn't coupled to Rails (usable in a pure Ruby application to consume any REST api)
 * Can be used both stand alone as well as to build object oriented abstractions around web services (Wrest::Resource is an example of the latter)
 
