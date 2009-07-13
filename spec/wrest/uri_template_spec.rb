@@ -24,5 +24,15 @@ module Wrest
           :resource => 'shen_coins', :id => 5, :format => :json
         ).should == "http://localhost:3000/shen_coins/5.json".to_uri
     end
+    
+    it "should also handle username and password" do
+      template = UriTemplate.new("http://:user::password@coathangers.com/:resource/:id")
+      template.to_uri(
+        :user => 'kaiwren',
+        :password => 'fupuppies',
+        :resource => 'portal',
+        :id => '1'
+      ).should == "http://kaiwren:fupuppies@coathangers.com/portal/1".to_uri
+    end
   end
 end

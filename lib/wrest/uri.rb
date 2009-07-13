@@ -11,6 +11,13 @@ module Wrest #:nodoc:
   # Wrest::Uri provides a simple api for
   # REST calls. String#to_uri is a convenience
   # method to build a Wrest::Uri from a string url.
+  #
+  # Basic HTTP Authentication is supported.
+  # Example:
+  #  "http://kaiwren:fupuppies@coathangers.com/portal/1".to_uri
+  # 
+  # If you want to dynamically change the username and password,
+  # take a look at Wrest::UriTemplate
   class Uri
     attr_reader :uri
     def initialize(uri_string)

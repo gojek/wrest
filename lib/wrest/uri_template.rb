@@ -19,9 +19,23 @@ module Wrest
     # the corressponding values.
     #
     # Example:
-    # template = UriTemplate.new("http://localhost:3000/:resource/:id.:format")
+    # template = UriTemplate.new("http://coathangers.com/:resource/:id.:format")
     # template.to_uri(:resource => 'shen_coins', :id => 5, :format => :json)
     # => #<Wrest::Uri:0x1225514 @uri=#<URI::HTTP:0x9127d8 URL:http://localhost:3000/shen_coins/5.json>>
+    #
+    # This feature is especially useful when handling HTTP authentication and where the username
+    # and password needs changing at runtime. Note that beacuse because both HTTP Auth and UriTemplate
+    # use ':' as a delimiter, the pattern does look slightly weird, but it works as intended.
+    #
+    # Example:
+    # template = UriTemplate.new("http://:username::password@coathangers.com/:resource/:id.:format")
+    # template.to_uri(
+    #  :user => 'kaiwren',
+    #  :password => 'fupuppies',
+    #  :resource => 'portal',
+    #  :id => '1'
+    # )
+    #  => #<Wrest::Uri:0x18e0bec @uri=#<URI::HTTP:0x18e09a8 URL:http://kaiwren:fupuppies@coathangers.com/portal/1>>
     def to_uri(options = {})
       options.inject(uri_pattern.clone) do |uri_string, tuple| 
         key, value = tuple
