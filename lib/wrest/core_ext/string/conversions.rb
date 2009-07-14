@@ -14,8 +14,8 @@ module Wrest
       module Conversions
 
         # A convenience method equivalent to Wrest::Uri.new(string)
-        def to_uri
-          Wrest::Uri.new(self)
+        def to_uri(options = {})
+          Wrest::Uri.new(self, options)
         end
       end
     end

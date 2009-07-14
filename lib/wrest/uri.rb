@@ -11,17 +11,41 @@ module Wrest #:nodoc:
   # Wrest::Uri provides a simple api for
   # REST calls. String#to_uri is a convenience
   # method to build a Wrest::Uri from a string url.
+  # Note that a Wrest::Uri is immutable.
   #
   # Basic HTTP Authentication is supported.
   # Example:
   #  "http://kaiwren:fupuppies@coathangers.com/portal/1".to_uri
+  #  "http://coathangers.com/portal/1".to_uri(:username => 'kaiwren', :password => 'fupuppies')
   # 
-  # If you want to dynamically change the username and password,
-  # take a look at Wrest::UriTemplate
+  # The second form is preferred as it can handle passwords with special characters like ^ and @
   class Uri
-    attr_reader :uri
-    def initialize(uri_string)
+    attr_reader :uri, :username, :password
+    def initialize(uri_string, options = {})
+      @options = options
+      @uri_string = uri_string.clone
       @uri = URI.parse(uri_string)
+      @username = options[:username] || @uri.user
+      @password = options[:password] || @uri.password
+    end
+    
+    # Build a new Wrest::Uri by appending _path_ to
+    # the current uri. If the original Wrest::Uri
+    # has a username and password, that will be
+    # copied to the new Wrest::Uri as well.
+    #
+    # Example:
+    #  uri = "https://localhost:3000/v1".to_uri
+    #  uri['/oogas/1'].get
+    #
+    # To change the username and password on the new
+    # instance, simply pass them as an options map.
+    #
+    # Example:
+    #  uri = "https://localhost:3000/v1".to_uri(:username => 'foo', :password => 'bar')
+    #  uri['/oogas/1', {:username => 'meh', :password => 'baz'}].get
+    def [](path, options = nil)
+      Uri.new(@uri_string+path, options || @options)
     end
     
     def eql?(other)
@@ -30,41 +54,44 @@ module Wrest #:nodoc:
     
     def ==(other)
       return false if other.class != self.class
-      return other.uri == self.uri
+      return other.uri == self.uri && self.username == other.username && self.password == other.password
     end
     
     def hash
-      self.uri.hash + 20090423
+      @uri.hash + @username.hash + @password.hash + 20090423
     end
     
     # Make a HTTP get request to this URI.
-    # Remember to escape the parameter strings using URI.escape 
+    # Remember to escape all parameter strings using URI.escape 
     def get(parameters = {}, headers = {})
-      do_request 'get', parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys
+      do_request Net::HTTP::Get.new(parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys)
     end
 
     def put(body = '', headers = {})
-      do_request 'put', @uri.request_uri, body.to_s, headers.stringify_keys
+      do_request Net::HTTP::Put.new(@uri.request_uri, headers.stringify_keys), body.to_s
     end
 
     def post(body = '', headers = {})
-      do_request 'post', @uri.request_uri, body.to_s, headers.stringify_keys
+      do_request Net::HTTP::Post.new(@uri.request_uri, headers.stringify_keys), body.to_s
     end
 
     def delete(parameters = {}, headers = {})
-      do_request 'delete', parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys
+      do_request Net::HTTP::Delete.new(parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys)
     end
 
     def options
-      do_request 'options', @uri.request_uri
+      do_request Net::HTTP::Options.new(@uri.request_uri)
     end
     
-    def do_request(method, url, *args)
+    def do_request(http_request, *args)
       response = nil
 
-      Wrest.logger.info "--> (#{method}) #{@uri.scheme}://#{@uri.host}:#{@uri.port}#{url}"
-      time = Benchmark.realtime { response = Wrest::Response.new(http.send(method, url, *args)) }
-      Wrest.logger.info "--> %d %s (%d %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
+      prefix = "#{http_request.method} #{http_request.hash}"
+      http_request.basic_auth username, password
+
+      Wrest.logger.debug "--> (#{prefix}) #{@uri.scheme}://#{@uri.host}:#{@uri.port}#{http_request.path} #{args.inspect}"
+      time = Benchmark.realtime { response = Wrest::Response.new(http.request(http_request, *args)) }
+      Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
       response
     end

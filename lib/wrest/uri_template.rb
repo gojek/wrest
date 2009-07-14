@@ -23,9 +23,12 @@ module Wrest
     # template.to_uri(:resource => 'shen_coins', :id => 5, :format => :json)
     # => #<Wrest::Uri:0x1225514 @uri=#<URI::HTTP:0x9127d8 URL:http://localhost:3000/shen_coins/5.json>>
     #
-    # This feature is especially useful when handling HTTP authentication and where the username
-    # and password needs changing at runtime. Note that beacuse because both HTTP Auth and UriTemplate
-    # use ':' as a delimiter, the pattern does look slightly weird, but it works as intended.
+    # This feature can also be used to handle HTTP authentication where the username
+    # and password needs changing at runtime. However, this approach _will_ fail if
+    # the password contains characters like ^ and @.
+    #
+    # Note that beacuse because both HTTP Auth and UriTemplate
+    # use ':' as a delimiter, the pattern does look slightly weird, but it still works.
     #
     # Example:
     # template = UriTemplate.new("http://:username::password@coathangers.com/:resource/:id.:format")
