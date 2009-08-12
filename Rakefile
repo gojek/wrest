@@ -94,6 +94,7 @@ begin
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install technicalpickles-jeweler -s http://gems.github.com"
+  puts "If you're using JRuby, install it with: jruby -S gem install technicalpickles-jeweler -s http://gems.github.com --version '=0.11.0'"
 end
 
 begin
