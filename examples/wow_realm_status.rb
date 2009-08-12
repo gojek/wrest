@@ -52,6 +52,6 @@ puts "Status of Nagrand: #{realms.find{|realm| realm.n == 'Nagrand'}.s}"
 puts
 puts "All Available Realms:"
 puts
-puts "Realm\tLoad"
+puts "Realm\tLoad\tType"
 puts "-----------"
-realms.select(&:available?).each{|realm| puts "#{realm.n}\t#{realm.l}" }
+realms.select(&:available?).each{|realm| puts "#{realm.n}\t#{realm.l}\t#{realm.t}" }

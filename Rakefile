@@ -7,6 +7,9 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
+puts "Note that some optional libraries/gems that the build (not Wrest itself) uses may not be available on all implementations of Ruby."
+
 if Object.const_defined?('RAILS_ROOT')
   require File.dirname(__FILE__) + '/../../../config/environment'
 else
@@ -15,10 +18,13 @@ else
   require 'rake'
   require 'spec'
   require 'spec/rake/spectask'
-  require 'metric_fu'
+  
+  begin
+    require 'metric_fu'
+  rescue LoadError
+    puts 'metric_fu is not available. Install it with: gem install jscruggs-metric_fu -s http://gems.github.com'
+  end
 end
-
-puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
 desc 'Default: run spec tests.'
 task :default => :spec
@@ -32,7 +38,7 @@ end
 begin
   require 'hanna/rdoctask'
 rescue LoadError
-  puts 'Hanna not available, using standard Rake rdoctask. Fix this by running gem install mislav-hanna.'
+  puts 'Hanna not available, using standard Rake rdoctask. Install it with: gem install mislav-hanna.'
   require 'rake/rdoctask'
 end
 desc 'Generate documentation for Wrest'
@@ -87,7 +93,7 @@ begin
     end
   end
 rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+  puts "Jeweler not available. Install it with: gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
 begin

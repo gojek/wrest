@@ -19,14 +19,17 @@ module Wrest #:nodoc:
   #  "http://coathangers.com/portal/1".to_uri(:username => 'kaiwren', :password => 'fupuppies')
   # 
   # The second form is preferred as it can handle passwords with special characters like ^ and @
+  #
+  # You can find examples that use real APIs (like delicious) under the wrest/examples directory.
   class Uri
     attr_reader :uri, :username, :password
     def initialize(uri_string, options = {})
       @options = options
       @uri_string = uri_string.clone
       @uri = URI.parse(uri_string)
-      @username = options[:username] || @uri.user
-      @password = options[:password] || @uri.password
+      @options = options
+      @username = (@options[:username] ||= @uri.user)
+      @password = (@options[:password] ||= @uri.password)
     end
     
     # Build a new Wrest::Uri by appending _path_ to
@@ -61,52 +64,67 @@ module Wrest #:nodoc:
       @uri.hash + @username.hash + @password.hash + 20090423
     end
     
-    # Make a HTTP get request to this URI.
-    # Remember to escape all parameter strings using URI.escape 
+    # Make a GET request to this URI. This is a convenience API
+    # that creates a Wrest::Http::Get, executes it and returns a Wrest::Http::Response.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
     def get(parameters = {}, headers = {})
-      do_request Net::HTTP::Get.new(parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys)
+      Http::Get.new(self, parameters, headers, @options).invoke
     end
 
-    def put(body = '', headers = {})
-      do_request Net::HTTP::Put.new(@uri.request_uri, headers.stringify_keys), body.to_s
+    # Make a PUT request to this URI. This is a convenience API
+    # that creates a Wrest::Http::Put, executes it and returns a Wrest::Http::Response.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    def put(body = '', headers = {}, parameters = {})
+      Http::Put.new(self, body.to_s, headers, parameters, @options).invoke
     end
 
-    def post(body = '', headers = {})
-      do_request Net::HTTP::Post.new(@uri.request_uri, headers.stringify_keys), body.to_s
+    # Makes a POST request to this URI. This is a convenience API
+    # that creates a Wrest::Http::Post, executes it and returns a Wrest::Http::Response.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    def post(body = '', headers = {}, parameters = {})
+      Http::Post.new(self, body.to_s, headers, parameters, @options).invoke
     end
 
+    # Makes a DELETE request to this URI. This is a convenience API
+    # that creates a Wrest::Http::Delete, executes it and returns a Wrest::Http::Response.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
     def delete(parameters = {}, headers = {})
-      do_request Net::HTTP::Delete.new(parameters.empty? ? @uri.request_uri : "#{@uri.request_uri}?#{parameters.to_query}", headers.stringify_keys)
+      Http::Delete.new(self, parameters, headers, @options).invoke
     end
 
+    # Makes an OPTIONS request to this URI. This is a convenience API
+    # that creates a Wrest::Http::Options, executes it and returns the Wrest::Http::Response.
     def options
-      do_request Net::HTTP::Options.new(@uri.request_uri)
+      Http::Options.new(self, @options).invoke
     end
-    
-    def do_request(http_request, *args)
-      response = nil
 
-      prefix = "#{http_request.method} #{http_request.hash}"
-      http_request.basic_auth username, password
-
-      Wrest.logger.debug "--> (#{prefix}) #{@uri.scheme}://#{@uri.host}:#{@uri.port}#{http_request.path} #{args.inspect}"
-      time = Benchmark.realtime { response = Wrest::Response.new(http.request(http_request, *args)) }
-      Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
-
-      response
-    end
-    
     def https?
       @uri.is_a?(URI::HTTPS)
     end
-
-    def http
-      http = Net::HTTP.new(@uri.host, @uri.port)
-      if https?
-        http.use_ssl     = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-      http
+    
+    # Provides the full path of a request.
+    # For example, for
+    #  http://localhost:3000/demons/1/chi?sort=true
+    # this would return
+    #  /demons/1/chi?sort=true
+    def full_path
+      uri.request_uri
+    end
+    
+    def protocol
+      uri.scheme
+    end
+    
+    def host
+      uri.host
+    end
+    
+    def port
+      uri.port
     end
   end
 end

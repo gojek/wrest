@@ -1,3 +1,12 @@
+# Copyright 2009 Sidu Ponnappa
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and limitations under the License.
+
 require File.dirname(__FILE__) + '/../spec_helper'
 
 module Wrest
@@ -30,6 +39,20 @@ module Wrest
       Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
     end
     
+    it "should know its full path" do
+      Uri.new('http://localhost:3000/ooga').full_path.should == '/ooga'
+      Uri.new('http://localhost:3000/ooga?foo=meh&bar=1').full_path.should == '/ooga?foo=meh&bar=1'
+    end
+        
+    it "should know its host" do
+      Uri.new('http://localhost:3000/ooga').host.should == 'localhost'
+    end
+  
+    it "should know its port" do
+      Uri.new('http://localhost:3000/ooga').port.should == 3000
+      Uri.new('http://localhost/ooga').port.should == 80
+    end
+  
     it "should include the username and password while building a new uri if no options are provided" do
       Uri.new(
         'http://localhost:3000', 
@@ -93,7 +116,7 @@ module Wrest
         request = Net::HTTP::Get.new('/glassware', {})
         Net::HTTP::Get.should_receive(:new).with('/glassware', {}).and_return(request)
         
-        http.should_receive(:request).with(request).and_return(build_ok_response)
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
         uri.get
       end
@@ -108,7 +131,7 @@ module Wrest
         request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
         Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
-        http.should_receive(:request).with(request).and_return(build_ok_response)
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
         uri.get({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
       end
@@ -123,7 +146,7 @@ module Wrest
         request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {})
         Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {}).and_return(request)
         
-        http.should_receive(:request).with(request).and_return(build_ok_response)
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
         uri.get(:owner => 'Kai', :type => 'bottle')
       end
@@ -169,7 +192,7 @@ module Wrest
       request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
       Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
 
-      http.should_receive(:request).with(request).and_return(build_ok_response(nil))
+      http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
       uri.delete({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
     end
@@ -182,9 +205,9 @@ module Wrest
       Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
 
       request = Net::HTTP::Options.new('/glassware')
-      Net::HTTP::Options.should_receive(:new).with('/glassware').and_return(request)
+      Net::HTTP::Options.should_receive(:new).with('/glassware', {}).and_return(request)
       
-      http.should_receive(:request).with(request).and_return(build_ok_response(nil))
+      http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
       uri.options
     end
@@ -202,7 +225,7 @@ module Wrest
       request_post = Net::HTTP::Post.new('/glassware', {'page' => '2', 'per_page' => '5'})
       Net::HTTP::Post.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request_post)
       
-      http.should_receive(:request).with(request_get).and_return(build_ok_response)
+      http.should_receive(:request).with(request_get, nil).and_return(build_ok_response)
       http.should_receive(:request).with(request_post, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
       uri.get({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')

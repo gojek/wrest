@@ -13,22 +13,46 @@ require 'pp'
 Wrest.logger = Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
 
+# API reference: http://delicious.com/help/api
 class Delicious
   def initialize(options)
-    @uri = "https://api.del.icio.us/v1".to_uri(options)
+    @uri = "https://api.del.icio.us/v1/posts".to_uri(options)
   end
   
-  def bookmarks(options = {})
-    @uri['/posts/get'].get(options)
+  def bookmarks(parameters = {})
+    @uri['/get'].get(parameters)
   end
   
-  def recent(options = {})
-    @uri['/posts/recent'].get(options)
+  def recent(parameters = {})
+    @uri['/recent'].get(parameters)
+  end
+  
+  def bookmark(parameters)
+    @uri['/add'].post('', {}, parameters)
+  end
+  
+  def delete(parameters)
+    @uri['/delete'].delete(parameters)
   end
 end
 
 account = Delicious.new :username => 'kaiwren', :password => 'fupupp1es'
 
+pp account.bookmark(
+    :url => 'http://blog.sidu.in/search/label/ruby',
+    :description => 'The Ruby related posts on my blog!',
+    :extended => "All posts tagged with 'ruby'",
+    :tags => 'ruby hacking'
+  ).deserialise
+  
+puts '----------'
+
 pp account.bookmarks(:tag => 'rails', :dt => '20090712').deserialise
 
+puts '----------'
+
 pp recently_saved_uris = account.recent(:tag => 'ruby').deserialise["posts"]["post"].collect{|bookmark| bookmark['href']}
+
+puts '----------'
+
+pp account.delete(:url => 'http://blog.sidu.in/search/label/ruby').deserialise

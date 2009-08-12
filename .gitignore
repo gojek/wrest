@@ -7,3 +7,4 @@ spec/wrest/meh_spec.rb
 .DS_Store
 *.ipr
 *.iws
+*.iml
