@@ -43,7 +43,7 @@ module Wrest::Resource #:nodoc:
       # we often do while writing tests.
       # By default, the resource name is set to the name of the class.
       def set_resource_name(resource_name)
-        self.class_eval "def self.resource_name; '#{resource_name.underscore}';end"
+        self.class_eval "def self.resource_name; '#{resource_name.to_s.underscore}';end"
       end
 
       # Allows the host url at which the resource is found to be configured

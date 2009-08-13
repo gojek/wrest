@@ -22,9 +22,9 @@ module Wrest
 
     describe 'subclasses' do
       before(:each) do
-        @BottledUniverse = Class.new(Resource::Base)
+        @BottledUniverse = Class.new(Wrest::Resource::Base)
         @BottledUniverse.class_eval do
-          set_resource_name   'BottledUniverse'
+          set_resource_name 'BottledUniverse'
         end
       end
 

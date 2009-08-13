@@ -5,8 +5,8 @@ module Wrest::Components
     before :each do
       @Demon = Class.new
       @Demon.class_eval do
-        include AttributesContainer
-        include AttributesContainer::Typecaster
+        include Wrest::Components::AttributesContainer
+        include Wrest::Components::AttributesContainer::Typecaster
       end
     end
 
@@ -38,8 +38,8 @@ module Wrest::Components
       before :each do
         @Sidhe = Class.new
         @Sidhe.class_eval do
-          include AttributesContainer
-          include AttributesContainer::Typecaster
+          include Wrest::Components::AttributesContainer
+          include Wrest::Components::AttributesContainer::Typecaster
 
           typecast :age => as_integer
         end

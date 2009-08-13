@@ -12,7 +12,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 module Wrest::Components
   describe AttributesContainer do
     class HumanBeing
-      include AttributesContainer
+      include Wrest::Components::AttributesContainer
       always_has :id
     end
 
@@ -26,39 +26,41 @@ module Wrest::Components
           @Demon = Class.new
         end
 
+        # Methods are string in 1.8 and symbols in 1.9. We'll use to_sym to
+        # allow us to build on both.
         it "should define attribute getters at the class level" do
           kai_wren = @Demon.new
-          kai_wren.methods.should_not include('trainer')
+          kai_wren.methods.map(&:to_sym).should_not include(:trainer)
 
           @Demon.class_eval{
-            include AttributesContainer
+            include Wrest::Components::AttributesContainer
             always_has :trainer
           }
 
-          kai_wren.methods.should include('trainer')
+          kai_wren.methods.map(&:to_sym).should include(:trainer)
         end
 
         it "should define attribute setters at the class level" do
           kai_wren = @Demon.new
-          kai_wren.methods.should_not include('trainer=')
+          kai_wren.methods.map(&:to_sym).should_not include(:trainer=)
 
           @Demon.class_eval{
-            include AttributesContainer
+            include Wrest::Components::AttributesContainer
             always_has :trainer
           }
 
-          kai_wren.methods.should include('trainer=')
+          kai_wren.methods.map(&:to_sym).should include(:trainer=)
         end
 
         it "should define attribute query methods at the class level" do
           kai_wren = @Demon.new
-          kai_wren.methods.should_not include('trainer?')
+          kai_wren.methods.map(&:to_sym).should_not include(:trainer?)
 
           @Demon.class_eval{
-            include AttributesContainer
+            include Wrest::Components::AttributesContainer
             always_has :trainer
           }
-          kai_wren.methods.should include('trainer?')
+          kai_wren.methods.map(&:to_sym).should include(:trainer?)
         end
       end
 
@@ -66,7 +68,7 @@ module Wrest::Components
         before :each do
           @Demon = Class.new
           @Demon.class_eval{
-            include AttributesContainer
+            include Wrest::Components::AttributesContainer
             always_has :trainer
 
             def method_missing(method_name, *args)

@@ -98,9 +98,9 @@ Example:
    include Wrest::Components::AttributesContainer
    include Wrest::Components::AttributesContainer::Typecaster
 
-   always_has	      :id  
-   typecast         :age          =>  as_integer,
-                    :chi          =>  lambda{|chi| Chi.new(chi)}
+   always_has     :id
+   typecast       :age          =>  as_integer,
+                  :chi          =>  lambda{|chi| Chi.new(chi)}
  end
 
  kai_wren = Demon.new('id => '1', 'age' => '1500', 'chi' => '1024', 'teacher' => 'Viss')
