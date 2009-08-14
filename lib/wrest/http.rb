@@ -16,6 +16,7 @@ module Wrest #:nodoc:
 end
 
 require "#{WREST_ROOT}/wrest/http/response"
+require "#{WREST_ROOT}/wrest/http/redirection"
 require "#{WREST_ROOT}/wrest/http/request"
 require "#{WREST_ROOT}/wrest/http/get"
 require "#{WREST_ROOT}/wrest/http/put"

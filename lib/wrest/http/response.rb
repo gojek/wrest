@@ -24,6 +24,14 @@ module Wrest #:nodoc:
               :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
               :get_fields, :key?, :type_params
 
+      # We're overriding :new to act as a factory so 
+      # we can build the appropriate Response instance
+      def self.new(http_response)
+        instance = ((300..399).include?(http_response.code.to_i) ? Wrest::Http::Redirection : self).allocate
+        instance.send :initialize, http_response
+        instance
+      end
+              
       def initialize(http_response)
         @http_response = http_response
       end
@@ -38,6 +46,15 @@ module Wrest #:nodoc:
 
       def headers
         @http_response.to_hash
+      end
+      
+      # A null object implementation - invoking this method on
+      # a response simply returns the same response unless
+      # the response is a Redirection (code 3xx), in which case a 
+      # get is invoked on the url stored in the response headers
+      # under the key 'location' and the new Response is returned.
+      def follow(redirect_request_options = {})
+        self
       end
     end
   end

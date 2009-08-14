@@ -7,19 +7,16 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Http
-  class Get < Request
-    def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
-      follow_redirects = options[:follow_redirects]
-      options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
-      super(
-            wrest_uri, 
-            Net::HTTP::Get, 
-            parameters,
-            nil,
-            headers,
-            options
-          )
-    end
-  end
-end
+require File.expand_path(File.dirname(__FILE__) + "/../lib/wrest")
+require 'pp'
+
+Wrest.logger = Logger.new(STDOUT)
+Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
+
+# google.com redirects to www.google.com so this is live test for redirection
+pp 'http://google.com'.to_uri.get.body
+
+puts '', '*'*70, ''
+
+# Do a get with follow redirects turned off
+pp 'http://google.com'.to_uri(:follow_redirects => false).get.body

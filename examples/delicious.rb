@@ -13,6 +13,10 @@ require 'pp'
 Wrest.logger = Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
 
+# This example demonstrates the usage of GET, POST, PUT and
+# DELETE over HTTPS. Its also shows how Wrest::Uris can have
+# paths extended making accessing an API easy as pie.
+#
 # API reference: http://delicious.com/help/api
 class Delicious
   def initialize(options)
@@ -45,14 +49,14 @@ pp account.bookmark(
     :tags => 'ruby hacking'
   ).deserialise
   
-puts '----------'
+puts '', '*'*70, ''
 
 pp account.bookmarks(:tag => 'rails', :dt => '20090712').deserialise
 
-puts '----------'
+puts '', '*'*70, ''
 
 pp recently_saved_uris = account.recent(:tag => 'ruby').deserialise["posts"]["post"].collect{|bookmark| bookmark['href']}
 
-puts '----------'
+puts '', '*'*70, ''
 
 pp account.delete(:url => 'http://blog.sidu.in/search/label/ruby').deserialise

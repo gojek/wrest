@@ -9,7 +9,11 @@
 
 module Wrest::Http
   class Request
-    attr_reader :http_request, :uri, :body, :headers, :username, :password
+    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects
+    # Valid tuples for the options are:
+    # :username => String, defaults to nil
+    # :password => String, defaults to nil
+    # :follow_redirects => Boolean, defaults to true for Get, false for anything else
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
@@ -18,6 +22,7 @@ module Wrest::Http
       @options = options
       @username = options[:username]
       @password = options[:password]
+      @follow_redirects = options[:follow_redirects]
     end
 
     # Makes a request and returns a Wrest::Http::Response. 
@@ -32,7 +37,7 @@ module Wrest::Http
       time = Benchmark.realtime { response = Wrest::Http::Response.new( http.request(@http_request, @body) ) }
       Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
-      response
+      @follow_redirects ? response.follow(@options) : response
     end
 
     private

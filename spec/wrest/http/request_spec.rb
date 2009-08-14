@@ -19,4 +19,18 @@ describe Wrest::Http::Request do
                   'per_page' => '10'
                 }
   end
+  
+  it "should default the 'follow_redirects' option to true for a Get" do
+    Wrest::Http::Get.new('http://localhost/foo'.to_uri).follow_redirects.should be_true
+  end
+  
+  it "should allow Gets to disable redirect follows" do
+    Wrest::Http::Get.new('http://localhost/foo'.to_uri, {}, {}, {:follow_redirects => false}).follow_redirects.should be_false
+  end
+  
+  it "should default the 'follow_redirects' option to false for a Post, Put or Delete" do
+    Wrest::Http::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
+    Wrest::Http::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
+    Wrest::Http::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
+  end
 end

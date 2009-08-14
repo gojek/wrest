@@ -188,6 +188,7 @@ module Wrest
       it "should know how to create a new resource" do
         uri = mock(Uri)
         mock_http_response = mock(Net::HTTPResponse)
+        mock_http_response.stub!(:code).and_return('201')
         mock_http_response.stub!(:content_type).and_return('application/xml')
         mock_http_response.stub!(:body).and_return("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bottled-universe>\n  <name>Woot</name>\n <id>1</id>\n </bottled-universe>\n")
         
