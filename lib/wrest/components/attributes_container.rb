@@ -89,6 +89,13 @@ module Wrest::Components
           )
         end
       end
+      
+      # This is a convenience macro which includes 
+      # Wrest::Components::AttributesContainer::Typecaster into
+      # the class.
+      def enable_typecasting_support
+        self.class_eval{ include Wrest::Components::AttributesContainer::Typecaster }
+      end
     end
 
     module InstanceMethods

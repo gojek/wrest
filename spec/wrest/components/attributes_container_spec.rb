@@ -15,7 +15,23 @@ module Wrest::Components
       include Wrest::Components::AttributesContainer
       always_has :id
     end
+    
+    it "should provide a convenient macro to enable typecasting" do
+      @Demon = Class.new
 
+      @Demon.class_eval do
+        include Wrest::Components::AttributesContainer
+      end
+
+      @Demon.should_not respond_to(:typecast)
+
+      @Demon.class_eval do
+        enable_typecasting_support
+      end
+      
+      @Demon.should respond_to(:typecast)
+    end
+    
     it "should allow instantiation with no attributes" do
       lambda{ HumanBeing.new }.should_not raise_error
     end

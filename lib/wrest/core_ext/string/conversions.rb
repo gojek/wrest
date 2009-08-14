@@ -15,7 +15,7 @@ module Wrest
 
         # A convenience method equivalent to Wrest::Uri.new(string)
         def to_uri(options = {})
-          Wrest::Uri.new(self, options)
+          Wrest::Uri.new(self.strip, options)
         end
       end
     end

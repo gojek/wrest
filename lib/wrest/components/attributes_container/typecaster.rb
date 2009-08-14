@@ -39,6 +39,9 @@ module Wrest
         # discard inherited typecast information leaving only the casts
         # defined in the subclass.
         #
+        # Note that this _will_ increase the time needed to initialize
+        # instances.
+        #
         # Common typecasts such as integer, float, datetime etc. are
         # available through predefined helpers. See TypecastHelpers
         # for a full list.

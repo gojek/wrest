@@ -22,4 +22,18 @@ describe String, 'conversions' do
     uri.username.should == 'ooga'
     uri.password.should == 'booga'
   end
+  
+  it "should strip leading spaces from a uri before building it" do
+    ' http://localhost:3000'.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+  end
+  
+  it "should strip trailing spaces from a uri before building it" do
+    'http://localhost:3000  '.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+  end
+  
+  it "should levae the original string  unchanged after building a uri from it" do
+    url = ' http://localhost:3000  '
+    url.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+    url.should == ' http://localhost:3000  '
+  end
 end
