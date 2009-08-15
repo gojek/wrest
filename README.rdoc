@@ -8,7 +8,7 @@ If you were wondering why the words 'demon', 'chi' and 'puppies' (among others) 
 
 == Wrest Core: Features
 
-* Provides convenient HTTP wrappers, serialisation and deserialisation with caching and redirect handling in the works.
+* Provides convenient HTTP wrappers, redirect handling, serialisation and deserialisation with response caching in the works.
 * Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Isn't coupled to Rails (usable in a pure Ruby application to consume any HTTP/REST api)
 * Can be used both stand alone as well as to build object oriented abstractions around resources and web services (Wrest::Resource is an example of the latter)
@@ -23,9 +23,9 @@ The source is available at git://github.com/kaiwren/wrest.git
 
 To install as a Rails plugin, do <tt>script/plugin install git://github.com/kaiwren/wrest.git</tt>
 
-To install the Wrest gem, do <tt>(sudo) gem install wrest</tt>
+To install the Wrest gem, do <tt>(sudo) gem install wrest</tt>. Wrest supports both Ruby 1.8 and 1.9.
 
-Wrest is also available as a gem for JRuby; you can instally it by running <tt>(sudo) jruby -S gem install wrest</tt>.
+Wrest is also available as a gem for JRuby; you can install it by running <tt>(sudo) jruby -S gem install wrest</tt>.
 
 === Usage: Shell
 
