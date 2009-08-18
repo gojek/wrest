@@ -16,10 +16,30 @@ module Wrest::Components
       kai_wren.age.should == 1
     end
 
-    it "should not apply a lambda to the value of a given key if it is not a string" do
-      @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
-      kai_wren = @Demon.new('age' => :ooga)
-      kai_wren.age.should == :ooga
+    describe "where the value is not a typecastable type" do
+      it "string should not typecast" do
+        @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
+        kai_wren = @Demon.new('age' => :ooga)
+        kai_wren.age.should == :ooga
+      end
+
+      it "hash should not typecast" do
+        class TestUser
+          include Wrest::Components::AttributesContainer
+        end
+
+        @Demon.class_eval{ typecast :user => lambda{|user| TestUser.new(user)}}
+
+        kai_wren = @Demon.new('user' => {'foo' => 'bar'})
+        kai_wren.user.class.should == TestUser
+        kai_wren.user.foo.should == 'bar'
+      end
+
+      it "array should not typecast" do
+        @Demon.class_eval{ typecast :addresses => lambda{|addresses| addresses.first} }
+        kai_wren = @Demon.new('addresses' => ['foo', 'bar'])
+        kai_wren.addresses.should == 'foo'
+      end
     end
 
     it "should leave nils unchanged" do

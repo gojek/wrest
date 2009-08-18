@@ -23,27 +23,52 @@ puts "Message: #{response.message}"
 puts "Headers: #{response.headers.inspect}"
 
 puts
- 
+
 # How about a little Object goodness?
+# Lets wrap every tweet in a Tweet class.
+#
+# Every Tweet contains the details of the twitter
+# user that posted it. We'd like this data to
+# also be encapsulated in a TwitterUser.
 
 class TwitterUser
+  # This will turn this class into a wrapper
+  # for a hash map.
+  #
+  # All the keys in the hash are exposed as methods.
   include Wrest::Components::AttributesContainer
-  
-  # We'd prefer the user's profile url to be 
+
+  # We'd prefer the user's profile url to be
   # a Wrest::Uri rather than a String, wouldn't we?
+  #
+  # Remember, enabling typecasting support _will_
+  # slow down instance construction marginally, so turn it on
+  # only if you need it.
   enable_typecasting_support
-  
+
   typecast :url => lambda{|url| url.to_uri}
 end
 
-users = response.deserialise.collect do |entry|
-  TwitterUser.new(entry['user'])
+class Tweet
+  include Wrest::Components::AttributesContainer
+
+  # And the user embedded in every tweet should be
+  # a TwitterUser...
+  enable_typecasting_support
+
+  typecast  :user => lambda{|user| TwitterUser.new(user) }
 end
 
-puts users[0].name
+tweets = response.deserialise.collect do |tweet|
+  Tweet.new(tweet)
+end
+
+user = tweets.first.user
+
+puts user.name
 
 # Just remember that not everyone on Twitter has a
-# url. On the other hand, some have more than one. 
-# This is just a cute little example that deals with 
+# url. On the other hand, some have more than one.
+# This is just a cute little example that deals with
 # the simple case of a single url.
-puts users[0].url.get.body
+puts user.url.get.body

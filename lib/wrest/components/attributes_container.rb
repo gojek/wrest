@@ -92,7 +92,8 @@ module Wrest::Components
       
       # This is a convenience macro which includes 
       # Wrest::Components::AttributesContainer::Typecaster into
-      # the class.
+      # the class. When using this, you no longer need to explicitly
+      # do the include.
       def enable_typecasting_support
         self.class_eval{ include Wrest::Components::AttributesContainer::Typecaster }
       end

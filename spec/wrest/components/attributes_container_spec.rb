@@ -15,7 +15,7 @@ module Wrest::Components
       include Wrest::Components::AttributesContainer
       always_has :id
     end
-    
+
     it "should provide a convenient macro to enable typecasting" do
       @Demon = Class.new
 
@@ -28,10 +28,10 @@ module Wrest::Components
       @Demon.class_eval do
         enable_typecasting_support
       end
-      
+
       @Demon.should respond_to(:typecast)
     end
-    
+
     it "should allow instantiation with no attributes" do
       lambda{ HumanBeing.new }.should_not raise_error
     end
@@ -197,7 +197,7 @@ module Wrest::Components
         @li_piao.id = 6
         @li_piao.id.should == 6
       end
-      
+
       it "should provide getter and query methods to instance which has corresponding attribute" do
         zotoh_zhaan = HumanBeing.new(:species => "Delvian")
         zotoh_zhaan.species.should == "Delvian"
