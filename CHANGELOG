@@ -1,3 +1,8 @@
+== In progress
+ * Auto redirection limit
+ * Cookie support
+ * 304/ETag response caching
+ 
 == Current
  * Added redirect follow support for GET requests
  
