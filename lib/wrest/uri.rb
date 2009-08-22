@@ -24,7 +24,7 @@ module Wrest #:nodoc:
   class Uri
     attr_reader :uri, :username, :password
     
-    # See Wrest::Http::Request for valid options
+    # See Wrest::Http::Request for the available options and their default values.
     def initialize(uri_string, options = {})
       @options = options
       @uri_string = uri_string.clone

@@ -105,13 +105,19 @@ module Wrest
       end
     end
     
-    describe 'Get' do
+    describe 'HTTP actions' do
+      def setup_http
+        returning mock(Net::HTTP) do |http|
+          Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
+          http.should_receive(:read_timeout=).with(60)
+        end
+      end
+      
       it "should know how to get" do
         uri = "http://localhost:3000/glassware".to_uri
         uri.should_not be_https
 
-        http = mock(Net::HTTP)
-        Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
+        http = setup_http
 
         request = Net::HTTP::Get.new('/glassware', {})
         Net::HTTP::Get.should_receive(:new).with('/glassware', {}).and_return(request)
@@ -125,9 +131,8 @@ module Wrest
         uri = "http://localhost:3000/glassware".to_uri
         uri.should_not be_https
 
-        http = mock(Net::HTTP)
-        Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
-        
+        http = setup_http
+                
         request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
         Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
@@ -140,9 +145,8 @@ module Wrest
         uri = "http://localhost:3000/glassware".to_uri
         uri.should_not be_https
 
-        http = mock(Net::HTTP)
-        Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
-
+        http = setup_http
+        
         request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {})
         Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {}).and_return(request)
         
@@ -150,86 +154,83 @@ module Wrest
 
         uri.get(:owner => 'Kai', :type => 'bottle')
       end
-    end
 
-    it "should know how to post" do
-      uri = "http://localhost:3000/glassware".to_uri
-      uri.should_not be_https
+      it "should know how to post" do
+        uri = "http://localhost:3000/glassware".to_uri
+        uri.should_not be_https
 
-      http = mock(Net::HTTP)
-      Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
-
-      request = Net::HTTP::Post.new('/glassware', {'page' => '2', 'per_page' => '5'})
-      Net::HTTP::Post.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
+        http = setup_http
       
-      http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
-
-      uri.post '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
-    end
-
-    it "should know how to put" do
-      uri = "http://localhost:3000/glassware".to_uri
-      uri.should_not be_https
-
-      http = mock(Net::HTTP)
-      Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
+        request = Net::HTTP::Post.new('/glassware', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Post.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
       
-      request = Net::HTTP::Put.new('/glassware', {'page' => '2', 'per_page' => '5'})
-      Net::HTTP::Put.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
+        http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
-      http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
+        uri.post '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
+      end
 
-      uri.put '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
-    end
+      it "should know how to put" do
+        uri = "http://localhost:3000/glassware".to_uri
+        uri.should_not be_https
 
-    it "should know how to delete" do
-      uri = "http://localhost:3000/glassware".to_uri
-      uri.should_not be_https
+        http = setup_http
+              
+        request = Net::HTTP::Put.new('/glassware', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Put.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
 
-      http = mock(Net::HTTP)
-      Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
+        http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
-      request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-      Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+        uri.put '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
+      end
 
-      http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+      it "should know how to delete" do
+        uri = "http://localhost:3000/glassware".to_uri
+        uri.should_not be_https
 
-      uri.delete({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
-    end
+        http = setup_http
 
-    it "should know how to ask for options on a URI" do
-      uri = "http://localhost:3000/glassware".to_uri
-      uri.should_not be_https
+        request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
 
-      http = mock(Net::HTTP)
-      Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
-      request = Net::HTTP::Options.new('/glassware')
-      Net::HTTP::Options.should_receive(:new).with('/glassware', {}).and_return(request)
+        uri.delete({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
+      end
+
+      it "should know how to ask for options on a URI" do
+        uri = "http://localhost:3000/glassware".to_uri
+        uri.should_not be_https
+
+        http = setup_http
+
+        request = Net::HTTP::Options.new('/glassware')
+        Net::HTTP::Options.should_receive(:new).with('/glassware', {}).and_return(request)
       
-      http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
-      uri.options
-    end
+        uri.options
+      end
 
-    it "should not mutate state of the uri across requests" do
-      uri = "http://localhost:3000/glassware".to_uri
-      uri.should_not be_https
+      it "should not mutate state of the uri across requests" do
+        uri = "http://localhost:3000/glassware".to_uri
+        uri.should_not be_https
 
-      http = mock(Net::HTTP)
-      Net::HTTP.should_receive(:new).with('localhost', 3000).any_number_of_times.and_return(http)
-
-      request_get = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-      Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request_get)
+        http = mock(Net::HTTP)
+        Net::HTTP.should_receive(:new).with('localhost', 3000).any_number_of_times.and_return(http)
+        http.should_receive(:read_timeout=).any_number_of_times.with(60)
       
-      request_post = Net::HTTP::Post.new('/glassware', {'page' => '2', 'per_page' => '5'})
-      Net::HTTP::Post.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request_post)
+        request_get = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request_get)
       
-      http.should_receive(:request).with(request_get, nil).and_return(build_ok_response)
-      http.should_receive(:request).with(request_post, '<ooga>Booga</ooga>').and_return(build_ok_response)
+        request_post = Net::HTTP::Post.new('/glassware', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Post.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request_post)
+      
+        http.should_receive(:request).with(request_get, nil).and_return(build_ok_response)
+        http.should_receive(:request).with(request_post, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
-      uri.get({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
-      uri.post '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
-    end
+        uri.get({:owner => 'Kai', :type => 'bottle'}, :page => '2', :per_page => '5')
+        uri.post '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
+      end
+    end  
   end
 end

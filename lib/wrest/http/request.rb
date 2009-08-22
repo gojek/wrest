@@ -9,11 +9,13 @@
 
 module Wrest::Http
   class Request
-    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects
+    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects, :timeout
     # Valid tuples for the options are:
     # :username => String, defaults to nil
     # :password => String, defaults to nil
     # :follow_redirects => Boolean, defaults to true for Get, false for anything else
+    # :timeout => The period, in seconds, after which a Timeout::Error is raised 
+    #             in the event of a connection failing to open. Defaults to 60.
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
@@ -22,7 +24,8 @@ module Wrest::Http
       @options = options
       @username = options[:username]
       @password = options[:password]
-      @follow_redirects = options[:follow_redirects]
+      @follow_redirects = options[:follow_redirects] || false
+      @timeout = options[:timeout] || 60
     end
 
     # Makes a request and returns a Wrest::Http::Response. 
@@ -31,23 +34,25 @@ module Wrest::Http
       response = nil
 
       prefix = "#{http_request.method} #{http_request.hash}"
-      http_request.basic_auth username, password
+      http_connection = create_connection(timeout)
+      http_request.basic_auth username, password      
 
       Wrest.logger.debug "--> (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
-      time = Benchmark.realtime { response = Wrest::Http::Response.new( http.request(@http_request, @body) ) }
+      time = Benchmark.realtime { response = Wrest::Http::Response.new( http_connection.request(@http_request, @body) ) }
       Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
       @follow_redirects ? response.follow(@options) : response
     end
 
     private
-    def http
-      http = Net::HTTP.new(@uri.host, @uri.port)
+    def create_connection(timeout)
+      connection = Net::HTTP.new(@uri.host, @uri.port)
+      connection.read_timeout = timeout
       if @uri.https?
-        http.use_ssl     = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        connection.use_ssl     = true
+        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
-      http
+      connection
     end
   end
 end
