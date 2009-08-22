@@ -18,5 +18,10 @@ pp 'http://google.com'.to_uri.get.body
 
 puts '', '*'*70, ''
 
-# Do a get with follow redirects turned off
+# Do a get with auto follow redirects turned off
 pp 'http://google.com'.to_uri(:follow_redirects => false).get.body
+
+puts '', '*'*70, ''
+
+# Do a get with auto follow redirects limited, causing an exception.
+'http://google.com'.to_uri(:follow_redirects_limit => 1).get.body

@@ -49,7 +49,7 @@ module Wrest
 
       protected
       def do_mutate(tuple)
-        raise Wrest::Exceptions::MethodNotOverriddenException
+        raise Wrest::Exceptions::MethodNotOverridden
       end
     end
   end

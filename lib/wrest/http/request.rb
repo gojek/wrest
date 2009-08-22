@@ -8,12 +8,25 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest::Http
+  # This represents a HTTP request. Typically you will never need to instantiate
+  # one of these yourself - you can use one of the more conveient APIs via Wrest::Uri
+  # or Wrest::Http::Get etc. instead.
   class Request
-    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects, :timeout
+    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects, 
+                :follow_redirects_limit, :follow_redirects_count, :timeout
     # Valid tuples for the options are:
     # :username => String, defaults to nil
     # :password => String, defaults to nil
     # :follow_redirects => Boolean, defaults to true for Get, false for anything else
+    # :follow_redirects_limit =>  Integer, defaults to 5. This is the number of redirects 
+    #                             that Wrest will automatically follow before raising an 
+    #                             Wrest::Exceptions::AutoRedirectLimitExceeded exception.
+    #                             For example, if you set this to 1, the very first redirect
+    #                             will raise the exception.
+    # :follow_redirects_count =>  Integer, defaults to 0. This is a count of the hops made to
+    #                             get to this request and increases by one for every redirect 
+    #                             until the follow_redirects_limit is hit. You should never set
+    #                             this option yourself.
     # :timeout => The period, in seconds, after which a Timeout::Error is raised 
     #             in the event of a connection failing to open. Defaults to 60.
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
@@ -21,11 +34,13 @@ module Wrest::Http
       @headers = headers.stringify_keys
       @http_request = http_request_klass.new(parameters.empty? ? wrest_uri.full_path : "#{wrest_uri.full_path}?#{parameters.to_query}", @headers)
       @body = body
-      @options = options
-      @username = options[:username]
-      @password = options[:password]
-      @follow_redirects = options[:follow_redirects] || false
-      @timeout = options[:timeout] || 60
+      @options = options.clone
+      @username = @options[:username]
+      @password = @options[:password]
+      @follow_redirects = (@options[:follow_redirects] ||= false)
+      @follow_redirects_count = (@options[:follow_redirects_count] ||= 0)
+      @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
+      @timeout = (@options[:timeout] ||= 60)
     end
 
     # Makes a request and returns a Wrest::Http::Response. 
@@ -44,7 +59,6 @@ module Wrest::Http
       @follow_redirects ? response.follow(@options) : response
     end
 
-    private
     def create_connection(timeout)
       connection = Net::HTTP.new(@uri.host, @uri.port)
       connection.read_timeout = timeout

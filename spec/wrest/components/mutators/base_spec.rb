@@ -12,7 +12,7 @@ require File.dirname(__FILE__) + '/../../../spec_helper'
 module Wrest::Components
   describe Mutators::Base do
     it "should raise an exception if mutate is invoked without do_mutate being implemented in a subclass" do
-      lambda{ Class.new(Mutators::Base).new.mutate([]) }.should raise_error(Wrest::Exceptions::MethodNotOverriddenException)
+      lambda{ Class.new(Mutators::Base).new.mutate([]) }.should raise_error(Wrest::Exceptions::MethodNotOverridden)
     end
 
     it "should ensure that the next mutator is invoked for a subclass" do

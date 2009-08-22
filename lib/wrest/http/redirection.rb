@@ -15,9 +15,18 @@ module Wrest #:nodoc:
       
       # A get is invoked on the url stored in the response headers
       # under the key 'location' and the new Response is returned.
+      #
+      # The follow_redirects_count and follow_redirects_limit options 
+      # should be present. follow_redirects_count will be incremented by 1.
+      #
+      # This method will raise a Wrest::Exceptions::AutoRedirectLimitExceeded
+      # if the follow_redirects_count equals the follow_redirects_limit.
       def follow(redirect_request_options = {})
         target = self['location']
-        
+        redirect_request_options = redirect_request_options.clone
+
+        raise Wrest::Exceptions::AutoRedirectLimitExceeded if (redirect_request_options[:follow_redirects_count] += 1) >= redirect_request_options[:follow_redirects_limit]
+
         Wrest.logger.debug "--| Redirecting to #{target}"
         target.to_uri(redirect_request_options).get
       end

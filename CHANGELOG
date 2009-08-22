@@ -1,5 +1,4 @@
 == In progress
- * Auto redirection limit
  * Cookie support
  * Proxy support 
  * 304/ETag response caching
@@ -7,7 +6,8 @@
 == Current
  * Added redirect follow support for GET requests
  * Request timeout limit config
-  
+ * Auto redirection limit
+   
 == 0.0.8
  * Added URI extension using the [] method (see examples/delicious.rb)
  * Refactored out Request as the first step to adding Response caching
