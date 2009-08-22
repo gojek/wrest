@@ -4,9 +4,9 @@
  * 304/ETag response caching
  
 == Current
- * Added redirect follow support for GET requests
- * Request timeout limit config
+ * Added redirect follow support for GET requests (see examples/redirection.rb)
  * Auto redirection limit
+ * Request timeout limit config
    
 == 0.0.8
  * Added URI extension using the [] method (see examples/delicious.rb)
