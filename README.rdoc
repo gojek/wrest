@@ -103,7 +103,7 @@ Example:
                   :chi          =>  lambda{|chi| Chi.new(chi)}
  end
 
- kai_wren = Demon.new('id => '1', 'age' => '1500', 'chi' => '1024', 'teacher' => 'Viss')
+ kai_wren = Demon.new('id' => '1', 'age' => '1500', 'chi' => '1024', 'teacher' => 'Viss')
  kai_wren.id			# => '1'
  kai_wren.age			# => 1500
  kai_wren.chi			# => #<Chi:0x113af8c @count="1024">
@@ -125,6 +125,8 @@ Wrest RDocs can be found at http://wrest.rubyforge.org
 == Wrest::Resource 
 
 Wrest::Resource is an alternative to Rails' ActiveResource. It targets Rails REST (well, POX, since Rails isn't really RESTful) services and is currently under development. Since no single REST library can provide an object oriented wrapper suitable for _all_ available web services, it follows that Wrest should focus on providing you with the tools to help you roll your own. Wrest::Resource is an example of this - an object oriented wrapper for the kind of REST APIs exposed by Rails applications, that you would otherwise use ActiveResource to consume.
+
+If you're looking for help doing this on Rails on the server side, take a look at {resource_full}[http://github.com/bguthrie/resource_full], a Rails plugin that makes RESTful Rails a whole order of magnitude easier. resource_full a mature project and is currently in use in production.
 
 
 * No more pretending that REST resources are the same as records in a database (yeah, no more freaking ActiveResource::Connection)
@@ -157,10 +159,6 @@ Wrest::Resource is an alternative to Rails' ActiveResource. It targets Rails RES
 * rspec
 * rcov (unsupported on JRuby)
 * jeweler
-
-== Support
-
-This project uses Assembla for ticketing: http://www.assembla.com/spaces/wrest/tickets
 
 == Licence
 
