@@ -1,4 +1,5 @@
 == In progress
+ * Adding live functional tests to codebase (see spec/functinal no feasible way to develop Wrest::Resource otherwise)
  * Cookie support
  * Proxy support 
  * 304/ETag response caching

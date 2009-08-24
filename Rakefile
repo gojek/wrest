@@ -31,7 +31,7 @@ task :default => :spec
 
 desc "Run all specs"
 Spec::Rake::SpecTask.new(:spec) do |task|
-  task.spec_files = FileList['spec/wrest/**/*_spec.rb']
+  task.spec_files = FileList['spec/unit/wrest/**/*_spec.rb']
   task.spec_opts = ['--options', 'spec/spec.opts']
 end
 
@@ -56,7 +56,7 @@ begin
   desc "Run all specs in spec directory with RCov"
   Spec::Rake::SpecTask.new(:rcov) do |t|
     t.spec_opts = ['--options', "spec/spec.opts"]
-    t.spec_files = FileList["spec/wrest/**/*_spec.rb"]
+    t.spec_files = FileList["spec/unit/wrest/**/*_spec.rb"]
     t.rcov = true
     t.rcov_opts = lambda do
       IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
@@ -80,8 +80,8 @@ begin
     gemspec.rubyforge_project = 'wrest'
     gemspec.executables = ['wrest', 'jwrest']
     gemspec.require_path = "lib"
-    gemspec.files.exclude 'spec/wrest/meh_spec.rb'
-    gemspec.test_files.exclude 'spec/wrest/meh_spec.rb'
+    gemspec.files.exclude 'spec/unit/wrest/meh_spec.rb'
+    gemspec.test_files.exclude 'spec/unit/wrest/meh_spec.rb'
     gemspec.add_dependency('activesupport', '>= 2.3.2')
     case RUBY_PLATFORM
     when /java/

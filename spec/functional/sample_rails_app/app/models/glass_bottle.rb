@@ -1,0 +1,3 @@
+class GlassBottle < Bottle
+end
+  

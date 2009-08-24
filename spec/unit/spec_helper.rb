@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + "/../lib/wrest")
+require File.expand_path(File.dirname(__FILE__) + "/../../lib/wrest")
 require 'spec'
 
-["/custom_matchers/**/*.rb"].each{|directory|
+['/../custom_matchers/**/*.rb'].each{|directory|
   Dir["#{File.expand_path(File.dirname(__FILE__) + directory)}"].each { |file|
     require file
   }
