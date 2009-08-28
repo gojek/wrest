@@ -1,3 +1,10 @@
+Features under the section marked 'In Progress' are currently in the process of being implemented. They are to be considered unstable and not ready for use.
+
+Features under the section marked 'Current' are completed but pending release as a gem. If you need any of these, you'll need to use the latest source from the git repository.
+
+Features under a numbered section are complete and available in the Wrest gem.
+
+
 == In progress
  * Optional libcurl implementations of the Request/Response classes (for those on MRI who need better performance)
  * Adding live functional tests to codebase (see spec/functinal no feasible way to develop Wrest::Resource otherwise)
