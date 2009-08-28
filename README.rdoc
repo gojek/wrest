@@ -150,15 +150,21 @@ If you're looking for help doing this on Rails on the server side, take a look a
 == Dependencies
 
 === Source
+
 * gems
 * json (json-jruby on JRuby)
 * active_support
 * ruby-libxml (Recommended, will fall back to REXML if absent; be aware that Wrest uses ActiveSupport::XmlMini, so if you're using Wrest as a plugin in a Rails application, all xml parsing across the application will switch to using libxml if it's available. You're free to change this by hand by using the ActiveSupport::XmlMini.backend= method.)
 
 === Build
+
 * rspec
 * rcov (unsupported on JRuby)
 * jeweler
+
+== Roadmap
+
+Features that are planned, in progress or already implemented are documented in the {CHANGELOG}[http://github.com/kaiwren/wrest/tree/master/CHANGELOG] starting from version 0.0.8.
 
 == Licence
 
