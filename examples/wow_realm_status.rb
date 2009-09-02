@@ -16,7 +16,8 @@ include Wrest
 
 class Realm
   include Components::AttributesContainer
-  include Components::AttributesContainer::Typecaster
+  
+  enable_typecasting_support
 
   typecast  :t => lambda{|type| 
                     case type

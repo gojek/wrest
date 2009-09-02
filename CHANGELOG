@@ -5,12 +5,15 @@ Features under the section marked 'Current' are completed but pending release as
 Features under a numbered section are complete and available in the Wrest gem.
 
 
-== In progress
- * Optional libcurl implementations of the Request/Response classes (for those on MRI who need better performance)
- * Adding live functional tests to codebase (see spec/functinal no feasible way to develop Wrest::Resource otherwise)
+== Coming soon
+ * Optional libcurl implementations of the Request/Response classes (for those on MRI who need better performance) 
  * Cookie support
  * Proxy support 
  * 304/ETag response caching
+  
+== In progress
+ * Adding live functional tests to codebase (see spec/functional no feasible way to spec drive Wrest::Resource otherwise)
+ * Adding an :alias option to typecast to allow alternative names for attribute accessors (see examples/wow_realm_status.rb)
  
 == Current
  * Added redirect follow support for GET requests (see examples/redirection.rb)
