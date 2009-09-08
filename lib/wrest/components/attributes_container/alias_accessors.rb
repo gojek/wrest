@@ -44,10 +44,12 @@ module Wrest
         #    alias_accessors  :a => :age,
         #                     :s => :sex
         #  end
+        # This would create the methods user.age, user.age= and user.age? which delegate
+        # to user.a, user.a= and user.a? respectively. Ditto for s to sex.
         #
         # See examples/wow_realm_status.rb for a working example.
         # 
-        # Warning: If you try to create an alias with the same name as the attribute,
+        # WARNING: If you try to create an alias with the same name as the attribute,
         # and then use it, you _will_ cause an infinite loop.
         def alias_accessors(alias_map)
           alias_map.each do |attribute_name, alias_name|
