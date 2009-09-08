@@ -90,7 +90,7 @@ To find out what actions are permitted on a URI:
 
 === Usage: Attributes Container
 
-Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values. See examples/twitter.rb and example/wow_realm_status.rb for more samples.
+Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values. See examples/twitter.rb and examples/wow_realm_status.rb for more samples.
 
 Example:
 
