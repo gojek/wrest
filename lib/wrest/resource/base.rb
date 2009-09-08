@@ -12,7 +12,6 @@ module Wrest::Resource #:nodoc:
   # It is a REST client targetted at Rails REST apps.
   class Base
     include Wrest::Components::AttributesContainer
-    include Wrest::Components::AttributesContainer::Typecaster
 
     always_has      :id
     typecast        :id => as_integer

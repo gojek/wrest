@@ -31,6 +31,13 @@ module Wrest::Components
         end
         @Demon.new(:foo => '1').foo.should == 1
       end
+      
+      it "should provide helpers for common typecasts" do
+        @Demon.class_eval do
+          typecast :foo => as_integer
+        end
+        @Demon.new(:foo => '1').foo.should == 1
+      end
     end
 
     it "should allow instantiation with no attributes" do

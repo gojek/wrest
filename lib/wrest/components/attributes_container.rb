@@ -58,6 +58,7 @@ module Wrest::Components
   module AttributesContainer
     def self.included(klass) #:nodoc:
       klass.extend AttributesContainer::ClassMethods
+      klass.extend AttributesContainer::Typecaster::Helpers
       klass.class_eval do 
         include AttributesContainer::InstanceMethods
         include AttributesContainer::AliasAccessors

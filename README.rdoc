@@ -90,24 +90,26 @@ To find out what actions are permitted on a URI:
 
 === Usage: Attributes Container
 
-Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values.
+Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values. See examples/twitter.rb and example/wow_realm_status.rb for more samples.
 
 Example:
 
  class Demon
    include Wrest::Components::AttributesContainer
-   include Wrest::Components::AttributesContainer::Typecaster
 
-   always_has     :id
-   typecast       :age          =>  as_integer,
-                  :chi          =>  lambda{|chi| Chi.new(chi)}
+   always_has       :id
+   typecast         :age          =>  as_integer,
+                    :chi          =>  lambda{|chi| Chi.new(chi)}
+
+   alias_accessors  :chi => :energy                  
  end
 
  kai_wren = Demon.new('id' => '1', 'age' => '1500', 'chi' => '1024', 'teacher' => 'Viss')
- kai_wren.id			# => '1'
- kai_wren.age			# => 1500
- kai_wren.chi			# => #<Chi:0x113af8c @count="1024">
- kai_wren.teacher		# => 'Viss'
+ kai_wren.id       # => '1'
+ kai_wren.age      # => 1500
+ kai_wren.chi      # => #<Chi:0x113af8c @count="1024">
+ kai_wren.energy   # => #<Chi:0x113af8c @count="1024">
+ kai_wren.teacher  # => 'Viss'
 
 === Usage: Logging
 
