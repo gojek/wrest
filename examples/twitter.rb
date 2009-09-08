@@ -37,7 +37,7 @@ end
 
 class TwitterUser
   # This will turn this class into a wrapper
-  # for the desiralised data from a response.
+  # for the deserialised data from a response.
   #
   # All the keys in the hash are exposed as methods.
   include Wrest::Components::AttributesContainer
@@ -45,17 +45,14 @@ class TwitterUser
   # We'd prefer the user's profile url to be
   # a Wrest::Uri rather than a String, wouldn't we?
   #
-  # Remember, enabling typecasting support _will_
+  # Remember, using typecasting _will_
   # slow down instance construction marginally, so turn it on
   # only if you need it.
-  enable_typecasting_support
-
   typecast :url => lambda{|url| url.to_uri}
 end
 
 class Tweet
   include Wrest::Components::AttributesContainer
-  enable_typecasting_support
 
   typecast  :user => lambda{|user| TwitterUser.new(user) }
 end

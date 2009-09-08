@@ -13,6 +13,7 @@ module Wrest
 end
 
 require "#{WREST_ROOT}/wrest/components/attributes_container/typecaster"
+require "#{WREST_ROOT}/wrest/components/attributes_container/alias_accessors"
 
 module Wrest::Components
 
@@ -57,7 +58,10 @@ module Wrest::Components
   module AttributesContainer
     def self.included(klass) #:nodoc:
       klass.extend AttributesContainer::ClassMethods
-      klass.class_eval{ include AttributesContainer::InstanceMethods }
+      klass.class_eval do 
+        include AttributesContainer::InstanceMethods
+        include AttributesContainer::AliasAccessors
+      end  
     end
 
     def self.build_attribute_getter(attribute_name) #:nodoc:
@@ -92,10 +96,15 @@ module Wrest::Components
       
       # This is a convenience macro which includes 
       # Wrest::Components::AttributesContainer::Typecaster into
-      # the class. When using this, you no longer need to explicitly
-      # do the include.
-      def enable_typecasting_support
+      # the class (effectively overwriting this method) before delegating to 
+      # the actual typecast method that is a part of that module.
+      # This saves us the effort of explicitly doing the include. Easy to use API is king.
+      #
+      # Remember that using typecast carries a performance penalty.
+      # See Wrest::Components::AttributesContainer::Typecaster for the actual docs.
+      def typecast(cast_map)
         self.class_eval{ include Wrest::Components::AttributesContainer::Typecaster }
+        self.typecast cast_map
       end
     end
 
@@ -127,7 +136,7 @@ module Wrest::Components
       def method_missing(method_sym, *arguments)
         method_name = method_sym.to_s
         attribute_name = method_name.gsub(/(\?$)|(=$)/, '')
-        if @attributes.include?(attribute_name.to_sym) || method_name.last == '='
+        if @attributes.include?(attribute_name.to_sym) || method_name.last == '=' || method_name.last == '?'
           case method_name.last
           when '='
             self.instance_eval AttributesContainer.build_attribute_setter(attribute_name)

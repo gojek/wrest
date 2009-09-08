@@ -16,8 +16,6 @@ include Wrest
 
 class Realm
   include Components::AttributesContainer
-  
-  enable_typecasting_support
 
   typecast  :t => lambda{|type| 
                     case type
@@ -41,6 +39,11 @@ class Realm
                       when '4' then 'Max'
                     end  
                   }
+                  
+  alias_accessors :t => :type, 
+                  :s => :status,
+                  :l => :load,
+                  :n => :name
   
   def available?
     self.s == 'Available'
@@ -49,10 +52,10 @@ end
 
 realms = "http://www.worldofwarcraft.com/realmstatus/status.xml".to_uri.get.deserialise['page']['rs']['r'].collect{|data| Realm.new(data)}
 
-puts "Status of Nagrand: #{realms.find{|realm| realm.n == 'Nagrand'}.s}"
+puts "Status of Nagrand: #{realms.find{|realm| realm.name == 'Nagrand'}.status}"
 puts
 puts "All Available Realms:"
 puts
 puts "Realm\tLoad\tType"
 puts "-----------"
-realms.select(&:available?).each{|realm| puts "#{realm.n}\t#{realm.l}\t#{realm.t}" }
+realms.select(&:available?).each{|realm| puts "#{realm.name}\t#{realm.load}\t#{realm.type}" }

@@ -248,9 +248,9 @@ module Wrest
         universe.should_not respond_to(:theronic=)
       end
 
-      it "should fail when query methods for attributes that don't exist are invoked" do
+      it "should return false when query methods for attributes that don't exist are invoked" do
         universe = Glassware.new(:owner => 'Kai Wren', :guardian => 'Lung Shan')
-        lambda{ universe.ooga? }.should raise_error(NoMethodError)
+        universe.ooga?.should be_false
       end
 
       it "should provide query methods for attributes" do

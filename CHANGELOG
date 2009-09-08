@@ -13,12 +13,13 @@ Features under a numbered section are complete and available in the Wrest gem.
   
 == In progress
  * Adding live functional tests to codebase (see spec/functional no feasible way to spec drive Wrest::Resource otherwise)
- * Adding an :alias option to typecast to allow alternative names for attribute accessors (see examples/wow_realm_status.rb)
  
 == Current
  * Added redirect follow support for GET requests (see examples/redirection.rb)
  * Auto redirection limit
  * Request timeout limit config
+ * Added an alias_accessor macro to allow alternative names for attribute accessors (see examples/wow_realm_status.rb) 
+ * Removed the need to explicitly include AttributesContainer::Typecaster or to use the enable_typecasting_support macro. The call to typecast now does this for us. See AttributesContainer#typecast and AttributesContainer::Typecaster#typecast
    
 == 0.0.8
  * Added URI extension using the [] method (see examples/delicious.rb)

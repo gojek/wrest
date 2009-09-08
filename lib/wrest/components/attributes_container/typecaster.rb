@@ -32,7 +32,8 @@ module Wrest
         # to typecast string values injected through the constructor.
         # Typically needed when populating an +AttributesContainer+
         # directly from request params. Typecasting kicks in for
-        # a given value _only_ if it is a string.
+        # a given value _only_ if it is a String, Hash or Array, the
+        # three classes that deserilisation can produce.
         #
         # Typecast information is inherited by subclasses; however be
         # aware that explicitly invoking +typecast+ in a subclass will

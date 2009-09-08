@@ -16,20 +16,21 @@ module Wrest::Components
       always_has :id
     end
 
-    it "should provide a convenient macro to enable typecasting" do
-      @Demon = Class.new
+    describe "typecasting" do
+      before(:each) do
+        @Demon = Class.new
 
-      @Demon.class_eval do
-        include Wrest::Components::AttributesContainer
+        @Demon.class_eval do
+          include Wrest::Components::AttributesContainer
+        end
       end
 
-      @Demon.should_not respond_to(:typecast)
-
-      @Demon.class_eval do
-        enable_typecasting_support
+      it "should delegate to AttributesContainer::Typecaster#typecast to actually do the typecasting" do
+        @Demon.class_eval do
+          typecast :foo => lambda{|value| value.to_i}
+        end
+        @Demon.new(:foo => '1').foo.should == 1
       end
-
-      @Demon.should respond_to(:typecast)
     end
 
     it "should allow instantiation with no attributes" do
@@ -173,14 +174,15 @@ module Wrest::Components
         @li_piao.should_not respond_to(:god=)
       end
 
-      it "should fail when query methods for attributes that don't exist are invoked" do
-        lambda{ @li_piao.ooga? }.should raise_error(NoMethodError)
+      it "should return false when query methods for attributes that don't exist are invoked" do
+        @li_piao.ooga?.should be_false
       end
 
       it "should provide query methods for attributes" do
         li_piao = HumanBeing.new( :profession => 'Natural Magician', :enhanced_by => nil)
         li_piao.profession?.should be_true
         li_piao.enhanced_by?.should be_false
+        li_piao.gender?.should be_false
       end
 
       it "should respond to query methods for attributes" do
@@ -204,7 +206,7 @@ module Wrest::Components
         zotoh_zhaan.species?.should be_true
         zotoh_zhaan.species = "Human"
         lambda{@li_piao.species}.should raise_error(NoMethodError)
-        lambda{@li_piao.species?}.should raise_error(NoMethodError)
+        @li_piao.species?.should be_false
         @li_piao.should_not respond_to(:species=)
         @li_piao.methods.grep(/:species=/).should be_empty
       end
