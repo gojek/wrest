@@ -33,7 +33,7 @@ module Wrest
         # sevice/resource.
         #
         # For example, lets say that a particular resource exposes a
-        # User's age as 'a' and sex as s. Typically, you'd have to access it as
+        # User's age as 'a' and sex as 's'. Typically, you'd have to access it as
         # user.a and user.s whereas you's like to access it as user.age and user.sex.
         # This is where alias_accessors comes into the picture. Your User class would
         # look somethig like this:
@@ -44,8 +44,8 @@ module Wrest
         #    alias_accessors  :a => :age,
         #                     :s => :sex
         #  end
-        # This would create the methods user.age, user.age= and user.age? which delegate
-        # to user.a, user.a= and user.a? respectively. Ditto for s to sex.
+        # This would create the methods user.age, user.age= and user.age? which delegates
+        # to user.a, user.a= and user.a? respectively.
         #
         # See examples/wow_realm_status.rb for a working example.
         # 

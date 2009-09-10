@@ -16,7 +16,7 @@ Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disa
 
 # This is a basic example demonstrating GET and json deserialisation.
 
-response = 'http://twitter.com/statuses/public_timeline.json'.to_uri.get
+response = 'http://twitter.com/statuses/public_timeline.json'.to_uri.get(:timeout => 5)
 
 puts "Code: #{response.code}"
 puts "Message: #{response.message}"

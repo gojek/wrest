@@ -2,9 +2,11 @@
 
 (c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
-Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. If you want to be notified whenever new features are added to Wrest, you can subscribe to my {twitter feed}[http://twitter.com/ponnappa].
+Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. Wrest strongly favours immutable objects and avoids globals/class methods/static methods making it better suited for use as a library, especially in multi-threaded environments. Wrest runs on Ruby 1.8, 1.9 and JRuby.
 
-If you were wondering why the words 'demon', 'chi' and 'fu-puppies' (among others) show up in nearly every example and spec, it's because they all refer to characters and ideas from {Roger Zelazny's}[http://en.wikipedia.org/wiki/Roger_Zelazny] last book, 'Lord Demon.'
+To receive notifications whenever new features are added to Wrest, subscribe to my {twitter feed}[http://twitter.com/ponnappa].
+
+If you were wondering why the words 'demon', 'chi' and 'fu-puppies' (among others) show up in nearly every example and spec, it's because they're all references to {Roger Zelazny's}[http://en.wikipedia.org/wiki/Roger_Zelazny] last book, 'Lord Demon.'
 
 == Wrest Core: Features
 
@@ -15,7 +17,7 @@ If you were wondering why the words 'demon', 'chi' and 'fu-puppies' (among other
 
 == Examples
 
-See http://github.com/kaiwren/wrest/tree/master/examples
+For Twitter, Delicious and other examples, see http://github.com/kaiwren/wrest/tree/master/examples
 
 == Installation
 
@@ -23,7 +25,7 @@ The source is available at git://github.com/kaiwren/wrest.git
 
 To install as a Rails plugin, do <tt>script/plugin install git://github.com/kaiwren/wrest.git</tt>
 
-To install the Wrest gem, do <tt>(sudo) gem install wrest</tt>. Wrest supports both Ruby 1.8 and 1.9.
+To install the Wrest gem, do <tt>(sudo) gem install wrest</tt>.
 
 Wrest is also available as a gem for JRuby; you can install it by running <tt>(sudo) jruby -S gem install wrest</tt>.
 
@@ -31,7 +33,7 @@ Wrest is also available as a gem for JRuby; you can install it by running <tt>(s
 
 You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking <tt>wrest</tt> from your prompt if you've installed the gem.
   $ wrest
-  >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri.get.deserialise
+  >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(:timeout => 5).get.deserialise
 
 === Usage: Library
 
