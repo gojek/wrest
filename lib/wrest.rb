@@ -1,10 +1,10 @@
 # Copyright 2009 Sidu Ponnappa
-# Licensed under the Apache License, Version 2.0 (the "License"); 
-# you may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
-# Unless required by applicable law or agreed to in writing, software distributed under the License 
-# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-# See the License for the specific language governing permissions and limitations under the License. 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and limitations under the License.
 
 require 'rubygems'
 gem 'activesupport', '>= 2.3.2'
@@ -25,7 +25,7 @@ module Wrest  #:nodoc:
   def self.logger=(logger)
     @logger = logger
   end
-  
+
   def self.logger
     @logger
   end
@@ -38,7 +38,13 @@ begin
   gem 'libxml-ruby', '>= 1.1.3'
   ActiveSupport::XmlMini.backend='LibXML'
 rescue Gem::LoadError
-  Wrest.logger.warn "LibXML >= 1.1.3 not found, falling back to #{ActiveSupport::XmlMini.backend}. To install LibXML run `sudo gem install ruby-libxml`"
+  Wrest.logger.debug "LibXML >= 1.1.3 not found, attempting to use Nokogiri. To install LibXML run `sudo gem install ruby-libxml`"
+  begin
+    gem 'nokogiri', '>= 1.3.3'
+    ActiveSupport::XmlMini.backend='Nokogiri'
+  rescue Gem::LoadError
+    Wrest.logger.debug "Nokogiri >= 1.3.3 not found, falling back to #{ActiveSupport::XmlMini.backend}. To install Nokogiri run `sudo gem install nokogiri`"
+  end
 end
 
 source_dirs = ["/wrest/core_ext/*.rb", "/wrest/*.rb"]
