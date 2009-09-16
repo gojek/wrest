@@ -158,7 +158,7 @@ If you're looking for help doing this on Rails on the server side, take a look a
 * gems
 * json (json-jruby on JRuby)
 * active_support
-* ruby-libxml (Recommended, will fall back to REXML if absent; be aware that Wrest uses ActiveSupport::XmlMini, so if you're using Wrest as a plugin in a Rails application, all xml parsing across the application will switch to using libxml if it's available. You're free to change this by hand by using the ActiveSupport::XmlMini.backend= method.)
+* ruby-libxml or Nokogiri (Wrest tries ruby-libxml first, then nokogiri, and will finally fall back on REXML; be aware that Wrest uses ActiveSupport::XmlMini, so if you're using Wrest as a plugin in a Rails application, all xml parsing across the application will switch to using libxml if it's available. You're free to change this by hand by using the ActiveSupport::XmlMini.backend= method.)
 
 === Build
 

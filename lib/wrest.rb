@@ -38,12 +38,12 @@ begin
   gem 'libxml-ruby', '>= 1.1.3'
   ActiveSupport::XmlMini.backend='LibXML'
 rescue Gem::LoadError
-  Wrest.logger.debug "LibXML >= 1.1.3 not found, attempting to use Nokogiri. To install LibXML run `sudo gem install ruby-libxml`"
+  Wrest.logger.debug "LibXML >= 1.1.3 not found, attempting to use Nokogiri. To install LibXML run `sudo gem install ruby-libxml` (ruby-libxml is not available on JRuby)"
   begin
     gem 'nokogiri', '>= 1.3.3'
     ActiveSupport::XmlMini.backend='Nokogiri'
   rescue Gem::LoadError
-    Wrest.logger.debug "Nokogiri >= 1.3.3 not found, falling back to #{ActiveSupport::XmlMini.backend}. To install Nokogiri run `sudo gem install nokogiri`"
+    Wrest.logger.debug "Nokogiri >= 1.3.3 not found, falling back to #{ActiveSupport::XmlMini.backend}. To install Nokogiri run `(sudo) (jruby -S) gem install nokogiri`"
   end
 end
 
