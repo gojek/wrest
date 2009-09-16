@@ -86,6 +86,7 @@ begin
     case RUBY_PLATFORM
     when /java/
       gemspec.add_dependency('json-jruby', '>= 1.1.3')
+      gemspec.add_dependency('nokogiri', '>= 1.3.3')
       gemspec.platform = 'java'
     else
       gemspec.add_dependency('json', '>= 1.1.3')
@@ -263,11 +264,10 @@ namespace (:benchmark) do
   desc "Benchmark xml deserialisation"
   task :deserialise_xml => :setup_test_classes do |t|
     n = 100
-    puts "Running #{n} times per report"
     puts "Deserialising using #{ActiveSupport::XmlMini.backend}"
     
     Benchmark.bmbm(10) do |rpt|
-      rpt.report("hash.from_xml") do
+      rpt.report("Hash.from_xml") do
         n.times {
           Hash.from_xml(serialised_data)
         }

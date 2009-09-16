@@ -38,12 +38,22 @@ begin
   gem 'libxml-ruby', '>= 1.1.3'
   ActiveSupport::XmlMini.backend='LibXML'
 rescue Gem::LoadError
-  Wrest.logger.debug "LibXML >= 1.1.3 not found, attempting to use Nokogiri. To install LibXML run `sudo gem install ruby-libxml` (ruby-libxml is not available on JRuby)"
+  Wrest.logger.debug "LibXML >= 1.1.3 not found, attempting to use Nokogiri. To install LibXML run `sudo gem install libxml-ruby` (libxml-ruby is not available on JRuby)"
   begin
+    raise Gem::LoadError
     gem 'nokogiri', '>= 1.3.3'
     ActiveSupport::XmlMini.backend='Nokogiri'
   rescue Gem::LoadError
     Wrest.logger.debug "Nokogiri >= 1.3.3 not found, falling back to #{ActiveSupport::XmlMini.backend}. To install Nokogiri run `(sudo) (jruby -S) gem install nokogiri`"
+    if RUBY_PLATFORM =~ /java/
+      begin
+        gem 'jrexml', '>= 0.5.3'
+        require 'jrexml'
+        Wrest.logger.debug "Detected JRuby, JREXML loaded."
+      rescue Gem::LoadError  
+        Wrest.logger.debug "Detected JRuby, but failed to load JREXML. JREXML offers *some* performance improvement when using REXML on JRuby. To install JREXL run `(sudo) jruby -S gem install jrexml`"
+      end
+    end
   end
 end
 
