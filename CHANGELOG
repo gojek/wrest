@@ -16,7 +16,8 @@ Features under a numbered section are complete and available in the Wrest gem.
  * Adding support for keep-alive connections
  
 == Current
- * Added Nokogiri as a fallback for ruby-libxml before we give up and use REXML. (Nokogiri is available on JRuby, unlike ruby-libxml)
+ * Added Nokogiri as a fallback for LibXML Ruby before we give up and use REXML. (Nokogiri is available on JRuby, unlike ruby-libxml)
+ * Added code to attempt to load JREXML (for what its worth) when using REXML on JRuby
  
 == 0.0.9
  * Added redirect follow support for GET requests (see examples/redirection.rb)
