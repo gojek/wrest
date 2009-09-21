@@ -66,5 +66,5 @@ describe Wrest::Http::Request do
     Wrest::Http::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Http::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Http::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
-  end
+  end  
 end

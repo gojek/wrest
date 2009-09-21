@@ -133,7 +133,7 @@ Wrest::Resource is an alternative to Rails' ActiveResource. It targets Rails RES
 If you're looking for help doing this on Rails on the server side, take a look at {resource_full}[http://github.com/bguthrie/resource_full], a Rails plugin that makes RESTful Rails a whole order of magnitude easier. resource_full is a stable project and is currently in use in production.
 
 
-* No more pretending that REST resources are the same as records in a database (yeah, no more freaking ActiveResource::Connection)
+* No more pretending that REST resources are the same as records in a database (yeah, no more freaking ActiveResource::Connection that pretends it's a DB connection)
 * Treat put as 'create or update,' not just 'update'
 * Response codes result in user defined state transitions; favours state transitions based on response code over arbitrary ones
 * Supports moving toward hypermedia links as opposed to client server collusion through URI templates

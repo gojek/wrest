@@ -9,10 +9,18 @@ module Wrest
     # is requested. See Translators.
     class UnsupportedContentType < StandardError
     end
-    
+
     # Raised when a request auto redirects more times than are allowed
     # by its follow_redirects_limit. See Wrest::Http::Redirection.
     class AutoRedirectLimitExceeded < StandardError
+    end
+
+    # Raised when a request is made when either RAILS_ENV or
+    # ENV['RAILS_ENV'] is set to 'test', which is the case when
+    # running tests/specs in a Rails application. 
+    #
+    # See wrest/test/request_patches.
+    class RealRequestMadeInTestEnvironmet < StandardError
     end
   end
 end

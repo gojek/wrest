@@ -57,10 +57,14 @@ rescue Gem::LoadError
   end
 end
 
-source_dirs = ["/wrest/core_ext/*.rb", "/wrest/*.rb"]
+Dir["#{File.expand_path(File.dirname(__FILE__))}/wrest/core_ext/*.rb"].each { |file| require file }
 
-source_dirs.each{|directory|
-  Dir["#{File.expand_path(File.dirname(__FILE__) + directory)}"].each { |file|
-    require file
-  }
-}
+require "#{WREST_ROOT}/wrest/components"
+require "#{WREST_ROOT}/wrest/exceptions"
+require "#{WREST_ROOT}/wrest/http"
+require "#{WREST_ROOT}/wrest/resource"
+require "#{WREST_ROOT}/wrest/uri"
+require "#{WREST_ROOT}/wrest/uri_template"
+require "#{WREST_ROOT}/wrest/version"
+
+require "#{WREST_ROOT}/wrest/test" if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
