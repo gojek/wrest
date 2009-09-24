@@ -67,6 +67,5 @@ require "#{WREST_ROOT}/wrest/uri_template"
 require "#{WREST_ROOT}/wrest/version"
 
 if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
-  Wrest.logger.warn('Rails test environment detected, disabling live HTTP requests!')
-  require "#{WREST_ROOT}/wrest/test" 
+  # require "#{WREST_ROOT}/wrest/test" 
 end
