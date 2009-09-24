@@ -17,8 +17,8 @@ module Wrest
         ActiveSupport::JSON.decode(response.body)
       end
 
-      def serialise(hash)
-        ActiveSupport::JSON.encode(hash)
+      def serialise(hash, options = {})
+        hash.to_json(options)
       end
     end
   end

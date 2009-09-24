@@ -16,6 +16,42 @@ module Wrest::Components
       always_has :id
     end
 
+    class WaterMagician < HumanBeing
+    end
+
+    it "should allow instantiation with no attributes" do
+      lambda{ HumanBeing.new }.should_not raise_error
+    end
+
+    describe 'serialisation' do
+      it "should know its xml element name" do
+        HumanBeing.element_name.should == 'human_being'
+      end
+
+      it "should know how to serialise itself given any of the Wrest::Components::Translators" do
+        result = HumanBeing.new(:age => "70", :name => 'Li Piao').serialise_using(Wrest::Components::Translators::Json)
+        expectedPermutationOne = "{\"age\":\"70\",\"name\":\"Li Piao\"}"
+        expectedPermutationTwo = "{\"name\":\"Li Piao\",\"age\":\"70\"}"
+        
+        (result == expectedPermutationOne || result == expectedPermutationTwo).should be_true
+      end
+
+      it "should have a to_xml helper that ensures that the name of the class is the root of the serilised form" do
+        result = HumanBeing.new(:age => "70", :name => 'Li Piao').to_xml
+        expectedPermutationOne = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <age>70</age>\n  <name>Li Piao</name>\n</human-being>\n"
+        expectedPermutationTwo = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <name>Li Piao</name>\n  <age>70</age>\n</human-being>\n"
+
+        (result == expectedPermutationOne || result == expectedPermutationTwo).should be_true
+      end
+
+      describe 'subclasses' do
+        it "should not allow cached element name to clash" do
+          WaterMagician.element_name.should == 'water_magician'
+          HumanBeing.element_name.should == 'human_being'
+        end
+      end
+    end
+
     describe "typecasting" do
       before(:each) do
         @Demon = Class.new
@@ -31,17 +67,13 @@ module Wrest::Components
         end
         @Demon.new(:foo => '1').foo.should == 1
       end
-      
+
       it "should provide helpers for common typecasts" do
         @Demon.class_eval do
           typecast :foo => as_integer
         end
         @Demon.new(:foo => '1').foo.should == 1
       end
-    end
-
-    it "should allow instantiation with no attributes" do
-      lambda{ HumanBeing.new }.should_not raise_error
     end
 
     describe 'always_has' do

@@ -107,6 +107,17 @@ module Wrest::Components
         self.class_eval{ include Wrest::Components::AttributesContainer::Typecaster }
         self.typecast cast_map
       end
+      
+      # This is the name of the class in snake-case, with any parent
+      # module names removed.
+      #
+      # The class will use as the root element when
+      # serialised to xml after replacing underscores with hyphens.
+      #
+      # This method can be overidden should you need a different name.
+      def element_name
+        @element_name ||= self.name.demodulize.underscore.underscore
+      end
     end
 
     module InstanceMethods
@@ -119,7 +130,26 @@ module Wrest::Components
       def initialize(attributes = {})
         @attributes = attributes.symbolize_keys
       end
-
+      
+      # A translator is a anything that knows how to serialise a
+      # Hash. It must needs have a method named 'serialise' that
+      # accepts a hash and configuration options, and returns the serialised 
+      # result (leaving the hash unchanged, of course).
+      #
+      # Examples for JSON and XML can be found under Wrest::Components::Translators.
+      # These serialised output of these translators will work out of the box for Rails 
+      # applications; you may need to roll your own for anything else.
+      #
+      # Note: When serilising to XML, if you want the name of the class as the name of the root node
+      # then you should use the AttributesContainer#to_xml helper.
+      def serialise_using(translator, options = {})
+        translator.serialise(@attributes, options)
+      end
+      
+      def to_xml(options = {})
+        serialise_using(Wrest::Components::Translators::Xml, {:root => self.class.element_name}.merge(options))
+      end
+      
       def [](key)
         @attributes[key.to_sym]
       end

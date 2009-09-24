@@ -16,7 +16,8 @@ module Wrest
         ActiveSupport::XmlMini.parse(response.body)
       end
 
-      def serialise(hash)
+      def serialise(hash, options = {})
+        hash.to_xml(options)
       end
     end
   end
