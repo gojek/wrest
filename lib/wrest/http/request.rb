@@ -13,7 +13,7 @@ module Wrest::Http
   # or Wrest::Http::Get etc. instead.
   class Request
     attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects, 
-                :follow_redirects_limit, :follow_redirects_count, :timeout
+                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection
     # Valid tuples for the options are:
     # :username => String, defaults to nil
     # :password => String, defaults to nil
@@ -28,7 +28,9 @@ module Wrest::Http
     #                             until the follow_redirects_limit is hit. You should never set
     #                             this option yourself.
     # :timeout => The period, in seconds, after which a Timeout::Error is raised 
-    #             in the event of a connection failing to open. Defaults to 60.
+    #             in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
+    # :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
+    #             used for multiple requests.
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
@@ -40,33 +42,40 @@ module Wrest::Http
       @follow_redirects = (@options[:follow_redirects] ||= false)
       @follow_redirects_count = (@options[:follow_redirects_count] ||= 0)
       @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
-      @timeout = (@options[:timeout] ||= 60)
+      @timeout = @options[:timeout]
+      @connection = @options[:connection]
     end
 
     # Makes a request and returns a Wrest::Http::Response. 
     # Data about the request is and logged to Wrest.logger
+    # The log entry contains the following information:
+    #
+    # --> indicates a request
+    # <-- indicates a response
+    #
+    # The type of request is mentioned in caps, followed by a hash 
+    # uniquely uniquely identifying a particular request/response pair.
+    # In a multi-process or multi-threaded scenario, this can be used
+    # to identify request-response pairs.
+    #
+    # The request hash is followed by a connection hash; requests using the
+    # same connection (effectively a keep-alive connection) will have the 
+    # same connection hash.
+    #
+    # This is followed by the response code, th payload size and the time taken.
     def invoke
       response = nil
-
-      prefix = "#{http_request.method} #{http_request.hash}"
-      http_connection = create_connection(timeout)
+      
+      @connection = @connection || @uri.create_connection(timeout)
       http_request.basic_auth username, password      
 
+      prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"
+      
       Wrest.logger.debug "--> (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
-      time = Benchmark.realtime { response = Wrest::Http::Response.new( http_connection.request(@http_request, @body) ) }
+      time = Benchmark.realtime { response = Wrest::Http::Response.new( @connection.request(@http_request, @body) ) }
       Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
       @follow_redirects ? response.follow(@options) : response
-    end
-
-    def create_connection(timeout)
-      connection = Net::HTTP.new(@uri.host, @uri.port)
-      connection.read_timeout = timeout
-      if @uri.https?
-        connection.use_ssl     = true
-        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-      connection
     end
   end
 end

@@ -260,6 +260,29 @@ namespace (:benchmark) do
       end
     end
   end  
+  
+  desc "Benchmark keepalive connections (needs functional/sample_rails_app running with class-caching on and keep-alive enabled)"
+  task :keep_alive => :setup_test_classes do
+    n = 20
+    Wrest.logger = Logger.new(File.open("log/benchmark.log", 'a'))
+    Benchmark.bmbm(10) do |rpt|
+      rpt.report("Fresh connections (Connection: Close)") do
+        n.times {
+          'http://localhost:3000/headers'.to_uri.get
+          'http://localhost:3000/lead_bottles.xml?owner=Kai&type=bottle'.to_uri.get
+        }
+      end
+      
+      rpt.report("Keep-alive connection (Connection: Keep-Alive)") do
+        Wrest::Http::Session.new('http://localhost:3000'.to_uri) do |session|
+          n.times {
+            session.get '/headers'
+            session.get '/lead_bottles.xml'
+          }
+        end
+      end
+    end
+  end
 
   desc "Benchmark xml deserialisation"
   task :deserialise_xml => :setup_test_classes do |t|

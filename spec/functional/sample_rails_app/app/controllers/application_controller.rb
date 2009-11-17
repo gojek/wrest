@@ -7,4 +7,9 @@ class ApplicationController < ActionController::Base
   # session :off
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
+  
+  def headers
+    headers = request.headers.inject({}){|acc, tuple| acc[tuple.first] = tuple.last if tuple.last.is_a?(String); acc }
+    render :json => headers
+  end
 end

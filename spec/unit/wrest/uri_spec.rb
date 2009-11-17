@@ -11,14 +11,6 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 module Wrest
   describe Wrest::Uri do
-    def build_ok_response(body = '')
-      returning mock(Net::HTTPOK) do |response|
-        response.stub!(:code).and_return('200')
-        response.stub!(:message).and_return('OK')
-        response.stub!(:body).and_return(body)
-      end
-    end
-
     it "should respond to the four http actions" do
       uri = Uri.new('http://localhost')
       uri.should respond_to(:get)
@@ -38,7 +30,7 @@ module Wrest
     it "should know how to build a new uri from an existing one by appending a path" do
       Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
     end
-    
+
     it "should know its full path" do
       Uri.new('http://localhost:3000/ooga').full_path.should == '/ooga'
       Uri.new('http://localhost:3000/ooga?foo=meh&bar=1').full_path.should == '/ooga?foo=meh&bar=1'
@@ -47,12 +39,12 @@ module Wrest
     it "should know its host" do
       Uri.new('http://localhost:3000/ooga').host.should == 'localhost'
     end
-  
+
     it "should know its port" do
       Uri.new('http://localhost:3000/ooga').port.should == 3000
       Uri.new('http://localhost/ooga').port.should == 80
     end
-  
+
     it "should include the username and password while building a new uri if no options are provided" do
       Uri.new(
         'http://localhost:3000', 
@@ -102,6 +94,29 @@ module Wrest
         Uri.new('https://ooga:booga@localhost:3000').hash.should_not == Uri.new('https://localhost:3000').hash
         Uri.new('https://localhost:3000', :username => 'ooga', :password => 'booga').hash.should_not == Uri.new('https://localhost:3000').hash
         Uri.new('https://localhost:3000', :username => 'ooga', :password => 'booga').hash.should_not == Uri.new('http://localhost:3000', :username => 'foo', :password => 'bar').hash
+      end
+    end
+    
+    describe 'Cloning' do
+      before :each do
+        @original = Uri.new('http://localhost:3000/ooga')
+        @clone = @original.clone        
+      end
+      
+      it "should be equal to its clone" do
+        @original.should == @clone
+      end
+      
+      it "should not be the same object as the clone" do
+        @original.should_not be_equal(@clone)
+      end
+      
+      it "should allow options to be changed when building the clone" do
+        clone = @original.clone(:username => 'kaiwren', :password => 'bottle')
+        @original.should_not == clone
+        clone.username.should == 'kaiwren'
+        clone.password.should == 'bottle'
+        @original.username.should be_nil
       end
     end
     

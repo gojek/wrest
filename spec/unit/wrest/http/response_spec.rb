@@ -41,5 +41,25 @@ module Wrest
       response = Http::Response.new(http_response)
       response.follow.equal?(response).should be_true
     end
+    
+    describe 'Keep-Alive' do
+      it "should know when a connection has been closed" do
+        http_response = mock('response')
+        http_response.stub!(:code).and_return('200')
+        http_response.should_receive(:[]).with(Http::StandardHeaders::Connection).and_return('Close')
+    
+        response = Http::Response.new(http_response)
+        response.should be_connection_closed
+      end
+      
+      it "should know when a keep-alive connection has been estalished" do
+        http_response = mock('response')
+        http_response.stub!(:code).and_return('200')
+        http_response.should_receive(:[]).with(Http::StandardHeaders::Connection).and_return('')
+    
+        response = Http::Response.new(http_response)
+        response.should_not be_connection_closed
+      end
+    end
   end
 end

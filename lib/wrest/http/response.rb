@@ -56,6 +56,10 @@ module Wrest #:nodoc:
       def follow(redirect_request_options = {})
         self
       end
+      
+      def connection_closed?
+        self[StandardHeaders::Connection].downcase == StandardTokens::Close.downcase
+      end
     end
   end
 end

@@ -66,6 +66,6 @@ require "#{WREST_ROOT}/wrest/uri"
 require "#{WREST_ROOT}/wrest/uri_template"
 require "#{WREST_ROOT}/wrest/version"
 
-if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
-  # require "#{WREST_ROOT}/wrest/test" 
-end
+# if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
+#   require "#{WREST_ROOT}/wrest/test" 
+# end

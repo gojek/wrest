@@ -37,12 +37,13 @@ describe Wrest::Http::Request do
   end
   
   it "should increment the follow_redirects_count for every redirect leving the count unaffected in previous requests" do
-    request = Wrest::Http::Get.new('http://localhost/foo'.to_uri)
+    uri = 'http://localhost/foo'.to_uri
+    request = Wrest::Http::Get.new(uri)
     redirect_location = 'http://coathangers.com'
     redirected_request = mock('Request to http://coathangers.com')
 
     mock_connection = mock('Http Connection')
-    request.stub!(:create_connection).and_return(mock_connection)
+    uri.stub!(:create_connection).and_return(mock_connection)
     
     raw_response = mock(Net::HTTPRedirection)
     raw_response.stub!(:code).and_return('301')

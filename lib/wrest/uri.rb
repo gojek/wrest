@@ -29,7 +29,6 @@ module Wrest #:nodoc:
       @options = options
       @uri_string = uri_string.clone
       @uri = URI.parse(uri_string)
-      @options = options
       @username = (@options[:username] ||= @uri.user)
       @password = (@options[:password] ||= @uri.password)
     end
@@ -53,6 +52,12 @@ module Wrest #:nodoc:
       Uri.new(@uri_string+path, options || @options)
     end
     
+    # Clones a Uri, building a new instance with exactly the same uri string.
+    # You can however change the Uri options or add new ones.
+    def clone(opts = {})
+      Uri.new(@uri_string, @options.merge(opts))
+    end
+
     def eql?(other)
       self == other
     end
@@ -127,6 +132,17 @@ module Wrest #:nodoc:
     
     def port
       uri.port
+    end
+    
+    def create_connection(timeout = 60)
+      timeout ||= 60
+      connection = Net::HTTP.new(self.host, self.port)
+      connection.read_timeout = timeout
+      if self.https?
+        connection.use_ssl     = true
+        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      connection
     end
   end
 end

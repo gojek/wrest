@@ -17,10 +17,18 @@ end
 
 def puts(*args)
  # super *(args << caller[0])
- super *(args << '<br/>')
+ super *(['<pre>'] + args + ['</pre>'])
  # super *args
 end
 
 Spec::Runner.configure do |config|
   config.include(CustomMatchers)
+end
+
+def build_ok_response(body = '')
+  returning mock(Net::HTTPOK) do |response|
+    response.stub!(:code).and_return('200')
+    response.stub!(:message).and_return('OK')
+    response.stub!(:body).and_return(body)
+  end
 end
