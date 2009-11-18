@@ -8,3 +8,4 @@ spec/wrest/meh_spec.rb
 *.ipr
 *.iws
 *.iml
+tmtags

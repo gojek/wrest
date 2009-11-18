@@ -14,9 +14,13 @@ module Wrest::Http
   # If at any point the server closes an existing connection during a Session by returning a
   # Connection: Close header the current connection is destroyed and a fresh one created for the next
   # request.
+  #
+  # The Session constructor can accept either a String URI or a Wrest::Uri as a parameter. If you
+  # need HTTP authentication, you should use a Wrest::Uri.
   class Session
+    attr_reader :uri
     def initialize(uri)
-      @uri = uri
+      @uri = uri.is_a?(String) ? uri.to_uri : uri
       @default_headers = { StandardHeaders::Connection => StandardTokens::KeepAlive }
 
       yield(self) if block_given?

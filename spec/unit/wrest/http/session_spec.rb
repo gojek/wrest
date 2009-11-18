@@ -2,6 +2,18 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Wrest
   describe Http::Session do
+    describe 'Construction' do
+      it "should accept a string uri and convert it to a Wrest::Uri" do
+        uri = "http://localhost:3000"
+        Http::Session.new(uri).uri.should == uri.to_uri
+      end
+      
+      it "should accept a Wrest::Uri" do
+        uri = "http://localhost:3000"
+        Http::Session.new(uri.to_uri).uri.should == uri.to_uri
+      end      
+    end
+
     it "should know how to use the connection provided to make requests" do
       uri = "http://localhost:3000".to_uri
       uri.should_not be_https
