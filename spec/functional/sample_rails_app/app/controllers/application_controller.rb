@@ -12,4 +12,12 @@ class ApplicationController < ActionController::Base
     headers = request.headers.inject({}){|acc, tuple| acc[tuple.first] = tuple.last if tuple.last.is_a?(String); acc }
     render :json => headers
   end
+  
+  def no_body
+    head :created
+  end
+  
+  def nothing
+    render :nothing => true
+  end
 end

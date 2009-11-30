@@ -7,23 +7,30 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+gem 'toland-patron', '=0.4.3'
+require 'patron'
+
 module Wrest #:nodoc:
 
   # Contains all HTTP protocol related classes such as
-  # Get, Post, Request, Response etc. and uses the native
-  # Ruby Net::HTTP libraries.
-  module Http
+  # Get, Post, Request, Response etc. and uses Curl for
+  # better performance, but only on CRuby and only on a *nix OS.
+  module Curl
   end
 end
 
-require "#{WREST_ROOT}/wrest/http/connection_factory"
-require "#{WREST_ROOT}/wrest/http/standard_headers"
-require "#{WREST_ROOT}/wrest/http/response"
-require "#{WREST_ROOT}/wrest/http/redirection"
-require "#{WREST_ROOT}/wrest/http/request"
-require "#{WREST_ROOT}/wrest/http/get"
-require "#{WREST_ROOT}/wrest/http/put"
-require "#{WREST_ROOT}/wrest/http/post"
-require "#{WREST_ROOT}/wrest/http/delete"
-require "#{WREST_ROOT}/wrest/http/options"
-require "#{WREST_ROOT}/wrest/http/session"
+module Patron
+  class Session
+    public :handle_request
+  end
+end
+
+# require "#{WREST_ROOT}/wrest/curl/response"
+# require "#{WREST_ROOT}/wrest/curl/redirection"
+require "#{WREST_ROOT}/wrest/curl/request"
+# require "#{WREST_ROOT}/wrest/curl/get"
+# require "#{WREST_ROOT}/wrest/curl/put"
+# require "#{WREST_ROOT}/wrest/curl/post"
+# require "#{WREST_ROOT}/wrest/curl/delete"
+# require "#{WREST_ROOT}/wrest/curl/options"
+# require "#{WREST_ROOT}/wrest/curl/session"

@@ -7,35 +7,34 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Http
+module Wrest::Curl
   # This represents a HTTP request. Typically you will never need to instantiate
   # one of these yourself - you can use one of the more conveient APIs via Wrest::Uri
   # or Wrest::Http::Get etc. instead.
   class Request
-    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects, 
-                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters
+    attr_reader :uri, :body, :headers, :username, :password, :follow_redirects,
+    :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters
     # Valid tuples for the options are:
     # :username => String, defaults to nil
     # :password => String, defaults to nil
     # :follow_redirects => Boolean, defaults to true for Get, false for anything else
-    # :follow_redirects_limit =>  Integer, defaults to 5. This is the number of redirects 
-    #                             that Wrest will automatically follow before raising an 
+    # :follow_redirects_limit =>  Integer, defaults to 5. This is the number of redirects
+    #                             that Wrest will automatically follow before raising an
     #                             Wrest::Exceptions::AutoRedirectLimitExceeded exception.
     #                             For example, if you set this to 1, the very first redirect
     #                             will raise the exception.
     # :follow_redirects_count =>  Integer, defaults to 0. This is a count of the hops made to
-    #                             get to this request and increases by one for every redirect 
+    #                             get to this request and increases by one for every redirect
     #                             until the follow_redirects_limit is hit. You should never set
     #                             this option yourself.
-    # :timeout => The period, in seconds, after which a Timeout::Error is raised 
+    # :timeout => The period, in seconds, after which a Timeout::Error is raised
     #             in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
     # :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #             used for multiple requests.
-    def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
+    def initialize(wrest_uri, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
-      @parameters = parameters
-      @http_request = http_request_klass.new(parameters.empty? ? wrest_uri.full_path : "#{wrest_uri.full_path}?#{parameters.to_query}", @headers)
+      @parameters = parameters      
       @body = body
       @options = options.clone
       @username = @options[:username]
@@ -47,36 +46,43 @@ module Wrest::Http
       @connection = @options[:connection]
     end
 
-    # Makes a request and returns a Wrest::Http::Response. 
+    # Makes a request and returns a Wrest::Http::Response.
     # Data about the request is and logged to Wrest.logger
     # The log entry contains the following information:
     #
     # --> indicates a request
     # <-- indicates a response
     #
-    # The type of request is mentioned in caps, followed by a hash 
+    # The type of request is mentioned in caps, followed by a hash
     # uniquely uniquely identifying a particular request/response pair.
     # In a multi-process or multi-threaded scenario, this can be used
     # to identify request-response pairs.
     #
     # The request hash is followed by a connection hash; requests using the
-    # same connection (effectively a keep-alive connection) will have the 
+    # same connection (effectively a keep-alive connection) will have the
     # same connection hash.
     #
     # This is followed by the response code, the payload size and the time taken.
     def invoke
       response = nil
-      
-      @connection = @connection || @uri.create_connection(timeout)
-      http_request.basic_auth username, password      
 
-      prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"
+      sess = Patron::Session.new
+      req = Patron::Request.new
+      req.action = :get
+      req.timeout = self.timeout
+      req.username = self.username
+      req.password = self.password
       
-      Wrest.logger.debug "--> (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
-      time = Benchmark.realtime { response = Wrest::Http::Response.new( @connection.request(@http_request, @body) ) }
-      Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
+      req.url = parameters.empty? ? uri.to_s : "#{uri.to_s}?#{parameters.to_query}"
+      raise ArgumentError, "Empty URL" if req.url.empty?      
 
-      @follow_redirects ? response.follow(@options) : response
+      prefix = "#{'GET'} request.hash #{sess.hash}"
+
+      Wrest.logger.debug "--> (#{prefix}) #{req.url}"
+      time = Benchmark.realtime { response =  sess.handle_request(req)}
+      Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.status, response.status_line, response.body ? response.body.length : 0, time]
+      
+      response
     end
   end
 end

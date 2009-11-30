@@ -65,6 +65,13 @@ module Wrest
       extended_uri.password.should == 'baz'
     end
     
+    it "should know how to produce its uri as a string" do
+      Uri.new('http://localhost:3000').uri_string.should == 'http://localhost:3000'
+      Uri.new('http://localhost:3000').to_s.should == 'http://localhost:3000'
+      Uri.new('http://localhost:3000', :username => 'foo', :password => 'bar').to_s.should == 'http://localhost:3000'
+      Uri.new('http://foo:bar@localhost:3000').to_s.should == 'http://foo:bar@localhost:3000'
+    end
+    
     describe 'Equals' do
       it "should understand equality" do
         Uri.new('https://localhost:3000/ooga').should_not == nil

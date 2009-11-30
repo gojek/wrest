@@ -22,8 +22,8 @@ module Wrest #:nodoc:
   #
   # You can find examples that use real APIs (like delicious) under the wrest/examples directory.
   class Uri
-    attr_reader :uri, :username, :password
-    
+    attr_reader :uri, :username, :password, :uri_string
+        
     # See Wrest::Http::Request for the available options and their default values.
     def initialize(uri_string, options = {})
       @options = options
@@ -69,6 +69,13 @@ module Wrest #:nodoc:
     
     def hash
       @uri.hash + @username.hash + @password.hash + 20090423
+    end
+    
+    # This produces exactly the same string as the Wrest::Uri was constructed with.
+    # If the orignial URI contained a HTTP username and password, that too will
+    # show up, so be careful if using this for logging.
+    def to_s
+      uri_string
     end
     
     # Make a GET request to this URI. This is a convenience API
@@ -134,15 +141,6 @@ module Wrest #:nodoc:
       uri.port
     end
     
-    def create_connection(timeout = 60)
-      timeout ||= 60
-      connection = Net::HTTP.new(self.host, self.port)
-      connection.read_timeout = timeout
-      if self.https?
-        connection.use_ssl     = true
-        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-      connection
-    end
+    include Http::ConnectionFactory
   end
 end

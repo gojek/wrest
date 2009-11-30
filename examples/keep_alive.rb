@@ -20,16 +20,18 @@ include Wrest
 # --> (GET 12207030 12546830) http://github.com:80/api/v1/json/kaiwren
 #
 # The second number after the GET is a hash identifying the connection used.
-# You will notice that all requests are using the same connection and have the same hash.
+# You will notice that all requests have the same hash therefore use the same connection.
 
 Http::Session.new('http://github.com/api/v1/json') do |s|
-  pp s.get('/kaiwren').deserialise
-  pp s.get('/niranjan').deserialise
-  
-  puts '*' * 10
-  
-  puts 'Response Content Headers'
+  puts "Response Connection Header - a response token of 'Keep-Alive' indicates that the server has created a keep-alive connection"
   puts
   puts s.get('/kaiwren')['Connection']
   puts s.get('/niranjan')['Connection']
+  
+  puts
+  puts '*' * 10
+  puts
+  
+  pp s.get('/kaiwren').deserialise
+  pp s.get('/niranjan').deserialise
 end

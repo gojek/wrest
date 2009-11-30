@@ -1,5 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
   map.headers '/headers', :controller => 'application', :action => 'headers'
+  map.headers '/no_body', :controller => 'application', :action => 'no_body'
+  map.headers '/nothing', :controller => 'application', :action => 'nothing'
+  map.headers '/no_bodies/:id.:format', :controller => 'application', :action => 'no_body'
+  map.headers '/no_bodies.:format', :controller => 'application', :action => 'no_body'
   
   map.resources :glass_bottles, :lead_bottles
 end
