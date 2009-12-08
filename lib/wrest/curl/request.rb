@@ -12,8 +12,8 @@ module Wrest::Curl
   # one of these yourself - you can use one of the more conveient APIs via Wrest::Uri
   # or Wrest::Http::Get etc. instead.
   class Request
-    attr_reader :uri, :body, :headers, :username, :password, :follow_redirects,
-    :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters
+    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
+    :follow_redirects_limit, :timeout, :connection, :parameters
     # Valid tuples for the options are:
     # :username => String, defaults to nil
     # :password => String, defaults to nil
@@ -23,27 +23,29 @@ module Wrest::Curl
     #                             Wrest::Exceptions::AutoRedirectLimitExceeded exception.
     #                             For example, if you set this to 1, the very first redirect
     #                             will raise the exception.
-    # :follow_redirects_count =>  Integer, defaults to 0. This is a count of the hops made to
-    #                             get to this request and increases by one for every redirect
-    #                             until the follow_redirects_limit is hit. You should never set
-    #                             this option yourself.
     # :timeout => The period, in seconds, after which a Timeout::Error is raised
     #             in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
     # :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #             used for multiple requests.
-    def initialize(wrest_uri, parameters = {}, body = nil, headers = {}, options = {})
+    def initialize(wrest_uri, http_verb, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
       @parameters = parameters      
       @body = body
+            
       @options = options.clone
       @username = @options[:username]
       @password = @options[:password]
       @follow_redirects = (@options[:follow_redirects] ||= false)
-      @follow_redirects_count = (@options[:follow_redirects_count] ||= 0)
+
       @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
       @timeout = @options[:timeout]
       @connection = @options[:connection]
+      
+      @http_request = Patron::Request.new
+      @http_request.action = http_verb
+      @http_request.url = parameters.empty? ? uri.to_s : "#{uri.to_s}?#{parameters.to_query}"
+      @http_request.max_redirects = follow_redirects_limit if follow_redirects
     end
 
     # Makes a request and returns a Wrest::Http::Response.
@@ -66,21 +68,14 @@ module Wrest::Curl
     def invoke
       response = nil
 
-      sess = Patron::Session.new
-      req = Patron::Request.new
-      req.action = :get
-      req.timeout = self.timeout
-      req.username = self.username
-      req.password = self.password
-      
-      req.url = parameters.empty? ? uri.to_s : "#{uri.to_s}?#{parameters.to_query}"
-      raise ArgumentError, "Empty URL" if req.url.empty?      
+      @connection ||= @uri.create_connection(timeout) 
+      raise ArgumentError, "Empty URL" if http_request.url.empty?      
 
-      prefix = "#{'GET'} request.hash #{sess.hash}"
+      prefix = "#{http_request.action.to_s.upcase} #{http_request.hash} #{connection.hash}"
 
-      Wrest.logger.debug "--> (#{prefix}) #{req.url}"
-      time = Benchmark.realtime { response =  sess.handle_request(req)}
-      Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.status, response.status_line, response.body ? response.body.length : 0, time]
+      Wrest.logger.debug "--> (#{prefix}) #{http_request.url}"
+      time = Benchmark.realtime { response =  Wrest::Curl::Response.new(connection.handle_request(http_request))}
+      Wrest.logger.debug "<-- (#{prefix}) %s (%d bytes %.2fs)" % [response.message, response.body ? response.body.length : 0, time]
       
       response
     end

@@ -20,4 +20,19 @@ class ApplicationController < ActionController::Base
   def nothing
     render :nothing => true
   end
+  
+  def one_second
+    sleep 1
+    render :text => '1'
+  end
+  
+  def two_seconds
+    sleep 2
+    render :text => '2'
+  end
+  
+  def eight_seconds
+    sleep 8
+    render :text => '3'
+  end
 end

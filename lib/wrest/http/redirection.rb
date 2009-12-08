@@ -11,6 +11,9 @@ module Wrest #:nodoc:
   module Http #:nodoc:
     # Constructed by Wrest::Response.new if the HTTP response code is 3xx 
     # (http://en.wikipedia.org/wiki/300_Multiple_Choices#3xx_Redirection)
+    # 
+    # This class is necessary because Net::HTTP doesn't seem to support
+    # redirection natively.
     class Redirection < Response
       
       # A get is invoked on the url stored in the response headers

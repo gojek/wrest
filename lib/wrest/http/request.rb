@@ -12,7 +12,7 @@ module Wrest::Http
   # one of these yourself - you can use one of the more conveient APIs via Wrest::Uri
   # or Wrest::Http::Get etc. instead.
   class Request
-    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects, 
+    attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
                 :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters
     # Valid tuples for the options are:
     # :username => String, defaults to nil
@@ -67,7 +67,7 @@ module Wrest::Http
     def invoke
       response = nil
       
-      @connection = @connection || @uri.create_connection(timeout)
+      @connection ||= @uri.create_connection(timeout)
       http_request.basic_auth username, password      
 
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"

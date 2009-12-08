@@ -11,7 +11,7 @@ module Wrest #:nodoc:
   module Http #:nodoc:
     # Decorates a response providing support for deserialisation.
     #
-    # The following methods are also available (unlisted by rdoc because they're forwarded):
+    # The following methods are also available (unlisted by rdoc because they're forwarded to Net::HTTP::Response):
     #
     # <tt>:@Http_response,  :code, :message, :body, :Http_version,
     # :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
@@ -19,13 +19,16 @@ module Wrest #:nodoc:
     #
     # They behave exactly like their Net::HttpResponse equivalents.
     class Response
+      attr_reader :http_response
+      
       extend Forwardable
       def_delegators  :@http_response,  :code, :message, :body, :Http_version,
               :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
               :get_fields, :key?, :type_params
 
       # We're overriding :new to act as a factory so 
-      # we can build the appropriate Response instance
+      # we can build the appropriate Response instance based
+      # on th response code.
       def self.new(http_response)
         instance = ((300..399).include?(http_response.code.to_i) ? Wrest::Http::Redirection : self).allocate
         instance.send :initialize, http_response

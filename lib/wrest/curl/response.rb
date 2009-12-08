@@ -8,30 +8,23 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 module Wrest #:nodoc:
-  module Http #:nodoc:
+  module Curl #:nodoc:
     # Decorates a response providing support for deserialisation.
     #
-    # The following methods are also available (unlisted by rdoc because they're forwarded):
+    # The following Net::HTTPRequest methods are also available (unlisted by rdoc because they're forwarded):
     #
     # <tt>:@Http_response,  :code, :message, :body, :Http_version,
     # :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
     # :get_fields, :key?, :type_params</tt>
     #
     # They behave exactly like their Net::HttpResponse equivalents.
-    class Response
+    class Response              
+      attr_reader :http_response
+      
       extend Forwardable
-      def_delegators  :@http_response,  :code, :message, :body, :Http_version,
-              :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
-              :get_fields, :key?, :type_params
-
-      # We're overriding :new to act as a factory so 
-      # we can build the appropriate Response instance
-      def self.new(http_response)
-        instance = ((300..399).include?(http_response.code.to_i) ? Wrest::Http::Redirection : self).allocate
-        instance.send :initialize, http_response
-        instance
-      end
-              
+      # def_delegators  *([:@http_response, :body, :headers] + Net::HTTPHeader.public_instance_methods.map(&:to_sym))
+      def_delegators  :@http_response, :body, :headers
+      
       def initialize(http_response)
         @http_response = http_response
       end
@@ -43,11 +36,19 @@ module Wrest #:nodoc:
       def deserialise_using(translator)
         translator.deserialise(@http_response)
       end
-
-      def headers
-        @http_response.to_hash
+      
+      def code
+        @http_response.status
       end
       
+      def message
+        @http_response.status_line
+      end
+      
+      def [](key)
+        @http_response[key]
+      end
+            
       # A null object implementation - invoking this method on
       # a response simply returns the same response unless
       # the response is a Redirection (code 3xx), in which case a 
