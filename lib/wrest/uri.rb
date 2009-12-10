@@ -83,7 +83,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def get(parameters = {}, headers = {})
-      Http::Get.new(self, parameters, headers, @options).invoke
+      Native::Get.new(self, parameters, headers, @options).invoke
     end
 
     # Make a PUT request to this URI. This is a convenience API
@@ -91,7 +91,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def put(body = '', headers = {}, parameters = {})
-      Http::Put.new(self, body.to_s, headers, parameters, @options).invoke
+      Native::Put.new(self, body.to_s, headers, parameters, @options).invoke
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -99,7 +99,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def post(body = '', headers = {}, parameters = {})
-      Http::Post.new(self, body.to_s, headers, parameters, @options).invoke
+      Native::Post.new(self, body.to_s, headers, parameters, @options).invoke
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
@@ -107,13 +107,13 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def delete(parameters = {}, headers = {})
-      Http::Delete.new(self, parameters, headers, @options).invoke
+      Native::Delete.new(self, parameters, headers, @options).invoke
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API
     # that creates a Wrest::Http::Options, executes it and returns the Wrest::Http::Response.
     def options
-      Http::Options.new(self, @options).invoke
+      Native::Options.new(self, @options).invoke
     end
 
     def https?
@@ -141,6 +141,6 @@ module Wrest #:nodoc:
       uri.port
     end
     
-    include Http::ConnectionFactory
+    include Native::ConnectionFactory
   end
 end

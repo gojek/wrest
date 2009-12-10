@@ -1,16 +1,16 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Wrest
-  describe Http::Session do
+  describe Native::Session do
     describe 'Construction' do
       it "should accept a string uri and convert it to a Wrest::Uri" do
         uri = "http://localhost:3000"
-        Http::Session.new(uri).uri.should == uri.to_uri
+        Native::Session.new(uri).uri.should == uri.to_uri
       end
       
       it "should accept a Wrest::Uri" do
         uri = "http://localhost:3000"
-        Http::Session.new(uri.to_uri).uri.should == uri.to_uri
+        Native::Session.new(uri.to_uri).uri.should == uri.to_uri
       end      
     end
 
@@ -29,12 +29,12 @@ module Wrest
       Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {"Connection"=>"Keep-Alive"}).and_return(request_two)
 
       ok_response = build_ok_response
-      ok_response.should_receive(:[]).with(Http::StandardHeaders::Connection).twice.and_return(Http::StandardTokens::KeepAlive)
+      ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).twice.and_return(Native::StandardTokens::KeepAlive)
       
       http.should_receive(:request).with(request_one, nil).and_return(ok_response)
       http.should_receive(:request).with(request_two, nil).and_return(ok_response)
 
-      Http::Session.new(uri) do |session|
+      Native::Session.new(uri) do |session|
         session.get('/glassware', :owner => 'Kai', :type => 'bottle')
         session.get '/bottles.xml'
       end
@@ -55,15 +55,15 @@ module Wrest
       Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {"Connection"=>"Keep-Alive"}).and_return(request_two)
 
       ok_response = build_ok_response
-      ok_response.should_receive(:[]).with(Http::StandardHeaders::Connection).once.and_return(Http::StandardTokens::KeepAlive)
+      ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).once.and_return(Native::StandardTokens::KeepAlive)
 
       ok_response_with_connection_close = build_ok_response
-      ok_response_with_connection_close.should_receive(:[]).with(Http::StandardHeaders::Connection).once.and_return(Http::StandardTokens::Close)
+      ok_response_with_connection_close.should_receive(:[]).with(Native::StandardHeaders::Connection).once.and_return(Native::StandardTokens::Close)
       
       http.should_receive(:request).with(request_one, nil).and_return(ok_response)
       http.should_receive(:request).with(request_two, nil).and_return(ok_response_with_connection_close)
 
-      Http::Session.new(uri) do |session|
+      Native::Session.new(uri) do |session|
         session.get('/glassware', :owner => 'Kai', :type => 'bottle')
         session.instance_variable_get('@connection').should == http
         session.get '/bottles.xml'

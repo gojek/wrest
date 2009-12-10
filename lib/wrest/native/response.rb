@@ -8,7 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 module Wrest #:nodoc:
-  module Http #:nodoc:
+  module Native #:nodoc:
     # Decorates a response providing support for deserialisation.
     #
     # The following methods are also available (unlisted by rdoc because they're forwarded to Net::HTTP::Response):
@@ -30,7 +30,7 @@ module Wrest #:nodoc:
       # we can build the appropriate Response instance based
       # on th response code.
       def self.new(http_response)
-        instance = ((300..399).include?(http_response.code.to_i) ? Wrest::Http::Redirection : self).allocate
+        instance = ((300..399).include?(http_response.code.to_i) ? Wrest::Native::Redirection : self).allocate
         instance.send :initialize, http_response
         instance
       end

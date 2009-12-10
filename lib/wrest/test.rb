@@ -1,1 +1,1 @@
-require "#{WREST_ROOT}/wrest/test/request_patches"
+require "#{Wrest::Root}/wrest/test/request_patches"

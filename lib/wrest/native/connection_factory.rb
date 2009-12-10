@@ -7,17 +7,17 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Http
-  class Options < Request
-    def initialize(wrest_uri, options = {})
-      super(
-            wrest_uri, 
-            Net::HTTP::Options, 
-            {},
-            nil,
-            {},
-            options
-          )
+module Wrest::Native
+  module ConnectionFactory
+    def create_connection(timeout = 60)
+      timeout ||= 60
+      connection = Net::HTTP.new(self.host, self.port)
+      connection.read_timeout = timeout
+      if self.https?
+        connection.use_ssl     = true
+        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
+      connection
     end
   end
 end

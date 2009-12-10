@@ -7,7 +7,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Http
+module Wrest::Native
   # This represents a HTTP request. Typically you will never need to instantiate
   # one of these yourself - you can use one of the more conveient APIs via Wrest::Uri
   # or Wrest::Http::Get etc. instead.
@@ -73,7 +73,7 @@ module Wrest::Http
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"
       
       Wrest.logger.debug "--> (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
-      time = Benchmark.realtime { response = Wrest::Http::Response.new( @connection.request(@http_request, @body) ) }
+      time = Benchmark.realtime { response = Wrest::Native::Response.new( @connection.request(@http_request, @body) ) }
       Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
       @follow_redirects ? response.follow(@options) : response

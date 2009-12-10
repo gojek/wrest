@@ -7,7 +7,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'rubygems'
-gem 'activesupport', '>= 2.3.2'
+gem 'activesupport', '>= 2.3.5'
 
 require 'net/http'
 require 'net/https'
@@ -19,9 +19,9 @@ require 'logger'
 require 'benchmark'
 require 'active_support'
 
-WREST_ROOT = File.dirname(__FILE__)
 
 module Wrest  #:nodoc:
+  Root = File.dirname(__FILE__)
   def self.logger=(logger)
     @logger = logger
   end
@@ -58,14 +58,14 @@ end
 
 Dir["#{File.expand_path(File.dirname(__FILE__))}/wrest/core_ext/*.rb"].each { |file| require file }
 
-require "#{WREST_ROOT}/wrest/components"
-require "#{WREST_ROOT}/wrest/exceptions"
-require "#{WREST_ROOT}/wrest/http"
-require "#{WREST_ROOT}/wrest/resource"
-require "#{WREST_ROOT}/wrest/uri"
-require "#{WREST_ROOT}/wrest/uri_template"
-require "#{WREST_ROOT}/wrest/version"
+require "#{Wrest::Root}/wrest/components"
+require "#{Wrest::Root}/wrest/exceptions"
+require "#{Wrest::Root}/wrest/native"
+require "#{Wrest::Root}/wrest/resource"
+require "#{Wrest::Root}/wrest/uri"
+require "#{Wrest::Root}/wrest/uri_template"
+require "#{Wrest::Root}/wrest/version"
 
 # if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
-#   require "#{WREST_ROOT}/wrest/test" 
+#   require "#{Wrest::Root}/wrest/test"
 # end

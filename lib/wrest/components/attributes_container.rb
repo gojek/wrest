@@ -12,8 +12,8 @@ module Wrest
   end
 end
 
-require "#{WREST_ROOT}/wrest/components/attributes_container/typecaster"
-require "#{WREST_ROOT}/wrest/components/attributes_container/alias_accessors"
+require "#{Wrest::Root}/wrest/components/attributes_container/typecaster"
+require "#{Wrest::Root}/wrest/components/attributes_container/alias_accessors"
 
 module Wrest::Components
 

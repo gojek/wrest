@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-require "#{WREST_ROOT}/wrest/curl"
+require "#{Wrest::Root}/wrest/curl"
 
 module Wrest
   Uri.send :include, Curl::ConnectionFactory

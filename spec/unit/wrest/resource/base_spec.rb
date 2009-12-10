@@ -165,7 +165,7 @@ module Wrest
         it "should know how to find a resource by id" do
           uri = 'http://localhost:3001/bottled_universe/1.xml'.to_uri
           Wrest::Uri.should_receive(:new).with('http://localhost:3001/bottled_universes/1.xml', {}).and_return(uri)
-          response = mock(Wrest::Http::Response)
+          response = mock(Wrest::Native::Response)
           uri.should_receive(:get).with(no_args).and_return(response)
           response.should_receive(:deserialise).and_return({"bottled-universe"=>{"name"=>{"__content__"=>"Wooz"}, "universe-id"=>{"type"=>"integer", "nil"=>"true"}, "id"=>{"__content__"=>"1", "type"=>"integer"}}})
 
@@ -196,7 +196,7 @@ module Wrest
         uri.should_receive(:post).with(
                                       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bottled-universe>\n  <name>Woot</name>\n</bottled-universe>\n", 
                                       'Content-Type' => 'application/xml'
-                                      ).and_return(Wrest::Http::Response.new(mock_http_response))
+                                      ).and_return(Wrest::Native::Response.new(mock_http_response))
         ware = BottledUniverse.create(:name => 'Woot')
       end
     end

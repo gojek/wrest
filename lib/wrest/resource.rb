@@ -15,4 +15,4 @@ module Wrest
   end
 end
 
-require "#{WREST_ROOT}/wrest/resource/base"
+require "#{Wrest::Root}/wrest/resource/base"

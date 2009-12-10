@@ -1,26 +1,26 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Wrest
-  describe Http::Response do
+  describe Native::Response do
     it "should build a Redirection instead of a normal response if the code is 3xx" do
       http_response = mock(Net::HTTPRedirection)
       http_response.stub!(:code).and_return('301')
       
-      Http::Response.new(http_response).class.should == Wrest::Http::Redirection
+      Native::Response.new(http_response).class.should == Wrest::Native::Redirection
     end
     
     it "should build a normal Response for non 3xx codes" do
       http_response = mock(Net::HTTPResponse)
       http_response.stub!(:code).and_return('200')
       
-      Http::Response.new(http_response).class.should == Wrest::Http::Response
+      Native::Response.new(http_response).class.should == Wrest::Native::Response
     end
     
     it "should know how to delegate to a translator" do
       http_response = mock('response')
       http_response.stub!(:code).and_return('200')
       Components::Translators::Xml.should_receive(:deserialise).with(http_response)
-      Http::Response.new(http_response).deserialise_using(Components::Translators::Xml)
+      Native::Response.new(http_response).deserialise_using(Components::Translators::Xml)
     end
 
     it "should know how to load a translator based on content type" do
@@ -28,7 +28,7 @@ module Wrest
       http_response.stub!(:code).and_return('422')
       http_response.should_receive(:content_type).and_return('application/xml')
 
-      response = Http::Response.new(http_response)
+      response = Native::Response.new(http_response)
       response.should_receive(:deserialise_using).with(Components::Translators::Xml)
 
       response.deserialise
@@ -38,7 +38,7 @@ module Wrest
       http_response = mock('response')
       http_response.stub!(:code).and_return('422')
       
-      response = Http::Response.new(http_response)
+      response = Native::Response.new(http_response)
       response.follow.equal?(response).should be_true
     end
     
@@ -46,18 +46,18 @@ module Wrest
       it "should know when a connection has been closed" do
         http_response = mock('response')
         http_response.stub!(:code).and_return('200')
-        http_response.should_receive(:[]).with(Http::StandardHeaders::Connection).and_return('Close')
+        http_response.should_receive(:[]).with(Native::StandardHeaders::Connection).and_return('Close')
     
-        response = Http::Response.new(http_response)
+        response = Native::Response.new(http_response)
         response.should be_connection_closed
       end
       
       it "should know when a keep-alive connection has been estalished" do
         http_response = mock('response')
         http_response.stub!(:code).and_return('200')
-        http_response.should_receive(:[]).with(Http::StandardHeaders::Connection).and_return('')
+        http_response.should_receive(:[]).with(Native::StandardHeaders::Connection).and_return('')
     
-        response = Http::Response.new(http_response)
+        response = Native::Response.new(http_response)
         response.should_not be_connection_closed
       end
     end

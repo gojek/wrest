@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe Wrest::Http::Redirection do
+describe Wrest::Native::Redirection do
   
   it "should make a request to the url in its location header and return the response" do
     mock_net_http_response = mock(Net::HTTPRedirection)
@@ -12,13 +12,13 @@ describe Wrest::Http::Redirection do
     Wrest::Uri.should_receive(:new).with(redirect_url, anything).and_return(redirect_uri)
     
     
-    after_redirect_request = Wrest::Http::Get.new(redirect_uri)
-    final_mock_response = mock(Wrest::Http::Response)
+    after_redirect_request = Wrest::Native::Get.new(redirect_uri)
+    final_mock_response = mock(Wrest::Native::Response)
     after_redirect_request.should_receive(:invoke).and_return(final_mock_response)
     
-    Wrest::Http::Get.should_receive(:new).with(redirect_uri, {}, {}, {:username=>nil, :password=>nil}).and_return(after_redirect_request)
+    Wrest::Native::Get.should_receive(:new).with(redirect_uri, {}, {}, {:username=>nil, :password=>nil}).and_return(after_redirect_request)
     
-    response = Wrest::Http::Redirection.new(mock_net_http_response)
+    response = Wrest::Native::Redirection.new(mock_net_http_response)
     response.follow(:follow_redirects_count => 0, :follow_redirects_limit => 5).should == final_mock_response
   end
   

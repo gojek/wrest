@@ -7,17 +7,17 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Http
-  class Post < Request
-    def initialize(wrest_uri, body = '', headers = {}, parameters = {}, options = {})
+module Wrest::Native
+  class Options < Request
+    def initialize(wrest_uri, options = {})
       super(
-        wrest_uri,
-        Net::HTTP::Post,
-        parameters,
-        body,
-        headers,
-        options
-      )
+            wrest_uri, 
+            Net::HTTP::Options, 
+            {},
+            nil,
+            {},
+            options
+          )
     end
   end
 end

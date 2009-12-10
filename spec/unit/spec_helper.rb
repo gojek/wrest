@@ -7,7 +7,7 @@ require 'spec'
   }
 }
 
-Wrest.logger = Logger.new(File.open("#{WREST_ROOT}/../log/test.log", 'a'))
+Wrest.logger = Logger.new(File.open("#{Wrest::Root}/../log/test.log", 'a'))
 
 def p(*args)
  # super *(args << caller[0])

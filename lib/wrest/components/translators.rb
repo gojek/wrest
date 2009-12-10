@@ -23,6 +23,6 @@ module Wrest
   end
 end
 
-require "#{WREST_ROOT}/wrest/components/translators/xml"
-require "#{WREST_ROOT}/wrest/components/translators/json"
-require "#{WREST_ROOT}/wrest/components/translators/content_types"
+require "#{Wrest::Root}/wrest/components/translators/xml"
+require "#{Wrest::Root}/wrest/components/translators/json"
+require "#{Wrest::Root}/wrest/components/translators/content_types"

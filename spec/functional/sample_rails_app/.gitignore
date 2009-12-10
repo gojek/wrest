@@ -1,5 +1,5 @@
 log/*.log
-db/*.sqlite3
+db/development.sqlite3
 tmp
 tmtags
 .DS_Store

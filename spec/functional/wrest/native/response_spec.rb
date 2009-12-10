@@ -1,14 +1,14 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-require "#{WREST_ROOT}/wrest/curl"
+require "#{Wrest::Root}/wrest/curl"
 
 module Wrest
-  describe Http::Response do
+  describe Native::Response do
     before :each do
-      @response = Wrest::Http::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke
+      @response = Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke
     end
     
     it "should be a Http::Response" do
-      @response.class.should == Http::Response
+      @response.class.should == Native::Response
     end
     
     it "should provide access to its headers in a case-insensitive manner via []" do

@@ -8,7 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 module Wrest #:nodoc:
-  module Http #:nodoc:
+  module Native #:nodoc:
     # Constructed by Wrest::Response.new if the HTTP response code is 3xx 
     # (http://en.wikipedia.org/wiki/300_Multiple_Choices#3xx_Redirection)
     # 

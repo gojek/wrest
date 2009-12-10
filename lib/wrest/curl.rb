@@ -7,7 +7,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-gem 'patron', '=0.4.4'
+gem 'toland-patron', '=0.4.3'
 require 'patron'
 
 module Wrest #:nodoc:
@@ -23,43 +23,14 @@ module Patron
   class Session
     public :handle_request
   end
-
-  class Response
-    def initialize
-      @header = {}
-    end
-
-    def headers
-      @header
-    end
-    
-    include Net::HTTPHeader
-    private
-    # Called by the C code to parse and set the headers
-    def parse_headers(header_data)
-      header_data.split(/\r\n/).each do |header|
-        if header =~ %r|^HTTP/1.[01]|
-          @status_line = header.strip
-        else
-          parts = header.split(':', 2)
-          parts[1].strip! unless parts[1].nil?
-          if headers.has_key?(parts[0])
-            headers[parts[0]] << ",#{parts[1]}"
-          else
-            headers[parts[0]] = parts[1]
-          end
-        end
-      end
-    end
-  end
 end
 
-require "#{WREST_ROOT}/wrest/curl/response"
-require "#{WREST_ROOT}/wrest/curl/request"
-require "#{WREST_ROOT}/wrest/curl/connection_factory"
-# require "#{WREST_ROOT}/wrest/curl/get"
-# require "#{WREST_ROOT}/wrest/curl/put"
-# require "#{WREST_ROOT}/wrest/curl/post"
-# require "#{WREST_ROOT}/wrest/curl/delete"
-# require "#{WREST_ROOT}/wrest/curl/options"
-# require "#{WREST_ROOT}/wrest/curl/session"
+require "#{Wrest::Root}/wrest/curl/response"
+require "#{Wrest::Root}/wrest/curl/request"
+require "#{Wrest::Root}/wrest/curl/connection_factory"
+# require "#{Wrest::Root}/wrest/curl/get"
+# require "#{Wrest::Root}/wrest/curl/put"
+# require "#{Wrest::Root}/wrest/curl/post"
+# require "#{Wrest::Root}/wrest/curl/delete"
+# require "#{Wrest::Root}/wrest/curl/options"
+# require "#{Wrest::Root}/wrest/curl/session"

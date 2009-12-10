@@ -33,7 +33,7 @@ module Wrest
   end
 end
 
-require "#{WREST_ROOT}/wrest/components/mutators/base"
-require "#{WREST_ROOT}/wrest/components/mutators/xml_simple_type_caster"
-require "#{WREST_ROOT}/wrest/components/mutators/xml_mini_type_caster"
-require "#{WREST_ROOT}/wrest/components/mutators/camel_to_snake_case"
+require "#{Wrest::Root}/wrest/components/mutators/base"
+require "#{Wrest::Root}/wrest/components/mutators/xml_simple_type_caster"
+require "#{Wrest::Root}/wrest/components/mutators/xml_mini_type_caster"
+require "#{Wrest::Root}/wrest/components/mutators/camel_to_snake_case"

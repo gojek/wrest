@@ -9,9 +9,9 @@
 
 require File.dirname(__FILE__) + '/../../spec_helper'
 
-describe Wrest::Http::Request do
+describe Wrest::Native::Request do
   it "should convert all symbols in header keys to strings" do
-    Wrest::Http::Request.new(
+    Wrest::Native::Request.new(
                 'http://localhost/foo'.to_uri, Net::HTTP::Get, {}, 
                 nil, 'Content-Type' => 'application/xml', :per_page => '10'
                 ).headers.should == {
@@ -21,24 +21,24 @@ describe Wrest::Http::Request do
   end
   
   it "should default the 'follow_redirects' option to true for a Get" do
-    Wrest::Http::Get.new('http://localhost/foo'.to_uri).follow_redirects.should be_true
+    Wrest::Native::Get.new('http://localhost/foo'.to_uri).follow_redirects.should be_true
   end
   
   it "should default the 'follow_redirects_count' option to 0" do
-    Wrest::Http::Get.new('http://localhost/foo'.to_uri).follow_redirects_count.should == 0
+    Wrest::Native::Get.new('http://localhost/foo'.to_uri).follow_redirects_count.should == 0
   end
   
   it "should default the 'follow_redirects_limit' option to 5" do
-    Wrest::Http::Get.new('http://localhost/foo'.to_uri).follow_redirects_limit.should == 5
+    Wrest::Native::Get.new('http://localhost/foo'.to_uri).follow_redirects_limit.should == 5
   end
   
   it "should allow Gets to disable redirect follows" do
-    Wrest::Http::Get.new('http://localhost/foo'.to_uri, {}, {}, {:follow_redirects => false}).follow_redirects.should be_false
+    Wrest::Native::Get.new('http://localhost/foo'.to_uri, {}, {}, {:follow_redirects => false}).follow_redirects.should be_false
   end
   
   it "should increment the follow_redirects_count for every redirect leving the count unaffected in previous requests" do
     uri = 'http://localhost/foo'.to_uri
-    request = Wrest::Http::Get.new(uri)
+    request = Wrest::Native::Get.new(uri)
     redirect_location = 'http://coathangers.com'
     redirected_request = mock('Request to http://coathangers.com')
 
@@ -51,11 +51,11 @@ describe Wrest::Http::Request do
     raw_response.stub!(:body).and_return('')
     raw_response.stub!(:[]).with('location').and_return(redirect_location)
     
-    response = Wrest::Http::Redirection.new(raw_response)
+    response = Wrest::Native::Redirection.new(raw_response)
     
     mock_connection.should_receive(:request).and_return(raw_response)
     
-    Wrest::Http::Response.should_receive(:new).and_return(response)
+    Wrest::Native::Response.should_receive(:new).and_return(response)
     redirected_request.stub!(:get)
     redirect_location.should_receive(:to_uri).with(hash_including(:follow_redirects_count=>1)).and_return(redirected_request)
     
@@ -64,8 +64,8 @@ describe Wrest::Http::Request do
   end
   
   it "should default the 'follow_redirects' option to false for a Post, Put or Delete" do
-    Wrest::Http::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
-    Wrest::Http::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
-    Wrest::Http::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
+    Wrest::Native::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
+    Wrest::Native::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
+    Wrest::Native::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
   end  
 end

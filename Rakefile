@@ -7,8 +7,8 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+# Note that some optional libraries/gems that the build (not Wrest itself) uses may not be available on all implementations of Ruby.
 puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
-puts "Note that some optional libraries/gems that the build (not Wrest itself) uses may not be available on all implementations of Ruby."
 
 if Object.const_defined?('RAILS_ROOT')
   require File.dirname(__FILE__) + '/../../../config/environment'
@@ -274,7 +274,7 @@ namespace (:benchmark) do
       end
       
       rpt.report("Keep-alive connection (Connection: Keep-Alive)") do
-        Wrest::Http::Session.new('http://localhost:3000'.to_uri) do |session|
+        Wrest::Native::Session.new('http://localhost:3000'.to_uri) do |session|
           n.times {
             session.get '/headers'
             session.get '/lead_bottles.xml'

@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Wrest
-  describe Http::Session do
+  describe Native::Session do
     xit "should know how to use the connection provided to make requests" do
-      Http::Session.new('http://github.com') do |session|
+      Native::Session.new('http://github.com') do |session|
         session.get('/repositories').should_not be_connection_closed
       end
     end
