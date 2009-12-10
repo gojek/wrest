@@ -27,3 +27,5 @@ require "#{Wrest::Root}/wrest/native/post"
 require "#{Wrest::Root}/wrest/native/delete"
 require "#{Wrest::Root}/wrest/native/options"
 require "#{Wrest::Root}/wrest/native/session"
+
+Wrest::Http = Wrest::Native

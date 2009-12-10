@@ -34,3 +34,5 @@ require "#{Wrest::Root}/wrest/curl/connection_factory"
 # require "#{Wrest::Root}/wrest/curl/delete"
 # require "#{Wrest::Root}/wrest/curl/options"
 # require "#{Wrest::Root}/wrest/curl/session"
+
+Wrest::Http = Wrest::Curl
