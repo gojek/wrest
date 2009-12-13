@@ -22,7 +22,7 @@ include Wrest
 # The second number after the GET is a hash identifying the connection used.
 # You will notice that all requests have the same hash therefore use the same connection.
 
-Native::Session.new('http://github.com/api/v1/json') do |s|
+Http::Session.new('http://github.com/api/v1/json') do |s|
   puts "Response Connection Header - a response token of 'Keep-Alive' indicates that the server has created a keep-alive connection"
   puts
   puts s.get('/kaiwren')['Connection']

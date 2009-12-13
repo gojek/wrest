@@ -12,6 +12,12 @@ require File.expand_path(File.dirname(__FILE__) + "/../lib/wrest")
 Wrest.logger = Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
 
+# Optionally uncomment the following line to use the significantly faster libcurl library.
+# This uses the patron gem - (sudo) gem install patron
+# IMPORTANT: Libcurl support is currently in alpha and is both incomplete and unstable!
+# Wrest.use_curl
+
+
 include Wrest
 
 class Realm
@@ -54,7 +60,7 @@ realms = "http://www.worldofwarcraft.com/realmstatus/status.xml".to_uri.get.dese
 
 puts "Status of Nagrand: #{realms.find{|realm| realm.name == 'Nagrand'}.status}"
 puts
-puts "All Available Realms:"
+puts "Listing All Available Realms:"
 puts
 puts "Realm\tLoad\tType"
 puts "-----------"

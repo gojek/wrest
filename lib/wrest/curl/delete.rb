@@ -7,12 +7,12 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Native
+module Wrest::Curl
   class Delete < Request
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       super(
             wrest_uri, 
-            Net::HTTP::Delete, 
+            :delete, 
             parameters,
             nil,
             headers,

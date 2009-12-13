@@ -7,7 +7,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-gem 'toland-patron', '=0.4.3'
+gem 'patron', '>=0.4.4'
 require 'patron'
 
 module Wrest #:nodoc:
@@ -15,6 +15,10 @@ module Wrest #:nodoc:
   # Contains all HTTP protocol related classes such as
   # Get, Post, Request, Response etc. and uses Curl for
   # better performance, but works only on CRuby and only on a *nix OS.
+  #
+  # Note: T
+  # * The Curl based APIs do *not* support the HTTP options verb.
+  # * Since 
   module Curl
     include Wrest::HttpShared
   end
@@ -28,12 +32,11 @@ end
 
 require "#{Wrest::Root}/wrest/curl/response"
 require "#{Wrest::Root}/wrest/curl/request"
-require "#{Wrest::Root}/wrest/curl/connection_factory"
-# require "#{Wrest::Root}/wrest/curl/get"
+require "#{Wrest::Root}/wrest/curl/get"
 # require "#{Wrest::Root}/wrest/curl/put"
 # require "#{Wrest::Root}/wrest/curl/post"
 # require "#{Wrest::Root}/wrest/curl/delete"
 # require "#{Wrest::Root}/wrest/curl/options"
 # require "#{Wrest::Root}/wrest/curl/session"
 
-Wrest::Http = Wrest::Curl
+silence_warnings { Wrest::Http = Wrest::Curl }

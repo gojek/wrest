@@ -29,6 +29,10 @@ module Wrest  #:nodoc:
   def self.logger
     @logger
   end
+  
+  def self.use_curl
+    require "#{Wrest::Root}/wrest/curl"
+  end
 end
 
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)

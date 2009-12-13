@@ -10,14 +10,6 @@
 module Wrest #:nodoc:
   module Curl #:nodoc:
     # Decorates a response providing support for deserialisation.
-    #
-    # The following Net::HTTPRequest methods are also available (unlisted by rdoc because they're forwarded):
-    #
-    # <tt>:@Http_response,  :code, :message, :body, :Http_version,
-    # :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
-    # :get_fields, :key?, :type_params</tt>
-    #
-    # They behave exactly like their Net::HttpResponse equivalents.
     class Response              
       attr_reader :http_response
       
@@ -30,7 +22,7 @@ module Wrest #:nodoc:
       end
 
       def deserialise
-        deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type))
+        deserialise_using(Wrest::Components::Translators.lookup(content_type))
       end
 
       def deserialise_using(translator)
@@ -46,11 +38,16 @@ module Wrest #:nodoc:
       end
       
       def [](key)
-        @http_response.headers[key]
+        token = @http_response.headers[key]
+        token ? token.split(';').first : token
       end
       
       def content_length
-        @http_response.headers['Content-Length'].try(:to_i)
+        self['Content-Length'].try(:to_i)
+      end
+    
+      def content_type
+        self['Content-Type']
       end
             
       # A null object implementation - invoking this method on

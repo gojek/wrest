@@ -39,13 +39,14 @@ module Wrest::Curl
       @follow_redirects = (@options[:follow_redirects] ||= false)
 
       @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
-      @timeout = @options[:timeout]
+      @timeout = @options[:timeout] || 60
       @connection = @options[:connection]
       
       @http_request = Patron::Request.new
       @http_request.action = http_verb
       @http_request.url = parameters.empty? ? uri.to_s : "#{uri.to_s}?#{parameters.to_query}"
       @http_request.max_redirects = follow_redirects_limit if follow_redirects
+      @http_request.timeout = @timeout
     end
 
     # Makes a request and returns a Wrest::Http::Response.
@@ -68,7 +69,7 @@ module Wrest::Curl
     def invoke
       response = nil
 
-      @connection ||= @uri.create_session(timeout) 
+      @connection ||= Patron::Session.new
       raise ArgumentError, "Empty URL" if http_request.url.empty?      
 
       prefix = "#{http_request.action.to_s.upcase} #{http_request.hash} #{connection.hash}"
