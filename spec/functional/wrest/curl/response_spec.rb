@@ -2,7 +2,6 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 require "#{Wrest::Root}/wrest/curl"
 
 module Wrest
-  Uri.send :include, Curl::ConnectionFactory
   describe Curl::Response do
     before :all do
       @response = Wrest::Curl::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, :get).invoke

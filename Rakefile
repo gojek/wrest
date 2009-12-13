@@ -27,12 +27,20 @@ else
 end
 
 desc 'Default: run spec tests.'
-task :default => :spec
+task :default => 'spec:unit'
 
-desc "Run all specs"
-Spec::Rake::SpecTask.new(:spec) do |task|
-  task.spec_files = FileList['spec/unit/wrest/**/*_spec.rb']
-  task.spec_opts = ['--options', 'spec/spec.opts']
+namespace :spec do
+  desc "Run all unit specs"
+  Spec::Rake::SpecTask.new(:unit) do |task|
+    task.spec_files = FileList['spec/unit/wrest/**/*_spec.rb']
+    task.spec_opts = ['--options', 'spec/spec.opts']
+  end
+  
+  desc "Run unit all specs"
+  Spec::Rake::SpecTask.new(:functional) do |task|
+    task.spec_files = FileList['spec/functional/wrest/**/*_spec.rb']
+    task.spec_opts = ['--options', 'spec/spec.opts']
+  end
 end
 
 begin

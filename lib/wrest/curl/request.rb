@@ -68,7 +68,7 @@ module Wrest::Curl
     def invoke
       response = nil
 
-      @connection ||= @uri.create_connection(timeout) 
+      @connection ||= @uri.create_session(timeout) 
       raise ArgumentError, "Empty URL" if http_request.url.empty?      
 
       prefix = "#{http_request.action.to_s.upcase} #{http_request.hash} #{connection.hash}"

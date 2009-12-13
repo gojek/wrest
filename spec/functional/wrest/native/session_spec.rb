@@ -1,4 +1,6 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
+require "#{Wrest::Root}/wrest/native"
+Wrest::Http = Wrest::Native
 
 module Wrest
   describe Native::Session do

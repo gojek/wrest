@@ -9,7 +9,7 @@
 
 module Wrest::Curl
   module ConnectionFactory
-    def create_connection(timeout = 60)
+    def create_session(timeout = 60)
       timeout ||= 60
       connection = Patron::Session.new
       connection.timeout = timeout
