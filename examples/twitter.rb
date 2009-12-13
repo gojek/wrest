@@ -31,7 +31,7 @@ class Twitter
   end
   
   def post(text)
-    Tweet.new @uri['/statuses/update.json'].post('', {'User-Agent' => "Wrest/#{Wrest::VERSION::STRING}"}, {:status => text}).deserialise
+    Tweet.new @uri['/statuses/update.json'].post('', {'User-Agent' => "Wrest/#{Wrest::VERSION::STRING}"}, :status => text).deserialise
   end  
 end
 

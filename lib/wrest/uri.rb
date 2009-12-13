@@ -98,8 +98,8 @@ module Wrest #:nodoc:
     # that creates a Wrest::Http::Post, executes it and returns a Wrest::Http::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    def post(body = '', headers = {})
-      Http::Post.new(self, body.to_s, headers, {}, @options).invoke
+    def post(body = '', headers = {}, parameters = {})
+      Http::Post.new(self, body.to_s, headers, parameters, @options).invoke
     end
     
     # Makes a POST request to this URI. This is a convenience API
