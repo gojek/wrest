@@ -60,6 +60,7 @@ Dir["#{File.expand_path(File.dirname(__FILE__))}/wrest/core_ext/*.rb"].each { |f
 
 require "#{Wrest::Root}/wrest/components"
 require "#{Wrest::Root}/wrest/exceptions"
+require "#{Wrest::Root}/wrest/headers"
 require "#{Wrest::Root}/wrest/native"
 require "#{Wrest::Root}/wrest/resource"
 require "#{Wrest::Root}/wrest/uri"

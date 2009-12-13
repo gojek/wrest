@@ -6,11 +6,11 @@ module Wrest::Components::Translators
       http_response = mock('Http Reponse')
       http_response.should_receive(:body).and_return("<ooga><age>12</age></ooga>")
 
-      Xml.deserialise(http_response).should == {"ooga"=>{"age"=>{"__content__" => "12"}}}
+      Xml.deserialise(http_response).should == {"ooga"=>{"age"=> "12"}}
     end
 
     it "should know how to convert a hashmap to xml" do
-      Xml.serialise({"ooga"=>{"age"=>{"__content__" => "12"}}}).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <ooga>\n    <age>\n      <--content-->12</--content-->\n    </age>\n  </ooga>\n</hash>\n"
+      Xml.serialise({"ooga"=>{"age" => "12"}}).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <ooga>\n    <age>12</age>\n  </ooga>\n</hash>\n"
     end
   end
 end

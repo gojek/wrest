@@ -13,7 +13,7 @@ module Wrest
       extend self
 
       def deserialise(response)
-        ActiveSupport::XmlMini.parse(response.body)
+        Hash.from_xml(response.body)
       end
 
       def serialise(hash, options = {})

@@ -16,8 +16,14 @@ module Wrest #:nodoc:
   end
 end
 
-require "#{Wrest::Root}/wrest/native/connection_factory"
 require "#{Wrest::Root}/wrest/native/standard_headers"
+require "#{Wrest::Root}/wrest/native/standard_tokens"
+
+# Set up a shorter convenience API
+Wrest::H = Wrest::Native::StandardHeaders
+Wrest::T = Wrest::Native::StandardTokens
+
+require "#{Wrest::Root}/wrest/native/connection_factory"
 require "#{Wrest::Root}/wrest/native/response"
 require "#{Wrest::Root}/wrest/native/redirection"
 require "#{Wrest::Root}/wrest/native/request"

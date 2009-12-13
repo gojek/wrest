@@ -98,8 +98,21 @@ module Wrest #:nodoc:
     # that creates a Wrest::Http::Post, executes it and returns a Wrest::Http::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    def post(body = '', headers = {}, parameters = {})
-      Http::Post.new(self, body.to_s, headers, parameters, @options).invoke
+    def post(body = '', headers = {})
+      Http::Post.new(self, body.to_s, headers, {}, @options).invoke
+    end
+    
+    # Makes a POST request to this URI. This is a convenience API
+    # that mimics a form being posted; some allegly RESTful APIs like FCBK
+    # require this to be used.
+    #
+    # Form encoding involves munging the parameters into a string and placing them
+    # in the body, as well as setting the Content-Type header to
+    # application/x-www-form-urlencoded
+    def post_form(parameters = {}, headers = {})
+      headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
+      body = parameters.to_query
+      Http::Post.new(self, body, headers, {}, @options).invoke
     end
 
     # Makes a DELETE request to this URI. This is a convenience API

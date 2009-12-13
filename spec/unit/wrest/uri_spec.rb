@@ -190,6 +190,24 @@ module Wrest
 
         uri.post '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
       end
+      
+      it "should know how to post form-encoded parameters using Uri#post_form" do
+        uri = "http://localhost:3000/glassware".to_uri
+        uri.should_not be_https
+
+        http = setup_http
+
+        request = Net::HTTP::Post.new('/glassware', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Post.should_receive(:new).with('/glassware', 
+                                                  'page' => '2', 'per_page' => '5', "Content-Type"=>"application/x-www-form-urlencoded"
+                                                  ).and_return(request)
+
+        http.should_receive(:request).with(request, "foo=bar&ooga=booga").and_return(build_ok_response)
+        params = ActiveSupport::OrderedHash.new
+        params[:ooga] = 'booga'
+        params[:foo] = 'bar'
+        uri.post_form(params, :page => '2', :per_page => '5')
+      end
 
       it "should know how to put" do
         uri = "http://localhost:3000/glassware".to_uri
