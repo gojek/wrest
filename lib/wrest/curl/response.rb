@@ -46,7 +46,11 @@ module Wrest #:nodoc:
       end
       
       def [](key)
-        @http_response[key]
+        @http_response.headers[key]
+      end
+      
+      def content_length
+        @http_response.headers['Content-Length'].try(:to_i)
       end
             
       # A null object implementation - invoking this method on

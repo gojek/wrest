@@ -8,7 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 module Wrest #:nodoc:
-  module Native #:nodoc:
+  module HttpShared #:nodoc:
     module StandardTokens
       Close = 'Close'
       KeepAlive = 'Keep-Alive'
@@ -16,4 +16,3 @@ module Wrest #:nodoc:
     end
   end
 end
-

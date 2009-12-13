@@ -21,7 +21,7 @@ module Wrest::Native
     attr_reader :uri
     def initialize(uri)
       @uri = uri.is_a?(String) ? uri.to_uri : uri
-      @default_headers = { StandardHeaders::Connection => StandardTokens::KeepAlive }
+      @default_headers = { Wrest::Native::StandardHeaders::Connection => Wrest::Native::StandardTokens::KeepAlive }
 
       yield(self) if block_given?
     end

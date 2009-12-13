@@ -14,8 +14,9 @@ module Wrest #:nodoc:
 
   # Contains all HTTP protocol related classes such as
   # Get, Post, Request, Response etc. and uses Curl for
-  # better performance, but only on CRuby and only on a *nix OS.
+  # better performance, but works only on CRuby and only on a *nix OS.
   module Curl
+    include Wrest::HttpShared
   end
 end
 

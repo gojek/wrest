@@ -46,7 +46,7 @@ module Wrest
       it "should know when a connection has been closed" do
         http_response = mock('response')
         http_response.stub!(:code).and_return('200')
-        http_response.should_receive(:[]).with(Native::StandardHeaders::Connection).and_return('Close')
+        http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('Close')
     
         response = Native::Response.new(http_response)
         response.should be_connection_closed
@@ -55,7 +55,7 @@ module Wrest
       it "should know when a keep-alive connection has been estalished" do
         http_response = mock('response')
         http_response.stub!(:code).and_return('200')
-        http_response.should_receive(:[]).with(Native::StandardHeaders::Connection).and_return('')
+        http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('')
     
         response = Native::Response.new(http_response)
         response.should_not be_connection_closed

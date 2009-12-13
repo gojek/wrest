@@ -61,7 +61,7 @@ module Wrest #:nodoc:
       end
       
       def connection_closed?
-        self[StandardHeaders::Connection].downcase == StandardTokens::Close.downcase
+        self[Native::StandardHeaders::Connection].downcase == Native::StandardTokens::Close.downcase
       end
     end
   end

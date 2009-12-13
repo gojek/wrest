@@ -13,15 +13,9 @@ module Wrest #:nodoc:
   # Get, Post, Request, Response etc. and uses the native
   # Ruby Net::native libraries.
   module Native
+    include Wrest::HttpShared
   end
 end
-
-require "#{Wrest::Root}/wrest/native/standard_headers"
-require "#{Wrest::Root}/wrest/native/standard_tokens"
-
-# Set up a shorter convenience API
-Wrest::H = Wrest::Native::StandardHeaders
-Wrest::T = Wrest::Native::StandardTokens
 
 require "#{Wrest::Root}/wrest/native/connection_factory"
 require "#{Wrest::Root}/wrest/native/response"

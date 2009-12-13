@@ -58,14 +58,19 @@ end
 
 Dir["#{File.expand_path(File.dirname(__FILE__))}/wrest/core_ext/*.rb"].each { |file| require file }
 
-require "#{Wrest::Root}/wrest/components"
-require "#{Wrest::Root}/wrest/exceptions"
-require "#{Wrest::Root}/wrest/headers"
+# Load Wrest Core
+require "#{Wrest::Root}/wrest/http_shared"
 require "#{Wrest::Root}/wrest/native"
-require "#{Wrest::Root}/wrest/resource"
+
+# Load Wrest Wrappers
 require "#{Wrest::Root}/wrest/uri"
 require "#{Wrest::Root}/wrest/uri_template"
 require "#{Wrest::Root}/wrest/version"
+require "#{Wrest::Root}/wrest/exceptions"
+require "#{Wrest::Root}/wrest/components"
+
+# Load Wrest::Resource
+require "#{Wrest::Root}/wrest/resource"
 
 # if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
 #   require "#{Wrest::Root}/wrest/test"
