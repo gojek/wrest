@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-require "#{Wrest::Root}/wrest/curl"
+Wrest.use_curl
 
 module Wrest
   describe Curl::Response do
