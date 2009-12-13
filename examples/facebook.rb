@@ -44,7 +44,7 @@ module Facebook
     
     def self.invoke(args)
       args = API::Defaults.merge(args)
-      Config[:restserver].to_uri.post_form(args.merge('sig' => Facebook::API.signature_for(args)))
+      Config[:restserver].to_uri.post_form(args.merge('sig' => Facebook::API.signature_for(args))).deserialise
     end
   end
   
@@ -66,7 +66,7 @@ module Facebook
         'method' => 'facebook.users.getInfo', 
         'fields' => Profile::Fields,
         'uids' => fcbk_uid
-      }).deserialise
+      })
       
       if hash['error_response']
         Facebook::Error.new hash['error_response']
