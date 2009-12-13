@@ -8,7 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest
-  module Components::AttributesContainer
+  module Components::Container
     # An extension to AttributesContainer that adds support for
     # specifying how the values associated with certain attribute keys
     # should be typecast.

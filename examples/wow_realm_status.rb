@@ -15,7 +15,7 @@ Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disa
 include Wrest
 
 class Realm
-  include Components::AttributesContainer
+  include Components::Container
 
   typecast  :t => lambda{|type| 
                     case type

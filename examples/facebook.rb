@@ -49,7 +49,7 @@ module Facebook
   end
   
   class Profile
-    include Wrest::Components::AttributesContainer
+    include Components::Container
     typecast  :uid        => as_integer,
               :pic_square => lambda{|pic_square| pic_square.to_uri}
 
@@ -77,7 +77,7 @@ module Facebook
   end
   
   class Error
-    include Wrest::Components::AttributesContainer
+    include Components::Container
     typecast :error_code => as_integer
   end
 end

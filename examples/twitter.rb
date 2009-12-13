@@ -40,7 +40,7 @@ class TwitterUser
   # for the deserialised data from a response.
   #
   # All the keys in the hash are exposed as methods.
-  include Wrest::Components::AttributesContainer
+  include Wrest::Components::Container
 
   # We'd prefer the user's profile url to be
   # a Wrest::Uri rather than a String, wouldn't we?
@@ -52,7 +52,7 @@ class TwitterUser
 end
 
 class Tweet
-  include Wrest::Components::AttributesContainer
+  include Wrest::Components::Container
 
   typecast  :user => lambda{|user| TwitterUser.new(user) }
 end

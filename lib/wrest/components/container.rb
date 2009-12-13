@@ -8,12 +8,12 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest
-  module Components::AttributesContainer
+  module Components::Container
   end
 end
 
-require "#{Wrest::Root}/wrest/components/attributes_container/typecaster"
-require "#{Wrest::Root}/wrest/components/attributes_container/alias_accessors"
+require "#{Wrest::Root}/wrest/components/container/typecaster"
+require "#{Wrest::Root}/wrest/components/container/alias_accessors"
 
 module Wrest::Components
 
@@ -55,13 +55,13 @@ module Wrest::Components
   #  coin = ShenCoin.new(:id => '5', :chi_count => 500, :owner => 'Kai Wren')
   #  coin.id    # => 5
   #  coin.owner # => 'Kai Wren'
-  module AttributesContainer
+  module Container
     def self.included(klass) #:nodoc:
-      klass.extend AttributesContainer::ClassMethods
-      klass.extend AttributesContainer::Typecaster::Helpers
+      klass.extend Container::ClassMethods
+      klass.extend Container::Typecaster::Helpers
       klass.class_eval do 
-        include AttributesContainer::InstanceMethods
-        include AttributesContainer::AliasAccessors
+        include Container::InstanceMethods
+        include Container::AliasAccessors
       end  
     end
 
@@ -88,9 +88,9 @@ module Wrest::Components
       def always_has(*attribute_names)
         attribute_names.each do |attribute_name|
           self.class_eval(
-          AttributesContainer.build_attribute_getter(attribute_name) +
-          AttributesContainer.build_attribute_setter(attribute_name) +
-          AttributesContainer.build_attribute_queryer(attribute_name)
+          Container.build_attribute_getter(attribute_name) +
+          Container.build_attribute_setter(attribute_name) +
+          Container.build_attribute_queryer(attribute_name)
           )
         end
       end
@@ -104,7 +104,7 @@ module Wrest::Components
       # Remember that using typecast carries a performance penalty.
       # See Wrest::Components::AttributesContainer::Typecaster for the actual docs.
       def typecast(cast_map)
-        self.class_eval{ include Wrest::Components::AttributesContainer::Typecaster }
+        self.class_eval{ include Wrest::Components::Container::Typecaster }
         self.typecast cast_map
       end
       
@@ -170,11 +170,11 @@ module Wrest::Components
         if @attributes.include?(attribute_name.to_sym) || method_name.last == '=' || method_name.last == '?'
           case method_name.last
           when '='
-            self.instance_eval AttributesContainer.build_attribute_setter(attribute_name)
+            self.instance_eval Container.build_attribute_setter(attribute_name)
           when '?'
-            self.instance_eval AttributesContainer.build_attribute_queryer(attribute_name)
+            self.instance_eval Container.build_attribute_queryer(attribute_name)
           else
-            self.instance_eval AttributesContainer.build_attribute_getter(attribute_name)
+            self.instance_eval Container.build_attribute_getter(attribute_name)
           end
           send(method_sym, *arguments)
         else

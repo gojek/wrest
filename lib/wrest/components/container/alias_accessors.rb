@@ -8,7 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest
-  module Components::AttributesContainer
+  module Components::Container
     module AliasAccessors
       def self.included(klass) #:nodoc:
         klass.extend AliasAccessors::ClassMethods

@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + '/../../../spec_helper'
 
 module Wrest::Components
-  describe AttributesContainer::Typecaster do
+  describe Container::Typecaster do
     before :each do
       @Demon = Class.new
       @Demon.class_eval do
-        include Wrest::Components::AttributesContainer
-        include Wrest::Components::AttributesContainer::Typecaster
+        include Wrest::Components::Container
+        include Wrest::Components::Container::Typecaster
       end
     end
 
@@ -25,7 +25,7 @@ module Wrest::Components
 
       it "hash should not typecast" do
         class TestUser
-          include Wrest::Components::AttributesContainer
+          include Wrest::Components::Container
         end
 
         @Demon.class_eval{ typecast :user => lambda{|user| TestUser.new(user)}}
@@ -58,8 +58,8 @@ module Wrest::Components
       before :each do
         @Sidhe = Class.new
         @Sidhe.class_eval do
-          include Wrest::Components::AttributesContainer
-          include Wrest::Components::AttributesContainer::Typecaster
+          include Wrest::Components::Container
+          include Wrest::Components::Container::Typecaster
 
           typecast :age => as_integer
         end

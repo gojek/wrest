@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../../../spec_helper'
 
 module Wrest::Components
-  describe AttributesContainer::AliasAccessors do
+  describe Container::AliasAccessors do
     before :each do
       @Demon = Class.new
       @Demon.class_eval do
-        include Wrest::Components::AttributesContainer
+        include Wrest::Components::Container
       end
     end
 

@@ -15,6 +15,6 @@ module Wrest
   end
 end
 
-require "#{Wrest::Root}/wrest/components/attributes_container"
+require "#{Wrest::Root}/wrest/components/container"
 require "#{Wrest::Root}/wrest/components/mutators"
 require "#{Wrest::Root}/wrest/components/translators"

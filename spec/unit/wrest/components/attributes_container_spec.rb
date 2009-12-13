@@ -10,9 +10,9 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Wrest::Components
-  describe AttributesContainer do
+  describe Container do
     class HumanBeing
-      include Wrest::Components::AttributesContainer
+      include Wrest::Components::Container
       always_has :id
     end
 
@@ -57,7 +57,7 @@ module Wrest::Components
         @Demon = Class.new
 
         @Demon.class_eval do
-          include Wrest::Components::AttributesContainer
+          include Wrest::Components::Container
         end
       end
 
@@ -89,7 +89,7 @@ module Wrest::Components
           kai_wren.methods.map(&:to_sym).should_not include(:trainer)
 
           @Demon.class_eval{
-            include Wrest::Components::AttributesContainer
+            include Wrest::Components::Container
             always_has :trainer
           }
 
@@ -101,7 +101,7 @@ module Wrest::Components
           kai_wren.methods.map(&:to_sym).should_not include(:trainer=)
 
           @Demon.class_eval{
-            include Wrest::Components::AttributesContainer
+            include Wrest::Components::Container
             always_has :trainer
           }
 
@@ -113,7 +113,7 @@ module Wrest::Components
           kai_wren.methods.map(&:to_sym).should_not include(:trainer?)
 
           @Demon.class_eval{
-            include Wrest::Components::AttributesContainer
+            include Wrest::Components::Container
             always_has :trainer
           }
           kai_wren.methods.map(&:to_sym).should include(:trainer?)
@@ -124,7 +124,7 @@ module Wrest::Components
         before :each do
           @Demon = Class.new
           @Demon.class_eval{
-            include Wrest::Components::AttributesContainer
+            include Wrest::Components::Container
             always_has :trainer
 
             def method_missing(method_name, *args)
