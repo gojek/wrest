@@ -79,6 +79,8 @@ module Wrest::Curl
       Wrest.logger.debug "<-- (#{prefix}) %s (%d bytes %.2fs)" % [response.message, response.body ? response.body.length : 0, time]
       
       response
+      rescue Patron::TimeoutError => e
+        raise Wrest::Exceptions::Timeout.new(e)
     end
   end
 end

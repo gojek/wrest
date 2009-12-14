@@ -22,5 +22,9 @@ module Wrest
     # See wrest/test/request_patches.
     class RealRequestMadeInTestEnvironmet < StandardError
     end
+    
+    # Raised when a request times out
+    class Timeout < StandardError
+    end
   end
 end

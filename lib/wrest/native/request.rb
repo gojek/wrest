@@ -77,6 +77,8 @@ module Wrest::Native
       Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
       @follow_redirects ? response.follow(@options) : response
+    rescue Timeout::Error => e
+      raise Wrest::Exceptions::Timeout.new(e)
     end
   end
 end
