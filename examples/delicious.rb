@@ -12,6 +12,7 @@ require 'pp'
 
 Wrest.logger = Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
+# Wrest.use_curl
 
 # This example demonstrates the usage of GET, POST, PUT and
 # DELETE over HTTPS. Its also shows how Wrest::Uris can have
@@ -32,7 +33,7 @@ class Delicious
   end
   
   def bookmark(parameters)
-    @uri['/add'].post('', {}, parameters)
+    @uri['/add'].post_form(parameters)
   end
   
   def delete(parameters)
@@ -42,6 +43,8 @@ end
 
 account = Delicious.new :username => 'kaiwren', :password => 'fupupp1es'
 
+puts '*'*20 + "Creating bookmark tagged Rails" + '*'*20
+
 pp account.bookmark(
     :url => 'http://blog.sidu.in/search/label/ruby',
     :description => 'The Ruby related posts on my blog!',
@@ -49,14 +52,18 @@ pp account.bookmark(
     :tags => 'ruby hacking'
   ).deserialise
   
-puts '', '*'*70, ''
+puts '*'*20 + "Listing bookmarks tagged Rails on a certain date" + '*'*20
 
 pp account.bookmarks(:tag => 'rails', :dt => '20090712').deserialise
 
-puts '', '*'*70, ''
+puts '*'*20 + "Listing recent bookmarks" + '*'*20
 
-pp recently_saved_uris = account.recent(:tag => 'ruby').deserialise["posts"]["post"].collect{|bookmark| bookmark['href']}
+pp account.recent(:tag => 'ruby').deserialise["posts"]["post"].collect{|bookmark| bookmark['href']}
 
-puts '', '*'*70, ''
+puts '*'*20 + "Deleting the bookmark we just created" + '*'*20
 
 pp account.delete(:url => 'http://blog.sidu.in/search/label/ruby').deserialise
+
+puts '*'*20 + "Listing recent bookmarks" + '*'*20
+
+pp account.recent(:tag => 'ruby').deserialise["posts"]["post"].collect{|bookmark| bookmark['href']}

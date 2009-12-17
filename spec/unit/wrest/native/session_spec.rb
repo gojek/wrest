@@ -22,11 +22,11 @@ module Wrest
       Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
       http.should_receive(:read_timeout=).with(60)
 
-      request_one = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {"Connection"=>"Keep-Alive"})
-      request_two = Net::HTTP::Get.new('/bottles.xml', {"Connection"=>"Keep-Alive"})
+      request_one = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive})
+      request_two = Net::HTTP::Get.new('/bottles.xml', {H::Connection=>T::KeepAlive})
 
-      Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {"Connection"=>"Keep-Alive"}).and_return(request_one)
-      Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {"Connection"=>"Keep-Alive"}).and_return(request_two)
+      Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive}).and_return(request_one)
+      Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {H::Connection=>T::KeepAlive}).and_return(request_two)
 
       ok_response = build_ok_response
       ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).twice.and_return(Native::StandardTokens::KeepAlive)
@@ -48,11 +48,11 @@ module Wrest
       Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
       http.should_receive(:read_timeout=).with(60)
 
-      request_one = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {"Connection"=>"Keep-Alive"})
-      request_two = Net::HTTP::Get.new('/bottles.xml', {"Connection"=>"Keep-Alive"})
+      request_one = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive})
+      request_two = Net::HTTP::Get.new('/bottles.xml', {H::Connection=>T::KeepAlive})
 
-      Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {"Connection"=>"Keep-Alive"}).and_return(request_one)
-      Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {"Connection"=>"Keep-Alive"}).and_return(request_two)
+      Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive}).and_return(request_one)
+      Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {H::Connection=>T::KeepAlive}).and_return(request_two)
 
       ok_response = build_ok_response
       ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).once.and_return(Native::StandardTokens::KeepAlive)

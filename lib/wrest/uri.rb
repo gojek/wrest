@@ -96,6 +96,7 @@ module Wrest #:nodoc:
 
     # Makes a POST request to this URI. This is a convenience API
     # that creates a Wrest::Http::Post, executes it and returns a Wrest::Http::Response.
+    # Note that sending an empty body will blow up if you're using libcurl.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def post(body = '', headers = {}, parameters = {})

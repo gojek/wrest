@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-require "#{Wrest::Root}/wrest/native"
 
 module Wrest
   describe Native::Request do

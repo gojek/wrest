@@ -29,9 +29,14 @@ module Wrest  #:nodoc:
   def self.logger
     @logger
   end
-  
+
+  def self.use_native
+    silence_warnings{ Wrest.const_set('Http', Wrest::Native) }
+  end
+
   def self.use_curl
     require "#{Wrest::Root}/wrest/curl"
+    silence_warnings{ Wrest.const_set('Http', Wrest::Curl) }
   end
 end
 
@@ -53,7 +58,7 @@ rescue Gem::LoadError
         gem 'jrexml', '>= 0.5.3'
         require 'jrexml'
         Wrest.logger.debug "Detected JRuby, JREXML loaded."
-      rescue Gem::LoadError  
+      rescue Gem::LoadError
         Wrest.logger.debug "Detected JRuby, but failed to load JREXML. JREXML offers *some* performance improvement when using REXML on JRuby. To install JREXL run `(sudo) jruby -S gem install jrexml`"
       end
     end

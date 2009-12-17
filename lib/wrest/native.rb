@@ -28,4 +28,5 @@ require "#{Wrest::Root}/wrest/native/delete"
 require "#{Wrest::Root}/wrest/native/options"
 require "#{Wrest::Root}/wrest/native/session"
 
+# default to using Native libs
 Wrest::Http = Wrest::Native

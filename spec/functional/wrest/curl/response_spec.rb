@@ -1,5 +1,4 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-Wrest.use_curl
 
 module Wrest
   describe Curl::Response do
@@ -19,13 +18,13 @@ module Wrest
       @response.code.should == 200
     end
     
-    it "should provide access to its headers in a case-insensitive manner via []"    # do
-    #   @response.headers['Content-Type'].should == 'application/xml; charset=utf-8'
-    #   @response.headers['content-type'].should be_nil
-    # 
-    #   @response['Content-Type'].should == 'application/xml; charset=utf-8'
-    #   @response['content-type'].should == 'application/xml; charset=utf-8'
-    # end
+    it "should provide access to its headers in a case-insensitive manner via []" do
+      @response.headers['Content-Type'].should == 'application/xml; charset=utf-8'
+      @response.headers['content-type'].should == "application/xml; charset=utf-8"
+    
+      @response['Content-Type'].should == 'application/xml; charset=utf-8'
+      @response['content-type'].should == 'application/xml; charset=utf-8'
+    end
 
     it "should provide access to the content-length" do
       @response.headers['Content-Length'].should == '172'

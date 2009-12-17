@@ -12,6 +12,7 @@ require 'digest/md5'
 
 Wrest.logger = Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
+Wrest.use_curl
 
 include Wrest
 

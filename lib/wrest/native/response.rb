@@ -30,7 +30,8 @@ module Wrest #:nodoc:
       # we can build the appropriate Response instance based
       # on th response code.
       def self.new(http_response)
-        instance = ((300..399).include?(http_response.code.to_i) ? Wrest::Native::Redirection : self).allocate
+        code = http_response.code.to_i
+        instance = ((300..303).include?(code) || (305..399).include?(code)  ? Wrest::Native::Redirection : self).allocate
         instance.send :initialize, http_response
         instance
       end

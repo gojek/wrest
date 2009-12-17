@@ -15,6 +15,7 @@ module Wrest #:nodoc:
   end
 end
 
+require "#{Wrest::Root}/wrest/http_shared/headers"
 require "#{Wrest::Root}/wrest/http_shared/standard_headers"
 require "#{Wrest::Root}/wrest/http_shared/standard_tokens"
 

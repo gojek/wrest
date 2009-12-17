@@ -16,9 +16,11 @@ module Wrest #:nodoc:
   # Get, Post, Request, Response etc. and uses Curl for
   # better performance, but works only on CRuby and only on a *nix OS.
   #
-  # Note: T
+  # This functionality is under development and the Wrest API
+  # may not cover using it fully.
+  #
+  # Note:
   # * The Curl based APIs do *not* support the HTTP options verb.
-  # * Since 
   module Curl
     include Wrest::HttpShared
   end
@@ -33,10 +35,8 @@ end
 require "#{Wrest::Root}/wrest/curl/response"
 require "#{Wrest::Root}/wrest/curl/request"
 require "#{Wrest::Root}/wrest/curl/get"
-# require "#{Wrest::Root}/wrest/curl/put"
-# require "#{Wrest::Root}/wrest/curl/post"
-# require "#{Wrest::Root}/wrest/curl/delete"
-# require "#{Wrest::Root}/wrest/curl/options"
+require "#{Wrest::Root}/wrest/curl/put"
+require "#{Wrest::Root}/wrest/curl/post"
+require "#{Wrest::Root}/wrest/curl/delete"
+require "#{Wrest::Root}/wrest/curl/options"
 # require "#{Wrest::Root}/wrest/curl/session"
-
-silence_warnings { Wrest::Http = Wrest::Curl }

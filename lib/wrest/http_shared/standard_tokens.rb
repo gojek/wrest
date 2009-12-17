@@ -10,8 +10,8 @@
 module Wrest #:nodoc:
   module HttpShared #:nodoc:
     module StandardTokens
-      Close = 'Close'
-      KeepAlive = 'Keep-Alive'
+      Close = 'close'
+      KeepAlive = 'keep-alive'
       FormEncoded = 'application/x-www-form-urlencoded'
     end
   end

@@ -2,11 +2,18 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Wrest
   describe Native::Response do
-    it "should build a Redirection instead of a normal response if the code is 3xx" do
+    it "should build a Redirection instead of a normal response if the code is 301..303 or 305..3xx" do
       http_response = mock(Net::HTTPRedirection)
       http_response.stub!(:code).and_return('301')
       
       Native::Response.new(http_response).class.should == Wrest::Native::Redirection
+    end
+
+    it "should build a normal response if the code is 304" do
+      http_response = mock(Net::HTTPRedirection)
+      http_response.stub!(:code).and_return('304')
+      
+      Native::Response.new(http_response).class.should == Wrest::Native::Response
     end
     
     it "should build a normal Response for non 3xx codes" do

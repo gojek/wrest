@@ -17,14 +17,17 @@ module Wrest
 
     # Raised when a request is made when either RAILS_ENV or
     # ENV['RAILS_ENV'] is set to 'test', which is the case when
-    # running tests/specs in a Rails application. 
+    # running tests/specs in a Rails application.
     #
     # See wrest/test/request_patches.
     class RealRequestMadeInTestEnvironmet < StandardError
     end
-    
+
     # Raised when a request times out
     class Timeout < StandardError
+    end
+    
+    class UnsupportedHttpVerb < StandardError
     end
   end
 end

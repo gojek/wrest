@@ -12,13 +12,14 @@ module Wrest #:nodoc:
     # Decorates a response providing support for deserialisation.
     class Response              
       attr_reader :http_response
+      include HttpShared::Headers
       
       extend Forwardable
-      # def_delegators  *([:@http_response, :body, :headers] + Net::HTTPHeader.public_instance_methods.map(&:to_sym))
       def_delegators  :@http_response, :body, :headers
       
       def initialize(http_response)
         @http_response = http_response
+        initialize_http_header
       end
 
       def deserialise
@@ -37,17 +38,12 @@ module Wrest #:nodoc:
         @http_response.status_line
       end
       
-      def [](key)
-        token = @http_response.headers[key]
-        token ? token.split(';').first : token
-      end
-      
       def content_length
-        self['Content-Length'].try(:to_i)
+        self[H::ContentLength].try(:to_i)
       end
     
       def content_type
-        self['Content-Type']
+        self[H::ContentType].split(';').first
       end
             
       # A null object implementation - invoking this method on
