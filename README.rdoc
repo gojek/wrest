@@ -1,8 +1,8 @@
-= Wrest 0.0.9
+= Wrest 0.1.0
 
 (c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
-Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. The Wrest codebase is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments. Wrest runs on Ruby 1.8, 1.9 and JRuby.
+Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. The Wrest codebase is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments. Wrest runs on Ruby 1.8, 1.9 and JRuby, with MacRuy and IronRuby support on the way.
 
 To receive notifications whenever new features are added to Wrest, subscribe to my {twitter feed}[http://twitter.com/ponnappa].
 
@@ -10,7 +10,8 @@ If you were wondering why the words 'demon', 'chi' and 'fu-puppies' (among other
 
 == Wrest Core: Features
 
-* Provides convenient HTTP wrappers, redirect handling, serialisation and deserialisation with response caching in the works.
+* Provides convenient HTTP wrappers, redirect handling, serialisation and deserialisation with response caching in the works
+* Supports using either Net::HTTP or libcurl as the underlying HTTP library
 * Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Isn't coupled to Rails (usable in a pure Ruby application to consume any HTTP/REST api)
 * Can be used both stand alone as well as to build object oriented abstractions around resources and web services (Wrest::Resource is an example of the latter)

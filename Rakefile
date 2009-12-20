@@ -78,9 +78,10 @@ end
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
+      # p Rake::FileList['spec/functional/**/*']
     gemspec.name = "wrest"
     gemspec.summary = "REST client library for Ruby."
-    gemspec.description = "Wrest is a REST client library which allows you to quickly build object oriented wrappers around any web service. It has two main components - Wrest Core and Wrest::Resource."
+    gemspec.description = "Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service."
     gemspec.authors = ["Sidu Ponnappa"]
     gemspec.email = "ckponnappa@gmail.com"
     gemspec.homepage = "http://github.com/kaiwren/wrest"
@@ -88,9 +89,9 @@ begin
     gemspec.rubyforge_project = 'wrest'
     gemspec.executables = ['wrest', 'jwrest']
     gemspec.require_path = "lib"
-    gemspec.files.exclude ['spec/unit/wrest/meh_spec.rb', 'spec/functional/sample_rails_app/db/*.sqlite3']
-    gemspec.test_files.exclude ['spec/unit/wrest/meh_spec.rb', 'spec/functional/sample_rails_app/config/*.sqlite3']
-    gemspec.add_dependency('activesupport', '>= 2.3.2')
+    gemspec.files.exclude ['.gitignore', 'spec/functional']
+    gemspec.test_files.exclude ['.gitignore', 'spec/functional', 'examples']
+    gemspec.add_dependency('activesupport', '>= 2.3.5')
     case RUBY_PLATFORM
     when /java/
       gemspec.add_dependency('json-jruby', '>= 1.1.3')

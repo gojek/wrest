@@ -1,7 +1,10 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Wrest
-  [Wrest::Curl, Wrest::Native].each do |library|
+  libraries = [Wrest::Native]
+  libraries << Wrest::Curl unless RUBY_PLATFORM =~ /java/
+    
+  libraries.each do |library|
     describe "For #{library}" do
       describe 'Response' do
         describe 'Headers' do

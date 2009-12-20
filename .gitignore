@@ -9,3 +9,4 @@ spec/wrest/meh_spec.rb
 *.iws
 *.iml
 tmtags
+.gemspec

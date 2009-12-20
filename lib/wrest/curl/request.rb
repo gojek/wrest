@@ -26,7 +26,9 @@ module Wrest::Curl
     # :timeout => The period, in seconds, after which a Timeout::Error is raised
     #             in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
     # :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
-    #             used for multiple requests.
+    #             used for multiple requests. Not yet fully implemented for Curl.
+    #
+    # Curl specific options:
     # :auth_type => This is a curl specific option and can be one of :basic, :digest, or :any. The default is :basic.
     def initialize(wrest_uri, http_verb, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
@@ -47,6 +49,7 @@ module Wrest::Curl
       @http_request = Patron::Request.new
       @http_request.action = http_verb
       @http_request.upload_data = body
+      @http_request.headers = headers
       @http_request.username = username
       @http_request.password = password
       @http_request.auth_type = auth_type

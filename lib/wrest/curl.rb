@@ -7,7 +7,12 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-gem 'patron', '>=0.4.4'
+begin
+  gem 'patron', '>=0.4.4'
+rescue Gem::LoadError => e
+  Wrest.logger.debug "Patron >= 0.4.4 not found. Patron is necessary to use libcurl. To install Patron run `sudo gem install patron` (patron is not available on JRuby, but you shouldn't need it anyway)."
+  raise e
+end
 require 'patron'
 
 module Wrest #:nodoc:
@@ -20,7 +25,9 @@ module Wrest #:nodoc:
   # may not cover using it fully.
   #
   # Note:
-  # * The Curl based APIs do *not* support the HTTP options verb.
+  # * The Curl based APIs do *not* support the HTTP 'options' verb.
+  # * Since auto-redirect is natively supported by Curl, auto-redirect may 
+  #   behave differently from the native implementation for now.
   module Curl
     include Wrest::HttpShared
   end

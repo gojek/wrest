@@ -7,19 +7,19 @@ Features under a numbered section are complete and available in the Wrest gem.
 == Coming soon
  * Cookie support
  * Proxy support
- * Adding live functional tests to codebase (see spec/functional no feasible way to spec drive Wrest::Resource otherwise)
-
+ 
 == In progress
  * 304/ETag response caching
+ * Keep-alive support for libcurl
 
-== Current
+== 0.1.0
  * Added Nokogiri as a fallback for LibXML Ruby before we give up and use REXML. (Nokogiri is available on JRuby, unlike LibXML-ruby)
  * Added code to attempt to load JREXML (for what it's worth) when using REXML on JRuby
  * Ensure that Wrest throws an exception when an actual request is made in a test environment in Rails (RAILS_ENV == 'test')
  * Support for keep-alive connections via Wrest::Http::Session and Wrest::Http::Response#connection_closed?
  * Create two convenience Post methods on Uri - one for application/x-www-form-urlencoded and the other normal
  * Optional libcurl implementations of the Request/Response classes (for those on MRI who need better performance). See examples/delicious.rb, examples/facebook.rb. Note that while there is a great deal of API compatibility, everything may not behave exactly the same under libcurl. Please do report inconsistencies.
- * Adding live functional tests to codebase (see spec/functional no feasible way to spec drive Wrest::Resource otherwise)
+ * Added live functional tests to codebase (rake spec:functional, needs spec/functional/sample_rails_app running on port 3000)
  
 == 0.0.9
  * Added redirect follow support for GET requests (see examples/redirection.rb)

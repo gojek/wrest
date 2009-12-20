@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + "/../../lib/wrest")
-require "#{Wrest::Root}/wrest/curl"
+require "#{Wrest::Root}/wrest/curl" unless RUBY_PLATFORM =~ /java/
 require 'spec'
 
 ['/../custom_matchers/**/*.rb'].each{|directory|
