@@ -16,7 +16,10 @@ Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disa
 
 # This example demonstrates the usage of GET, POST, PUT and
 # DELETE over HTTPS. Its also shows how Wrest::Uris can have
-# paths extended making accessing an API easy as pie.
+# paths extended making accessing an API easy as pie. 
+#
+# Do remember to change the username and password on line 47
+# before running this example.
 #
 # API reference: http://delicious.com/help/api
 class Delicious
