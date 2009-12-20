@@ -89,8 +89,8 @@ begin
     gemspec.rubyforge_project = 'wrest'
     gemspec.executables = ['wrest', 'jwrest']
     gemspec.require_path = "lib"
-    gemspec.files.exclude ['.gitignore', 'spec/functional']
-    gemspec.test_files.exclude ['.gitignore', 'spec/functional', 'examples']
+    gemspec.files.exclude *['.gitignore', 'spec/functional']
+    gemspec.test_files.exclude *['.gitignore', 'spec/functional', 'examples']
     gemspec.add_dependency('activesupport', '>= 2.3.5')
     case RUBY_PLATFORM
     when /java/

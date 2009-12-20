@@ -2,11 +2,14 @@
 
 (c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
-Wrest is a ruby REST client library which allows you to quickly build object oriented wrappers around any web service. It has two components - Wrest Core and Wrest::Resource. The Wrest codebase is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments. Wrest runs on Ruby 1.8, 1.9 and JRuby, with MacRuy and IronRuby support on the way.
+Wrest is a ruby REST client library which
+ * allows allows you to quickly build object oriented wrappers around any web service 
+ * is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
+ * runs on Ruby 1.8, 1.9 and JRuby, with MacRuy and IronRuby support on the way
 
 To receive notifications whenever new features are added to Wrest, subscribe to my {twitter feed}[http://twitter.com/ponnappa].
 
-If you were wondering why the words 'demon', 'chi' and 'fu-puppies' (among others) show up in nearly every example and spec, it's because they're all references to {Roger Zelazny's}[http://en.wikipedia.org/wiki/Roger_Zelazny] last book, 'Lord Demon.'
+(If you were wondering why the words 'demon', 'chi' and 'fu-puppies' show up in nearly every example and spec, it's because they're all references to {Roger Zelazny's}[http://en.wikipedia.org/wiki/Roger_Zelazny] last book, 'Lord Demon.')
 
 == Wrest Core: Features
 
@@ -18,7 +21,7 @@ If you were wondering why the words 'demon', 'chi' and 'fu-puppies' (among other
 
 == Examples
 
-For Twitter, Delicious and other examples, see http://github.com/kaiwren/wrest/tree/master/examples
+For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/kaiwren/wrest/tree/master/examples
 
 == Installation
 
