@@ -177,3 +177,4 @@ Features that are planned, in progress or already implemented are documented in 
 == Licence
 
 Wrest is released under the Apache 2.0 licence
+
