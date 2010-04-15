@@ -119,7 +119,7 @@ Example:
 
 === Usage: Logging
 
-The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT. If you're using Wrest in a Rails application, you can configure logging by placing the following line in your environment file:
+The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT. If you're using Wrest in a Rails application, you can configure logging by adding a config/initializers/wrest.rb file with the following contents :
   Wrest.logger = ActiveRecord::Base.logger
 
 === Build
