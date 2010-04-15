@@ -101,7 +101,7 @@ Allows any class to hold an attributes hash, somewhat like ActiveResource. It al
 Example:
 
  class Demon
-   include Wrest::Components::AttributesContainer
+   include Wrest::Components::Container
 
    always_has       :id
    typecast         :age          =>  as_integer,
