@@ -7,11 +7,12 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest #:nodoc:
-
+module Wrest
   # Contains all native protocol related classes such as
   # Get, Post, Request, Response etc. and uses the native
-  # Ruby Net::native libraries.
+  # Ruby Net::HTTP libraries.
+  #
+  # Wrest::Http points to this module by default.
   module Native
     include Wrest::HttpShared
   end

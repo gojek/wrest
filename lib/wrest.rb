@@ -20,8 +20,9 @@ require 'benchmark'
 require 'active_support'
 
 
-module Wrest  #:nodoc:
+module Wrest
   Root = File.dirname(__FILE__)
+  
   def self.logger=(logger)
     @logger = logger
   end
@@ -30,10 +31,12 @@ module Wrest  #:nodoc:
     @logger
   end
 
+  # Switch Wrest to using Net::HTTP.
   def self.use_native
     silence_warnings{ Wrest.const_set('Http', Wrest::Native) }
   end
 
+  # Switch Wrest to using libcurl.
   def self.use_curl
     require "#{Wrest::Root}/wrest/curl"
     silence_warnings{ Wrest.const_set('Http', Wrest::Curl) }
@@ -68,13 +71,13 @@ end
 Dir["#{File.expand_path(File.dirname(__FILE__))}/wrest/core_ext/*.rb"].each { |file| require file }
 
 # Load Wrest Core
+require "#{Wrest::Root}/wrest/version"
 require "#{Wrest::Root}/wrest/http_shared"
 require "#{Wrest::Root}/wrest/native"
 
 # Load Wrest Wrappers
 require "#{Wrest::Root}/wrest/uri"
 require "#{Wrest::Root}/wrest/uri_template"
-require "#{Wrest::Root}/wrest/version"
 require "#{Wrest::Root}/wrest/exceptions"
 require "#{Wrest::Root}/wrest/components"
 

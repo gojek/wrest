@@ -36,7 +36,7 @@ namespace :spec do
     task.spec_opts = ['--options', 'spec/spec.opts']
   end
   
-  desc "Run unit all specs"
+  desc "Run all live functional specs"
   Spec::Rake::SpecTask.new(:functional) do |task|
     task.spec_files = FileList['spec/functional/wrest/**/*_spec.rb']
     task.spec_opts = ['--options', 'spec/spec.opts']

@@ -15,8 +15,7 @@ rescue Gem::LoadError => e
 end
 require 'patron'
 
-module Wrest #:nodoc:
-
+module Wrest
   # Contains all HTTP protocol related classes such as
   # Get, Post, Request, Response etc. and uses Curl for
   # better performance, but works only on CRuby and only on a *nix OS.
@@ -33,7 +32,8 @@ module Wrest #:nodoc:
   end
 end
 
-module Patron
+module Patron #:nodoc:
+  # Patching Patron::Session#handle_request to make it public.
   class Session
     public :handle_request
   end

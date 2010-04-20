@@ -7,6 +7,7 @@ Features under a numbered section are complete and available in the Wrest gem.
 == Coming soon
  * Cookie support
  * Proxy support
+ * Multi-part post support
  
 == In progress
  * 304/ETag response caching
