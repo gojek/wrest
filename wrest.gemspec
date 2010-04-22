@@ -5,12 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{wrest}
-  s.version = "0.1.0"
-  s.platform = %q{java}
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2009-12-21}
+  s.date = %q{2010-04-23}
   s.description = %q{Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service.}
   s.email = %q{ckponnappa@gmail.com}
   s.executables = ["wrest", "jwrest"]
@@ -25,8 +24,10 @@ Gem::Specification.new do |s|
      "bin/jwrest",
      "bin/wrest",
      "bin/wrest_shell.rb",
+     "examples/aws_simpledb.rb",
      "examples/delicious.rb",
      "examples/facebook.rb",
+     "examples/imgur_multipart.rb",
      "examples/keep_alive.rb",
      "examples/redirection.rb",
      "examples/twitter.rb",
@@ -65,13 +66,16 @@ Gem::Specification.new do |s|
      "lib/wrest/http_shared/headers.rb",
      "lib/wrest/http_shared/standard_headers.rb",
      "lib/wrest/http_shared/standard_tokens.rb",
+     "lib/wrest/multipart.rb",
      "lib/wrest/native.rb",
      "lib/wrest/native/connection_factory.rb",
      "lib/wrest/native/delete.rb",
      "lib/wrest/native/get.rb",
      "lib/wrest/native/options.rb",
      "lib/wrest/native/post.rb",
+     "lib/wrest/native/post_multipart.rb",
      "lib/wrest/native/put.rb",
+     "lib/wrest/native/put_multipart.rb",
      "lib/wrest/native/redirection.rb",
      "lib/wrest/native/request.rb",
      "lib/wrest/native/response.rb",
@@ -122,18 +126,16 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/custom_matchers/custom_matchers.rb",
      "spec/unit/spec_helper.rb",
-     "spec/unit/wrest/uri_spec.rb",
-     "spec/unit/wrest/uri_template_spec.rb",
-     "spec/unit/wrest/components/attributes_container_spec.rb",
-     "spec/unit/wrest/components/mutators_spec.rb",
-     "spec/unit/wrest/components/translators_spec.rb",
      "spec/unit/wrest/components/attributes_container/alias_accessors_spec.rb",
      "spec/unit/wrest/components/attributes_container/typecaster_spec.rb",
+     "spec/unit/wrest/components/attributes_container_spec.rb",
      "spec/unit/wrest/components/mutators/base_spec.rb",
      "spec/unit/wrest/components/mutators/camel_to_snake_spec.rb",
      "spec/unit/wrest/components/mutators/xml_mini_type_caster_spec.rb",
      "spec/unit/wrest/components/mutators/xml_simple_type_caster_spec.rb",
+     "spec/unit/wrest/components/mutators_spec.rb",
      "spec/unit/wrest/components/translators/xml_spec.rb",
+     "spec/unit/wrest/components/translators_spec.rb",
      "spec/unit/wrest/core_ext/hash/conversions_spec.rb",
      "spec/unit/wrest/core_ext/string/conversions_spec.rb",
      "spec/unit/wrest/curl/request_spec.rb",
@@ -143,7 +145,9 @@ Gem::Specification.new do |s|
      "spec/unit/wrest/native/request_spec.rb",
      "spec/unit/wrest/native/response_spec.rb",
      "spec/unit/wrest/native/session_spec.rb",
-     "spec/unit/wrest/resource/base_spec.rb"
+     "spec/unit/wrest/resource/base_spec.rb",
+     "spec/unit/wrest/uri_spec.rb",
+     "spec/unit/wrest/uri_template_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -152,17 +156,14 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.5"])
-      s.add_runtime_dependency(%q<json-jruby>, [">= 1.1.3"])
-      s.add_runtime_dependency(%q<nokogiri>, [">= 1.3.3"])
+      s.add_runtime_dependency(%q<json>, [">= 1.1.3"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.5"])
-      s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
-      s.add_dependency(%q<nokogiri>, [">= 1.3.3"])
+      s.add_dependency(%q<json>, [">= 1.1.3"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.5"])
-    s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
-    s.add_dependency(%q<nokogiri>, [">= 1.3.3"])
+    s.add_dependency(%q<json>, [">= 1.1.3"])
   end
 end
 

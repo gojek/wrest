@@ -1,6 +1,6 @@
 = Wrest 0.1.1
 
-(c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
+(c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
 Wrest is a ruby REST client library which
 * allows allows you to quickly build object oriented wrappers around any web service 

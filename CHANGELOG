@@ -13,7 +13,7 @@ Features under a numbered section are complete and available in the Wrest gem.
  * 304/ETag response caching
  * Keep-alive support for libcurl
 
-== Current
+== 0.1.1
  * Multipart post and put using Net::Http
 
 == 0.1.0
