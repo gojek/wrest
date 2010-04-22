@@ -7,11 +7,14 @@ Features under a numbered section are complete and available in the Wrest gem.
 == Coming soon
  * Cookie support
  * Proxy support
- * Multi-part post support
+ * Multi-part post support on curl
  
 == In progress
  * 304/ETag response caching
  * Keep-alive support for libcurl
+
+== Current
+ * Multipart post and put using Net::Http
 
 == 0.1.0
  * Added Nokogiri as a fallback for LibXML Ruby before we give up and use REXML. (Nokogiri is available on JRuby, unlike LibXML-ruby)

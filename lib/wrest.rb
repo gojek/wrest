@@ -23,6 +23,8 @@ require 'active_support'
 module Wrest
   Root = File.dirname(__FILE__)
   
+  $:.unshift Root
+  
   def self.logger=(logger)
     @logger = logger
   end

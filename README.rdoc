@@ -1,4 +1,4 @@
-= Wrest 0.1.0
+= Wrest 0.1.1
 
 (c) Copyright 2009 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -44,12 +44,12 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
   require 'rubygems'
   require 'wrest'
   y "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
-									:appid  => 'YahooDemo', 
-									:output => 'xml',
-									:query  => 'India',
-									:results=> '3',
-									:start  => '1'
-								)
+                  :appid  => 'YahooDemo', 
+                  :output => 'xml',
+                  :query  => 'India',
+                  :results=> '3',
+                  :start  => '1'
+                )
 === Usage: Basic Http Calls
 
 ==== GET
@@ -64,16 +64,16 @@ A couple of ways to get Yahoo news as a hash map.
  require 'wrest'
  include Wrest::Components
  y "http://search.yahooapis.com/NewsSearchService/V1/newsSearch".to_uri.get(
-									:appid  => 'YahooDemo', 
-									:output => 'xml',
-									:query  => 'India',
-									:results=> '3',
-									:start  => '1'
-								).deserialise_using(
-									Translators::Xml
-								).mutate_using(
-									Mutators::XmlMiniTypeCaster.new
-								)
+                  :appid  => 'YahooDemo', 
+                  :output => 'xml',
+                  :query  => 'India',
+                  :results=> '3',
+                  :start  => '1'
+                ).deserialise_using(
+                  Translators::Xml
+                ).mutate_using(
+                  Mutators::XmlMiniTypeCaster.new
+                )
 
 ==== DELETE
 
@@ -163,6 +163,7 @@ If you're looking for help doing this on Rails on the server side, take a look a
 * json (json-jruby on JRuby)
 * active_support
 * ruby-libxml or Nokogiri (Wrest tries ruby-libxml first, then nokogiri, and will finally fall back on REXML; be aware that Wrest uses ActiveSupport::XmlMini, so if you're using Wrest as a plugin in a Rails application, all xml parsing across the application will switch to using libxml if it's available. You're free to change this by hand by using the ActiveSupport::XmlMini.backend= method.)
+* multipart-post (needed only if multipart support is enabled)
 
 === Build
   

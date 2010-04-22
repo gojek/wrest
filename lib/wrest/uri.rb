@@ -104,8 +104,8 @@ module Wrest #:nodoc:
     end
     
     # Makes a POST request to this URI. This is a convenience API
-    # that mimics a form being posted; some allegly RESTful APIs like FCBK
-
+    # that mimics a form being posted; some allegly RESTful APIs like FCBK require 
+    # this.
     #
     # Form encoding involves munging the parameters into a string and placing them
     # in the body, as well as setting the Content-Type header to

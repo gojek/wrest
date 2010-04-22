@@ -10,4 +10,5 @@ ActionController::Routing::Routes.draw do |map|
   map.headers '/eight_seconds', :controller => 'application', :action => 'eight_seconds'
   
   map.resources :glass_bottles, :lead_bottles
+  map.resources :uploads, :only => [:create, :update]
 end

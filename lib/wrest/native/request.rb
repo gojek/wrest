@@ -35,7 +35,6 @@ module Wrest::Native
       @uri = wrest_uri
       @headers = headers.stringify_keys
       @parameters = parameters
-      @http_request = http_request_klass.new(parameters.empty? ? wrest_uri.full_path : "#{wrest_uri.full_path}?#{parameters.to_query}", @headers)
       @body = body
       @options = options.clone
       @username = @options[:username]
@@ -45,6 +44,7 @@ module Wrest::Native
       @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
       @timeout = @options[:timeout]
       @connection = @options[:connection]
+      @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
     end
 
     # Makes a request and returns a Wrest::Native::Response. 
@@ -73,12 +73,20 @@ module Wrest::Native
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"
       
       Wrest.logger.debug "--> (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
-      time = Benchmark.realtime { response = Wrest::Native::Response.new( @connection.request(@http_request, @body) ) }
+      time = Benchmark.realtime { response = Wrest::Native::Response.new( do_request ) }
       Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
       @follow_redirects ? response.follow(@options) : response
     rescue Timeout::Error => e
       raise Wrest::Exceptions::Timeout.new(e)
+    end
+
+    def build_request(request_klass, uri, parameters, headers)
+      request_klass.new(parameters.empty? ? uri.full_path : "#{uri.full_path}?#{parameters.to_query}", headers)
+    end
+  
+    def do_request
+      @connection.request(@http_request, @body)
     end
   end
 end
