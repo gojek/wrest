@@ -116,7 +116,7 @@ module Wrest::Components
       #
       # This method can be overidden should you need a different name.
       def element_name
-        @element_name ||= self.name.demodulize.underscore.underscore
+        @element_name ||= ActiveSupport::Inflector.demodulize(self.name).underscore.underscore
       end
     end
 

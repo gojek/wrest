@@ -9,8 +9,8 @@
 
 begin
   gem 'multipart-post', '>= 1.0'
-rescue Gem::LoadError
-  Wrest.logger.debug "Multipart Post >= 1.0 not found. Multipart Post is necessary to be able to post multipart. To install Multipart Post run `sudo gem install multipart-post`"
+rescue Gem::LoadError => e
+  Wrest.logger.debug "Multipart Post >= 1.0 not found. Multipart Post is necessary to be able to post multipart. To install Multipart Post run 'sudo gem install multipart-post'"
   raise e
 end
 
