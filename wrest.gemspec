@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2010-04-23}
+  s.date = %q{2010-05-06}
   s.description = %q{Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service.}
   s.email = %q{ckponnappa@gmail.com}
   s.executables = ["wrest", "jwrest"]
@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
      "bin/jwrest",
      "bin/wrest",
      "bin/wrest_shell.rb",
-     "examples/aws_simpledb.rb",
      "examples/delicious.rb",
      "examples/facebook.rb",
      "examples/imgur_multipart.rb",
@@ -121,7 +120,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{wrest}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{REST client library for Ruby.}
   s.test_files = [
     "spec/custom_matchers/custom_matchers.rb",
