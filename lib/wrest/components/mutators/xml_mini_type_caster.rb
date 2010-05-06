@@ -23,7 +23,7 @@ module Wrest
           if in_value['nil'] == 'true'
             out_value = nil
           elsif in_value.key?('type')
-            caster = ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING[in_value['type']]
+            caster = Hash::XML_PARSING[in_value['type']]
             out_value = caster ? caster.call(in_value['__content__']) : in_value
           elsif in_value.key?('__content__')
             out_value = in_value['__content__']

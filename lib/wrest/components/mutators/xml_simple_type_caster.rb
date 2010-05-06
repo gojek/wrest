@@ -24,7 +24,7 @@ module Wrest
           if in_value['nil'] == 'true'
             out_value = nil
           elsif in_value.key?('type')
-            out_value = ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING[in_value['type']].call(in_value['content'])
+            out_value = Hash::XML_PARSING[in_value['type']].call(in_value['content'])
           else
             out_value = in_value.mutate_using(self)
           end
