@@ -73,6 +73,10 @@ rescue Gem::LoadError
   end
 end
 
+gem 'json', '>= 1.4.2'
+ActiveSupport::JSON.backend = "JSONGem"
+
+
 Dir["#{File.expand_path(File.dirname(__FILE__))}/wrest/core_ext/*.rb"].each { |file| require file }
 
 # Load Wrest Core

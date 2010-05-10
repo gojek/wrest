@@ -94,11 +94,11 @@ begin
     gemspec.add_dependency('activesupport', '>= 2.3.5')
     case RUBY_PLATFORM
     when /java/
-      gemspec.add_dependency('json-jruby', '>= 1.1.3')
+      gemspec.add_dependency('json-jruby', '>= 1.4.2')
       gemspec.add_dependency('nokogiri', '>= 1.3.3')
       gemspec.platform = 'java'
     else
-      gemspec.add_dependency('json', '>= 1.1.3')
+      gemspec.add_dependency('json', '>= 1.4.2')
       gemspec.platform = Gem::Platform::RUBY
     end
   end
