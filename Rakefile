@@ -10,7 +10,7 @@
 # Note that some optional libraries/gems that the build (not Wrest itself) uses may not be available on all implementations of Ruby.
 puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
-if Object.const_defined?('RAILS_ROOT')
+if Object.const_defined?('RAILS_ROOT') || Object.const_defined?('Rails') 
   require File.dirname(__FILE__) + '/../../../config/environment'
 else
   require 'rubygems'
@@ -28,6 +28,8 @@ end
 
 desc 'Default: run spec tests.'
 task :default => 'rspec:unit'
+
+task :spec => 'rspec:unit'
 
 namespace :rspec do
   desc "Run all unit specs"
@@ -101,8 +103,8 @@ begin
     end
   end
 rescue LoadError
-  puts "Jeweler not available. Install it with: gem install technicalpickles-jeweler -s http://gems.github.com"
-  puts "If you're using JRuby and are having trouble installing jeweler, try installing the git (gem install git) and rubyforge (gem install rubyforge) gems by hand. Also remember to update gems itself (jruby -S gem update --system)."
+  puts "Jeweler not available. Install it with: gem install jeweler"
+  puts "If you're using JRuby and are having trouble installing jeweler, try installing the git (gem install git) and rubyforge (gem install rubyforge) gems by hand. Also remember to update gems itself (jruby -S gem update --system)." if RUBY_PLATFORM =~ /java/
 end
 
 begin
