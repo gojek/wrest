@@ -18,22 +18,27 @@ describe Wrest::Native::Get do
       @get = Wrest::Native::Get.new(@request_uri, {},{},{:cache_store => @cache})
     end
 
-    it "should call get_cached_response before making actual request" do
-      @get.should_receive(:get_cached_response)
-      @get.invoke
-    end
+    describe "dependencies" do
+      before :each do
+        @get.stub!(:invoke_without_cache_check).and_return(build_ok_response)
+      end
 
-    it "should call cache_response after calling invoke method for fresh request" do
-      @get.should_receive(:get_cached_response).and_return(nil)
-      @get.should_receive(:cache_response)
-      @get.invoke
-    end
+      it "should call get_cached_response before making actual request" do
+        @get.should_receive(:get_cached_response)
+        @get.invoke
+      end
 
-    it "should check if response already exists cache before making a request" do
-      @cache.should_receive(:has_key?).with(@request_uri)
-      @get.invoke
-    end
+      it "should call cache_response after calling invoke method for fresh request" do
+        @get.should_receive(:get_cached_response).and_return(nil)
+        @get.should_receive(:cache_response)
+        @get.invoke
+      end
 
+      it "should check if response already exists cache before making a request" do
+        @cache.should_receive(:has_key?).with(@request_uri)
+        @get.invoke
+      end
+    end
     it "should call invoke_without_cache_check if response does not exist in cache" do
       @cache.should_receive(:has_key?).with(@request_uri).and_return(false)
       @get.should_receive(:invoke_without_cache_check)
