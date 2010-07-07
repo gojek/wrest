@@ -13,7 +13,7 @@ module Wrest::Native
   # or Wrest::Native::Get etc. instead.
   class Request
     attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
-                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters
+                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters, :cache_store
     # Valid tuples for the options are:
     #   :username => String, defaults to nil
     #   :password => String, defaults to nil
@@ -31,6 +31,7 @@ module Wrest::Native
     #               in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
     #   :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #                  used for multiple requests.
+    #   :cache_store => The object which should be used as cache store for cacheable responses
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
@@ -45,6 +46,7 @@ module Wrest::Native
       @timeout = @options[:timeout]
       @connection = @options[:connection]
       @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
+      @cache_store = options[:cache_store]
     end
 
     # Makes a request and returns a Wrest::Native::Response. 
