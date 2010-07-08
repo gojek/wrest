@@ -66,7 +66,25 @@ module Wrest #:nodoc:
       end
 
       def cacheable?
+        code_cacheable? && no_cache_flag_not_set? & no_store_flag_not_set?
+      end
+
+      :private
+
+      def code_cacheable?
         !code.nil? && !/2\d{2}/.match(code).nil?
+      end
+
+      def no_cache_flag_not_set?
+        not cache_control_headers.include?('no-cache')
+      end
+
+      def no_store_flag_not_set?
+        not cache_control_headers.include?('no-store')
+      end
+
+      def cache_control_headers
+        headers['Cache-Control'].nil? ?  [] : headers['Cache-Control'].split(",")
       end
     end
   end

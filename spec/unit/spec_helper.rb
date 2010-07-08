@@ -26,18 +26,18 @@ Spec::Runner.configure do |config|
   config.include(CustomMatchers)
 end
 
-def build_ok_response(body = '')
-  returning mock(Net::HTTPOK) do |response|
-    response.stub!(:code).and_return('200')
-    response.stub!(:message).and_return('OK')
-    response.stub!(:body).and_return(body)
-  end
+def build_ok_response(body = '', headers = {})
+  build_response('200','OK',body, headers)
 end
 
-def build_response(code,message = '', body = '')
+def build_response(code,message = '', body = '', headers = {})
   returning mock(Net::HTTPOK) do |response|
     response.stub!(:code).and_return(code)
     response.stub!(:message).and_return(message)
     response.stub!(:body).and_return(body)
+    response.stub!(:to_hash).and_return(headers)
+    options.each{|k,v|
+      response.stub!('[]').with(k).and_return(v)
+    }
   end
 end
