@@ -33,3 +33,11 @@ def build_ok_response(body = '')
     response.stub!(:body).and_return(body)
   end
 end
+
+def build_response(code,message = '', body = '')
+  returning mock(Net::HTTPOK) do |response|
+    response.stub!(:code).and_return(code)
+    response.stub!(:message).and_return(message)
+    response.stub!(:body).and_return(body)
+  end
+end

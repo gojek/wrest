@@ -68,5 +68,25 @@ module Wrest
         response.should_not be_connection_closed
       end
     end
+
+    describe 'caching' do
+      it "should say its cacheable if the response code is in range of 200-299" do
+        http_response = mock('response')
+        ['200','210','299'].each do |code|
+          http_response.stub!(:code).and_return(code)
+          response = Native::Response.new(http_response)
+          response.cacheable?.should == true
+        end
+      end
+
+      it "it should say its not cacheable if the response code is not range of 200-299" do
+        http_response = mock('response')
+        ['100','300','400','500'].each do |code|
+          http_response.stub!(:code).and_return(code)
+          response = Native::Response.new(http_response)
+          response.cacheable?.should == false
+        end
+      end
+    end
   end
 end
