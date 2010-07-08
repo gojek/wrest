@@ -60,9 +60,13 @@ module Wrest #:nodoc:
       def follow(redirect_request_options = {})
         self
       end
-      
+
       def connection_closed?
         self[Native::StandardHeaders::Connection].downcase == Native::StandardTokens::Close.downcase
+      end
+
+      def cacheable?
+        !code.nil? && !/2\d{2}/.match(code).nil?
       end
     end
   end

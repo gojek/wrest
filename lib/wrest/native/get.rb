@@ -27,7 +27,7 @@ module Wrest::Native
       cached_response = get_cached_response
       if cached_response.nil? then
         response = invoke_without_cache_check
-        cache_response(response)
+        cache_response(response) if !response.nil? && response.cacheable?
         response
       else
         cached_response
