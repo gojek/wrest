@@ -41,3 +41,7 @@ def build_response(code,message = '', body = '', headers = {})
     }
   end
 end
+
+def format_date_in_rfc822_format(date)
+  date.in_time_zone('UTC').strftime('%a, %d %b %Y %H:%M:%S %Z')
+end
