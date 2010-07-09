@@ -96,6 +96,18 @@ module Wrest
           response = Native::Response.new(build_ok_response('','Cache-Control' => 'no-store'))
           response.cacheable?.should == false
         end
+
+        it "should not be cacheable for response with Expires header in past" do
+          yesterday_in_rfc822_format = format_date_in_rfc822_format(DateTime.now - 1)
+          response = Native::Response.new(build_ok_response('','Cache-Control' => 'Expires = '+yesterday_in_rfc822_format))
+          response.cacheable?.should == false
+        end
+
+        it "should be cacheable for response with Expires header in future" do
+          yesterday_in_rfc822_format = format_date_in_rfc822_format(DateTime.now + 1)
+          response = Native::Response.new(build_ok_response('','Cache-Control' => 'Expires = '+yesterday_in_rfc822_format))
+          response.cacheable?.should == true
+        end
       end
     end
   end
