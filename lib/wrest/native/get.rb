@@ -12,6 +12,7 @@ module Wrest::Native
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       follow_redirects = options[:follow_redirects]
       options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
+      options[:cache_store] ||= {}
       super(
             wrest_uri, 
             Net::HTTP::Get, 
@@ -21,5 +22,30 @@ module Wrest::Native
             options
           )
     end
+
+    def invoke_with_cache_check
+      cached_response = get_cached_response
+      if cached_response.nil? then
+        response = invoke_without_cache_check
+        cache_response(response)
+        response
+      else
+        cached_response
+      end
+    end
+
+    def get_cached_response
+      response = nil
+      if cache_store.has_key?(@uri)
+        response = cache_store.fetch(@uri)
+      end
+      response
+    end
+
+    def cache_response(response)
+      cache_store[@uri] = response
+    end
+
+    alias_method_chain :invoke, :cache_check
   end
 end
