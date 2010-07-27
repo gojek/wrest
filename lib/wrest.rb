@@ -74,7 +74,7 @@ rescue Gem::LoadError
   end
 end
 
-gem 'json', '>= 1.4.2'
+RUBY_PLATFORM =~ /java/ ? gem('json-jruby', '>= 1.4.2') : gem('json', '>= 1.4.2')
 ActiveSupport::JSON.backend = "JSONGem"
 
 

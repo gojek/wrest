@@ -4,7 +4,8 @@ Wrest::Http = Wrest::Native
 
 module Wrest
   describe Native::Session do
-    xit "should know how to use the connection provided to make requests" do
+    it "should know how to use the connection provided to make requests"
+    def cont
       Native::Session.new('http://github.com') do |session|
         session.get('/repositories').should_not be_connection_closed
       end
