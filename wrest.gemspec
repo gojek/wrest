@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{wrest}
-  s.version = "0.1.1"
+  s.version = "1.0.0.beta0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2010-05-06}
+  s.date = %q{2010-07-27}
   s.description = %q{Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service.}
   s.email = %q{ckponnappa@gmail.com}
   s.executables = ["wrest", "jwrest"]
@@ -90,7 +90,7 @@ Gem::Specification.new do |s|
      "lib/wrest/version.rb",
      "spec/custom_matchers/custom_matchers.rb",
      "spec/rcov.opts",
-     "spec/spec.opts",
+     "spec/spec.opts.disable",
      "spec/unit/spec_helper.rb",
      "spec/unit/wrest/components/attributes_container/alias_accessors_spec.rb",
      "spec/unit/wrest/components/attributes_container/typecaster_spec.rb",
@@ -120,7 +120,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{wrest}
-  s.rubygems_version = %q{1.3.6}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{REST client library for Ruby.}
   s.test_files = [
     "spec/custom_matchers/custom_matchers.rb",
@@ -153,16 +153,16 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.5"])
-      s.add_runtime_dependency(%q<json>, [">= 1.1.3"])
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0.rc"])
+      s.add_runtime_dependency(%q<json>, [">= 1.4.2"])
     else
-      s.add_dependency(%q<activesupport>, [">= 2.3.5"])
-      s.add_dependency(%q<json>, [">= 1.1.3"])
+      s.add_dependency(%q<activesupport>, [">= 3.0.0.rc"])
+      s.add_dependency(%q<json>, [">= 1.4.2"])
     end
   else
-    s.add_dependency(%q<activesupport>, [">= 2.3.5"])
-    s.add_dependency(%q<json>, [">= 1.1.3"])
+    s.add_dependency(%q<activesupport>, [">= 3.0.0.rc"])
+    s.add_dependency(%q<json>, [">= 1.4.2"])
   end
 end
 
