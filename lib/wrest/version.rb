@@ -10,11 +10,12 @@
 module Wrest
   module VERSION
     unless defined? MAJOR
-      MAJOR  = 0
-      MINOR  = 9
+      MAJOR  = 1
+      MINOR  = 0
       TINY   = 0
-
-      STRING = [MAJOR, MINOR, TINY].join('.')
+      UNSTABLE = 'beta0'
+      
+      STRING = [MAJOR, MINOR, TINY, UNSTABLE].compact.join('.')
 
       SUMMARY = "wrest version #{STRING}"
     end
