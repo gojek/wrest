@@ -6,8 +6,9 @@
 Gem::Specification.new do |s|
   s.name = %q{wrest}
   s.version = "1.0.0.beta0"
+  s.platform = %q{java}
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
   s.date = %q{2010-07-27}
   s.description = %q{Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service.}
@@ -125,16 +126,18 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/custom_matchers/custom_matchers.rb",
      "spec/unit/spec_helper.rb",
+     "spec/unit/wrest/uri_spec.rb",
+     "spec/unit/wrest/uri_template_spec.rb",
+     "spec/unit/wrest/components/attributes_container_spec.rb",
+     "spec/unit/wrest/components/mutators_spec.rb",
+     "spec/unit/wrest/components/translators_spec.rb",
      "spec/unit/wrest/components/attributes_container/alias_accessors_spec.rb",
      "spec/unit/wrest/components/attributes_container/typecaster_spec.rb",
-     "spec/unit/wrest/components/attributes_container_spec.rb",
      "spec/unit/wrest/components/mutators/base_spec.rb",
      "spec/unit/wrest/components/mutators/camel_to_snake_spec.rb",
      "spec/unit/wrest/components/mutators/xml_mini_type_caster_spec.rb",
      "spec/unit/wrest/components/mutators/xml_simple_type_caster_spec.rb",
-     "spec/unit/wrest/components/mutators_spec.rb",
      "spec/unit/wrest/components/translators/xml_spec.rb",
-     "spec/unit/wrest/components/translators_spec.rb",
      "spec/unit/wrest/core_ext/hash/conversions_spec.rb",
      "spec/unit/wrest/core_ext/string/conversions_spec.rb",
      "spec/unit/wrest/curl/request_spec.rb",
@@ -144,9 +147,7 @@ Gem::Specification.new do |s|
      "spec/unit/wrest/native/request_spec.rb",
      "spec/unit/wrest/native/response_spec.rb",
      "spec/unit/wrest/native/session_spec.rb",
-     "spec/unit/wrest/resource/base_spec.rb",
-     "spec/unit/wrest/uri_spec.rb",
-     "spec/unit/wrest/uri_template_spec.rb"
+     "spec/unit/wrest/resource/base_spec.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -155,14 +156,17 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0.rc"])
-      s.add_runtime_dependency(%q<json>, [">= 1.4.2"])
+      s.add_runtime_dependency(%q<json-jruby>, [">= 1.4.2"])
+      s.add_runtime_dependency(%q<nokogiri>, [">= 1.3.3"])
     else
       s.add_dependency(%q<activesupport>, [">= 3.0.0.rc"])
-      s.add_dependency(%q<json>, [">= 1.4.2"])
+      s.add_dependency(%q<json-jruby>, [">= 1.4.2"])
+      s.add_dependency(%q<nokogiri>, [">= 1.3.3"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 3.0.0.rc"])
-    s.add_dependency(%q<json>, [">= 1.4.2"])
+    s.add_dependency(%q<json-jruby>, [">= 1.4.2"])
+    s.add_dependency(%q<nokogiri>, [">= 1.3.3"])
   end
 end
 
