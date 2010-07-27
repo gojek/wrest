@@ -27,9 +27,9 @@ else
 end
 
 desc 'Default: run spec tests.'
-task :default => 'spec:unit'
+task :default => 'rspec:unit'
 
-namespace :spec do
+namespace :rspec do
   desc "Run all unit specs"
   RSpec::Core::RakeTask.new(:unit) do |task|
     task.pattern = 'spec/unit/wrest/**/*_spec.rb'
