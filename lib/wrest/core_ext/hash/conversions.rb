@@ -34,9 +34,9 @@ module Wrest
         #                           :start  => '1'
         #                         ).deserialise.mutate_using(XmlSimpleTypeCaster.new)
         def mutate_using(mutator)
-          returning({})do |mutated_hash|
+          mutated_hash = {}
             self.each{|tuple| mutated_hash.store(*mutator.mutate(tuple))}
-          end
+          mutated_hash
         end
       end
     end
