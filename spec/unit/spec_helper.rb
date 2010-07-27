@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/../../lib/wrest")
 require "#{Wrest::Root}/wrest/curl" unless RUBY_PLATFORM =~ /java/
-require 'spec'
+require 'rspec'
 
 ['/../custom_matchers/**/*.rb'].each{|directory|
   Dir["#{File.expand_path(File.dirname(__FILE__) + directory)}"].each { |file|
@@ -22,7 +22,7 @@ def puts(*args)
  # super *args
 end
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.include(CustomMatchers)
 end
 
