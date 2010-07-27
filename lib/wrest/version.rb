@@ -13,9 +13,9 @@ module Wrest
       MAJOR  = 1
       MINOR  = 0
       TINY   = 0
-      UNSTABLE = 'beta0'
+      BUILD = 'beta0'
       
-      STRING = [MAJOR, MINOR, TINY, UNSTABLE].compact.join('.')
+      STRING = [MAJOR, MINOR, TINY, BUILD].compact.join('.')
 
       SUMMARY = "wrest version #{STRING}"
     end
