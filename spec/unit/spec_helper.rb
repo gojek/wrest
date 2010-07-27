@@ -27,9 +27,9 @@ RSpec.configure do |config|
 end
 
 def build_ok_response(body = '')
-  returning mock(Net::HTTPOK) do |response|
+  response = mock(Net::HTTPOK)
     response.stub!(:code).and_return('200')
     response.stub!(:message).and_return('OK')
     response.stub!(:body).and_return(body)
-  end
+  response
 end

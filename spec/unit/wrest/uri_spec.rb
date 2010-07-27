@@ -129,10 +129,10 @@ module Wrest
     
     describe 'HTTP actions' do
       def setup_http
-        returning mock(Net::HTTP) do |http|
+        http = mock(Net::HTTP) 
           Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
           http.should_receive(:read_timeout=).with(60)
-        end
+        http
       end
       
       it "should know how to get" do
