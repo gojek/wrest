@@ -5,14 +5,15 @@
 
 Gem::Specification.new do |s|
   s.name = %q{wrest}
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2010-04-23}
+  s.date = %q{2010-07-26}
+  s.default_executable = %q{wrest}
   s.description = %q{Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service.}
   s.email = %q{ckponnappa@gmail.com}
-  s.executables = ["wrest", "jwrest"]
+  s.executables = ["wrest"]
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
@@ -24,7 +25,6 @@ Gem::Specification.new do |s|
      "bin/jwrest",
      "bin/wrest",
      "bin/wrest_shell.rb",
-     "examples/aws_simpledb.rb",
      "examples/delicious.rb",
      "examples/facebook.rb",
      "examples/imgur_multipart.rb",
@@ -108,6 +108,7 @@ Gem::Specification.new do |s|
      "spec/unit/wrest/curl/request_spec.rb",
      "spec/unit/wrest/curl/response_spec.rb",
      "spec/unit/wrest/http/response_spec.rb",
+     "spec/unit/wrest/native/get_spec.rb",
      "spec/unit/wrest/native/redirection_spec.rb",
      "spec/unit/wrest/native/request_spec.rb",
      "spec/unit/wrest/native/response_spec.rb",
@@ -121,7 +122,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{wrest}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.7}
   s.summary = %q{REST client library for Ruby.}
   s.test_files = [
     "spec/custom_matchers/custom_matchers.rb",
@@ -141,6 +142,7 @@ Gem::Specification.new do |s|
      "spec/unit/wrest/curl/request_spec.rb",
      "spec/unit/wrest/curl/response_spec.rb",
      "spec/unit/wrest/http/response_spec.rb",
+     "spec/unit/wrest/native/get_spec.rb",
      "spec/unit/wrest/native/redirection_spec.rb",
      "spec/unit/wrest/native/request_spec.rb",
      "spec/unit/wrest/native/response_spec.rb",
@@ -154,15 +156,15 @@ Gem::Specification.new do |s|
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.5"])
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<activesupport>, ["= 2.3.8"])
       s.add_runtime_dependency(%q<json>, [">= 1.1.3"])
     else
-      s.add_dependency(%q<activesupport>, [">= 2.3.5"])
+      s.add_dependency(%q<activesupport>, ["= 2.3.8"])
       s.add_dependency(%q<json>, [">= 1.1.3"])
     end
   else
-    s.add_dependency(%q<activesupport>, [">= 2.3.5"])
+    s.add_dependency(%q<activesupport>, ["= 2.3.8"])
     s.add_dependency(%q<json>, [">= 1.1.3"])
   end
 end

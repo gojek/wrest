@@ -14,7 +14,7 @@ if Object.const_defined?('RAILS_ROOT') || Object.const_defined?('Rails')
   require File.dirname(__FILE__) + '/../../../config/environment'
 else
   require 'rubygems'
-  gem 'rspec'
+  gem 'rspec', '= 1.3.0'
   require 'rake'
   require 'spec'
   require 'spec/rake/spectask'
@@ -88,11 +88,11 @@ begin
     gemspec.homepage = "http://github.com/kaiwren/wrest"
     gemspec.has_rdoc = true
     gemspec.rubyforge_project = 'wrest'
-    gemspec.executables = ['wrest', 'jwrest']
+    gemspec.executables = ['wrest']
     gemspec.require_path = "lib"
     gemspec.files.exclude *['.gitignore', 'spec/functional']
     gemspec.test_files.exclude *['.gitignore', 'spec/functional', 'examples']
-    gemspec.add_dependency('activesupport', '>= 2.3.5')
+    gemspec.add_dependency('activesupport', '= 2.3.8')
     case RUBY_PLATFORM
     when /java/
       gemspec.add_dependency('json-jruby', '>= 1.1.3')

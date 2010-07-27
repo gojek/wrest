@@ -7,7 +7,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'rubygems'
-gem 'activesupport', ['>= 2.3.5','< 2.3.8']
+gem 'activesupport', '=2.3.8'
 
 require 'net/http'
 require 'net/https'
