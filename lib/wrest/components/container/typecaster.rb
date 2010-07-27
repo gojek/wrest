@@ -29,39 +29,39 @@ module Wrest
 
       module Helpers
         def as_base64Binary
-          Hash::XML_PARSING['base64Binary']
+          ActiveSupport::XmlMini::PARSING['base64Binary']
         end
 
         def as_boolean
-          Hash::XML_PARSING['boolean']
+          ActiveSupport::XmlMini::PARSING['boolean']
         end
 
         def as_decimal
-          Hash::XML_PARSING['decimal']
+          ActiveSupport::XmlMini::PARSING['decimal']
         end
 
         def as_date
-          Hash::XML_PARSING['date']
+          ActiveSupport::XmlMini::PARSING['date']
         end
 
         def as_datetime
-          Hash::XML_PARSING['datetime']
+          ActiveSupport::XmlMini::PARSING['datetime']
         end
 
         def as_float
-          Hash::XML_PARSING['float']
+          ActiveSupport::XmlMini::PARSING['float']
         end
 
         def as_integer
-          Hash::XML_PARSING['integer']
+          ActiveSupport::XmlMini::PARSING['integer']
         end
 
         def as_symbol
-          Hash::XML_PARSING['symbol']
+          ActiveSupport::XmlMini::PARSING['symbol']
         end
 
         def as_yaml
-          Hash::XML_PARSING['yaml']
+          ActiveSupport::XmlMini::PARSING['yaml']
         end
       end
 

@@ -91,7 +91,7 @@ begin
     gemspec.require_path = "lib"
     gemspec.files.exclude *['.gitignore', 'spec/functional']
     gemspec.test_files.exclude *['.gitignore', 'spec/functional', 'examples']
-    gemspec.add_dependency('activesupport', '>= 2.3.5')
+    gemspec.add_dependency('activesupport', '>= 3.0.0.rc')
     case RUBY_PLATFORM
     when /java/
       gemspec.add_dependency('json-jruby', '>= 1.4.2')
