@@ -13,8 +13,8 @@ Features under a numbered section are complete and available in the Wrest gem.
  * 304/ETag response caching
  * Keep-alive support for libcurl
 
-== 1.0.0
- * Dependencies updated to ActiveSupport 3.0
+== 0.9.0
+ * Dependencies updated to ActiveSupport 3.0.0.rc and RSpec 2.0.0.beta19
 
 == 0.1.2
  * Locked gem dependencies to ActiveSupport 2.3.8 and rspec 1.3.0 to avoid breakages caused by inadvertently requiring the Rails 3.0 and Rspec 2.0 gems which have changed greatly
