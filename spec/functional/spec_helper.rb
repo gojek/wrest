@@ -1,5 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + "/../../lib/wrest")
-require "#{Wrest::Root}/wrest/curl"
 require 'rspec'
 
 Wrest.logger = Logger.new(File.open("#{Wrest::Root}/../log/test.log", 'a'))
