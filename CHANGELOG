@@ -14,6 +14,8 @@ Features under a numbered section are complete and available in the Wrest gem.
  * Cookie support
  * Response code checkers: ok?, redirect?, created? etc.
  * Alias deserialise as deserialize
+ * Make Components::Containers hash store a HashWithIndifferentAccess
+ * Ensure Components::Container is ActiveModel compliant
 
 == 1.0.0.beta1
  * If libxml-ruby isn't found but nokogiri, don't warn about libxml-ruby
