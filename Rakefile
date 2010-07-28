@@ -85,7 +85,7 @@ begin
     gemspec.homepage = "http://github.com/kaiwren/wrest"
     gemspec.has_rdoc = true
     gemspec.rubyforge_project = 'wrest'
-    gemspec.executables = ['wrest', 'jwrest']
+    gemspec.executables = ['wrest']
     gemspec.require_path = "lib"
     gemspec.files.exclude *['.gitignore', 'spec/functional']
     gemspec.test_files.exclude *['.gitignore', 'spec/functional', 'examples']
