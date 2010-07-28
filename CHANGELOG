@@ -12,7 +12,8 @@ Features under a numbered section are complete and available in the Wrest gem.
  * 304/ETag response caching
  * Keep-alive support for libcurl
  * Cookie support
- * Response code checkers: ok?, redirect? etc.
+ * Response code checkers: ok?, redirect?, created? etc.
+ * Alias deserialise as deserialize
 
 == 1.0.0.beta1
  * If libxml-ruby isn't found but nokogiri, don't warn about libxml-ruby
