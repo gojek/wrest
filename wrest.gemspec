@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{wrest}
-  s.version = "1.0.0.beta0"
+  s.version = "1.0.0.beta1"
   s.platform = %q{java}
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sidu Ponnappa"]
-  s.date = %q{2010-07-27}
+  s.date = %q{2010-07-28}
   s.description = %q{Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service.}
   s.email = %q{ckponnappa@gmail.com}
   s.executables = ["wrest", "jwrest"]

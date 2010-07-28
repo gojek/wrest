@@ -13,7 +13,7 @@ module Wrest
       MAJOR  = 1
       MINOR  = 0
       TINY   = 0
-      BUILD = 'beta0'
+      BUILD = 'beta1'
       
       STRING = [MAJOR, MINOR, TINY, BUILD].compact.join('.')
 
