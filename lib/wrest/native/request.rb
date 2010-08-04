@@ -70,7 +70,7 @@ module Wrest::Native
       response = nil
       
       @connection ||= @uri.create_connection(timeout)
-      http_request.basic_auth username, password      
+      http_request.basic_auth username, password unless username.nil? || password.nil?
 
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"
       
