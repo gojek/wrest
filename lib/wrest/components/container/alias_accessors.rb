@@ -39,7 +39,7 @@ module Wrest
         # look somethig like this:
         #
         #  class User
-        #    include Wrest::Components::AttributesContainer
+        #    include Wrest::Components::Container
         #
         #    alias_accessors  :a => :age,
         #                     :s => :sex
