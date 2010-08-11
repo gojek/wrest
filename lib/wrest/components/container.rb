@@ -25,8 +25,8 @@ module Wrest::Components
   # <tt>respond_to?</tt> however will respond as though
   # they are all already present.
   # This means that two different instances of the same
-  # AttributesContainer could well have
-  # different attribute getters/setters/query methods.
+  # Container could well have different attribute 
+  # getters/setters/query methods.
   #
   # Note that the first call to a particular getter/setter/query
   # method will be slower because the method is defined
@@ -42,12 +42,12 @@ module Wrest::Components
   #
   # If you're implementing your own initialize method
   # remember to delegate to the default initialize
-  # of AttributesContainer by invoking <tt>super(attributes)</tt>
+  # of Container by invoking <tt>super(attributes)</tt>
   #
   # Example:
   #  class ShenCoin
-  #    include Wrest::Components::AttributesContainer
-  #    include Wrest::Components::AttributesContainer::Typecaster
+  #    include Wrest::Components::Container
+  #    include Wrest::Components::Container::Typecaster
   #
   #    always_has   :id
   #    typecast         :id   =>  as_integer
@@ -79,7 +79,7 @@ module Wrest::Components
 
     module ClassMethods
       # This macro explicitly creates getter, setter and query methods on
-      # an AttributesContainer, overriding any exisiting methods with the same names.
+      # an Container, overriding any exisiting methods with the same names.
       # This can be used when attribute names clash with existing method names;
       # an example would be Rails REST resources which frequently make use
       # an attribute named <tt>id</tt> which clashes with Object#id. Also,
@@ -96,13 +96,13 @@ module Wrest::Components
       end
       
       # This is a convenience macro which includes 
-      # Wrest::Components::AttributesContainer::Typecaster into
+      # Wrest::Components::Container::Typecaster into
       # the class (effectively overwriting this method) before delegating to 
       # the actual typecast method that is a part of that module.
       # This saves us the effort of explicitly doing the include. Easy to use API is king.
       #
       # Remember that using typecast carries a performance penalty.
-      # See Wrest::Components::AttributesContainer::Typecaster for the actual docs.
+      # See Wrest::Components::Container::Typecaster for the actual docs.
       def typecast(cast_map)
         self.class_eval{ include Wrest::Components::Container::Typecaster }
         self.typecast cast_map
@@ -125,8 +125,7 @@ module Wrest::Components
       # an attributes container by creating
       # two variables, @attributes and @interface.
       # Remember not to use these two variable names
-      # when using AttributesContainer in your
-      # own class.
+      # when using Container in your own class.
       def initialize(attributes = {})
         @attributes = attributes.symbolize_keys
       end
@@ -141,7 +140,7 @@ module Wrest::Components
       # applications; you may need to roll your own for anything else.
       #
       # Note: When serilising to XML, if you want the name of the class as the name of the root node
-      # then you should use the AttributesContainer#to_xml helper.
+      # then you should use the Container#to_xml helper.
       def serialise_using(translator, options = {})
         translator.serialise(@attributes, options)
       end
