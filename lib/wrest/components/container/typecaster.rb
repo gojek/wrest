@@ -9,8 +9,8 @@
 
 module Wrest
   module Components::Container
-    # An extension to AttributesContainer that adds support for
-    # specifying how the values associated with certain attribute keys
+    # An extension to Container that adds support for specifying
+    # how the values associated with certain attribute keys
     # should be typecast.
     #
     # This extension can be used in situations where the attributes
@@ -68,7 +68,7 @@ module Wrest
       module ClassMethods
         # Accepts a set of attribute-name/lambda pairs which are used
         # to typecast string values injected through the constructor.
-        # Typically needed when populating an +AttributesContainer+
+        # Typically needed when populating an +Container+
         # directly from request params. Typecasting kicks in for
         # a given value _only_ if it is a String, Hash or Array, the
         # three classes that deserilisation can produce.
@@ -88,8 +88,8 @@ module Wrest
         # Example:
         #
         #  class Demon
-        #    include Wrest::Components::AttributesContainer
-        #    include Wrest::Components::AttributesContainer::Typecaster
+        #    include Wrest::Components::Container
+        #    include Wrest::Components::Container::Typecaster
         #
         #    typecast         :age          =>  as_integer,
         #                     :chi          =>  lambda{|chi| Chi.new(chi)}

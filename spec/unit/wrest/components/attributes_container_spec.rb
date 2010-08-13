@@ -61,7 +61,7 @@ module Wrest::Components
         end
       end
 
-      it "should delegate to AttributesContainer::Typecaster#typecast to actually do the typecasting" do
+      it "should delegate to Container::Typecaster#typecast to actually do the typecasting" do
         @Demon.class_eval do
           typecast :foo => lambda{|value| value.to_i}
         end

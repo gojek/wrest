@@ -63,6 +63,26 @@ describe Wrest::Native::Request do
     request.follow_redirects_count.should == 0
   end
   
+  it "should not set basic authentication for request if either of username or password is nil" do
+    uri = 'http://localhost/foo'.to_uri
+    request = Wrest::Native::Get.new(uri)
+    http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
+    http_request.should_not_receive(:basic_auth)
+    request.should_receive(:http_request).any_number_of_times.and_return(http_request)
+    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => 200, :message => 'OK', :body => ''))
+    request.invoke
+  end
+
+  it "should set basic authentication for request" do
+    uri = 'http://localhost/foo'.to_uri
+    request = Wrest::Native::Get.new(uri, {}, {}, {:username => "name", :password => "password"})
+    http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
+    http_request.should_receive(:basic_auth).with('name', 'password')
+    request.should_receive(:http_request).any_number_of_times.and_return(http_request)
+    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => 200, :message => 'OK', :body => ''))
+    request.invoke
+  end
+
   it "should default the 'follow_redirects' option to false for a Post, Put or Delete" do
     Wrest::Native::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Native::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
