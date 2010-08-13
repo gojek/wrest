@@ -2,22 +2,16 @@
 
 (c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
-Wrest is a ruby REST client library which
-* allows allows you to quickly build object oriented wrappers around any web service 
-* is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
-* runs on Ruby 1.8 and JRuby with 1.9, Rubinius, MacRuby and IronRuby support on the way
+Wrest is a ruby REST/HTTP client library which
 
-To receive notifications whenever new features are added to Wrest, please subscribe to my {twitter feed}[http://twitter.com/ponnappa].
-
-(If you were wondering why the words 'demon', 'chi' and 'fu-puppies' show up in nearly every example and spec, it's because they're all references to {Roger Zelazny's}[http://en.wikipedia.org/wiki/Roger_Zelazny] last book, 'Lord Demon.')
-
-== Wrest Core: Features
-
+* Allows allows you to quickly build object oriented wrappers around any web service 
+* Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
+* Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
+* Runs on Ruby 1.8 and JRuby with 1.9, Rubinius, MacRuby and IronRuby support on the way
 * Provides convenient HTTP wrappers, redirect handling, serialisation and deserialisation with response caching in the works
 * Supports using either Net::HTTP or libcurl as the underlying HTTP library
-* Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
-* Isn't coupled to Rails (usable in a pure Ruby application to consume any HTTP/REST api)
-* Can be used both stand alone as well as to build object oriented abstractions around resources and web services (Wrest::Resource is an example of the latter)
+
+To receive notifications whenever new features are added to Wrest, please subscribe to my {twitter feed}[http://twitter.com/ponnappa].
 
 == Examples
 
@@ -27,19 +21,17 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 
 The source is available at git://github.com/kaiwren/wrest.git
 
-To install as a Rails plugin, do <tt>script/plugin install git://github.com/kaiwren/wrest.git</tt>
-
 To install the Wrest gem, do <tt>(sudo) gem install wrest --pre</tt>.
 
-Wrest is also available as a gem for JRuby; you can install it by running <tt>(sudo) jruby -S gem install wrest --pre</tt>.
+Wrest is currently available as a gem for for Ruby and JRuby.
 
-=== Usage: Shell
+=== Shell
 
 You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking <tt>wrest</tt> from your prompt if you've installed the gem.
   $ wrest
   >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(:timeout => 5).get.deserialise
 
-=== Usage: Library
+=== Library
 
   require 'rubygems'
   require 'wrest'
@@ -50,7 +42,7 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
                   :results=> '3',
                   :start  => '1'
                 )
-=== Usage: Basic Http Calls
+=== Basic Http Calls
 
 ==== GET
 
@@ -94,7 +86,7 @@ To find out what actions are permitted on a URI:
  'http://www.yahoo.com'.to_uri.options.headers['allow']
 
 
-=== Usage: Attributes Container
+=== Other useful stuff
 
 Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values. See examples/twitter.rb and examples/wow_realm_status.rb for more samples.
 
@@ -117,65 +109,19 @@ Example:
  kai_wren.energy   # => #<Chi:0x113af8c @count="1024">
  kai_wren.teacher  # => 'Viss'
 
-=== Usage: Logging
+=== Logging
 
 The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT. If you're using Wrest in a Rails application, you can configure logging by adding a config/initializers/wrest.rb file with the following contents :
   Wrest.logger = ActiveRecord::Base.logger
 
 === Build
 
-Standard options are available and can be listed using <tt>rake -T</tt>. Use rake:rcov for coverage and rake:rdoc to generate documentation.
+Standard options are available and can be listed using <tt>rake -T</tt>. Use rake:rcov for coverage and rake:rdoc to generate documentation. The link to the continuous integration build is over at the C42 Engineering {open source}[http://c42.in/open_source] page.
 
 == Documentation
 
 Wrest RDocs can be found at http://wrest.rubyforge.org
 
-== Wrest::Resource 
-
-Wrest::Resource is an alternative to Rails' ActiveResource. It targets Rails REST (well, POX, since Rails isn't really RESTful) services and is currently under development. Since no single REST library can provide an object oriented wrapper suitable for _all_ available web services, it follows that Wrest should focus on providing you with the tools to help you roll your own. Wrest::Resource is an example of this - an object oriented wrapper for the kind of REST APIs exposed by Rails applications, that you would otherwise use ActiveResource to consume.
-
-If you're looking for help doing this on Rails on the server side, take a look at {resource_full}[http://github.com/bguthrie/resource_full], a Rails plugin that makes RESTful Rails a whole order of magnitude easier. resource_full is a stable project and is currently in use in production.
-
-
-* No more pretending that REST resources are the same as records in a database (yeah, no more freaking ActiveResource::Connection that pretends it's a DB connection)
-* Treat put as 'create or update,' not just 'update'
-* Response codes result in user defined state transitions; favours state transitions based on response code over arbitrary ones
-* Supports moving toward hypermedia links as opposed to client server collusion through URI templates
-* The header is now exposed as metadata, rather being than something you have no control over
-* Out of the box support for If-Unmodified-Since/If-Match+Etag
-* Out of the box support for collections
-* Out of the box support for collection pagination (including support for WillPaginate), both header based and xml attribute based
-* Out of the box support for operations on all the records on the collection
-* Out of the box support for nested resources
-* Out of the box support for cached resources
-* Out of the box support for type-casting data that comes in as parameter strings
-* More natural mapping of deserialised entities to existing classes
-* No communication via exceptions for http error status codes
-* Better extensibility - allows access to request/response objects, avoids class variables, favours symbols over strings etc.
-* Content Types in request headers
-* Consider support for OPTIONS and response codes 100/417
-
-== Dependencies
-
-=== Source
-
-* gems
-* json (json-jruby on JRuby)
-* active_support
-* ruby-libxml or Nokogiri (Wrest tries ruby-libxml first, then nokogiri, and will finally fall back on REXML; be aware that Wrest uses ActiveSupport::XmlMini, so if you're using Wrest as a plugin in a Rails application, all xml parsing across the application will switch to using libxml if it's available. You're free to change this by hand by using the ActiveSupport::XmlMini.backend= method.)
-* multipart-post (needed only if multipart support is enabled)
-
-=== Build
-  
-* rspec
-* rcov (unsupported on JRuby)
-* jeweler
-
 == Roadmap
 
 Features that are planned, in progress or already implemented are documented in the {CHANGELOG}[http://github.com/kaiwren/wrest/tree/master/CHANGELOG] starting from version 0.0.8.
-
-== Licence
-
-Wrest is released under the Apache 2.0 licence
-
