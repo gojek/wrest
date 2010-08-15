@@ -36,7 +36,7 @@ def build_response(code,message = '', body = '', headers = {})
     response.stub!(:message).and_return(message)
     response.stub!(:body).and_return(body)
     response.stub!(:to_hash).and_return(headers)
-    options.each{|k,v|
+    headers.each{|k,v|
       response.stub!('[]').with(k).and_return(v)
     }
   end
