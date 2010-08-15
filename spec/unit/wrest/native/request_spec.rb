@@ -69,7 +69,7 @@ describe Wrest::Native::Request do
     http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
     http_request.should_not_receive(:basic_auth)
     request.should_receive(:http_request).any_number_of_times.and_return(http_request)
-    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => 200, :message => 'OK', :body => ''))
+    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
     request.invoke
   end
 
@@ -79,7 +79,7 @@ describe Wrest::Native::Request do
     http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
     http_request.should_receive(:basic_auth).with('name', 'password')
     request.should_receive(:http_request).any_number_of_times.and_return(http_request)
-    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => 200, :message => 'OK', :body => ''))
+    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
     request.invoke
   end
 

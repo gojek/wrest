@@ -31,12 +31,12 @@ def build_ok_response(body = '', headers = {})
 end
 
 def build_response(code,message = '', body = '', headers = {})
-  returning mock(Net::HTTPOK) do |response|
+  mock(Net::HTTPOK).tap do |response|
     response.stub!(:code).and_return(code)
     response.stub!(:message).and_return(message)
     response.stub!(:body).and_return(body)
     response.stub!(:to_hash).and_return(headers)
-    options.each{|k,v|
+    headers.each{|k,v|
       response.stub!('[]').with(k).and_return(v)
     }
   end

@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.date = %q{2010-07-28}
   s.description = %q{Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service.}
   s.email = %q{ckponnappa@gmail.com}
-  s.executables = ["wrest", "jwrest"]
+  s.executables = ["wrest"]
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
@@ -108,6 +108,7 @@ Gem::Specification.new do |s|
      "spec/unit/wrest/curl/request_spec.rb",
      "spec/unit/wrest/curl/response_spec.rb",
      "spec/unit/wrest/http/response_spec.rb",
+     "spec/unit/wrest/native/get_spec.rb",
      "spec/unit/wrest/native/redirection_spec.rb",
      "spec/unit/wrest/native/request_spec.rb",
      "spec/unit/wrest/native/response_spec.rb",
@@ -143,6 +144,7 @@ Gem::Specification.new do |s|
      "spec/unit/wrest/curl/request_spec.rb",
      "spec/unit/wrest/curl/response_spec.rb",
      "spec/unit/wrest/http/response_spec.rb",
+     "spec/unit/wrest/native/get_spec.rb",
      "spec/unit/wrest/native/redirection_spec.rb",
      "spec/unit/wrest/native/request_spec.rb",
      "spec/unit/wrest/native/response_spec.rb",
