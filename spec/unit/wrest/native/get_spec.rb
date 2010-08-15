@@ -16,11 +16,12 @@ describe Wrest::Native::Get do
       @request_uri = 'http://localhost/foo'.to_uri
       @cache = Hash.new
       @get = Wrest::Native::Get.new(@request_uri, {},{},{:cache_store => @cache})
+      @ok_response = Wrest::Native::Response.new(build_ok_response)
     end
 
     describe "dependencies" do
       before :each do
-        @get.stub!(:invoke_without_cache_check).and_return(build_ok_response)
+        @get.stub!(:invoke_without_cache_check).and_return(@ok_response)
       end
 
       it "should call get_cached_response before making actual request" do
@@ -39,26 +40,40 @@ describe Wrest::Native::Get do
         @get.invoke
       end
     end
+
     it "should call invoke_without_cache_check if response does not exist in cache" do
       @cache.should_receive(:has_key?).with(@request_uri).and_return(false)
-      @get.should_receive(:invoke_without_cache_check)
+      @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
       @get.invoke
     end
 
     it "should not call invoke_without_cache_check if response exists in cache" do
       @cache.should_receive(:has_key?).with(@request_uri).and_return(true)
-      @cache.should_receive(:fetch).with(@request_uri).and_return(build_ok_response)
+      @cache.should_receive(:fetch).with(@request_uri).and_return(@ok_response)
       @get.should_not_receive(:invoke_without_cache_check)
       @get.invoke
     end
 
     it "should store response in cache if it did not exist in cache" do
-      response = build_ok_response
+      response = @ok_response
       @cache.should_receive(:has_key?).with(@request_uri).and_return(false)
       @get.should_receive(:invoke_without_cache_check).and_return(response)
       @cache.should_receive(:[]=).with(@request_uri,response)
       @get.invoke
     end
 
+    it "should store response in cache if response is cacheable" do
+      response = @ok_response
+      @get.should_receive(:invoke_without_cache_check).and_return(response)
+      @cache.should_receive(:[]=).with(@request_uri,response)
+      @get.invoke
+    end
+
+    it "should not store response in cache if response is not cacheable" do
+      response = Wrest::Native::Response.new(build_response('404','redirect'))
+      @get.should_receive(:invoke_without_cache_check).and_return(response)
+      @cache.should_not_receive(:[]=).with(@request_uri,response)
+      @get.invoke
+    end
   end
 end

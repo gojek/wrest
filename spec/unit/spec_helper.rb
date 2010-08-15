@@ -26,10 +26,22 @@ Spec::Runner.configure do |config|
   config.include(CustomMatchers)
 end
 
-def build_ok_response(body = '')
+def build_ok_response(body = '', headers = {})
+  build_response('200','OK',body, headers)
+end
+
+def build_response(code,message = '', body = '', headers = {})
   returning mock(Net::HTTPOK) do |response|
-    response.stub!(:code).and_return('200')
-    response.stub!(:message).and_return('OK')
+    response.stub!(:code).and_return(code)
+    response.stub!(:message).and_return(message)
     response.stub!(:body).and_return(body)
+    response.stub!(:to_hash).and_return(headers)
+    options.each{|k,v|
+      response.stub!('[]').with(k).and_return(v)
+    }
   end
+end
+
+def format_date_in_rfc822_format(date)
+  date.in_time_zone('UTC').strftime('%a, %d %b %Y %H:%M:%S %Z')
 end

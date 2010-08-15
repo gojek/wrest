@@ -60,9 +60,60 @@ module Wrest #:nodoc:
       def follow(redirect_request_options = {})
         self
       end
-      
+
       def connection_closed?
         self[Native::StandardHeaders::Connection].downcase == Native::StandardTokens::Close.downcase
+      end
+
+      def cacheable?
+        code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? && expires_header_not_in_past?
+      end
+
+      def code_cacheable?
+        !code.nil? && !/2\d{2}/.match(code).nil?
+      end
+
+      def no_cache_flag_not_set?
+        not cache_control_headers.include?('no-cache')
+      end
+
+      def no_store_flag_not_set?
+        not cache_control_headers.include?('no-store')
+      end
+
+      def expires_header_not_in_past?
+        expires_header = cache_control_headers.find{ |h| h.include? 'Expires' }
+        if expires_header.nil?
+          true
+        else
+          expires_on = DateTime.parse(expires_header.split("=")[1])
+          expires_on > DateTime.now
+        end
+      end
+
+      def cache_control_headers
+        @cache_control_headers unless @cache_control_headers.nil?
+        if headers['Cache-Control'].nil? then
+          @cache_control_headers = []
+        else 
+          cache_headers = headers['Cache-Control'].split(",")
+          @cache_control_headers = correct_expires_headers(cache_headers)
+          @cache_control_headers.collect
+        end
+      end
+
+      :private
+
+      def correct_expires_headers(cache_headers)
+        # The expires header "Expires = Sun, 06 Nov 1994 08:49:37 GMT" would have split into two ['Expires = Sun',' 06 Nov 1994 08:49:37 GMT']
+        expires_index = cache_headers.find_index(){ |a| a.include? 'Expires' }
+        if expires_index
+          expires_part_1 = cache_headers.delete(cache_headers[expires_index])
+          # earlier delete shifted the second part on same index
+          expires_part_2 = cache_headers.delete(cache_headers[expires_index])
+          cache_headers.push(expires_part_1+','+expires_part_2)
+        end
+        cache_headers
       end
     end
   end

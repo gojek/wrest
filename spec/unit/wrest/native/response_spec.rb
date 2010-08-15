@@ -51,8 +51,7 @@ module Wrest
     
     describe 'Keep-Alive' do
       it "should know when a connection has been closed" do
-        http_response = mock('response')
-        http_response.stub!(:code).and_return('200')
+        http_response = build_ok_response
         http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('Close')
     
         response = Native::Response.new(http_response)
@@ -60,12 +59,55 @@ module Wrest
       end
       
       it "should know when a keep-alive connection has been estalished" do
-        http_response = mock('response')
-        http_response.stub!(:code).and_return('200')
+        http_response = build_ok_response
         http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('')
     
         response = Native::Response.new(http_response)
         response.should_not be_connection_closed
+      end
+    end
+
+    describe 'caching' do
+      it "should say its cacheable if the response code is in range of 200-299" do
+        http_response = build_ok_response
+        ['200','210','299'].each do |code|
+          http_response.stub!(:code).and_return(code)
+          response = Native::Response.new(http_response)
+          response.cacheable?.should == true
+        end
+      end
+
+      it "should say its not cacheable if the response code is not range of 200-299" do
+        http_response = build_ok_response
+        ['100','300','400','500'].each do |code|
+          http_response.stub!(:code).and_return(code)
+          response = Native::Response.new(http_response)
+          response.cacheable?.should == false
+        end
+      end
+
+      describe 'with HTTP/1.1 protocol' do
+        it "should not be cacheable for responses with cache-control header no-cache" do
+          response = Native::Response.new(build_ok_response('','Cache-Control' => 'no-cache'))
+          response.cacheable?.should == false
+        end
+
+        it "should not be cacheable for responses with cache-control header no-store" do
+          response = Native::Response.new(build_ok_response('','Cache-Control' => 'no-store'))
+          response.cacheable?.should == false
+        end
+
+        it "should not be cacheable for response with Expires header in past" do
+          yesterday_in_rfc822_format = format_date_in_rfc822_format(DateTime.now - 1)
+          response = Native::Response.new(build_ok_response('','Cache-Control' => 'Expires = '+yesterday_in_rfc822_format))
+          response.cacheable?.should == false
+        end
+
+        it "should be cacheable for response with Expires header in future" do
+          yesterday_in_rfc822_format = format_date_in_rfc822_format(DateTime.now + 1)
+          response = Native::Response.new(build_ok_response('','Cache-Control' => 'Expires = '+yesterday_in_rfc822_format))
+          response.cacheable?.should == true
+        end
       end
     end
   end
