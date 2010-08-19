@@ -160,9 +160,24 @@ module Wrest::Components
         @li_piao = HumanBeing.new(:id => 5, :profession => 'Natural Magician', 'enhanced_by' => 'Kai Wren')
       end
 
-      it "should provide a generic key based getter that requires symbols" do
-        @li_piao[:profession].should == "Natural Magician"
-        @li_piao['profession'].should == "Natural Magician"
+      context 'access key format' do
+        it "should provide a generic key based setter that understands symbols" do
+          @li_piao[:enhanced_by] = "Viss"
+          @li_piao.instance_variable_get('@attributes')['enhanced_by'].should == "Viss"
+        end
+
+        it "should provide a generic key based setter that understands strings" do
+          @li_piao['enhanced_by'] = "Viss"
+          @li_piao.instance_variable_get('@attributes')['enhanced_by'].should == "Viss"
+        end
+
+        it "should provide a generic key based getter that understands symbols" do
+          @li_piao[:profession].should == "Natural Magician"
+        end
+
+        it "should provide a generic key based getter that understands strings" do
+          @li_piao['profession'].should == "Natural Magician"
+        end
       end
 
       it "should fail when getter methods for attributes that don't exist are invoked" do
@@ -181,16 +196,6 @@ module Wrest::Components
 
       it "should not respond to getter methods for attributes that don't exist" do
         @li_piao.should_not respond_to(:gods)
-      end
-
-      it "should provide a generic key based setter that understands symbols" do
-        @li_piao[:enhanced_by] = "Viss"
-        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
-      end
-
-      it "should provide a generic key based setter that translates strings to symbols" do
-        @li_piao['enhanced_by'] = "Viss"
-        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == "Viss"
       end
 
       it "should create a setter method when one is invoked for attributes that don't exist" do
