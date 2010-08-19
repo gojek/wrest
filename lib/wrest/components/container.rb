@@ -127,7 +127,7 @@ module Wrest::Components
       # Remember not to use these two variable names
       # when using Container in your own class.
       def initialize(attributes = {})
-        @attributes = attributes.symbolize_keys
+        @attributes = HashWithIndifferentAccess.new(attributes)
       end
       
       # A translator is a anything that knows how to serialise a
