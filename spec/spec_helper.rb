@@ -22,9 +22,13 @@ def puts(*args)
  # super *args
 end
 
+def ph(*args)
+  puts *(["<pre>"] + args + ["</pre>"])
+end
+
 RSpec.configure do |config|
   config.include(CustomMatchers)
-  config.filter_run :functional => true if ENV["wrest_functional_spec"] == "true"
+  config.filter_run :functional => ENV["wrest_functional_spec"] == "true" || nil
 end
 
 def build_ok_response(body = '', headers = {})
