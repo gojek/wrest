@@ -29,17 +29,27 @@ end
 desc 'Default: run spec tests.'
 task :default => 'rspec:unit'
 
-task :spec => 'rspec:unit'
+# task :spec => 'rspec:unit'
 
 namespace :rspec do
   desc "Run all unit specs"
-  RSpec::Core::RakeTask.new(:unit) do |task|
-    task.pattern = 'spec/unit/wrest/**/*_spec.rb'
+  task :unit do
+    ENV["wrest_functional_spec"] = nil
+    Rake::Task["rspec:spec_runner"].invoke
   end
 
   desc "Run all live functional specs - requires sample_rails_app running at 3000 in test environment"
   RSpec::Core::RakeTask.new(:functional) do |task| 
     task.pattern = 'spec/functional/wrest/**/*_spec.rb'
+  end
+  
+  RSpec::Core::RakeTask.new(:spec_runner) do |task|
+    task.pattern = 'spec/wrest/**/*_spec.rb'
+  end
+
+  task :new_functional do
+    ENV["wrest_functional_spec"] = "true"
+    Rake::Task["rspec:new_test"].invoke
   end
 end
 
