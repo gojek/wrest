@@ -17,6 +17,12 @@ module Wrest #:nodoc:
       extend Forwardable
       def_delegators  :@http_response, :body, :headers
       
+      def initialize_http_header
+        headers.each do |key, value|
+          headers[key.downcase] = value
+        end
+      end
+      
       def initialize(http_response)
         @http_response = http_response
         initialize_http_header

@@ -10,19 +10,7 @@ require 'rspec'
 
 Wrest.logger = Logger.new(File.open("#{Wrest::Root}/../log/test.log", 'a'))
 
-def p(*args)
- # super *(args << caller[0])
- super *(args << '<br/>')
- # super *args
-end
-
-def puts(*args)
- # super *(args << caller[0])
- super *(['<pre>'] + args + ['</pre>'])
- # super *args
-end
-
-def ph(*args)
+def putsh(*args)
   puts *(["<pre>"] + args + ["</pre>"])
 end
 

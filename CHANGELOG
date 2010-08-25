@@ -11,12 +11,16 @@ Features under a numbered section are complete and available in the Wrest gem.
 == In progress
  * 304/ETag response caching
  * Keep-alive support for libcurl
- * Cookie support
+ * Explicit cookie helpers - #cookie=, #cookie?
  * Response code checkers: ok?, redirect?, created? etc.
  * Alias deserialise as deserialize
- * Make Components::Containers hash store a HashWithIndifferentAccess
  * Ensure Components::Container is ActiveModel compliant
 
+== Current
+ * GH#2 Make Components::Containers hash store a HashWithIndifferentAccess
+ * GH#6 Net::HTTP based calls to Twitter public APIs fail
+ * GH#5 Patron (curl) support failing for responses where headers have multiple values
+ 
 == 1.0.0.beta1
  * If libxml-ruby isn't found but nokogiri, don't warn about libxml-ruby
 

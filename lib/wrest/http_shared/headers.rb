@@ -10,13 +10,6 @@
 module Wrest
   module HttpShared
     module Headers
-
-      def initialize_http_header
-        headers.each do |key, value|
-          headers[key.downcase] = value.strip
-        end
-      end
-
       # Returns the header field corresponding to the case-insensitive key.
       # For example, a key of "Content-Type" might return "text/html"
       def [](key)

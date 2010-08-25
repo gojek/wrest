@@ -1,4 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
+  map.headers '/multiple_response_headers', :controller => 'application', :action => 'multiple_response_headers'
   map.headers '/headers', :controller => 'application', :action => 'headers'
   map.headers '/no_body', :controller => 'application', :action => 'no_body'
   map.headers '/nothing', :controller => 'application', :action => 'nothing'

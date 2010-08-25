@@ -13,6 +13,20 @@ class ApplicationController < ActionController::Base
     render :json => headers
   end
   
+  def multiple_response_headers
+    response.set_cookie('foo', {
+               :value => "bar",
+               :path => '/',
+               :expires => Time.now
+            })
+    response.set_cookie('baz', {
+               :value => "woot",
+               :path => '/',
+               :expires => Time.now
+            })
+    head :ok
+  end
+  
   def no_body
     head :created
   end
