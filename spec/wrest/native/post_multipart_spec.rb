@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require "spec_helper"
 require "#{Wrest::Root}/wrest/native"
 require "#{Wrest::Root}/wrest/multipart"
 
