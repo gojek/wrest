@@ -14,3 +14,4 @@ spec/wrest/meh_spec.rb
 tmtags
 .gemspec
 TAGS
+*.swp
