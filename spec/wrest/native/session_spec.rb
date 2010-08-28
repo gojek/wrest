@@ -35,7 +35,7 @@ module Wrest
       http.should_receive(:request).with(request_two, nil).and_return(ok_response)
 
       Native::Session.new(uri) do |session|
-        session.get('/glassware', ActiveSupport::OrderedHash.new.merge!([[:owner, 'Kai'],[:type, 'bottle']]))
+        session.get('/glassware', build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]))
         session.get '/bottles.xml'
       end
     end
@@ -64,7 +64,7 @@ module Wrest
       http.should_receive(:request).with(request_two, nil).and_return(ok_response_with_connection_close)
 
       Native::Session.new(uri) do |session|
-        session.get('/glassware', ActiveSupport::OrderedHash.new.merge!([[:owner, 'Kai'],[:type, 'bottle']]))
+        session.get('/glassware', build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]))
         session.instance_variable_get('@connection').should == http
         session.get '/bottles.xml'
         session.instance_variable_get('@connection').should be_nil

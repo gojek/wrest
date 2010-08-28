@@ -18,9 +18,11 @@ module Wrest #:nodoc:
       def_delegators  :@http_response, :body, :headers
       
       def initialize_http_header
-        headers.each do |key, value|
-          headers[key.downcase] = value
-        end
+        headers.merge!(headers.inject({}) do |downcased_headers, tuple|
+          key, value = tuple
+          downcased_headers[key.downcase] = value
+          downcased_headers
+        end)
       end
       
       def initialize(http_response)

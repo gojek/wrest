@@ -160,7 +160,7 @@ module Wrest
         
         http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-        uri.get(ActiveSupport::OrderedHash.new.merge!([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+        uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
       end
 
       it "should know how to get with parameters but without any headers" do
@@ -174,7 +174,7 @@ module Wrest
         
         http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-        uri.get(ActiveSupport::OrderedHash.new.merge!([[:owner, 'Kai'],[:type, 'bottle']]))
+        uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]))
       end
 
       it "should know how to post" do
@@ -203,7 +203,7 @@ module Wrest
                                                   ).and_return(request)
 
         http.should_receive(:request).with(request, "foo=bar&ooga=booga").and_return(build_ok_response)
-        uri.post_form(ActiveSupport::OrderedHash.new.merge!([[:foo, 'bar'],[:ooga, 'booga']]), :page => '2', :per_page => '5')
+        uri.post_form(build_ordered_hash([[:foo, 'bar'],[:ooga, 'booga']]), :page => '2', :per_page => '5')
       end
 
       it "should know how to put" do
@@ -231,7 +231,7 @@ module Wrest
 
         http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
-        uri.delete(ActiveSupport::OrderedHash.new.merge!([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+        uri.delete(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
       end
 
       it "should know how to ask for options on a URI" do
@@ -265,7 +265,7 @@ module Wrest
         http.should_receive(:request).with(request_get, nil).and_return(build_ok_response)
         http.should_receive(:request).with(request_post, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
-        uri.get(ActiveSupport::OrderedHash.new.merge!([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+        uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
         uri.post '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
       end
     end  

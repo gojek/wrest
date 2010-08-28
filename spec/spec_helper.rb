@@ -19,6 +19,15 @@ RSpec.configure do |config|
   config.filter_run :functional => ENV["wrest_functional_spec"] == "true" || nil
 end
 
+    
+def build_ordered_hash(tuples)
+  ActiveSupport::OrderedHash.new.tap do |hash|
+    tuples.each do |key, value|
+      hash[key] = value
+    end
+  end
+end
+
 def build_ok_response(body = '', headers = {})
   build_response('200','OK',body, headers)
 end
