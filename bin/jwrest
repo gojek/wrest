@@ -1,3 +1,0 @@
-#!/usr/bin/env jruby
-
-load(File.dirname(__FILE__)+'/wrest_shell.rb')

@@ -82,38 +82,6 @@ rescue LoadError
 end
 
 begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gemspec|
-      # p Rake::FileList['spec/functional/**/*']
-    gemspec.name = "wrest"
-    gemspec.summary = "REST client library for Ruby."
-    gemspec.description = "Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service."
-    gemspec.authors = ["Sidu Ponnappa"]
-    gemspec.email = "ckponnappa@gmail.com"
-    gemspec.homepage = "http://github.com/kaiwren/wrest"
-    gemspec.has_rdoc = true
-    gemspec.rubyforge_project = 'wrest'
-    gemspec.executables = ['wrest']
-    gemspec.require_path = "lib"
-    gemspec.files.exclude *['.gitignore', 'spec/functional']
-    gemspec.test_files.exclude *['.gitignore', 'spec/functional', 'examples']
-    gemspec.add_dependency('activesupport', '>= 3.0.0.rc')
-    case RUBY_PLATFORM
-    when /java/
-      gemspec.add_dependency('json-jruby', '>= 1.4.2')
-      gemspec.add_dependency('nokogiri', '>= 1.3.3')
-      gemspec.platform = 'java'
-    else
-      gemspec.add_dependency('json', '>= 1.4.2')
-      gemspec.platform = Gem::Platform::RUBY
-    end
-  end
-rescue LoadError
-  puts "Jeweler not available. Install it with: gem install jeweler"
-  puts "If you're using JRuby and are having trouble installing jeweler, try installing the git (gem install git) and rubyforge (gem install rubyforge) gems by hand. Also remember to update gems itself (jruby -S gem update --system)." if RUBY_PLATFORM =~ /java/
-end
-
-begin
   require 'rake/contrib/sshpublisher'
   namespace :rubyforge do
 

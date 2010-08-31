@@ -21,6 +21,7 @@ Features under a numbered section are complete and available in the Wrest gem.
  * GH#6 Net::HTTP based calls to Twitter public APIs fail
  * GH#5 Patron (curl) support failing for responses where headers have multiple values
  * GH#7 Build fails on Ruby 1.9
+ * GH#16 Remove jeweler and use .gemspec direcly
  
 == 1.0.0.beta1
  * If libxml-ruby isn't found but nokogiri, don't warn about libxml-ruby
