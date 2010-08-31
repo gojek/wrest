@@ -17,6 +17,8 @@ Features under a numbered section are complete and available in the Wrest gem.
  * Ensure Components::Container is ActiveModel compliant
 
 == Current
+
+== 1.0.0.beta2
  * GH#2 Make Components::Containers hash store a HashWithIndifferentAccess
  * GH#6 Net::HTTP based calls to Twitter public APIs fail
  * GH#5 Patron (curl) support failing for responses where headers have multiple values
