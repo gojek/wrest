@@ -7,7 +7,7 @@ Wrest is a ruby REST/HTTP client library which
 * Allows allows you to quickly build object oriented wrappers around any web service 
 * Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
-* Runs on Ruby 1.8 and JRuby with 1.9, Rubinius, MacRuby and IronRuby support on the way
+* Runs on Ruby 1.8, Ruby 1.9.2 and JRuby with Rubinius, MacRuby and IronRuby support on the way
 * Provides convenient HTTP wrappers, redirect handling, serialisation and deserialisation with response caching in the works
 * Supports using either Net::HTTP or libcurl as the underlying HTTP library
 
