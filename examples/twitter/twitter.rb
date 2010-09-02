@@ -58,7 +58,7 @@ class Tweet
 end
 
 
-twitter = Twitter.new(:username => 'ponnappa', :password => 'ha!likeImchecking*that*in')
+twitter = Twitter.new(:username => 'ponnappa', :password => '00g@b00g@')
 
 pp twitter.post("This tweet via the Twitter example in #wrest #{Wrest::VERSION::STRING}, http://github.com/kaiwren/wrest")
 

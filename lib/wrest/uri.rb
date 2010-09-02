@@ -28,7 +28,7 @@ module Wrest #:nodoc:
     def initialize(uri_string, options = {})
       @options = options
       @uri_string = uri_string.clone
-      @uri = URI.parse(uri_string)
+      @uri = URI.parse(uri_string.to_s)
       @username = (@options[:username] ||= @uri.user)
       @password = (@options[:password] ||= @uri.password)
     end
@@ -49,7 +49,7 @@ module Wrest #:nodoc:
     #  uri = "https://localhost:3000/v1".to_uri(:username => 'foo', :password => 'bar')
     #  uri['/oogas/1', {:username => 'meh', :password => 'baz'}].get
     def [](path, options = nil)
-      Uri.new(@uri_string+path, options || @options)
+      Uri.new(URI.join(uri_string, path), options || @options)
     end
     
     # Clones a Uri, building a new instance with exactly the same uri string.

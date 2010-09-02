@@ -19,6 +19,10 @@ module Wrest
       uri.should respond_to(:delete)
     end
 
+    it "should handle URIs" do
+      Uri.new('https://localhost:3000').should == Uri.new(URI.parse('https://localhost:3000'))
+    end
+    
     it "should know when it is https" do
       Uri.new('https://localhost:3000').should be_https
     end
@@ -26,11 +30,20 @@ module Wrest
     it "should know when it is not https" do
       Uri.new('http://localhost:3000').should_not be_https
     end
-
-    it "should know how to build a new uri from an existing one by appending a path" do
-      Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+    
+    context 'extension' do
+      it "should know how to build a new uri from an existing one by appending a path" do
+        Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+      end
+      
+      it "should handle / positions with wisdom" do
+        Uri.new('http://localhost:3000/')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+        Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+        Uri.new('http://localhost:3000/')['ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+        Uri.new('http://localhost:3000')['ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+      end      
     end
-
+    
     it "should know its full path" do
       Uri.new('http://localhost:3000/ooga').full_path.should == '/ooga'
       Uri.new('http://localhost:3000/ooga?foo=meh&bar=1').full_path.should == '/ooga?foo=meh&bar=1'
