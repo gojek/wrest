@@ -2,11 +2,16 @@ require ::File.expand_path('../../config/boot', __FILE__)
 require ::File.expand_path('../models/facebook_client', __FILE__)
 
 class FacebookAuth < Sinatra::Application
+  get '/' do
+    erb :home
+  end
+  
   get '/facebook_profile' do
     if session[:access_token].nil?
       redirect '/facebook_authenticate'
     end
     profile = ActiveSupport::JSON.decode(FacebookClient.new.authorized_get('/me', session[:access_token]).body)
+    erb :facebook_profile, :locals => { :profile => profile }
   end
 
   get '/facebook_authenticate' do
