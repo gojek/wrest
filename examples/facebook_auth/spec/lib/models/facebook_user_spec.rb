@@ -18,7 +18,7 @@ describe FacebookUser do
     user = FacebookUser.new("access_token")
     client  = FacebookClient.new
     FacebookClient.should_receive(:new).and_return(client)
-    response = mock("Response", :body => {:name => "Booga"}.to_json)
+    response = mock("Response", :deserialise => {:name => "Booga"})
     client.should_receive(:authorized_get).with("/me", "access_token").and_return(response)
     profile = user.profile
     profile.name.should == "Booga"
