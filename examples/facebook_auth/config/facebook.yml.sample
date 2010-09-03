@@ -1,0 +1,3 @@
+client_id: 'facebook_client_id'
+client_secret: 'facebook_client_secret'
+facebook_uri: https://graph.facebook.com
