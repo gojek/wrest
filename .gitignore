@@ -15,3 +15,4 @@ tmtags
 .gemspec
 TAGS
 *.swp
+.bundle
