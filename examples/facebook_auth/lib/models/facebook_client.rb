@@ -23,4 +23,8 @@ class FacebookClient
     params = Rack::Utils.parse_query(response)
     params['access_token']
   end
+  
+  def authorized_get(path, access_token)
+    Config[:facebook_uri][path].get(:access_token => access_token)
+  end
 end

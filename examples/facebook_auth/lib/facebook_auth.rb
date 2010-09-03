@@ -6,10 +6,9 @@ class FacebookAuth < Sinatra::Application
     if session[:access_token].nil?
       redirect '/facebook_authenticate'
     end
-    response = FacebookClient::Config[:facebook_uri]['/me'].get(:access_token => session[:access_token])
-    response.body
+    profile = ActiveSupport::JSON.decode(FacebookClient.new.authorized_get('/me', session[:access_token]).body)
   end
-  
+
   get '/facebook_authenticate' do
     redirect FacebookClient.new.authorization_uri(facebook_post_authentication_url, :scope => "offline_access")
   end

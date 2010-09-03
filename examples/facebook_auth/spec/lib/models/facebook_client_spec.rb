@@ -1,8 +1,9 @@
 require 'spec_helper'
 
-describe FacebookClient do  
+describe FacebookClient do
+  let(:client){FacebookClient.new}
+
   it "should create a facebook authorization url given redirect url and parameters" do
-    client = FacebookClient.new
     url = client.authorization_uri("http://redirect_uri", :scope => "email")
     base, query_params = url.split("?")
     base.should == "https://graph.facebook.com/oauth/authorize"
@@ -13,7 +14,6 @@ describe FacebookClient do
   end
   
   it "should exchange authentication code for the access token" do
-    client = FacebookClient.new
     facebook_uri = mock(Wrest::Uri)
     access_token_uri = mock(Wrest::Uri)
     FacebookClient::Config.should_receive(:[]).with(:client_id).and_return("id")
@@ -25,5 +25,17 @@ describe FacebookClient do
                       :client_secret => "secret", :code => "auth_code"}
     access_token_uri.should_receive(:post_form).with(request_params).and_return(response)
     client.acquire_access_token("http://redirect_uri","auth_code").should == "access_token"
+  end
+  
+  context "authorized access" do
+    it "should get a resource at the given path using access token" do
+      facebook_uri = mock(Wrest::Uri)
+      get_uri = mock(Wrest::Uri)
+      FacebookClient::Config.should_receive(:[]).with(:facebook_uri).and_return(facebook_uri)
+      facebook_uri.should_receive(:[]).with('/me').and_return(get_uri)
+      response = mock("Response", :body => 'body')
+      get_uri.should_receive(:get).with(:access_token => "access_token").and_return(response)
+      client.authorized_get("/me", "access_token").body.should == 'body'
+    end
   end
 end
