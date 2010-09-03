@@ -1,5 +1,7 @@
 require ::File.expand_path('../../config/boot', __FILE__)
 require ::File.expand_path('../models/facebook_client', __FILE__)
+require ::File.expand_path('../models/facebook_user', __FILE__)
+require ::File.expand_path('../models/facebook_profile', __FILE__)
 
 class FacebookAuth < Sinatra::Application
   get '/' do
@@ -7,11 +9,10 @@ class FacebookAuth < Sinatra::Application
   end
   
   get '/facebook_profile' do
-    if session[:access_token].nil?
+    unless facebook_user.authenticated?
       redirect '/facebook_authenticate'
     end
-    profile = ActiveSupport::JSON.decode(FacebookClient.new.authorized_get('/me', session[:access_token]).body)
-    erb :facebook_profile, :locals => { :profile => profile }
+    erb :facebook_profile, :locals => { :profile => facebook_user.profile }
   end
 
   get '/facebook_authenticate' do
@@ -24,6 +25,10 @@ class FacebookAuth < Sinatra::Application
   end
   
   helpers do
+    def facebook_user
+      @facebook_user ||= FacebookUser.new(session[:access_token])
+    end
+    
     def app_base_url
       @base_url ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
     end
