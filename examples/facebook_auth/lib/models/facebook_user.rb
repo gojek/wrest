@@ -5,7 +5,7 @@ class FacebookUser
   
   def profile
     client  = FacebookClient.new
-    FacebookProfile.new(ActiveSupport::JSON.decode(client.authorized_get("/me", @access_token).body))
+    FacebookProfile.new(client.authorized_get("/me", @access_token).deserialise)
   end
   
   def authenticated?
