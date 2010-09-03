@@ -1,0 +1,2 @@
+class FacebookClient
+end
