@@ -27,8 +27,19 @@ module Wrest #:nodoc:
     # See Wrest::Http::Request for the available options and their default values.
     def initialize(uri_string, options = {})
       @options = options
-      @uri_string = uri_string.clone
-      @uri = URI.parse(uri_string.to_s)
+      @split_uri =  uri_string.to_s.split('?')
+      @uri_string = @split_uri.first.clone
+      @uri = URI.parse(uri_string.clone.to_s)
+      if(@split_uri.length > 1)
+        uri_options_str = @split_uri.last
+        uri_options_arr = uri_options_str.split('&')
+        i = 0
+        while( i < uri_options_arr.length)
+          option = uri_options_arr[i].split('=')
+          i += 1;
+          @options[option.first] = option.last
+        end
+      end
       @username = (@options[:username] ||= @uri.user)
       @password = (@options[:password] ||= @uri.password)
     end
