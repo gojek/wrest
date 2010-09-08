@@ -176,6 +176,53 @@ module Wrest
         uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
       end
 
+      it "should know how to get with parameters included in the uri" do
+        uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
+        uri.should_not be_https
+
+        http = setup_http
+                
+        request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Get.should_receive(:new).with('/glassware?type=bottle&owner=Kai', {'page' => '2', 'per_page' => '5'}).and_return(request)
+        
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+
+        uri.get({}, :page => '2', :per_page => '5')
+      end
+
+      it "should know how to get with a ? appended to the uri and no appended parameters" do
+         uri = "http://localhost:3000/glassware?".to_uri
+        uri.should_not be_https
+
+        http = setup_http
+                
+        request = Net::HTTP::Get.new('/glassware', {'page' => '2', 'per_page' => '5'})
+        Net::HTTP::Get.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
+        
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+
+        uri.get({}, :page => '2', :per_page => '5')
+     
+      end
+
+      it "should know how to get with a ? appended to the uri and specified parameters" do
+         uri = "http://localhost:3000/glassware?".to_uri
+        uri.should_not be_https
+
+        http = setup_http
+                
+        request = Net::HTTP::Get.new('/glassware?owner=kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+
+        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+        
+        
+        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+
+         uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+     
+      end
+
+
       it "should know how to get with parameters but without any headers" do
         uri = "http://localhost:3000/glassware".to_uri
         uri.should_not be_https
