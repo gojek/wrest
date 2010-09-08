@@ -26,23 +26,12 @@ module Wrest #:nodoc:
         
     # See Wrest::Http::Request for the available options and their default values.
     def initialize(uri_string, options = {})
-      @options = options
-      @split_uri =  uri_string.to_s.split('?')
-      @uri_string = @split_uri.first.clone
-      @uri = URI.parse(uri_string.clone.to_s)
-      if(@split_uri.length > 1)
-        uri_options_str = @split_uri.last
-        uri_options_arr = uri_options_str.split('&')
-        i = 0
-        while( i < uri_options_arr.length)
-          option = uri_options_arr[i].split('=')
-          i += 1;
-          @options[option.first] = option.last
-        end
-      end
-      @username = (@options[:username] ||= @uri.user)
-      @password = (@options[:password] ||= @uri.password)
-    end
+        @options = options
+        @uri_string = uri_string.clone
+        @uri = URI.parse(uri_string.to_s)
+        @username = (@options[:username] ||= @uri.user)
+        @password = (@options[:password] ||= @uri.password)
+    end 
     
     # Build a new Wrest::Uri by appending _path_ to
     # the current uri. If the original Wrest::Uri
@@ -94,6 +83,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def get(parameters = {}, headers = {})
+      parameters = extract_uri_parameters(parameters)
       Http::Get.new(self, parameters, headers, @options).invoke
     end
 
@@ -143,6 +133,19 @@ module Wrest #:nodoc:
 
     def https?
       @uri.is_a?(URI::HTTPS)
+    end
+
+    def extract_uri_parameters(parameters = {})
+      uri_string = @uri_string.to_s
+      uri_params = URI.split(uri_string)[-2].to_s
+      uri_string = uri_string.gsub("?#{uri_params}",'')
+      @uri_string = uri_string.clone
+      @uri = URI.parse(uri_string.to_s)
+      uri_params = uri_params.split('&')
+      if( !uri_params.empty?)
+       uri_params.each{|uri_params| parameters[uri_params.split('=').first] = uri_params.split('=').last} 
+      end
+      parameters
     end
     
     # Provides the full path of a request.
