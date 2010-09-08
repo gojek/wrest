@@ -122,6 +122,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def delete(parameters = {}, headers = {})
+      parameters = extract_uri_parameters(parameters)
       Http::Delete.new(self, parameters, headers, @options).invoke
     end
 
