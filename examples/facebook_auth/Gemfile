@@ -1,0 +1,11 @@
+# A sample Gemfile
+source "http://rubygems.org"
+
+gem 'sinatra', '= 1.0'
+gem 'i18n', '= 0.4.1'
+gem 'wrest', '~> 1.0.0.beta2'
+
+group :test do
+  gem "rspec", "2.0.0.beta.19"
+  gem "rack-test", "0.5.4", :require => "rack/test"
+end

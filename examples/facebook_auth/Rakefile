@@ -1,0 +1,14 @@
+require 'rake'
+require 'rspec'
+require 'rspec/core/rake_task'
+
+RSpec::Core::RakeTask.new("spec") do |t|
+  t.pattern = "spec/**/*_spec.rb"
+end
+
+desc "start a development server"
+task :server do
+  system "rackup -E development -p 10005 config.ru"
+end
+
+task :default => :spec

@@ -28,7 +28,7 @@ module Wrest
   # The methods in this module are mixed into Wrest::Uri.
   module Multipart
     # Makes a multipart/form-data encoded POST request to this URI. This is a convenience API
-    # that mimics a multipart form being posted; some allegly RESTful APIs like FCBK require 
+    # that mimics a multipart form being posted; some allegedly RESTful APIs like FCBK require 
     # this for file uploads.
     #
     #   File.open('/path/to/image.jpg') do |file|

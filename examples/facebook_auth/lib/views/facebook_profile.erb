@@ -1,0 +1,6 @@
+<div class='profile'>
+  <h2>Partial Facebook profile</h2>
+  <%= profile.name %>,
+  <%= profile.location.try(:[], :name) %>
+  <a href="<%= profile.link%>" target="_blank">View on Facebook</a>
+</div>

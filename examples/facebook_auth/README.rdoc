@@ -1,0 +1,14 @@
+== Facebook Example with OAuth 2.0
+
+This example demonstrates how easy it is to use OAuth 2.0 and integrate with a service like the Facebook APIs. Look ma, no OAuth 2.0 gem! It's so easy, it's just a dozen lines of code.
+
+== Instructions
+
+* cp config/facebook.yml.sample config/facebook.yml
+* Edit config/facebook.yml and add your facebook {app id and secret}[http://www.facebook.com/developers/apps.php] (remember to set your site url under the 'Web Site' tab to http://localhost:10005/)
+* bundle install
+* rake server
+* Open http://localhost:10005 in your browser
+* Once you've seen it work, take a look at {lib/models/facebook_client.rb}[http://github.com/kaiwren/wrest/blob/master/examples/facebook_auth/lib/models/facebook_client.rb] to see what's involved.
+
+That's all there is to OAuth 2.0 and Facebook - you don't need a gem for this.
