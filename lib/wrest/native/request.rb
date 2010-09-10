@@ -84,7 +84,11 @@ module Wrest::Native
     end
 
     def build_request(request_klass, uri, parameters, headers)
-      request_klass.new(parameters.empty? ? uri.full_path : "#{uri.full_path}?#{parameters.to_query}", headers)
+      if(uri.query && !uri.query.empty?)
+        request_klass.new(parameters.empty? ? "#{uri.uri_path}?#{uri.query}" : "#{uri.uri_path}?#{uri.query}&#{parameters.to_query}", headers)
+      else
+        request_klass.new(parameters.empty? ? "#{uri.uri_path}" : "#{uri.uri_path}?#{parameters.to_query}", headers)
+      end
     end
   
     def do_request

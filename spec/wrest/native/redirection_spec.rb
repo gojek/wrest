@@ -11,7 +11,6 @@ describe Wrest::Native::Redirection do
     
     Wrest::Uri.should_receive(:new).with(redirect_url, anything).and_return(redirect_uri)
     
-    
     after_redirect_request = Wrest::Native::Get.new(redirect_uri)
     final_mock_response = mock(Wrest::Native::Response)
     after_redirect_request.should_receive(:invoke).and_return(final_mock_response)
