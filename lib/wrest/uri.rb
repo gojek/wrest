@@ -30,9 +30,9 @@ module Wrest #:nodoc:
         @uri_string = uri_string.to_s
         @uri = URI.parse(@uri_string)
         uri_scheme = URI.split(@uri_string)
-        @uri_path = uri_scheme[-4].split('?').first
-        @uri_path = ((!@uri_path || @uri_path.empty?) ? '/' : @uri_path) 
-        @query = uri_scheme[-2]
+        @uri_path = uri_scheme[-4].split('?').first || ''
+        @uri_path = (@uri_path.empty? ? '/' : @uri_path) 
+        @query = uri_scheme[-2] || ''
         @username = (@options[:username] ||= @uri.user)
         @password = (@options[:password] ||= @uri.password)
     end 
@@ -53,7 +53,7 @@ module Wrest #:nodoc:
     #  uri = "https://localhost:3000/v1".to_uri(:username => 'foo', :password => 'bar')
     #  uri['/oogas/1', {:username => 'meh', :password => 'baz'}].get
     def [](path, options = nil)
-      Uri.new(URI.join(uri_string, path).to_s, options || @options)
+      Uri.new(URI.join(uri_string, path), options || @options)
     end
     
     # Clones a Uri, building a new instance with exactly the same uri string.
