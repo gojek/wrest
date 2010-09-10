@@ -150,7 +150,6 @@ module Wrest
       
       it "should know how to get" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
 
@@ -164,7 +163,6 @@ module Wrest
 
       it "should know how to get with parameters" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -178,7 +176,6 @@ module Wrest
 
       it "should know how to get with parameters included in the uri" do
         uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -191,8 +188,7 @@ module Wrest
       end
 
       it "should know how to get with a ? appended to the uri and no appended parameters" do
-         uri = "http://localhost:3000/glassware?".to_uri
-        uri.should_not be_https
+        uri = "http://localhost:3000/glassware?".to_uri
 
         http = setup_http
                 
@@ -207,7 +203,6 @@ module Wrest
 
       it "should know how to get with a ? appended to the uri and specified parameters" do
         uri = "http://localhost:3000/glassware?".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -224,7 +219,6 @@ module Wrest
 
       it "should know how to get with parameters appended to the uri and specfied parameters" do
         uri = "http://localhost:3000/glassware?owner=kai&type=bottle".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -241,7 +235,6 @@ module Wrest
 
       it "should know how to get with parameters but without any headers" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
         
@@ -255,7 +248,6 @@ module Wrest
 
       it "should know how to post" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
       
@@ -269,7 +261,6 @@ module Wrest
      
       it "should know how to post form-encoded parameters using Uri#post_form" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
 
@@ -284,7 +275,6 @@ module Wrest
 
       it "should know how to put" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
               
@@ -298,7 +288,6 @@ module Wrest
 
       it "should know how to delete" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
 
@@ -312,7 +301,6 @@ module Wrest
 
       it "should know how to delete with parameters included in the uri" do
         uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -326,7 +314,6 @@ module Wrest
 
       it "should know how to delete with a ? appended to the uri and no appended parameters" do
          uri = "http://localhost:3000/glassware?".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -341,7 +328,6 @@ module Wrest
 
       it "should know how to delete with a ? appended to the uri and specified parameters" do
         uri = "http://localhost:3000/glassware?".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -358,7 +344,6 @@ module Wrest
 
      it "should know how to delete with parameters appended to the uri and specfied parameters" do
         uri = "http://localhost:3000/glassware?owner=kai&type=bottle".to_uri
-        uri.should_not be_https
 
         http = setup_http
                 
@@ -374,7 +359,6 @@ module Wrest
 
       it "should know how to ask for options on a URI" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = setup_http
 
@@ -388,7 +372,6 @@ module Wrest
 
       it "should not mutate state of the uri across requests" do
         uri = "http://localhost:3000/glassware".to_uri
-        uri.should_not be_https
 
         http = mock(Net::HTTP)
         Net::HTTP.should_receive(:new).with('localhost', 3000).any_number_of_times.and_return(http)
