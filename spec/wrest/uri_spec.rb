@@ -67,7 +67,11 @@ module Wrest
                                                       :username => 'foo', 
                                                       :password => 'bar')
     end
-    
+
+    it "should extend the uri_string to include / even if it is not included " do
+      'http://localhost'.to_uri['ooga/booga'].should == 'http://localhost/'.to_uri['ooga/booga']
+    end
+
     it "should use the username and password provided while building a new uri if present" do
       uri = Uri.new('http://localhost:3000', :username => 'foo', :password => 'bar')
       uri.username.should == 'foo'
@@ -95,6 +99,10 @@ module Wrest
         Uri.new('http://ooga:booga@localhost:3000/ooga').should_not == Uri.new('http://foo:bar@localhost:3000/booga')
         Uri.new('http://localhost:3000/ooga').should_not == Uri.new('http://foo:bar@localhost:3000/booga')
         
+        Uri.new('http://localhost:3000?owner=kai&type=bottle').should_not == Uri.new('http://localhost:3000/')
+        Uri.new('http://localhost:3000?owner=kai&type=bottle').should_not == Uri.new('http://localhost:3000?')
+        Uri.new('http://localhost:3000?owner=kai&type=bottle').should_not == Uri.new('http://localhost:3000?type=bottle&owner=kai')
+
         Uri.new('https://localhost:3000').should_not == Uri.new('https://localhost:3500')
         Uri.new('https://localhost:3000').should_not == Uri.new('http://localhost:3000')
         Uri.new('http://localhost:3000', :username => 'ooga', :password => 'booga').should_not == Uri.new('http://ooga:booga@localhost:3000')
