@@ -17,6 +17,8 @@ Features under a numbered section are complete and available in the Wrest gem.
  * Ensure Components::Container is ActiveModel compliant
 
 == Current
+ * GH#13 Works for get and delete with parameters appended to the uri string and 
+   with ? and no parameters appended to the uri string
 
 == 1.0.0.beta2
  * GH#2 Make Components::Containers hash store a HashWithIndifferentAccess
