@@ -57,7 +57,7 @@ begin
   ActiveSupport::XmlMini.backend='LibXML'
 rescue Gem::LoadError
   begin
-    gem 'nokogiri', '>= 1.3.3'
+    gem 'nokogiri', '~> 1.4.3.1'
     ActiveSupport::XmlMini.backend='Nokogiri'
   rescue Gem::LoadError
     unless RUBY_PLATFORM =~ /java/
@@ -66,7 +66,7 @@ rescue Gem::LoadError
     Wrest.logger.debug "Warning: Nokogiri >= 1.3.3 not found, falling back to #{ActiveSupport::XmlMini.backend} (which is probably significantly slower). To install Nokogiri run `(sudo) (jruby -S) gem install nokogiri`"
     if RUBY_PLATFORM =~ /java/
       begin
-        gem 'jrexml', '>= 0.5.3'
+        gem 'jrexml', '~> 0.5.3'
         require 'jrexml'
         Wrest.logger.debug "Detected JRuby, JREXML loaded."
       rescue Gem::LoadError

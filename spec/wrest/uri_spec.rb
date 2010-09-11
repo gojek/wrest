@@ -41,7 +41,7 @@ module Wrest
         Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
         Uri.new('http://localhost:3000/')['ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
         Uri.new('http://localhost:3000')['ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
-      end      
+      end
     end
     
     it "should know its full path" do
@@ -68,9 +68,6 @@ module Wrest
                                                       :password => 'bar')
     end
 
-    it "should extend the uri_string to include / even if it is not included " do
-      'http://localhost'.to_uri['ooga/booga'].should == 'http://localhost/'.to_uri['ooga/booga']
-    end
 
     it "should use the username and password provided while building a new uri if present" do
       uri = Uri.new('http://localhost:3000', :username => 'foo', :password => 'bar')
@@ -156,104 +153,104 @@ module Wrest
         http
       end
       
-      it "should know how to get" do
-        uri = "http://localhost:3000/glassware".to_uri
+      context "GET" do
 
-        http = setup_http
+        it "should know how to get" do
+          uri = "http://localhost:3000/glassware".to_uri
 
-        request = Net::HTTP::Get.new('/glassware', {})
-        Net::HTTP::Get.should_receive(:new).with('/glassware', {}).and_return(request)
+          http = setup_http
+
+          request = Net::HTTP::Get.new('/glassware', {})
+          Net::HTTP::Get.should_receive(:new).with('/glassware', {}).and_return(request)
         
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+          http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-        uri.get
-      end
+          uri.get
+        end
 
-      it "should know how to get with parameters" do
-        uri = "http://localhost:3000/glassware".to_uri
+        context "query parameters" do
+          it "should know how to get with parameters" do
+            uri = "http://localhost:3000/glassware".to_uri
 
-        http = setup_http
+            http = setup_http
                 
-        request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+            request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-        uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
-      end
+            uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+          end
 
-      it "should know how to get with parameters included in the uri" do
-        uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
+          it "should know how to get with parameters included in the uri" do
+            uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
 
-        http = setup_http
+            http = setup_http
                 
-        request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+            request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-        uri.get({}, :page => '2', :per_page => '5')
-      end
+            uri.get({}, :page => '2', :per_page => '5')
+          end
 
-      it "should know how to get with a ? appended to the uri and no appended parameters" do
-        uri = "http://localhost:3000/glassware?".to_uri
+          it "should know how to get with a ? appended to the uri and no appended parameters" do
+            uri = "http://localhost:3000/glassware?".to_uri
 
-        http = setup_http
+            http = setup_http
                 
-        request = Net::HTTP::Get.new('/glassware', {'page' => '2', 'per_page' => '5'})
-        Net::HTTP::Get.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
+            request = Net::HTTP::Get.new('/glassware', {'page' => '2', 'per_page' => '5'})
+            Net::HTTP::Get.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-        uri.get({}, :page => '2', :per_page => '5')
-     
-      end
+            uri.get({}, :page => '2', :per_page => '5')
+          end
 
-      it "should know how to get with a ? appended to the uri and specified parameters" do
-        uri = "http://localhost:3000/glassware?".to_uri
+          it "should know how to get with a ? appended to the uri and specified parameters" do
+            uri = "http://localhost:3000/glassware?".to_uri
 
-        http = setup_http
+            http = setup_http
                 
-        request = Net::HTTP::Get.new('/glassware?owner=kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+            request = Net::HTTP::Get.new('/glassware?owner=kai&type=bottle', {'page' => '2', 'per_page' => '5'})
 
-        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
-        
-        
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
 
-        uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
-     
-      end
+            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-      it "should know how to get with parameters appended to the uri and specfied parameters" do
-        uri = "http://localhost:3000/glassware?owner=kai&type=bottle".to_uri
+            uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+          end
 
-        http = setup_http
+          it "should know how to get with parameters appended to the uri and specfied parameters" do
+            uri = "http://localhost:3000/glassware?owner=kai&type=bottle".to_uri
+
+            http = setup_http
                 
-        request = Net::HTTP::Get.new('/glassware?owner=kai&type=bottle&param1=one&param2=two', {'page' => '2', 'per_page' => '5'})
+            request = Net::HTTP::Get.new('/glassware?owner=kai&type=bottle&param1=one&param2=two', {'page' => '2', 'per_page' => '5'})
 
-
-        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two', {'page' => '2', 'per_page' => '5'}).and_return(request)
+            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-         uri.get(build_ordered_hash([[:param1, 'one'],[:param2, 'two']]), :page => '2', :per_page => '5')
-       
+            uri.get(build_ordered_hash([[:param1, 'one'],[:param2, 'two']]), :page => '2', :per_page => '5')
+          end
+
+          it "should know how to get with parameters but without any headers" do
+            uri = "http://localhost:3000/glassware".to_uri
+
+            http = setup_http
+        
+            request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {})
+            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {}).and_return(request)
+        
+            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+
+            uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]))
+          end
+        end
       end
-
-      it "should know how to get with parameters but without any headers" do
-        uri = "http://localhost:3000/glassware".to_uri
-
-        http = setup_http
-        
-        request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {})
-        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {}).and_return(request)
-        
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response)
-
-        uri.get(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]))
-      end
-
+      
       it "should know how to post" do
         uri = "http://localhost:3000/glassware".to_uri
 
@@ -294,77 +291,81 @@ module Wrest
         uri.put '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
       end
 
-      it "should know how to delete" do
-        uri = "http://localhost:3000/glassware".to_uri
-
-        http = setup_http
-
-        request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-        Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
-
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
-
-        uri.delete(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
-      end
-
-      it "should know how to delete with parameters included in the uri" do
-        uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
-
-        http = setup_http
-                
-        request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-        Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+      context "DELETE" do
         
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+        it "should know how to delete" do
+          uri = "http://localhost:3000/glassware".to_uri
 
-        uri.delete({}, :page => '2', :per_page => '5')
+          http = setup_http
+
+          request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+          Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+
+          http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+
+          uri.delete(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+        end
+      
+        context "query parameters" do
+           it "should know how to delete with parameters included in the uri" do
+             uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
+
+             http = setup_http
+
+             request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+             Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+
+             http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+
+             uri.delete({}, :page => '2', :per_page => '5')
+           end
+
+           it "should know how to delete with a ? appended to the uri and no appended parameters" do
+              uri = "http://localhost:3000/glassware?".to_uri
+
+             http = setup_http
+
+             request = Net::HTTP::Delete.new('/glassware', {'page' => '2', 'per_page' => '5'})
+             Net::HTTP::Delete.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
+
+             http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+
+             uri.delete({}, :page => '2', :per_page => '5')
+
+           end
+
+           it "should know how to delete with a ? appended to the uri and specified parameters" do
+             uri = "http://localhost:3000/glassware?".to_uri
+
+             http = setup_http
+
+             request = Net::HTTP::Delete.new('/glassware?owner=kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+
+             Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+
+
+             http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+
+              uri.delete(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
+
+           end
+
+          it "should know how to delete with parameters appended to the uri and specfied parameters" do
+             uri = "http://localhost:3000/glassware?owner=kai&type=bottle".to_uri
+
+             http = setup_http
+
+             request = Net::HTTP::Delete.new('/glassware?owner=kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+
+             Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two', {'page' => '2', 'per_page' => '5'}).and_return(request)
+
+             http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+
+             uri.delete(build_ordered_hash([[:param1, 'one'],[:param2, 'two']]), :page => '2', :per_page => '5')
+           end
+        end
       end
-
-      it "should know how to delete with a ? appended to the uri and no appended parameters" do
-         uri = "http://localhost:3000/glassware?".to_uri
-
-        http = setup_http
-                
-        request = Net::HTTP::Delete.new('/glassware', {'page' => '2', 'per_page' => '5'})
-        Net::HTTP::Delete.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
-        
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
-
-        uri.delete({}, :page => '2', :per_page => '5')
-     
-      end
-
-      it "should know how to delete with a ? appended to the uri and specified parameters" do
-        uri = "http://localhost:3000/glassware?".to_uri
-
-        http = setup_http
-                
-        request = Net::HTTP::Delete.new('/glassware?owner=kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-
-        Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
-        
-        
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
-
-         uri.delete(build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]), :page => '2', :per_page => '5')
-     
-      end
-
-     it "should know how to delete with parameters appended to the uri and specfied parameters" do
-        uri = "http://localhost:3000/glassware?owner=kai&type=bottle".to_uri
-
-        http = setup_http
-                
-        request = Net::HTTP::Delete.new('/glassware?owner=kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-
-        Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two', {'page' => '2', 'per_page' => '5'}).and_return(request)
-        
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
-
-        uri.delete(build_ordered_hash([[:param1, 'one'],[:param2, 'two']]), :page => '2', :per_page => '5')
-       
-      end
-
+      
       it "should know how to ask for options on a URI" do
         uri = "http://localhost:3000/glassware".to_uri
 
