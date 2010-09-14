@@ -41,6 +41,20 @@ module Wrest
         UriTemplate.new("http://localhost:3000/:resource/:id.:format").should ==  UriTemplate.new("http://localhost:3000/:resource/:id.:format")
       end
     end
+    
+    context 'extension' do
+      it "should know how to build a new UriTemplate from an existing one by appending a path" do
+        UriTemplate.new('http://localhost:3000')['/ooga/booga'].should == UriTemplate.new('http://localhost:3000/ooga/booga')
+      end
+      
+      it "should handle / positions with wisdom" do
+        UriTemplate.new('http://localhost:3000/')['/ooga/booga'].should == UriTemplate.new('http://localhost:3000/ooga/booga')
+        UriTemplate.new('http://localhost:3000')['/ooga/booga'].should == UriTemplate.new('http://localhost:3000/ooga/booga')
+        UriTemplate.new('http://localhost:3000/')['ooga/booga'].should == UriTemplate.new('http://localhost:3000/ooga/booga')
+        UriTemplate.new('http://localhost:3000')['ooga/booga'].should == UriTemplate.new('http://localhost:3000/ooga/booga')
+      end
+    end
+    
 
   end
 end
