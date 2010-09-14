@@ -38,7 +38,7 @@ module Wrest
     describe 'equals' do
       it "should have the same uri_pattern " do
         UriTemplate.new("http://localhost:3000/:resource/:id.:format").should_not ==  UriTemplate.new("http://localhost:3000/:id/:resource.:format")
-        UriTemplate.new("http://localhost:3000/:resource/:id.:format").should ==  UriTemplate.new("http://localhost:3000/:resource/:iesource.:format")
+        UriTemplate.new("http://localhost:3000/:resource/:id.:format").should ==  UriTemplate.new("http://localhost:3000/:resource/:id.:format")
       end
     end
 
