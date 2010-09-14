@@ -29,7 +29,14 @@ end
 desc 'Default: run spec tests.'
 task :default => 'rspec:unit'
 
-# task :spec => 'rspec:unit'
+desc 'Install bundler dependencies'
+task :install_dependencies do
+  puts (command = "cd #{File.expand_path(File.dirname(__FILE__))} && bundle install")
+  `#{command}`
+end
+
+desc 'Cruise task'
+task :cruise => ['install_dependencies', 'rspec:unit']
 
 namespace :rspec do
   desc "Run all unit specs"

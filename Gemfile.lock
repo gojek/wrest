@@ -1,0 +1,42 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activesupport (3.0.0)
+    builder (2.1.2)
+    diff-lcs (1.1.2)
+    i18n (0.4.1)
+    jrexml (0.5.3)
+    json (1.4.6)
+    json-jruby (1.4.3.1-java)
+    multipart-post (1.0.1)
+    nokogiri (1.4.3.1)
+    nokogiri (1.4.3.1-java)
+      weakling (>= 0.0.3)
+    patron (0.4.8)
+    rspec (2.0.0.beta.20)
+      rspec-core (= 2.0.0.beta.20)
+      rspec-expectations (= 2.0.0.beta.20)
+      rspec-mocks (= 2.0.0.beta.20)
+    rspec-core (2.0.0.beta.20)
+    rspec-expectations (2.0.0.beta.20)
+      diff-lcs (>= 1.1.2)
+    rspec-mocks (2.0.0.beta.20)
+    tzinfo (0.3.23)
+    weakling (0.0.4-java)
+
+PLATFORMS
+  java
+  ruby
+
+DEPENDENCIES
+  activesupport (~> 3.0.0)
+  builder (~> 2.1.2)
+  i18n (~> 0.4.1)
+  jrexml (~> 0.5.3)
+  json (~> 1.4.6)
+  json-jruby (~> 1.4.3.1)
+  multipart-post (~> 1.0)
+  nokogiri (~> 1.4.3.1)
+  patron (~> 0.4.8)
+  rspec (~> 2.0.0.beta.20)
+  tzinfo (~> 0.3.23)
