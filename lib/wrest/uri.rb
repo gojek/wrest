@@ -38,7 +38,7 @@ module Wrest #:nodoc:
     end 
     
     def to_template(pattern)
-      template_pattern = uri_string + pattern
+      template_pattern = URI.join(uri_string,pattern).to_s
       UriTemplate.new(template_pattern)
     end
         

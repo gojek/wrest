@@ -27,8 +27,17 @@ module Wrest
       Uri.new('https://localhost:3000').should be_https
     end
     
-    it "should be able to create a UriTemplate given a uri" do    
-      "http://localhost:3000".to_uri.to_template('/user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
+    context 'UriTemplate' do
+      it "should be able to create a UriTemplate given a uri" do    
+        "http://localhost:3000".to_uri.to_template('/user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
+      end
+    
+      it "should handle / positions with wisdom while creating UriTemplate from a given Uri" do
+        "http://localhost:3000/".to_uri.to_template('/user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
+        "http://localhost:3000".to_uri.to_template('/user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
+        "http://localhost:3000/".to_uri.to_template('user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
+        "http://localhost:3000".to_uri.to_template('user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
+      end
     end
 
     it "should know when it is not https" do
