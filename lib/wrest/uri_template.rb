@@ -45,5 +45,10 @@ module Wrest
         uri_string.gsub(":#{key.to_s}", value.to_s)
       end.to_uri
     end
+
+    def ==(other)
+      return false if other.class != self.class
+      return other.uri_pattern == self.uri_pattern 
+    end
   end
 end

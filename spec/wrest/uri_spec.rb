@@ -26,6 +26,10 @@ module Wrest
     it "should know when it is https" do
       Uri.new('https://localhost:3000').should be_https
     end
+    
+    it "should be able to create a UriTemplate given a uri" do    
+      "http://localhost:3000".to_uri.to_template('/user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
+    end
 
     it "should know when it is not https" do
       Uri.new('http://localhost:3000').should_not be_https
@@ -66,10 +70,6 @@ module Wrest
                                                       'http://localhost:3000/ooga/booga', 
                                                       :username => 'foo', 
                                                       :password => 'bar')
-    end
-
-    it "should extend the uri_string to include / even if it is not included " do
-      'http://localhost'.to_uri['ooga/booga'].should == 'http://localhost/'.to_uri['ooga/booga']
     end
 
     it "should use the username and password provided while building a new uri if present" do

@@ -37,6 +37,11 @@ module Wrest #:nodoc:
         @password = (@options[:password] ||= @uri.password)
     end 
     
+    def to_template(pattern)
+      template_pattern = uri_string + pattern
+      UriTemplate.new(template_pattern)
+    end
+        
     # Build a new Wrest::Uri by appending _path_ to
     # the current uri. If the original Wrest::Uri
     # has a username and password, that will be
