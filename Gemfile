@@ -20,7 +20,7 @@ end
 group :libcurl_support do
   # 1.8.7, 1.9.2, rbx
   platforms :ruby do
-    gem 'patron', '~> 0.4.8'
+    gem 'patron', '~> 0.4.9'
   end
 end
 
