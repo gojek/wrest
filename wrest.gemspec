@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rspec", ["~> 2.0.0.beta.22"]
   s.add_runtime_dependency "activesupport", ["~> 3.0.0"]  
-  s.add_runtime_dependency "builder", ["~> 3.0.0"]  
+  s.add_runtime_dependency "builder", ["~> 2.1.2"]  
   case RUBY_PLATFORM
   when /java/
     s.add_runtime_dependency("json-jruby", ["~> 1.4.3.1"])
