@@ -21,6 +21,8 @@ Features under a numbered section are complete and available in the Wrest gem.
    with ? and no parameters appended to the uri string
  * GH#26 'http://localhost'.to_uri['foo/bar'] fails
  * GH#11 Handle gem dependencies using bundler
+ * GH#22 Converts Uri to UriTemplate
+ * GH#23 Supports extension of UriTemplate via #[]
  
 == 1.0.0.beta2
  * GH#2 Make Components::Containers hash store a HashWithIndifferentAccess
