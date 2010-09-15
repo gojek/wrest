@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.requirements << "To use multipart post, install the 'multipart-post' gem."
   s.requirements << "To use curl as the http engine, install the 'patron' gem. This feature is not available (and should be unneccessary) on jruby."
   
-  s.files             = Dir.glob("{bin/*/,lib/*/.rb}") + %w(README.rdoc CHANGELOG LICENCE)
+puts  s.files             = Dir.glob("{bin/**/*,lib/**/*.rb}") + %w(README.rdoc CHANGELOG LICENCE)
   s.extra_rdoc_files  = ["README.rdoc"]
   s.rdoc_options      = ["--charset=UTF-8"]
   s.executables       = ['wrest']
