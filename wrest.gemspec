@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.executables       = ['wrest']
   s.require_path      = 'lib'
 
-  s.add_development_dependency "rspec", ["~> 2.0.0.beta19"]
+  s.add_development_dependency "rspec", ["~> 2.0.0.beta.22"]
   s.add_runtime_dependency "activesupport", ["~> 3.0.0"]  
   s.add_runtime_dependency "builder", ["~> 2.1.2"]  
   case RUBY_PLATFORM
