@@ -58,7 +58,7 @@ module Wrest #:nodoc:
     #  uri = "https://localhost:3000/v1".to_uri(:username => 'foo', :password => 'bar')
     #  uri['/oogas/1', {:username => 'meh', :password => 'baz'}].get
     def [](path, options = nil)
-      Uri.new(URI.join(uri_string, path), options || @options)
+      Uri.new(uri + File.join(uri_path, path), options || @options)
     end
     
     # Clones a Uri, building a new instance with exactly the same uri string.

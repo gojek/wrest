@@ -48,6 +48,10 @@ module Wrest
       it "should know how to build a new uri from an existing one by appending a path" do
         Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
       end
+
+      it "should not lose bits of the path along the way" do
+        Uri.new('http://localhost:3000/ooga')['/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+      end
       
       it "should handle / positions with wisdom" do
         Uri.new('http://localhost:3000/')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
