@@ -21,16 +21,17 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 
 ==== GET
 
-  'http://twitter.com/statuses/public_timeline.json'.to_uri.get.deserialise  # works with json and xml out-of-the-box
+* Basic API calls
+  'http://twitter.com/statuses/public_timeline.json'.to_uri.get.deserialise  # works with json and xml out of the box
 
-  'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise
-  
+  'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise   # see lib/wrest/components/translators to add other formats
+* Timeout support
   'http://twitter.com/statuses/public_timeline.json'.to_uri.get(:timeout => 5).body
-  
+* Redirect support
   'http://google.com'.to_uri(:follow_redirects => false).get
   
   'http://google.com'.to_uri(:follow_redirects_limit => 1).get
-
+* More complex call with custom deserialiser
   'http://search.yahooapis.com/NewsSearchService/V1/newsSearch'.to_uri.get(
                   :appid  => 'YahooDemo', 
                   :output => 'xml',
@@ -40,8 +41,8 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
                 ).deserialise_using(
                   Wrest::Translators::Xml
                 )
-  
-  base_uri = 'https://api.del.icio.us/v1'.to_uri(:username => 'kaiwren', :password => 'fupupp1es') # simple HTTP authentication
+* Basic HTTP auth and URI extensions using Wrest::Uri#[]
+  base_uri = 'https://api.del.icio.us/v1'.to_uri(:username => 'kaiwren', :password => 'fupupp1es')
   bookmarks = base_uri['/posts/get'].get.deserialise
 
 ==== DELETE
