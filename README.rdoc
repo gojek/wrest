@@ -34,7 +34,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     'http://google.com'.to_uri(:follow_redirects => false).get
   
     'http://google.com'.to_uri(:follow_redirects_limit => 1).get
-* More complex call with custom deserialiser
+* More complex request with parameters and a custom deserialiser
   
     'http://search.yahooapis.com/NewsSearchService/V1/newsSearch'.to_uri.get(
                   :appid  => 'YahooDemo', 
@@ -49,6 +49,28 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
   
     base_uri = 'https://api.del.icio.us/v1'.to_uri(:username => 'kaiwren', :password => 'fupupp1es')
     bookmarks = base_uri['/posts/get'].get.deserialise
+
+==== POST
+
+* Regular, vanilla Post with a body and headers
+  
+    'http://my.api.com'.to_uri.post('YAML encoded body', 'Content-Type' => 'text/x-yaml')  
+* Form encoded post
+    
+    'https://api.del.icio.us/v1/posts/add'.to_uri(
+             :username => 'kaiwren', :password => 'fupupp1es'
+          ).post_form(
+             :url => 'http://blog.sidu.in/search/label/ruby',
+             :description => 'The Ruby related posts on my blog!',
+             :extended => "All posts tagged with 'ruby'",
+             :tags => 'ruby hacking'
+          )
+* Multipart posts
+   
+   'http://imgur.com/api/upload.xml'.to_uri.post_multipart(
+     :image => UploadIO.new(File.open(file_path), "image/png", file_path), 
+     :key => imgur_key
+    ).deserialise
 
 ==== DELETE
 
