@@ -10,6 +10,8 @@
 module Wrest::Resource #:nodoc:
   # Resource::Base is the equivalent of ActiveResource::Base.
   # It is a REST client targetted at Rails REST apps.
+  # 
+  # Note that it is currently incomplete.
   class Base
     include Wrest::Components::Container
 

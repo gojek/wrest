@@ -1,4 +1,5 @@
 require "spec_helper"
+require "wrest/resource"
 
 class Glassware < Wrest::Resource::Base
   set_host "http://localhost:3000"
@@ -164,7 +165,7 @@ module Wrest
         #         {"lead_bottle"=>{"name"=>"Wooz", "id"=>1, "universe_id"=>nil}}
         it "should know how to find a resource by id" do
           uri = 'http://localhost:3001/bottled_universe/1.xml'.to_uri
-          Wrest::Uri.should_receive(:new).with('http://localhost:3001/bottled_universes/1.xml', {}).and_return(uri)
+          Wrest::Uri.should_receive(:new).with('http://localhost:3001/bottled_universes/1.xml').and_return(uri)
           response = mock(Wrest::Native::Response)
           uri.should_receive(:get).with(no_args).and_return(response)
           response.should_receive(:deserialise).and_return({"bottled-universe"=>{"name"=>{"__content__"=>"Wooz"}, "universe-id"=>{"type"=>"integer", "nil"=>"true"}, "id"=>{"__content__"=>"1", "type"=>"integer"}}})
@@ -192,7 +193,7 @@ module Wrest
         mock_http_response.stub!(:content_type).and_return('application/xml')
         mock_http_response.stub!(:body).and_return("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bottled-universe>\n  <name>Woot</name>\n <id>1</id>\n </bottled-universe>\n")
         
-        Uri.should_receive(:new).with("http://localhost:3001/bottled_universes.xml", {}).and_return(uri)
+        Uri.should_receive(:new).with("http://localhost:3001/bottled_universes.xml").and_return(uri)
         uri.should_receive(:post).with(
                                       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<bottled-universe>\n  <name>Woot</name>\n</bottled-universe>\n", 
                                       'Content-Type' => 'application/xml'

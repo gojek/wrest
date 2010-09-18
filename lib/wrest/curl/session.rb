@@ -7,7 +7,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Native
+module Wrest::Curl
   # This class is a wrapper for a keep-alive HTTP connection. It simply passes the
   # same connection instance as an option to all Wrest::Http::Request instances created using it.
   #
@@ -20,7 +20,7 @@ module Wrest::Native
   class Session
     attr_reader :uri
     def initialize(uri)
-      @uri = uri.is_a?(String) ? uri.to_uri : uri
+      @uri = Wrest::Uri.new(uri)
       @default_headers = { StandardHeaders::Connection => StandardTokens::KeepAlive }
 
       yield(self) if block_given?

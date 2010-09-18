@@ -31,7 +31,7 @@ module Wrest #:nodoc:
         raise Wrest::Exceptions::AutoRedirectLimitExceeded if (redirect_request_options[:follow_redirects_count] += 1) >= redirect_request_options[:follow_redirects_limit]
 
         Wrest.logger.debug "--| Redirecting to #{target}"
-        target.to_uri(redirect_request_options).get
+        Wrest::Uri.new(target, redirect_request_options).get
       end
     end
   end

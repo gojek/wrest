@@ -20,7 +20,7 @@ module Wrest::Native
   class Session
     attr_reader :uri
     def initialize(uri)
-      @uri = uri.is_a?(String) ? uri.to_uri : uri
+      @uri = Wrest::Uri.new(uri)
       @default_headers = { Wrest::Native::StandardHeaders::Connection => Wrest::Native::StandardTokens::KeepAlive }
 
       yield(self) if block_given?

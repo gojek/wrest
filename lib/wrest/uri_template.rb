@@ -40,10 +40,10 @@ module Wrest
     # )
     #  => #<Wrest::Uri:0x18e0bec @uri=#<URI::HTTP:0x18e09a8 URL:http://kaiwren:fupuppies@coathangers.com/portal/1>>
     def to_uri(options = {})
-      options.inject(uri_pattern.clone) do |uri_string, tuple| 
+      Wrest::Uri.new(options.inject(uri_pattern.clone) do |uri_string, tuple| 
         key, value = tuple
         uri_string.gsub(":#{key.to_s}", value.to_s)
-      end.to_uri
+      end)
     end
 
     def [](path)

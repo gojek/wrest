@@ -57,7 +57,7 @@ describe Wrest::Native::Request do
     
     Wrest::Native::Response.should_receive(:new).and_return(response)
     redirected_request.stub!(:get)
-    redirect_location.should_receive(:to_uri).with(hash_including(:follow_redirects_count=>1)).and_return(redirected_request)
+    Wrest::Uri.should_receive(:new).with(redirect_location, hash_including(:follow_redirects_count=>1)).and_return(redirected_request)
     
     request.invoke
     request.follow_redirects_count.should == 0

@@ -94,7 +94,7 @@ require "#{Wrest::Root}/wrest/exceptions"
 require "#{Wrest::Root}/wrest/components"
 
 # Load Wrest::Resource
-require "#{Wrest::Root}/wrest/resource"
+# require "#{Wrest::Root}/wrest/resource"
 
 # if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
 #   require "#{Wrest::Root}/wrest/test"
