@@ -11,6 +11,14 @@ module Wrest
   module CoreExt #:nodoc:
     module String #:nodoc:
       # Makes it easier to build other objects from a String
+      # This module is opt-out - if you don't want the to_uri
+      # convenience method on String, set the NoStringExtensions
+      # constant on the Wrest module before requiring wrest.
+      #
+      #   module Wrest
+      #     NoStringExtensions = true
+      #   end
+      #   require 'wrest'
       module Conversions
 
         # A convenience method equivalent to Wrest::Uri.new(string)
