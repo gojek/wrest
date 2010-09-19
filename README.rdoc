@@ -144,3 +144,13 @@ Wrest is currently available as a gem for for Ruby and JRuby.
 You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking <tt>wrest</tt> from your prompt if you've installed the gem.
   $ wrest
   >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(:timeout => 5).get.deserialise
+  
+== Contributors
+ 
+ * Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]
+ * Niranjan Paranjape : {achamian}[http://github.com/achamian]
+ * Aakash Dharmadhkari  : {aakashd}[http://github.com/aakashd]
+ * Srushti : {srushti}[http://github.com/srushti]
+ * Preethi Ramdev  : {preethiramdev}[http://github.com/preethiramdev]
+ * Nikhil Vallishayee  : {preethiramdev}[http://github.com/preethiramdev]
+ * Jacques Crocker: {railsjedi}[http://github.com/railsjedi]
