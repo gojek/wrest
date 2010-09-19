@@ -147,10 +147,10 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
   
 == Contributors
  
- * Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]
- * Niranjan Paranjape : {achamian}[http://github.com/achamian]
- * Aakash Dharmadhkari  : {aakashd}[http://github.com/aakashd]
- * Srushti : {srushti}[http://github.com/srushti]
- * Preethi Ramdev  : {preethiramdev}[http://github.com/preethiramdev]
- * Nikhil Vallishayee  : {preethiramdev}[http://github.com/preethiramdev]
- * Jacques Crocker: {railsjedi}[http://github.com/railsjedi]
+* Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]
+* Niranjan Paranjape : {achamian}[http://github.com/achamian]
+* Aakash Dharmadhkari  : {aakashd}[http://github.com/aakashd]
+* Srushti : {srushti}[http://github.com/srushti]
+* Preethi Ramdev  : {preethiramdev}[http://github.com/preethiramdev]
+* Nikhil Vallishayee  : {preethiramdev}[http://github.com/preethiramdev]
+* Jacques Crocker: {railsjedi}[http://github.com/railsjedi]
