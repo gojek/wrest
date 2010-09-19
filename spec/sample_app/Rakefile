@@ -1,0 +1,8 @@
+require 'rake'
+
+desc "start a development server"
+task :server do
+  system "rackup -E development -p 3000 config.ru"
+end
+
+task :default => :server
