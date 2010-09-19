@@ -152,5 +152,5 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 * Aakash Dharmadhkari : {aakashd}[http://github.com/aakashd]
 * Srushti : {srushti}[http://github.com/srushti]
 * Preethi Ramdev : {preethiramdev}[http://github.com/preethiramdev]
-* Nikhil Vallishayee : {preethiramdev}[http://github.com/preethiramdev]
+* Nikhil Vallishayee : {nikhilvallishayee}[http://github.com/nikhilvallishayee]
 * Jacques Crocker : {railsjedi}[http://github.com/railsjedi]
