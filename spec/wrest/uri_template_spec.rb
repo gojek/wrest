@@ -45,7 +45,9 @@ module Wrest
     context 'extension' do
       it "should know how to build a new UriTemplate from an existing one by appending a path" do
         UriTemplate.new('http://localhost:3000')['/ooga/booga'].should == UriTemplate.new('http://localhost:3000/ooga/booga')
+      end
 
+      it "should know how to extend a UriTemplate that already has a path" do
         UriTemplate.new('http://localhost:3000/1')['/ooga/booga'].should == UriTemplate.new('http://localhost:3000/1/ooga/booga')
         UriTemplate.new('http://localhost:3000/1')['ooga/booga'].should == UriTemplate.new('http://localhost:3000/1/ooga/booga')
         UriTemplate.new('http://localhost:3000/1/')['/ooga/booga'].should == UriTemplate.new('http://localhost:3000/1/ooga/booga')

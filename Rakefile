@@ -18,7 +18,7 @@ else
   require 'rake'
   require 'rspec'
   require 'rspec/core/rake_task'
-
+  
   begin
     require 'metric_fu'
   rescue LoadError
