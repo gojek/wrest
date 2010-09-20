@@ -80,7 +80,8 @@ RUBY_PLATFORM =~ /java/ ? gem('json-jruby', '>= 1.4.2') : gem('json', '>= 1.4.2'
 ActiveSupport::JSON.backend = "JSONGem"
 
 
-Dir["#{File.expand_path(File.dirname(__FILE__))}/wrest/core_ext/*.rb"].each { |file| require file }
+
+require "#{Wrest::Root}/wrest/core_ext/string"
 
 # Load Wrest Core
 require "#{Wrest::Root}/wrest/version"
