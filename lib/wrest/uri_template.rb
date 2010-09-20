@@ -47,7 +47,7 @@ module Wrest
     end
 
     def [](path)
-       UriTemplate.new(URI.join(uri_pattern,path).to_s)
+      UriTemplate.new(File.join(uri_pattern, path))
     end
 
     def ==(other)
