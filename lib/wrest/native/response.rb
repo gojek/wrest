@@ -6,7 +6,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License 
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
 # See the License for the specific language governing permissions and limitations under the License. 
-
+require "rexml/document"
 module Wrest #:nodoc:
   module Native #:nodoc:
     # Decorates a response providing support for deserialisation.
@@ -40,12 +40,13 @@ module Wrest #:nodoc:
         @http_response = http_response
       end
 
-      def deserialise
-        deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type))
+
+      def deserialise(options = {})
+        deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
       end
 
-      def deserialise_using(translator)
-        translator.deserialise(@http_response)
+      def deserialise_using(translator,options = {})
+        translator.deserialise(@http_response,options)
       end
 
       def headers
@@ -54,7 +55,7 @@ module Wrest #:nodoc:
       
       # A null object implementation - invoking this method on
       # a response simply returns the same response unless
-      # the response is a Redirection (code 3xx), in which case a 
+      # the response is Redirection (code 3xx), in which case a 
       # get is invoked on the url stored in the response headers
       # under the key 'location' and the new Response is returned.
       def follow(redirect_request_options = {})

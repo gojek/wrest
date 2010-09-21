@@ -30,12 +30,12 @@ module Wrest #:nodoc:
         initialize_http_header
       end
 
-      def deserialise
-        deserialise_using(Wrest::Components::Translators.lookup(content_type))
+      def deserialise(options = {})
+        deserialise_using(Wrest::Components::Translators.lookup(content_type),options)
       end
 
-      def deserialise_using(translator)
-        translator.deserialise(@http_response)
+      def deserialise_using(translator,options={})
+        translator.deserialise(@http_response,options)
       end
       
       def code
