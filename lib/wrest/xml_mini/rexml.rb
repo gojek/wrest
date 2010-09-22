@@ -1,5 +1,5 @@
-include ActiveSupport::XmlMini_REXML
 
+include ActiveSupport::XmlMini_REXML
 module ActiveSupport
   module XmlMini_REXML 
   #enables filtering an xml response using a specified xpath
