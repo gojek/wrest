@@ -83,6 +83,9 @@ ActiveSupport::JSON.backend = "JSONGem"
 
 require "#{Wrest::Root}/wrest/core_ext/string"
 
+# Load XmlMini Extensions
+require "#{Wrest::Root}/wrest/xml_mini"
+
 # Load Wrest Core
 require "#{Wrest::Root}/wrest/version"
 require "#{Wrest::Root}/wrest/http_shared"

@@ -16,9 +16,8 @@ module Wrest::Components::Translators
     it "should call filter only if xpath is specified" do
       
       http_response = mock('Http Response')
-      Xml.should_receive(:filter)
-
-      Xml.deserialise(http_response,{:xpath=>'//b'})
+      ActiveSupport::XmlMini.should_receive(:filter)
+      Xml.deserialise(http_response,{:xpath=>'//age'})
     end
 
     
