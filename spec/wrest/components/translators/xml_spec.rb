@@ -34,7 +34,7 @@ module Wrest::Components::Translators
 
       http_response = mock('Http Response')
       http_response.should_receive(:body).and_return("<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>")
-
+      ActiveSupport::XmlMini.backend = 'REXML'
       Xml.deserialise(http_response,{:xpath=>'//Name'}).should == {"Name" => {"FirstName" => "Nikhil"}} 
     end
   end

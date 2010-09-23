@@ -1,4 +1,5 @@
 require "spec_helper"
+
 module ActiveSupport 
 describe XmlMini_REXML, 'filter' do
   it "should filter using the given xpath and return the first matching node found" do

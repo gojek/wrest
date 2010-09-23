@@ -1,5 +1,8 @@
 require 'wrest/xml_mini/rexml'
-module XmlMini
-  delegate :filter, :to => :backend
+module ActiveSupport
+  module XmlMini
+    delegate :filter, :to => :backend
+  end
 end
+
 
