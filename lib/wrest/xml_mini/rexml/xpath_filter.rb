@@ -1,5 +1,3 @@
-require "spec_helper"
-
 module REXML_Filter
   #enables filtering an xml response using a specified xpath
   #it returns the first element that matches the xpath
