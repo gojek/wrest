@@ -1,7 +1,7 @@
 require 'wrest/xml_mini/rexml/xpath_filter'
 module ActiveSupport
   module XmlMini_REXML 
-   include REXML_Filter
+   include Xml_Mini::Rexml::XPathFilter
     extend self 
   end
 end

@@ -13,8 +13,7 @@ module Wrest
 
       def deserialise(response,options={})
         if(!options[:xpath].nil?)
-        	p "#{ActiveSupport::XmlMini.backend}"
-          Hash.from_xml(ActiveSupport::XmlMini.filter(response,options[:xpath]))
+          Hash.from_xml(ActiveSupport::XmlMini.filter(response.body,options[:xpath]))
         else
           Hash.from_xml(response.body)
         end
