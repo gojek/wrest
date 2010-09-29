@@ -1,4 +1,4 @@
-= Wrest 1.0.0.beta5
+= Wrest 1.0.0.beta7
 
 (c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
