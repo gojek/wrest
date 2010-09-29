@@ -13,7 +13,7 @@ module Wrest
     module Translators::Json
       extend self
 
-      def deserialise(response)
+      def deserialise(response,options = {})
         ActiveSupport::JSON.decode(response.body)
       end
 
