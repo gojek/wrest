@@ -41,6 +41,24 @@ module Wrest
       response.deserialise
     end
 
+    it "should know how to deserialise a json response" do
+      http_response = mock('response')
+      http_response.stub!(:code).and_return('200')
+      http_response.should_receive(:body).and_return("{ 
+         \"menu\": \"File\", \"commands\": [ { \"title\": \"New\",
+         \"action\":\"CreateDoc\" }, { \"title\": \"Open\", \"action\":
+         \"OpenDoc\" }, { \"title\": \"Close\", \"action\": \"CloseDoc\" } ]
+         }")
+      http_response.should_receive(:content_type).and_return('application/json')
+
+      response = Native::Response.new(http_response)
+      
+      response.deserialise.should == { "commands"=>[{"title"=>"New", "action"=>"CreateDoc"},
+        {"title"=>"Open","action"=>"OpenDoc"},{"title"=>"Close", "action"=>"CloseDoc"}],
+        "menu"=>"File"}
+      
+    end
+
    it "should simply return itself when asked to follow (null object behaviour - see MovedPermanently for more context)" do
       http_response = mock('response')
       http_response.stub!(:code).and_return('422')
