@@ -14,6 +14,7 @@ GEM
     nokogiri (1.4.3.1-java)
       weakling (>= 0.0.3)
     patron (0.4.9)
+    rack (1.2.1)
     rspec (2.0.0.beta.20)
       rspec-core (= 2.0.0.beta.20)
       rspec-expectations (= 2.0.0.beta.20)
@@ -22,6 +23,8 @@ GEM
     rspec-expectations (2.0.0.beta.20)
       diff-lcs (>= 1.1.2)
     rspec-mocks (2.0.0.beta.20)
+    sinatra (1.0)
+      rack (>= 1.0)
     tzinfo (0.3.23)
     weakling (0.0.4-java)
 
@@ -41,4 +44,5 @@ DEPENDENCIES
   nokogiri (~> 1.4.3.1)
   patron (~> 0.4.9)
   rspec (~> 2.0.0.beta.22)
+  sinatra (~> 1.0.0)
   tzinfo (~> 0.3.23)
