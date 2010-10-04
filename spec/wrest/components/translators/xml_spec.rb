@@ -30,13 +30,21 @@ module Wrest::Components::Translators
 
       Xml.deserialise(http_response)
     end
-
-    it "should be able to pull out desired element from a xml response based on xpath and create a hash out of it" do
-      http_response = mock('Http Response')
-      http_response.should_receive(:body).and_return("<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>")
-      
-      ActiveSupport::XmlMini.backend = 'REXML'
-      Xml.deserialise(http_response,{:xpath=>'//Name'}).should == {"Name" => {"FirstName" => "Nikhil"}} 
+    
+    backend = ['Nokogiri','REXML']
+    backend.each { |e| 
+      it "should be able to pull out desired elements from an xml response based on xpath and return an array of matching nodes" do
+        ActiveSupport::XmlMini.backend = e
+        p ActiveSupport::XmlMini.backend
+        
+        http_response = mock('Http Response')
+        http_response.should_receive(:body).and_return("<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>")
+        
+        res_arr = Xml.deserialise(http_response,{:xpath=>'//Name'})
+        result = ""
+        res_arr.each { |a| result+= a.to_s.gsub(/[\n]+/, "").gsub(/\s/, '')}
+        result.should == "<Name><FirstName>Nikhil</FirstName></Name><Name>Bangalore</Name>" 
+      end
+    }
     end
-  end
 end

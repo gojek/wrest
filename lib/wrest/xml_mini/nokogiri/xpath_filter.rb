@@ -1,11 +1,11 @@
 module XmlMini
-  module Rexml
+  module Nokogiri
     module XPathFilter
       #Enables filtering of an xml response using a specified xpath
-      #Returns an array of elements matching the xpath
+      #Returns all elements that match the xpath
       def filter(xml_body,xpath)
-        doc = REXML::Document.new(xml_body)
-        REXML::XPath.each(doc,xpath).to_a
+        doc = ::Nokogiri::XML(xml_body)
+        doc.xpath(xpath).to_a 
       end
     end
   end
