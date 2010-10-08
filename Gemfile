@@ -33,7 +33,7 @@ group :fast_xml_deserialisation_ruby_libxml do
     gem 'libxml-ruby', '~> 1.1.4'
   end
 end
-
+ 
 group :fast_xml_deserialisation_rexml do
   platforms :jruby do
     gem 'jrexml', '~> 0.5.3'
