@@ -1,4 +1,4 @@
-= Wrest 1.0.0.beta7
+= Wrest 1.0.0
 
 (c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -34,6 +34,14 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     'http://google.com'.to_uri(:follow_redirects => false).get
   
     'http://google.com'.to_uri(:follow_redirects_limit => 1).get
+* Deserialise with XPath filtering
+  
+    ActiveSupport::XmlMini.backend = 'REXML'
+    
+    'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise(
+                                                  :xpath => '//user/name/text()'
+                                                )
+
 * More complex request with parameters and a custom deserialiser
   
     'http://search.yahooapis.com/NewsSearchService/V1/newsSearch'.to_uri.get(
