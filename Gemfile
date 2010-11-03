@@ -24,14 +24,6 @@ group :libcurl_support do
   end
 end
 
-
-
-
-
-
-
-
-
 group :fast_xml_deserialisation_nokogiri do
   gem 'nokogiri', '~> 1.4.3.1'
 end
@@ -49,6 +41,6 @@ group :fast_xml_deserialisation_rexml do
 end
 
 group :test do
-  gem 'rspec', '~> 2.0.0'
+  gem 'rspec', '> 2.0.0'
   gem 'sinatra', '~> 1.0.0'
 end
