@@ -18,9 +18,8 @@ Features under a numbered section are complete and available in the Wrest gem.
 
 == Current
  * GH#24 Add support for xpath based filtering of xml response bodies to the response chain
- 
-== 1.0.0
  * GH#46 Response.deserialise for Json responses
+ * GH#52 Wrest console (bin/wrest) fails on 1.9.2
 
 == 1.0.0.beta7
  * GH#46 Response.deserialise for Json responses
