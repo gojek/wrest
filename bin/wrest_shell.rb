@@ -1,7 +1,7 @@
 puts "Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
-entry_point = "#{File.dirname(__FILE__)}/../lib/wrest.rb"
-version = "#{File.dirname(__FILE__)}/../lib/wrest/version"
+entry_point = File.expand_path "#{File.dirname(__FILE__)}/../lib/wrest.rb"
+version = File.expand_path "#{File.dirname(__FILE__)}/../lib/wrest/version.rb"
 
 irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
 
