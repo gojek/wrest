@@ -30,7 +30,7 @@ end
 
 group :fast_xml_deserialisation_ruby_libxml do
   platforms :ruby do
-    gem 'libxml-ruby', '>= 1.1.4'
+    gem 'libxml-ruby', '>= 1.1.4' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
   end
 end
  
