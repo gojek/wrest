@@ -31,9 +31,7 @@ module Wrest::Components::Translators
       Xml.deserialise(http_response)
     end
     
-    backend = ['Nokogiri','REXML']
-    backend << 'LibXML' unless (RUBY_PLATFORM =~ /java/ || (Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/))
-    backend.each do |e| 
+    xml_backends.each do |e| 
       it "should be able to pull out desired elements from an xml response based on xpath and return an array of matching nodes" do
         ActiveSupport::XmlMini.backend = e
         

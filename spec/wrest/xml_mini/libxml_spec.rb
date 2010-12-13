@@ -1,4 +1,4 @@
-unless (RUBY_PLATFORM =~ /java/ || (Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/))
+if xml_backends.include?('LibXML')
   require "spec_helper"
   require 'wrest/xml_mini/libxml'
   require 'libxml'
