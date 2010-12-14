@@ -24,7 +24,7 @@ module Wrest #:nodoc:
   class Uri
     attr_reader :uri, :username, :password, :uri_string, :uri_path, :query
         
-    # See Wrest::Http::Request for the available options and their default values.
+    # See Wrest::Native::Request for the available options and their default values.
     def initialize(uri_string, options = {})
         @options = options
         @uri_string = uri_string.to_s
@@ -88,7 +88,7 @@ module Wrest #:nodoc:
     end
     
     # Make a GET request to this URI. This is a convenience API
-    # that creates a Wrest::Http::Get, executes it and returns a Wrest::Http::Response.
+    # that creates a Wrest::Native::Get, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def get(parameters = {}, headers = {})
@@ -96,7 +96,7 @@ module Wrest #:nodoc:
     end
 
     # Make a PUT request to this URI. This is a convenience API
-    # that creates a Wrest::Http::Put, executes it and returns a Wrest::Http::Response.
+    # that creates a Wrest::Native::Put, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def put(body = '', headers = {}, parameters = {})
@@ -104,7 +104,7 @@ module Wrest #:nodoc:
     end
 
     # Makes a POST request to this URI. This is a convenience API
-    # that creates a Wrest::Http::Post, executes it and returns a Wrest::Http::Response.
+    # that creates a Wrest::Native::Post, executes it and returns a Wrest::Native::Response.
     # Note that sending an empty body will blow up if you're using libcurl.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
@@ -126,7 +126,7 @@ module Wrest #:nodoc:
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
-    # that creates a Wrest::Http::Delete, executes it and returns a Wrest::Http::Response.
+    # that creates a Wrest::Native::Delete, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def delete(parameters = {}, headers = {})
@@ -134,7 +134,7 @@ module Wrest #:nodoc:
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API
-    # that creates a Wrest::Http::Options, executes it and returns the Wrest::Http::Response.
+    # that creates a Wrest::Native::Options, executes it and returns the Wrest::Native::Response.
     def options
       Http::Options.new(self, @options).invoke
     end

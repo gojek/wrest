@@ -9,7 +9,7 @@
 
 module Wrest::Native
   # This class is a wrapper for a keep-alive HTTP connection. It simply passes the
-  # same connection instance as an option to all Wrest::Http::Request instances created using it.
+  # same connection instance as an option to all Wrest::Native::Request instances created using it.
   #
   # If at any point the server closes an existing connection during a Session by returning a
   # Connection: Close header the current connection is destroyed and a fresh one created for the next
