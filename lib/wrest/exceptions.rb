@@ -11,7 +11,7 @@ module Wrest
     end
 
     # Raised when a request auto redirects more times than are allowed
-    # by its follow_redirects_limit. See Wrest::Http::Redirection.
+    # by its follow_redirects_limit. See Wrest::Native::Redirection.
     class AutoRedirectLimitExceeded < StandardError
     end
 
