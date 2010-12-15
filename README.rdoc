@@ -34,6 +34,9 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     'http://google.com'.to_uri(:follow_redirects => false).get
   
     'http://google.com'.to_uri(:follow_redirects_limit => 1).get
+
+  :follow_redirects_limit defaults to 5 if not specified.
+
 * Deserialise with XPath filtering
   
     ActiveSupport::XmlMini.backend = 'REXML'

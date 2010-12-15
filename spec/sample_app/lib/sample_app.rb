@@ -29,6 +29,20 @@ module SampleApp
     post '/uploads' do
       params[:file][:tempfile].read
     end
+
+    get '/redirect_n_times/:times' do
+      times = (params[:times] || 1).to_i
+
+      # Put in a "Moved Permanently" redirect into the mix.
+      status_code = (times == 2) ? 301 : 302
+
+      if times > 0
+        redirect "/redirect_n_times/#{times-1}", status_code
+      else
+        "You've reached the end of redirection. There is only darkness beyond this."
+      end
+    end
+
   end
   
   get '/lead_bottles/1.xml' do
