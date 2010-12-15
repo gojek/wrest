@@ -152,7 +152,21 @@ Wrest is currently available as a gem for for Ruby and JRuby.
 You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking <tt>wrest</tt> from your prompt if you've installed the gem.
   $ wrest
   >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(:timeout => 5).get.deserialise
-  
+
+=== Testing
+
+Start the Sinatra test server for functional test.
+  rake -f spec/sample_app/Rakefile  
+
+Run the tests in a different terminal:
+
+  # Run the normal test suite.
+  rake
+
+  # Runs the functional test suite.
+  rake rspec:functional
+
+
 == Contributors
  
 * Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]
