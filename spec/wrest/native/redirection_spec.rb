@@ -38,4 +38,11 @@ describe Wrest::Native::Redirection do
 
     lambda{ request_url.to_uri(:follow_redirects_limit => 5).get }.should raise_error(Wrest::Exceptions::AutoRedirectLimitExceeded)
   end
+
+  context "functional", :functional => true do
+    it "should follow redirection when follow_redirects is true" do
+      "http://localhost:3000/redirect_n_times/4".to_uri(:follow_redirects => true).get.body should == "You've reached the end of redirection. There is only darkness beyond this."
+    end
+
+  end
 end
