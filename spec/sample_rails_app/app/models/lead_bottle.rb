@@ -1,3 +1,0 @@
-class LeadBottle < Bottle
-end
-  

@@ -1,3 +1,0 @@
-== Wrest's Sample Rails App
-
-This dummy application is what Wrest's live functional tests run against. RESTful behaviour is supported by the {resource_full}[http://github.com/bguthrie/resource_full] plugin (see vendor/plugins inside the sample app).

@@ -1,5 +1,0 @@
-log/*.log
-db/development.sqlite3
-tmp
-tmtags
-.DS_Store
