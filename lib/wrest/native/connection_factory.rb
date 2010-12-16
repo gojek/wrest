@@ -9,13 +9,14 @@
 
 module Wrest::Native
   module ConnectionFactory
-    def create_connection(timeout = 60)
-      timeout ||= 60
+    def create_connection(options = {:timeout => 60, :verify_mode => 'VERIFY_PEER'})
+      options[:timeout] ||= 60
       connection = Net::HTTP.new(self.host, self.port)
-      connection.read_timeout = timeout
+      connection.read_timeout = options[:timeout]
       if self.https?
         connection.use_ssl     = true
-        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        connection.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        connection.verify_mode = OpenSSL::SSL::VERIFY_NONE if options[:verify_mode] == 'VERIFY_NONE'
       end
       connection
     end
