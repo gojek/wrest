@@ -59,7 +59,7 @@ module Wrest
         @http_request.timeout = @timeout
       end
 
-      # Makes a request and returns a Wrest::Http::Response.
+      # Makes a request and returns a Wrest::Native::Response.
       # Data about the request is and logged to Wrest.logger
       # The log entry contains the following information:
       #
