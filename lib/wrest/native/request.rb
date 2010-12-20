@@ -74,9 +74,9 @@ module Wrest::Native
 
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"
       
-      Wrest.logger.debug "--> (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
+      Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
       time = Benchmark.realtime { response = Wrest::Native::Response.new( do_request ) }
-      Wrest.logger.debug "<-- (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
+      Wrest.logger.debug "-> (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
       @follow_redirects ? response.follow(@options) : response
     rescue Timeout::Error => e
