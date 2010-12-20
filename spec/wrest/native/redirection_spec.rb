@@ -36,6 +36,7 @@ describe Wrest::Native::Redirection do
 
     http_connection = mock(Net::HTTP)
     http_connection.stub!(:read_timeout=)
+    http_connection.stub!(:set_debug_output)
     http_connection.should_receive(:request).exactly(5).times.and_return(response)
 
     Net::HTTP.should_receive(:new).exactly(5).times.and_return(http_connection)

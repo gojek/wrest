@@ -32,6 +32,10 @@ module Wrest::Native
     #   :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #                  used for multiple requests.
     #   :cache_store => The object which should be used as cache store for cacheable responses
+    #   :detailed_http_logging => nil/$stdout/$stderr or File/Logger/IO object. Defaults to nil (recommended).
+    #   
+    # *WARNING* : detailed_http_logging causes serious security hole. Never use it in production code.
+    #
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
@@ -47,6 +51,7 @@ module Wrest::Native
       @connection = @options[:connection]
       @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
       @cache_store = options[:cache_store]
+      @detailed_http_logging = options[:detailed_http_logging]
     end
 
     # Makes a request and returns a Wrest::Native::Response. 
@@ -70,6 +75,8 @@ module Wrest::Native
       response = nil
       
       @connection ||= @uri.create_connection(timeout)
+      @connection.set_debug_output @detailed_http_logging
+      
       http_request.basic_auth username, password unless username.nil? || password.nil?
 
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"

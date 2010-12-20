@@ -165,8 +165,9 @@ module Wrest
     describe 'HTTP actions' do
       def setup_http
         http = mock(Net::HTTP) 
-          Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
-          http.should_receive(:read_timeout=).with(60)
+        Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
+        http.should_receive(:read_timeout=).with(60)
+        http.should_receive(:set_debug_output).with(nil)
         http
       end
       
@@ -395,12 +396,23 @@ module Wrest
         uri.options
       end
 
+      it "should correctly use the detailed_http_logging option" do
+        logger = mock(Logger)
+        logger.should_receive(:<<).at_least(:once).with {|detailed_log| detailed_log.include? "opening connection to"}
+        logger.should_receive(:<<).any_number_of_times
+
+        uri = "http://localhost:3000/glassware".to_uri :detailed_http_logging => logger
+
+        uri.get
+      end
+          
       it "should not mutate state of the uri across requests" do
         uri = "http://localhost:3000/glassware".to_uri
 
         http = mock(Net::HTTP)
         Net::HTTP.should_receive(:new).with('localhost', 3000).any_number_of_times.and_return(http)
         http.should_receive(:read_timeout=).any_number_of_times.with(60)
+        http.should_receive(:set_debug_output).any_number_of_times
       
         request_get = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
         Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request_get)

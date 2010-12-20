@@ -21,6 +21,7 @@ module Wrest
       http = mock(Net::HTTP)
       Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
       http.should_receive(:read_timeout=).with(60)
+      http.should_receive(:set_debug_output).any_number_of_times
 
       request_one = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive})
       request_two = Net::HTTP::Get.new('/bottles.xml', {H::Connection=>T::KeepAlive})
@@ -62,6 +63,7 @@ module Wrest
       
       http.should_receive(:request).with(request_one, nil).and_return(ok_response)
       http.should_receive(:request).with(request_two, nil).and_return(ok_response_with_connection_close)
+      http.should_receive(:set_debug_output).twice
 
       Native::Session.new(uri) do |session|
         session.get('/glassware', build_ordered_hash([[:owner, 'Kai'],[:type, 'bottle']]))

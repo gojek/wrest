@@ -54,6 +54,7 @@ describe Wrest::Native::Request do
     response = Wrest::Native::Redirection.new(raw_response)
     
     mock_connection.should_receive(:request).and_return(raw_response)
+    mock_connection.should_receive(:set_debug_output)
     
     Wrest::Native::Response.should_receive(:new).and_return(response)
     redirected_request.stub!(:get)
