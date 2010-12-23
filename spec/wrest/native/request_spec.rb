@@ -89,6 +89,28 @@ describe Wrest::Native::Request do
     Wrest::Native::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
   end  
   
+  it "should have verification mode for https set to VERIFY_PEER by default" do
+    uri = 'https://localhost/foo'.to_uri
+    request = Wrest::Native::Get.new(uri, {}, {}, {:username => "name", :password => "password"})
+    http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
+    http_request.should_receive(:basic_auth).with('name', 'password')
+     request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
+    request.should_receive(:http_request).any_number_of_times.and_return(http_request)
+    request.invoke
+    request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_PEER
+  end
+   
+  it "should have verification mode for https set to VERIFY_NONE when passed as an option" do
+    uri = 'https://localhost/foo'.to_uri
+    request = Wrest::Native::Get.new(uri, {}, {}, {:username => "name", :password => "password", :verify_mode => OpenSSL::SSL::VERIFY_NONE})
+    http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
+    http_request.should_receive(:basic_auth).with('name', 'password')
+    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
+    request.should_receive(:http_request).any_number_of_times.and_return(http_request)
+    request.invoke
+    request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
+  end
+
   context "functional", :functional => true do
     it "should have a empty string for a body" do
       Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<lead-bottle>\n  <id type=\"integer\">1</id>\n  <name>Wooz</name>\n  <universe-id type=\"integer\" nil=\"true\"></universe-id>\n</lead-bottle>\n"

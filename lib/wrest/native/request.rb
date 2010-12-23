@@ -32,6 +32,7 @@ module Wrest::Native
     #   :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #                  used for multiple requests.
     #   :cache_store => The object which should be used as cache store for cacheable responses
+    #   :verify_mode => The  verification mode to be used for Net::HTTP https connections. Defaults to OpenSSL::SSL::VERIFY_PEER
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
@@ -47,6 +48,7 @@ module Wrest::Native
       @connection = @options[:connection]
       @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
       @cache_store = options[:cache_store]
+      @verify_mode = @options[:verify_mode]
     end
 
     # Makes a request and returns a Wrest::Native::Response. 
@@ -57,7 +59,7 @@ module Wrest::Native
     #   <-- indicates a response
     #
     # The type of request is mentioned in caps, followed by a hash 
-    # uniquely uniquely identifying a particular request/response pair.
+    # uniquely identifying a particular request/response pair.
     # In a multi-process or multi-threaded scenario, this can be used
     # to identify request-response pairs.
     #
@@ -69,7 +71,7 @@ module Wrest::Native
     def invoke
       response = nil
       
-      @connection ||= @uri.create_connection({:timeout => timeout})
+      @connection ||= @uri.create_connection({:timeout => timeout, :verify_mode => @verify_mode})
       http_request.basic_auth username, password unless username.nil? || password.nil?
 
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"

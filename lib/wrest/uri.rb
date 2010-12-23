@@ -22,7 +22,7 @@ module Wrest #:nodoc:
   #
   # You can find examples that use real APIs (like delicious) under the wrest/examples directory.
   class Uri
-    attr_reader :uri, :username, :password, :uri_string, :uri_path, :query
+    attr_reader :uri, :username, :password, :uri_string, :uri_path, :query 
         
     # See Wrest::Native::Request for the available options and their default values.
     def initialize(uri_string, options = {})
