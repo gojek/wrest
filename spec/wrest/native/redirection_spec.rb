@@ -40,8 +40,13 @@ describe Wrest::Native::Redirection do
   end
 
   context "functional", :functional => true do
-    it "should follow redirection when follow_redirects is true" do
-      "http://localhost:3000/redirect_n_times/4".to_uri(:follow_redirects => true).get.body should == "You've reached the end of redirection. There is only darkness beyond this."
+    it "should follow redirection (only) when follow_redirects is true" do
+      after_redirect = "http://localhost:3000/redirect_n_times/4".to_uri(:follow_redirects => true).get
+      after_redirect.body.should == "You've reached the end of redirection. There is only darkness beyond this."
+
+      no_redirect = "http://localhost:3000/redirect_n_times/10".to_uri(:follow_redirects => false).get
+      no_redirect.body.should be_blank
+      no_redirect.http_response.code.should == "302"
     end
   end
 end
