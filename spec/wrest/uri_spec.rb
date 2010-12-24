@@ -396,16 +396,6 @@ module Wrest
         uri.options
       end
 
-      it "should correctly use the detailed_http_logging option" do
-        logger = mock(Logger)
-        logger.should_receive(:<<).at_least(:once).with {|detailed_log| detailed_log.include? "opening connection to"}
-        logger.should_receive(:<<).any_number_of_times
-
-        uri = "http://localhost:3000/glassware".to_uri :detailed_http_logging => logger
-
-        uri.get
-      end
-          
       it "should not mutate state of the uri across requests" do
         uri = "http://localhost:3000/glassware".to_uri
 
