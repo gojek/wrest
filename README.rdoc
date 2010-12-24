@@ -1,4 +1,4 @@
-= Wrest 1.0.0.beta7 (gem install with --pre)
+= Wrest 1.0.0
 
 (c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -146,7 +146,7 @@ Features that are planned, in progress or already implemented are documented in 
 
 The source is available at git://github.com/kaiwren/wrest.git
 
-To install the Wrest gem, do <tt>(sudo) gem install wrest --pre</tt>.
+To install the Wrest gem, do <tt>(sudo) gem install wrest</tt>.
 
 Wrest is currently available as a gem for for Ruby and JRuby.
 
@@ -179,3 +179,5 @@ Run the tests in a different terminal:
 * Preethi Ramdev : {preethiramdev}[http://github.com/preethiramdev]
 * Nikhil Vallishayee : {nikhilvallishayee}[http://github.com/nikhilvallishayee]
 * Jacques Crocker : {railsjedi}[http://github.com/railsjedi]
+* Jasim A Basheer: {jasim}[http://github.com/jasim]
+
