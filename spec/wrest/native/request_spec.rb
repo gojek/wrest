@@ -54,6 +54,7 @@ describe Wrest::Native::Request do
     response = Wrest::Native::Redirection.new(raw_response)
     
     mock_connection.should_receive(:request).and_return(raw_response)
+    mock_connection.should_receive(:set_debug_output)
     
     Wrest::Native::Response.should_receive(:new).and_return(response)
     redirected_request.stub!(:get)
@@ -93,6 +94,17 @@ describe Wrest::Native::Request do
     it "should have a empty string for a body" do
       Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<lead-bottle>\n  <id type=\"integer\">1</id>\n  <name>Wooz</name>\n  <universe-id type=\"integer\" nil=\"true\"></universe-id>\n</lead-bottle>\n"
     end
+
+    it "should correctly use the detailed_http_logging option" do
+      logger = mock(Logger)
+      logger.should_receive(:<<).at_least(:once).with {|detailed_log| detailed_log.include? "opening connection to"}
+      logger.should_receive(:<<).any_number_of_times
+
+      uri = "http://localhost:3000/glassware".to_uri :detailed_http_logging => logger
+
+      uri.get
+    end
+
     
     it "should raise a Wrest exception on timeout" do
       lambda{ 

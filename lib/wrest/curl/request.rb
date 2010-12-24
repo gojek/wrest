@@ -84,9 +84,9 @@ module Wrest
 
         prefix = "#{http_request.action.to_s.upcase} #{http_request.hash} #{connection.hash}"
 
-        Wrest.logger.debug "--> (#{prefix}) #{http_request.url}"
+        Wrest.logger.debug "<- (#{prefix}) #{http_request.url}"
         time = Benchmark.realtime { response =  Wrest::Curl::Response.new(connection.handle_request(http_request))}
-        Wrest.logger.debug "<-- (#{prefix}) %s (%d bytes %.2fs)" % [response.message, response.body ? response.body.length : 0, time]
+        Wrest.logger.debug "-> (#{prefix}) %s (%d bytes %.2fs)" % [response.message, response.body ? response.body.length : 0, time]
 
         response
       rescue Patron::TimeoutError => e
