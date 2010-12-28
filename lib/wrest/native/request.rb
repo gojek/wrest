@@ -31,7 +31,7 @@ module Wrest::Native
     #               in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
     #   :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #                  used for multiple requests.
-    #   :cache_store => The object which should be used as cache store for cacheable responses
+    #   :cache_store => The object which should be used as cache store for cacheable responses (caching is not supported in this version)
     #   :detailed_http_logging => nil/$stdout/$stderr or File/Logger/IO object. Defaults to nil (recommended).
     #   
     # *WARNING* : detailed_http_logging causes serious security hole. Never use it in production code.
