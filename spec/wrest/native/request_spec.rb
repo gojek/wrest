@@ -54,6 +54,7 @@ describe Wrest::Native::Request do
     response = Wrest::Native::Redirection.new(raw_response)
     
     mock_connection.should_receive(:request).and_return(raw_response)
+    mock_connection.should_receive(:set_debug_output)
     
     Wrest::Native::Response.should_receive(:new).and_return(response)
     redirected_request.stub!(:get)
@@ -87,7 +88,33 @@ describe Wrest::Native::Request do
     Wrest::Native::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Native::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Native::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
-  end  
+  end
+
+  it "should run the appropriate callbacks" do
+    cb = mock
+    cb.should_receive(:cb_204)
+    cb.should_receive(:cb_200)
+    cb.should_receive(:cb_range)
+
+    response_handler = {
+      200 => lambda { cb.cb_200 },
+      204 => lambda { cb.cb_204},
+      500..599 => lambda { cb.cb_range}
+    }
+
+    uri = 'http://localhost/foo'.to_uri
+    request = Wrest::Native::Get.new(uri,{},{},:callback => response_handler)
+
+    response_204=mock(Net::HTTPOK, :code => "204", :message => 'not OK', :body => '', :to_hash => {})
+    response_200=mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {})
+    response_501 = mock(Net::HTTPOK, :code => "501", :message => 'not implemented', :body => '', :to_hash => {})
+
+    request.should_receive(:do_request).and_return(response_204, response_501, response_200)
+
+    request.invoke
+    request.invoke
+    request.invoke
+  end
   
   it "should have verification mode for https set to VERIFY_PEER by default" do
     uri = 'https://localhost/foo'.to_uri
@@ -115,6 +142,17 @@ describe Wrest::Native::Request do
     it "should have a empty string for a body" do
       Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<lead-bottle>\n  <id type=\"integer\">1</id>\n  <name>Wooz</name>\n  <universe-id type=\"integer\" nil=\"true\"></universe-id>\n</lead-bottle>\n"
     end
+
+    it "should correctly use the detailed_http_logging option" do
+      logger = mock(Logger)
+      logger.should_receive(:<<).at_least(:once).with {|detailed_log| detailed_log.include? "opening connection to"}
+      logger.should_receive(:<<).any_number_of_times
+
+      uri = "http://localhost:3000/glassware".to_uri :detailed_http_logging => logger
+
+      uri.get
+    end
+
     
     it "should raise a Wrest exception on timeout" do
       lambda{ 

@@ -1,3 +1,0 @@
-class GlassBottle < Bottle
-end
-  

@@ -1,4 +1,4 @@
-= Wrest 1.0.0.beta7 (gem install with --pre)
+= Wrest 1.0.0
 
 (c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -34,6 +34,9 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     'http://google.com'.to_uri(:follow_redirects => false).get
   
     'http://google.com'.to_uri(:follow_redirects_limit => 1).get
+
+  :follow_redirects_limit defaults to 5 if not specified.
+
 * Deserialise with XPath filtering
   
     ActiveSupport::XmlMini.backend = 'REXML'
@@ -143,7 +146,7 @@ Features that are planned, in progress or already implemented are documented in 
 
 The source is available at git://github.com/kaiwren/wrest.git
 
-To install the Wrest gem, do <tt>(sudo) gem install wrest --pre</tt>.
+To install the Wrest gem, do <tt>(sudo) gem install wrest</tt>.
 
 Wrest is currently available as a gem for for Ruby and JRuby.
 
@@ -152,7 +155,21 @@ Wrest is currently available as a gem for for Ruby and JRuby.
 You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking <tt>wrest</tt> from your prompt if you've installed the gem.
   $ wrest
   >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(:timeout => 5).get.deserialise
-  
+
+=== Testing
+
+Start the Sinatra test server for functional test.
+  rake -f spec/sample_app/Rakefile  
+
+Run the tests in a different terminal:
+
+  # Run the normal test suite.
+  rake
+
+  # Runs the functional test suite.
+  rake rspec:functional
+
+
 == Contributors
  
 * Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]
@@ -162,3 +179,5 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 * Preethi Ramdev : {preethiramdev}[http://github.com/preethiramdev]
 * Nikhil Vallishayee : {nikhilvallishayee}[http://github.com/nikhilvallishayee]
 * Jacques Crocker : {railsjedi}[http://github.com/railsjedi]
+* Jasim A Basheer: {jasim}[http://github.com/jasim]
+
