@@ -19,4 +19,18 @@ describe Hash, 'conversions' do
     
     {'ooga' => 'booga'}.mutate_using(StringToSymbolMutator.new).should == {:ooga => 'booga'}
   end
+
+  it "should know how to convert the keys of a hash into an array" do
+    {
+      "a" => "-a-",
+      100 => "-100-",
+      100..102 => "-100 to 102-",
+      999..1000 => "-999 to 1000-"
+    }.keys_to_array.should == {
+      ["a"] => "-a-",
+      [100] => "-100-",
+      [100, 101, 102] => "-100 to 102-",
+      [999,1000] => "-999 to 1000-"
+    }
+  end
 end
