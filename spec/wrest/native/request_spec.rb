@@ -88,7 +88,33 @@ describe Wrest::Native::Request do
     Wrest::Native::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Native::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Native::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
-  end  
+  end
+
+  it "should run the appropriate callbacks" do
+    cb = mock
+    cb.should_receive(:cb_204)
+    cb.should_receive(:cb_200)
+    cb.should_receive(:cb_range)
+
+    response_handler = {
+      200 => lambda { cb.cb_200 },
+      204 => lambda { cb.cb_204},
+      500..599 => lambda { cb.cb_range}
+    }
+
+    uri = 'http://localhost/foo'.to_uri
+    request = Wrest::Native::Get.new(uri,{},{},:callback => response_handler)
+
+    response_204=mock(Net::HTTPOK, :code => "204", :message => 'not OK', :body => '', :to_hash => {})
+    response_200=mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {})
+    response_501 = mock(Net::HTTPOK, :code => "501", :message => 'not implemented', :body => '', :to_hash => {})
+
+    request.should_receive(:do_request).and_return(response_204, response_501, response_200)
+
+    request.invoke
+    request.invoke
+    request.invoke
+  end
   
   context "functional", :functional => true do
     it "should have a empty string for a body" do

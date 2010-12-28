@@ -33,6 +33,9 @@ module Wrest::Native
     #                  used for multiple requests.
     #   :cache_store => The object which should be used as cache store for cacheable responses (caching is not supported in this version)
     #   :detailed_http_logging => nil/$stdout/$stderr or File/Logger/IO object. Defaults to nil (recommended).
+    #   :callback => A Hash whose keys are the response codes (or Range of response codes),
+    #                        and the values are the callback functions to be executed.
+    #                        eg: { <response code> => lambda { |response| some_operation } }
     #   
     # *WARNING* : detailed_http_logging causes serious security hole. Never use it in production code.
     #
@@ -52,9 +55,12 @@ module Wrest::Native
       @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
       @cache_store = options[:cache_store]
       @detailed_http_logging = options[:detailed_http_logging]
+      @callback = (@options[:callback] || {}).keys_to_array
     end
 
-    # Makes a request and returns a Wrest::Native::Response. 
+    # Makes a request, runs the appropriate callback if any and
+    # returns a Wrest::Native::Response.
+    # 
     # Data about the request is and logged to Wrest.logger
     # The log entry contains the following information:
     #
@@ -85,6 +91,8 @@ module Wrest::Native
       time = Benchmark.realtime { response = Wrest::Native::Response.new( do_request ) }
       Wrest.logger.debug "-> (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
 
+      execute_callback_if_any(response)
+      
       @follow_redirects ? response.follow(@options) : response
     rescue Timeout::Error => e
       raise Wrest::Exceptions::Timeout.new(e)
@@ -100,6 +108,14 @@ module Wrest::Native
   
     def do_request
       @connection.request(@http_request, @body)
+    end
+
+    private
+
+    def execute_callback_if_any(actual_response)
+      @callback.each do |callback_response_range, action|
+        action.call(actual_response) if callback_response_range.include?(actual_response.code.to_i)
+      end
     end
   end
 end
