@@ -55,12 +55,9 @@ module Wrest::Native
       @connection = @options[:connection]
       @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
       @cache_store = options[:cache_store]
-<<<<<<< HEAD
       @verify_mode = @options[:verify_mode]
-=======
       @detailed_http_logging = options[:detailed_http_logging]
       @callback = (@options[:callback] || {}).keys_to_array
->>>>>>> f7051ac98b943e8322c5b8a322a4e05ada62e52b
     end
 
     # Makes a request, runs the appropriate callback if any and
@@ -84,14 +81,8 @@ module Wrest::Native
     # This is followed by the response code, the payload size and the time taken.
     def invoke
       response = nil
-      
-<<<<<<< HEAD
       @connection ||= @uri.create_connection({:timeout => timeout, :verify_mode => @verify_mode})
-=======
-      @connection ||= @uri.create_connection({:timeout => timeout})
       @connection.set_debug_output @detailed_http_logging
-      
->>>>>>> f7051ac98b943e8322c5b8a322a4e05ada62e52b
       http_request.basic_auth username, password unless username.nil? || password.nil?
 
       prefix = "#{http_request.method} #{http_request.hash} #{@connection.hash}"
