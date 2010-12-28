@@ -10,8 +10,9 @@
 module Wrest
   class UriTemplate
     attr_reader :uri_pattern
-    def initialize(uri_pattern)
+    def initialize(uri_pattern, options = {})
       @uri_pattern = uri_pattern.clone
+      @options = options.clone
     end
     
     # Builds a new Wrest::Uri from this uri template 
@@ -29,7 +30,6 @@ module Wrest
     #
     # Note that beacuse because both HTTP Auth and UriTemplate
     # use ':' as a delimiter, the pattern does look slightly weird, but it still works.
-    #
     # Example:
     # template = UriTemplate.new("http://:username::password@coathangers.com/:resource/:id.:format")
     # template.to_uri(
@@ -40,7 +40,8 @@ module Wrest
     # )
     #  => #<Wrest::Uri:0x18e0bec @uri=#<URI::HTTP:0x18e09a8 URL:http://kaiwren:fupuppies@coathangers.com/portal/1>>
     def to_uri(options = {})
-      Wrest::Uri.new(options.inject(uri_pattern.clone) do |uri_string, tuple| 
+     merged_options = @options.merge(options) 
+      Wrest::Uri.new(merged_options.inject(uri_pattern.clone) do |uri_string, tuple| 
         key, value = tuple
         uri_string.gsub(":#{key.to_s}", value.to_s)
       end)

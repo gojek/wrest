@@ -25,6 +25,17 @@ module Wrest
         ).should == "http://localhost:3000/shen_coins/5.json".to_uri
     end
     
+    it "should ensure uri built out of template receives options" do
+      template = UriTemplate.new("http://:user::password@coathangers.com/:resource/:id", {
+        :user => 'kaiwren',
+        :password => 'fupuppies',
+        :resource => 'portal',
+        :id => '1'
+})
+     template.to_uri.should == "http://kaiwren:fupuppies@coathangers.com/portal/1".to_uri
+ 
+      
+    end
     it "should also handle username and password" do
       template = UriTemplate.new("http://:user::password@coathangers.com/:resource/:id")
       template.to_uri(

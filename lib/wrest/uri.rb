@@ -39,7 +39,7 @@ module Wrest #:nodoc:
     
     def to_template(pattern)
       template_pattern = URI.join(uri_string,pattern).to_s
-      UriTemplate.new(template_pattern)
+      UriTemplate.new(template_pattern, @options)
     end
         
     # Build a new Wrest::Uri by appending _path_ to
