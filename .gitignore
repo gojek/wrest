@@ -6,6 +6,7 @@ rdoc
 doc
 pkg
 tmp
+nbproject
 spec/wrest/meh_spec.rb
 .DS_Store
 *.rbc
