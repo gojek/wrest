@@ -44,7 +44,7 @@ module Wrest
       Wrest::Uri.new(merged_options.inject(uri_pattern.clone) do |uri_string, tuple| 
         key, value = tuple
         uri_string.gsub(":#{key.to_s}", value.to_s)
-      end)
+      end , @options)
     end
 
     def [](path)

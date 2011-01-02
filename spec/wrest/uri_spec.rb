@@ -188,8 +188,7 @@ module Wrest
 
           uri.get
         end
-
-        context "query parameters" do
+      context "query parameters" do
           it "should know how to get with parameters" do
             uri = "http://localhost:3000/glassware".to_uri
 
@@ -204,30 +203,45 @@ module Wrest
           end
 
          it "should know how to get with parameters included in the uri" do
-            uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
+           uri = "http://localhost:3000/glassware?owner=Kai&type=bottle".to_uri
 
-            http = setup_http
+           http = setup_http
                 
-            request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
-            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
+           request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'})
+           Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+           http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-            uri.get({}, :page => '2', :per_page => '5')
+           uri.get({}, :page => '2', :per_page => '5')
+         end
+          
+         it "should propagate http auth options while being converted to Template and back" do
+           base = "http://localhost:3000/".to_uri(:username => 'ooga', :password => 'bar')
+           template = base.to_template('/search/:search')
+           uri = template.to_uri(:search => 'kaiwren')
+     request = Wrest::Native::Get.new(uri, {}, {} ,{:username => "ooga", :password =>"bar"})
+           Http::Get.should_receive(:new).with(uri,{},{},{:username => "ooga", :password =>"bar"}).and_return(request)
+ 
+    http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
+    http_request.should_receive(:basic_auth).with('ooga', 'bar')
+    request.should_receive(:http_request).any_number_of_times.and_return(http_request)
+    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
+             uri.get
           end
+   
+           
+         it "should know how to get with a ? appended to the uri and no appended parameters" do
+           uri = "http://localhost:3000/glassware?".to_uri
 
-          it "should know how to get with a ? appended to the uri and no appended parameters" do
-            uri = "http://localhost:3000/glassware?".to_uri
-
-            http = setup_http
+           http = setup_http
                 
-            request = Net::HTTP::Get.new('/glassware', {'page' => '2', 'per_page' => '5'})
-            Net::HTTP::Get.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
+           request = Net::HTTP::Get.new('/glassware', {'page' => '2', 'per_page' => '5'})
+           Net::HTTP::Get.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
         
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+           http.should_receive(:request).with(request, nil).and_return(build_ok_response)
 
-            uri.get({}, :page => '2', :per_page => '5')
-          end
+           uri.get({}, :page => '2', :per_page => '5')
+         end
 
           it "should know how to get with a ? appended to the uri and specified parameters" do
             uri = "http://localhost:3000/glassware?".to_uri
@@ -383,7 +397,7 @@ module Wrest
              http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
              uri.delete(build_ordered_hash([[:param1, 'one'],[:param2, 'two']]), :page => '2', :per_page => '5')
-           end
+          end
         end
       end
       
