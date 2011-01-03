@@ -39,34 +39,6 @@ module Wrest
           mutated_hash
         end
 
-        # Returns a new Hash with all the keys converted into an Array.
-        # Keys who are of type Range are expanded, existing Arrays are kept as such.
-        #
-        # Use case:
-        # Converts Wrest#Uri callback array from
-        #   { 200 => lambda { xyz }, 500..502 => lambda { abc } }
-        #       into
-        #   { [200] => lambda { xyz }, [500, 501, 502] => lambda { abc } }
-        #
-        def keys_to_array
-          result = {}
-
-          self.each do |key, value|
-            new_key =
-              if key.is_a?(Range)
-                key.to_a
-              elsif key.is_a?(Array)
-                key
-              else
-                [key]
-              end
-
-            result[new_key] = value
-          end
-
-          result
-        end
-
       end
     end
   end

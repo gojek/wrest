@@ -57,7 +57,7 @@ module Wrest::Native
       @cache_store = options[:cache_store]
       @verify_mode = @options[:verify_mode]
       @detailed_http_logging = options[:detailed_http_logging]
-      @callback = (@options[:callback] || {}).keys_to_array
+      @callback = key_ranges_to_array(@options[:callback] || {})
     end
 
     # Makes a request, runs the appropriate callback if any and
@@ -116,6 +116,34 @@ module Wrest::Native
       @callback.each do |callback_response_range, action|
         action.call(actual_response) if callback_response_range.include?(actual_response.code.to_i)
       end
+    end
+
+    # Returns a new Hash with all the keys converted into an Array.
+    # Keys who are of type Range are expanded, existing Arrays are kept as such.
+    #
+    # Use case:
+    # Converts Wrest#Uri callback array from
+    #   { 200 => lambda { xyz }, 500..502 => lambda { abc } }
+    #       into
+    #   { [200] => lambda { xyz }, [500, 501, 502] => lambda { abc } }
+    #
+    def key_ranges_to_array(callback_hash)
+      result = {}
+
+      callback_hash.each do |key, value|
+        new_key =
+          if key.is_a?(Range)
+          key.to_a
+        elsif key.is_a?(Array)
+          key
+        else
+          [key]
+        end
+
+        result[new_key] = value
+      end
+
+      result
     end
   end
 end
