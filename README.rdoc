@@ -4,7 +4,7 @@
 
 Wrest is a ruby REST/HTTP client library which
 
-* Allows allows you to quickly build object oriented wrappers around any web service 
+* Allows you to quickly build object oriented wrappers around any web service 
 * Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
 * Runs on Ruby 1.8, Ruby 1.9.2, JRuby and Rubinius with MacRuby and IronRuby support on the way
@@ -101,6 +101,20 @@ To find out what actions are permitted on a URI:
 
  'http://www.yahoo.com'.to_uri.options.headers['allow']
 
+==== Callbacks
+
+You can define a Hash of {response code -> action} to be executed after a request is completed.
+
+  logger=Logger.new("wrest_callbacks.log")
+
+  actions = { 200 => lambda {|response| logger.info "Ok." },
+              400..499 => lambda {|response| logger.error "Invalid. #{response.body}"},
+              300..302 => lambda {|response| logger.debug "Redirected. #{response.message}" }
+            }
+
+  "http://google.com".to_uri(:callback => actions).get
+
+Please note that Wrest is a synchronous library. All requests are blocking, and will not return till the request is completed and appropriate callbacks executed.
 
 === Other useful stuff
 
