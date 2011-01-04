@@ -38,7 +38,7 @@ module Wrest::Native
     #                        and the values are the callback functions to be executed.
     #                        eg: { <response code> => lambda { |response| some_operation } }
     #   
-    # *WARNING* : detailed_http_logging causes serious security hole. Never use it in production code.
+    # *WARNING* : detailed_http_logging causes a serious security hole. Never use it in production code.
     #
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri

@@ -103,16 +103,13 @@ To find out what actions are permitted on a URI:
 
 ==== Callbacks
 
-You can define a Hash of {response code -> action} to be executed after a request is completed.
+You can define a set of callbacks that are invoked based on the http code of the response.
 
-  logger=Logger.new("wrest_callbacks.log")
-
-  actions = { 200 => lambda {|response| logger.info "Ok." },
-              400..499 => lambda {|response| logger.error "Invalid. #{response.body}"},
-              300..302 => lambda {|response| logger.debug "Redirected. #{response.message}" }
-            }
-
-  "http://google.com".to_uri(:callback => actions).get
+  "http://google.com".to_uri(:callback => {
+              200      => lambda {|response| Wrest.logger.info "Ok." },
+              400..499 => lambda {|response| Wrest.logger.error "Invalid. #{response.body}"},
+              300..302 => lambda {|response| Wrest.logger.debug "Redirected. #{response.message}" }
+            }).get
 
 Please note that Wrest is a synchronous library. All requests are blocking, and will not return till the request is completed and appropriate callbacks executed.
 
