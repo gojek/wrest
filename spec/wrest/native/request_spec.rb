@@ -97,9 +97,9 @@ describe Wrest::Native::Request do
     cb.should_receive(:cb_range)
 
     response_handler = {
-      200 => lambda { cb.cb_200 },
-      204 => lambda { cb.cb_204},
-      500..599 => lambda { cb.cb_range}
+      200 => lambda { |response| cb.cb_200 },
+      204 => lambda { |response| cb.cb_204},
+      500..599 => lambda { |response| cb.cb_range}
     }
 
     uri = 'http://localhost/foo'.to_uri
