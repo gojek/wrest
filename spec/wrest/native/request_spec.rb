@@ -89,39 +89,13 @@ describe Wrest::Native::Request do
     Wrest::Native::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
     Wrest::Native::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_true
   end
-
-  it "should run the appropriate callbacks" do
-    cb = mock
-    cb.should_receive(:cb_204)
-    cb.should_receive(:cb_200)
-    cb.should_receive(:cb_range)
-
-    response_handler = {
-      200 => lambda { |response| cb.cb_200 },
-      204 => lambda { |response| cb.cb_204},
-      500..599 => lambda { |response| cb.cb_range}
-    }
-
-    uri = 'http://localhost/foo'.to_uri
-    request = Wrest::Native::Get.new(uri,{},{},:callback => response_handler)
-
-    response_204=mock(Net::HTTPOK, :code => "204", :message => 'not OK', :body => '', :to_hash => {})
-    response_200=mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {})
-    response_501 = mock(Net::HTTPOK, :code => "501", :message => 'not implemented', :body => '', :to_hash => {})
-
-    request.should_receive(:do_request).and_return(response_204, response_501, response_200)
-
-    request.invoke
-    request.invoke
-    request.invoke
-  end
   
   it "should have verification mode for https set to VERIFY_PEER by default" do
     uri = 'https://localhost/foo'.to_uri
     request = Wrest::Native::Get.new(uri, {}, {}, {:username => "name", :password => "password"})
     http_request = mock(Net::HTTP::Get, :method => "GET", :hash => {})
     http_request.should_receive(:basic_auth).with('name', 'password')
-     request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
+    request.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
     request.should_receive(:http_request).any_number_of_times.and_return(http_request)
     request.invoke
     request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_PEER
@@ -136,6 +110,34 @@ describe Wrest::Native::Request do
     request.should_receive(:http_request).any_number_of_times.and_return(http_request)
     request.invoke
     request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
+  end
+
+  context "callbacks" do
+    it "should run the appropriate callbacks" do
+      cb = mock
+      cb.should_receive(:cb_204)
+      cb.should_receive(:cb_200)
+      cb.should_receive(:cb_range)
+
+      response_handler = {
+        200 => lambda { |response| cb.cb_200 },
+        204 => lambda { |response| cb.cb_204},
+        500..599 => lambda { |response| cb.cb_range}
+      }
+
+      uri = 'http://localhost/foo'.to_uri
+      request = Wrest::Native::Get.new(uri,{},{},:callback => response_handler)
+
+      response_204 = mock(Net::HTTPOK, :code => "204", :message => 'not OK', :body => '', :to_hash => {})
+      response_200 = mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {})
+      response_501 = mock(Net::HTTPOK, :code => "501", :message => 'not implemented', :body => '', :to_hash => {})
+
+      request.should_receive(:do_request).and_return(response_204, response_501, response_200)
+
+      request.invoke
+      request.invoke
+      request.invoke
+    end
   end
 
   context "functional", :functional => true do
