@@ -132,7 +132,7 @@ describe Wrest::Native::Request do
       response_200 = mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {})
       response_501 = mock(Net::HTTPOK, :code => "501", :message => 'not implemented', :body => '', :to_hash => {})
 
-      request.should_receive(:do_request).and_return(response_204, response_501, response_200)
+      request.should_receive(:do_request).and_return(response_200, response_501, response_204)
 
       request.invoke
       request.invoke

@@ -21,5 +21,50 @@ module Wrest::Native
             options
           )
     end
+
+    def ==(other)
+      return true if self.equal?(other)
+      return false unless other.class == self.class
+      return true if self.uri == other.uri and
+        self.parameters == other.parameters and
+        self.username == other.username and
+        self.password == other.password and
+        self.verify_mode == other.verify_mode
+    end
+
+    def hash
+      self.uri.hash + self.parameters.hash + self.username.hash + self.password.hash + self.verify_mode.hash + 20110106
+    end
+    
+    #:nodoc:
+    def invoke_with_cache_check
+      p "with cache check"
+      cached_response = get_cached_response
+      if cached_response.nil? then
+        p "without cache check"
+        response = invoke_without_cache_check
+        cache_response(response) if !response.nil? && response.cacheable?
+        response
+      else
+        cached_response
+      end
+    end
+
+    #:nodoc:
+    def get_cached_response
+      p "get cache response"
+      response = nil
+      if cache_store.has_key?(self.hash)
+        response = cache_store.fetch(self.hash)
+      end
+      response
+    end
+
+    #:nodoc:
+    def cache_response(response)
+      cache_store[self.hash] = response
+    end
+
+    alias_method_chain :invoke, :cache_check
   end
 end
