@@ -4,19 +4,7 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
-== Coming soon
- * Proxy support
- * Multi-part post support on curl
- 
-== In progress
- * 304/ETag response caching 
- * Keep-alive support for libcurl
- * Explicit cookie helpers - #cookie=, #cookie?
- * Response code checkers: ok?, redirect?, created? etc.
- * Alias deserialise as deserialize
- * Ensure Components::Container is ActiveModel compliant
-
-== Current
+== 1.0.1
  * GH#61 Option propogate while converting uri to UriTemplate and back.
  * GH#64 Removed Caching.
  * GH#32 Callback for response status codes.
