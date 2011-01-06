@@ -10,30 +10,52 @@
 require "spec_helper"
 
 describe String, 'conversions' do
-  it "should know how to convert a string to a Wrest::Uri" do
-    'http://localhost:3000'.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+  describe "to_uri" do
+    it "should know how to convert a string to a Wrest::Uri" do
+      'http://localhost:3000'.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+    end
+
+    it "should accept username and password as options" do
+      uri = 'http://localhost:3000'.to_uri(
+        :username => 'ooga',
+        :password => 'booga'
+      )
+      uri.username.should == 'ooga'
+      uri.password.should == 'booga'
+    end
+
+    it "should strip leading spaces from a uri before building it" do
+      ' http://localhost:3000'.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+    end
+
+    it "should strip trailing spaces from a uri before building it" do
+      'http://localhost:3000  '.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+    end
+
+    it "should leave the original string  unchanged after building a uri from it" do
+      url = ' http://localhost:3000  '
+      url.to_uri.should == Wrest::Uri.new('http://localhost:3000')
+      url.should == ' http://localhost:3000  '
+    end
   end
-  
-  it "should accept username and password as options" do
-    uri = 'http://localhost:3000'.to_uri(
-      :username => 'ooga',
-      :password => 'booga'
-    )
-    uri.username.should == 'ooga'
-    uri.password.should == 'booga'
-  end
-  
-  it "should strip leading spaces from a uri before building it" do
-    ' http://localhost:3000'.to_uri.should == Wrest::Uri.new('http://localhost:3000')
-  end
-  
-  it "should strip trailing spaces from a uri before building it" do
-    'http://localhost:3000  '.to_uri.should == Wrest::Uri.new('http://localhost:3000')
-  end
-  
-  it "should levae the original string  unchanged after building a uri from it" do
-    url = ' http://localhost:3000  '
-    url.to_uri.should == Wrest::Uri.new('http://localhost:3000')
-    url.should == ' http://localhost:3000  '
+
+  describe "to_uri_template" do
+    it "should know how to convert a string to a Wrest::UriTemplate" do
+      'http://localhost:3000/:id'.to_uri_template.should == Wrest::UriTemplate.new('http://localhost:3000/:id')
+    end
+
+    it "should strip leading spaces from a string before building it" do
+      ' http://localhost:3000/:id'.to_uri_template.should == Wrest::UriTemplate.new('http://localhost:3000/:id')
+    end
+
+    it "should strip trailing spaces from a string before building it" do
+      'http://localhost:3000/:id  '.to_uri_template.should == Wrest::UriTemplate.new('http://localhost:3000/:id')
+    end
+
+    it "should leave the original string  unchanged after building a uri from it" do
+      url = ' http://localhost:3000/:id  '
+      url.to_uri_template.should == Wrest::UriTemplate.new('http://localhost:3000/:id')
+      url.should == ' http://localhost:3000/:id  '
+    end
   end
 end

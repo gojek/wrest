@@ -20,3 +20,4 @@ TAGS
 *.swp
 .bundle
 .redcar
+.rvmrc

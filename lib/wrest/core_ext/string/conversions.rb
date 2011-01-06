@@ -12,8 +12,9 @@ module Wrest
     module String #:nodoc:
       # Makes it easier to build other objects from a String
       # This module is opt-out - if you don't want the to_uri
-      # convenience method on String, set the NoStringExtensions
-      # constant on the Wrest module before requiring wrest.
+      # and to_uri_template convenience method on String, set 
+      # the NoStringExtensions constant on the Wrest module 
+      # before requiring wrest.
       #
       #   module Wrest
       #     NoStringExtensions = true
@@ -24,6 +25,11 @@ module Wrest
         # A convenience method equivalent to Wrest::Uri.new(string)
         def to_uri(options = {})
           Wrest::Uri.new(self.strip, options)
+        end
+
+        # A convenience method equivalent to Wrest:UriTemplate.new(uri_pattern)
+        def to_uri_template(options = {})
+          Wrest::UriTemplate.new(self.strip, options)
         end
       end
     end
