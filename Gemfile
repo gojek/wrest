@@ -7,6 +7,7 @@ gem 'tzinfo', '>= 0.3.23'
 
 platforms :jruby do
   gem 'json-jruby', '~> 1.4.3.1'
+  gem "jruby-openssl", "~> 0.7.1"
 end
 
 platforms :ruby do
