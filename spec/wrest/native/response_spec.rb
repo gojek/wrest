@@ -87,7 +87,7 @@ module Wrest
 
     describe 'caching' do
       it "should say its cacheable if the response code is in range of 200-299" do
-        http_response = build_ok_response
+        http_response = build_ok_response('', cacheable_headers)
         ['200','210','299'].each do |code|
           http_response.stub!(:code).and_return(code)
           response = Native::Response.new(http_response)
@@ -116,19 +116,20 @@ module Wrest
         end
 
         it "should not be cacheable for response with Expires header in past" do
-          yesterday_in_rfc822_format = format_date_in_rfc822_format(DateTime.now - 1)
-          response = Native::Response.new(build_ok_response('','Cache-Control' => 'Expires = '+yesterday_in_rfc822_format))
+          ten_mins_early  = (Time.now - (10*30)).httpdate
+
+          response = Native::Response.new(build_ok_response('',"Expires" => ten_mins_early))
           response.cacheable?.should == false
         end
 
         it "should be cacheable for response with Expires header in future" do
-          yesterday_in_rfc822_format = format_date_in_rfc822_format(DateTime.now + 1)
-          response = Native::Response.new(build_ok_response('','Cache-Control' => 'Expires = '+yesterday_in_rfc822_format))
+          ten_mins_after = (Time.now + (10*30)).httpdate
+          response = Native::Response.new(build_ok_response('','Expires' => ten_mins_after))
           response.cacheable?.should == true
         end
       end
     end
-    
+
     context "functional", :functional => true do
       before :each do
         @response = Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke

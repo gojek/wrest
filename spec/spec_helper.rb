@@ -53,3 +53,12 @@ def xml_backends
   backends << 'LibXML' unless (RUBY_PLATFORM =~ /java/ || (Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/))
   backends
 end
+
+def cacheable_headers
+  half_hour_after = (Time.now + (60*30)).httpdate
+  ten_mins_early  = (Time.now - (10*30)).httpdate
+
+  # All responses in the caching block returns a cacheable response by default
+  headers         = {"Date" => Time.now.httpdate, "Expires" => half_hour_after, "Age" => 0, "Last-Modified" => ten_mins_early}
+  headers
+end
