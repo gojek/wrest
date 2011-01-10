@@ -14,7 +14,7 @@ module Wrest
     # or Wrest::Curl::Get etc. instead.
     class Request
       attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
-      :follow_redirects_limit, :timeout, :connection, :parameters, :auth_type
+      :follow_redirects_limit, :timeout, :connection, :parameters, :auth_type, :multipart, :file_name
       # Valid tuples for the options are:
       #   :username => String, defaults to nil
       #   :password => String, defaults to nil
@@ -36,6 +36,8 @@ module Wrest
         @headers = headers.stringify_keys
         @parameters = parameters
         @body = body
+        @multipart = options[:multipart] || options[:multipart.to_s]
+        @file_name = options[:file] || options[:file.to_s]
 
         @options = options.clone
         @auth_type = @options[:auth_type] || :basic
@@ -49,10 +51,13 @@ module Wrest
 
         @http_request = Patron::Request.new
         @http_request.action = http_verb
-        @http_request.upload_data = body
+
         @http_request.headers = headers
         @http_request.username = username
         @http_request.password = password
+        @http_request.multipart = multipart
+        @http_request.upload_data = body
+        @http_request.file_name = file_name
         @http_request.auth_type = auth_type
         @http_request.url = parameters.empty? ? uri.to_s : "#{uri.to_s}?#{parameters.to_query}"
         @http_request.max_redirects = follow_redirects_limit if follow_redirects

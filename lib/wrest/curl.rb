@@ -37,6 +37,10 @@ module Patron #:nodoc:
   class Session
     public :handle_request
   end
+
+  class Request
+    silence_warnings{ Request.const_set('VALID_ACTIONS', [:get, :put, :post, :delete, :head, :copy, :post_multipart])}
+  end
 end
 
 require "#{Wrest::Root}/wrest/curl/response"
@@ -46,4 +50,5 @@ require "#{Wrest::Root}/wrest/curl/put"
 require "#{Wrest::Root}/wrest/curl/post"
 require "#{Wrest::Root}/wrest/curl/delete"
 require "#{Wrest::Root}/wrest/curl/options"
+require "#{Wrest::Root}/wrest/curl/post_multipart"
 # require "#{Wrest::Root}/wrest/curl/session"
