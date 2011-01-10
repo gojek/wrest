@@ -38,10 +38,8 @@ module Wrest::Native
     
     #:nodoc:
     def invoke_with_cache_check
-      p "with cache check"
       cached_response = get_cached_response
       if cached_response.nil? then
-        p "without cache check"
         response = invoke_without_cache_check
         cache_response(response) if !response.nil? && response.cacheable?
         response
@@ -52,7 +50,6 @@ module Wrest::Native
 
     #:nodoc:
     def get_cached_response
-      p "get cache response"
       response = nil
       if cache_store.has_key?(self.hash)
         response = cache_store.fetch(self.hash)
