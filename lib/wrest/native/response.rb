@@ -83,24 +83,18 @@ module Wrest #:nodoc:
       end
 
       def expires_header_not_in_past?
-        expires_header = cache_control_headers.find{ |h| h.include? 'Expires' }
+        expires_header = headers['Expires']
         if expires_header.nil?
           true
         else
-          expires_on = DateTime.parse(expires_header.split("=")[1])
+          expires_on = DateTime.parse(expires_header)
           expires_on > DateTime.now
         end
       end
 
       def cache_control_headers
         @cache_control_headers unless @cache_control_headers.nil?
-        if headers['Cache-Control'].nil? then
-          @cache_control_headers = []
-        else 
-          cache_headers = headers['Cache-Control'].split(",")
-          @cache_control_headers = correct_expires_headers(cache_headers)
-          @cache_control_headers.collect
-        end
+        @cache_control_headers = headers['Cache-Control'].split(",") rescue []
       end
 
       :private
