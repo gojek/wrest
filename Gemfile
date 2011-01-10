@@ -7,6 +7,7 @@ gem 'tzinfo', '>= 0.3.23'
 
 platforms :jruby do
   gem 'json-jruby', '~> 1.4.3.1'
+  gem "jruby-openssl", "~> 0.7.1"
 end
 
 platforms :ruby do
@@ -40,7 +41,13 @@ group :fast_xml_deserialisation_rexml do
   end
 end
 
+group :development do
+  gem 'rubyforge'
+  gem 'hanna'
+end
+
 group :test do
   gem 'rspec', '> 2.0.0'
   gem 'sinatra', '~> 1.0.0'
+  gem 'metric_fu'
 end
