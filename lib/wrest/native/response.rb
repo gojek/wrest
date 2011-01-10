@@ -85,7 +85,7 @@ module Wrest #:nodoc:
       def expires_header_not_in_past?
         expires_header = headers['Expires']
         if expires_header.nil?
-          true
+          false
         else
           expires_on = DateTime.parse(expires_header)
           expires_on > DateTime.now
