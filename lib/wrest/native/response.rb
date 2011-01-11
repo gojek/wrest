@@ -67,11 +67,13 @@ module Wrest #:nodoc:
       end
 
       def cacheable?
-        code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? && expires_header_not_in_past?
+        code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? &&
+        expires_header_not_in_our_past? && expires_header_not_in_its_past? && pragma_nocache_not_set? &&
+        vary_tag_not_set?
       end
 
       def code_cacheable?
-        !code.nil? && !/2\d{2}/.match(code).nil?
+        !code.nil? && ([200, 203, 300, 301, 302, 304, 307].include?(code.to_i))
       end
 
       def no_cache_flag_not_set?
@@ -82,13 +84,31 @@ module Wrest #:nodoc:
         not cache_control_headers.include?('no-store')
       end
 
-      def expires_header_not_in_past?
+      def pragma_nocache_not_set?
+        headers['Pragma'].nil? || (not headers['Pragma'].include? 'no-cache')
+      end
+
+      def vary_tag_not_set?
+        headers['Vary'].nil?
+      end
+
+      def expires_header_not_in_our_past?
         expires_header = headers['Expires']
         if expires_header.nil?
           false
         else
           expires_on = DateTime.parse(expires_header)
           expires_on > DateTime.now
+        end
+      end
+
+      def expires_header_not_in_its_past?
+        expires_header = headers['Expires']
+        date_header = headers['Date']
+        if expires_header.nil? || date_header.nil?
+          false
+        else
+          DateTime.parse(expires_header) > DateTime.parse(date_header)
         end
       end
 

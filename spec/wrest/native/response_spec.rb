@@ -59,7 +59,7 @@ module Wrest
       
     end
 
-   it "should simply return itself when asked to follow (null object behaviour - see MovedPermanently for more context)" do
+    it "should simply return itself when asked to follow (null object behaviour - see MovedPermanently for more context)" do
       http_response = mock('response')
       http_response.stub!(:code).and_return('422')
       
@@ -86,46 +86,76 @@ module Wrest
     end
 
     describe 'caching' do
-      it "should say its cacheable if the response code is in range of 200-299" do
-        http_response = build_ok_response('', cacheable_headers)
-        ['200','210','299'].each do |code|
-          http_response.stub!(:code).and_return(code)
-          response = Native::Response.new(http_response)
+      describe "cases where response should be cached" do
+        it "should say its cacheable if the response code is cacheable" do
+          # the cacheable codes are enumerated in Firefox source code: nsHttpResponseHead.cpp::MustValidate
+          http_response = build_ok_response('', cacheable_headers)
+          ['200', '203', '300', '301'].each do |code|
+            http_response.stub!(:code).and_return(code)
+            response = Native::Response.new(http_response)
+            response.cacheable?.should == true
+          end
+        end
+
+
+        it "should be cacheable for response with Expires header in future" do
+          ten_mins_after = (Time.now + (10*30)).httpdate
+          response = Native::Response.new(build_ok_response('', cacheable_headers))
+          response.cacheable?.should == true
+        end
+
+        it "should be cacheable for response with max-age still not expired" do
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('Max-Age' => 10*30).tap {|h| h.delete("Expiry")}))
           response.cacheable?.should == true
         end
       end
 
-      it "should say its not cacheable if the response code is not range of 200-299" do
-        http_response = build_ok_response
-        ['100','300','400','500'].each do |code|
-          http_response.stub!(:code).and_return(code)
-          response = Native::Response.new(http_response)
+      describe "cases where response should not be cached" do
+        it "should say its not cacheable if the response code is not range of 200-299" do
+          http_response = build_ok_response('', cacheable_headers)
+          ['100', '206', '400', '401', '500'].each do |code|
+            http_response.stub!(:code).and_return(code)
+            response = Native::Response.new(http_response)
+            response.cacheable?.should == false
+          end
+        end
+
+        it "should not be cacheable for responses with neither Expiry nor Max-Age" do
+          response = Native::Response.new(build_ok_response)
           response.cacheable?.should == false
         end
-      end
 
-      describe 'with HTTP/1.1 protocol' do
         it "should not be cacheable for responses with cache-control header no-cache" do
-          response = Native::Response.new(build_ok_response('','Cache-Control' => 'no-cache'))
+          response = Native::Response.new(build_ok_response('', 'Cache-Control' => 'no-cache'))
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for responses with cache-control header no-store" do
-          response = Native::Response.new(build_ok_response('','Cache-Control' => 'no-store'))
+          response = Native::Response.new(build_ok_response('', 'Cache-Control' => 'no-store'))
+          response.cacheable?.should == false
+        end
+
+        it "should not be cacheable for responses with header pragma no-cache" do
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('Pragma' => 'no-cache')))    # HTTP 1.0
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for response with Expires header in past" do
-          ten_mins_early  = (Time.now - (10*30)).httpdate
+          ten_mins_early = (Time.now - (10*30)).httpdate
 
-          response = Native::Response.new(build_ok_response('',"Expires" => ten_mins_early))
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Expires" => ten_mins_early)))
           response.cacheable?.should == false
         end
 
-        it "should be cacheable for response with Expires header in future" do
-          ten_mins_after = (Time.now + (10*30)).httpdate
-          response = Native::Response.new(build_ok_response('','Expires' => ten_mins_after))
-          response.cacheable?.should == true
+        it "should not be cacheable for response without a max-age, and its Expiry is already less than its Date" do
+          one_day_before = (Time.now - (24*60*60)).httpdate
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Expires" => one_day_before)))
+          response.cacheable?.should == false
+        end
+
+        it "should not be cacheable for response with a vary tag" do
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('Vary' => 'something')))
+          response.cacheable?.should == false
         end
       end
     end
