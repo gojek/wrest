@@ -171,12 +171,12 @@ module Wrest
         before :each do
           current_time    =Time.now
 
-          ten_mins_early  = current_time - (10*60)
-          half_hour_after = current_time + (30*60)
+          ten_mins_early  = (current_time - (10*60)).httpdate
+          half_hour_after = (current_time + (30*60)).httpdate
 
           # All responses in the caching block returns a cacheable response by default
           @headers        = {
-              "Date"          => ten_mins_early.httpdate,
+              "Date"          => ten_mins_early,
               "Expires"       => half_hour_after,
               "Age"           => 5*60,
               "Last-Modified" => ten_mins_early
@@ -186,11 +186,20 @@ module Wrest
 
         it "should return correct values for current_age" do
           response = Native::Response.new(build_ok_response('', @headers))
-          (response.current_age - (10*60)).abs.to_i.should == 0 # the current_age should be 600
+          (response.current_age - (10*60)).abs.to_i.should == 0 # current_age should be 600, but it is temporal - so the rounding off.
 
           @headers["Age"] = 100*60 # 100 minutes - Age is larger than Now-Expires
           response        = Native::Response.new(build_ok_response('', @headers))
           (response.current_age - (100*60)).abs.to_i.should == 0
+        end
+
+        it "should return correct values for freshness_lifetime" do
+          response = Native::Response.new(build_ok_response('', @headers))
+          response.freshness_lifetime.should == (40*60)
+
+          @headers["Cache-Control"] = "max-age=600"
+          response = Native::Response.new(build_ok_response('', @headers))
+          response.freshness_lifetime.should == 600    # max-age takes priority over Expires
         end
       end
       

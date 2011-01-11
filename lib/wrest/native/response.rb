@@ -135,10 +135,10 @@ module Wrest #:nodoc:
       end
 
       def current_age
-        current_time = Time.now
+        current_time = Time.now.to_i
 
         # RFC 2616 13.2.3 Age Calculations. TODO: include response_delay in the calculation as defined in RFC. For this, include original Request with Response.
-        date_value             = DateTime.parse(headers['Date']) rescue current_time
+        date_value             = DateTime.parse(headers['Date']).to_i rescue current_time
         age_value              = headers['Age'].to_i || 0
 
         apparent_age           = current_time - date_value
@@ -148,9 +148,25 @@ module Wrest #:nodoc:
 
       def cache_control_headers
         return @cache_control_headers if @cache_control_headers
-        
+
         @cache_control_headers = headers['Cache-Control'].split(",") rescue []
       end
+
+      def freshness_lifetime
+        m=max_age
+        return m if m
+
+        # Chrome (and I guess Firefox also) uses a heuristic based on (current_time-last_modified_value/10) as the freshness period if
+        # there is no 'Max-Age' or 'Expires' headers. Browsers can afford to be optimistic, but an HTTP client library
+        # like this can't. So Wrest uses cached responses if and only if there is a clear expiry/max-age header that validates.
+        # cacheability? ensures this.
+
+        response_date = DateTime.parse(headers['Date']).to_i
+        expires_date  = DateTime.parse(headers['Expires']).to_i
+
+        return (expires_date - response_date)
+      end
+
 
       :private
 
