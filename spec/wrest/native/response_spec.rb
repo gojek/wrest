@@ -167,27 +167,33 @@ module Wrest
         end
       end
 
-      it "should return correct values for current_age" do
-        current_time    =Time.now
+      describe "page validity and expiry" do
+        before :each do
+          current_time    =Time.now
 
-        ten_mins_early  = current_time - (10*60)
-        half_hour_after = current_time + (30*60)
+          ten_mins_early  = current_time - (10*60)
+          half_hour_after = current_time + (30*60)
 
-        # All responses in the caching block returns a cacheable response by default
-        headers         = {
-            "Date"          => ten_mins_early.httpdate,
-            "Expires"       => half_hour_after,
-            "Age"           => 5*60,
-            "Last-Modified" => ten_mins_early
-        }
+          # All responses in the caching block returns a cacheable response by default
+          @headers        = {
+              "Date"          => ten_mins_early.httpdate,
+              "Expires"       => half_hour_after,
+              "Age"           => 5*60,
+              "Last-Modified" => ten_mins_early
+          }
+        end
 
-        response        = Native::Response.new(build_ok_response('', headers))
-        (response.current_age - (10*60)).abs.to_i.should == 0 # the current_age should be 600
 
-        headers["Age"] = 100*60    # 100 minutes - Age is larger than Now-Expires
-        response        = Native::Response.new(build_ok_response('', headers))
-        (response.current_age - (100*60)).abs.to_i.should == 0
+        it "should return correct values for current_age" do
+          response = Native::Response.new(build_ok_response('', @headers))
+          (response.current_age - (10*60)).abs.to_i.should == 0 # the current_age should be 600
+
+          @headers["Age"] = 100*60 # 100 minutes - Age is larger than Now-Expires
+          response        = Native::Response.new(build_ok_response('', @headers))
+          (response.current_age - (100*60)).abs.to_i.should == 0
+        end
       end
+      
     end
 
     context "functional", :functional => true do
