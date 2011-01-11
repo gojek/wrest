@@ -29,5 +29,8 @@ module Wrest
     
     class UnsupportedHttpVerb < StandardError
     end
+
+    class UnsupportedFeature < StandardError
+    end
   end
 end
