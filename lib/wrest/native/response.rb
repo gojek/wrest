@@ -20,7 +20,7 @@ module Wrest #:nodoc:
     # They behave exactly like their Net::HttpResponse equivalents.
     class Response
       attr_reader :http_response
-      
+
       extend Forwardable
       def_delegators  :@http_response,  :code, :message, :body, :Http_version,
               :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
@@ -35,7 +35,7 @@ module Wrest #:nodoc:
         instance.send :initialize, http_response
         instance
       end
-              
+
       def initialize(http_response)
         @http_response = http_response
       end
@@ -52,7 +52,7 @@ module Wrest #:nodoc:
       def headers
         @http_response.to_hash
       end
-      
+
       # A null object implementation - invoking this method on
       # a response simply returns the same response unless
       # the response is Redirection (code 3xx), in which case a 
@@ -68,12 +68,24 @@ module Wrest #:nodoc:
 
       def cacheable?
         code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? &&
-        expires_header_not_in_our_past? && expires_header_not_in_its_past? && pragma_nocache_not_set? &&
+        (not max_age.nil? or (expires_header_not_in_our_past? && expires_header_not_in_its_past?)) && pragma_nocache_not_set? &&
         vary_tag_not_set?
       end
 
       def code_cacheable?
         !code.nil? && ([200, 203, 300, 301, 302, 304, 307].include?(code.to_i))
+      end
+
+      def max_age
+        return @max_age if @max_age
+
+        max_age  =cache_control_headers.grep(/max-age/)
+
+        @max_age = unless max_age.empty?
+                     max_age.first.split('=').last.to_i
+                   else
+                     nil
+                   end
       end
 
       def no_cache_flag_not_set?
@@ -97,23 +109,46 @@ module Wrest #:nodoc:
         if expires_header.nil?
           false
         else
-          expires_on = DateTime.parse(expires_header)
-          expires_on > DateTime.now
+          expires_on = begin
+            DateTime.parse(expires_header).to_i
+          rescue ArgumentError
+            0 # Invalid Expires means the response is not cacheable.
+          end
+          expires_on > DateTime.now.to_i
         end
       end
 
       def expires_header_not_in_its_past?
         expires_header = headers['Expires']
-        date_header = headers['Date']
+        date_header    = headers['Date']
+        # Invalid Date or Expires means the response is not cacheable
         if expires_header.nil? || date_header.nil?
           false
         else
-          DateTime.parse(expires_header) > DateTime.parse(date_header)
+          # Can't trust external input. Do not crash even if invalid dates are passed.
+          begin
+            DateTime.parse(expires_header) > DateTime.parse(date_header)
+          rescue ArgumentError
+            false
+          end
         end
       end
 
+      def current_age
+        current_time = Time.now
+
+        # RFC 2616 13.2.3 Age Calculations. TODO: include response_delay in the calculation as defined in RFC. For this, include original Request with Response.
+        date_value             = DateTime.parse(headers['Date']) rescue current_time
+        age_value              = headers['Age'].to_i || 0
+
+        apparent_age           = current_time - date_value
+
+        [apparent_age, age_value].max
+      end
+
       def cache_control_headers
-        @cache_control_headers unless @cache_control_headers.nil?
+        return @cache_control_headers if @cache_control_headers
+        
         @cache_control_headers = headers['Cache-Control'].split(",") rescue []
       end
 

@@ -105,7 +105,7 @@ module Wrest
         end
 
         it "should be cacheable for response with max-age still not expired" do
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('Max-Age' => 10*30).tap {|h| h.delete("Expiry")}))
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('Cache-Control' => "max-age=#{10*30}".tap {|h| h.delete("Expires")}))) # 30mins max-age
           response.cacheable?.should == true
         end
       end
@@ -120,8 +120,16 @@ module Wrest
           end
         end
 
-        it "should not be cacheable for responses with neither Expiry nor Max-Age" do
+        it "should not be cacheable for responses with neither Expires nor Max-Age" do
           response = Native::Response.new(build_ok_response)
+          response.cacheable?.should == false
+        end
+
+        it "should not be cacheable for responses with invalid Expires or Date values" do
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Expires" => "invalid date")))
+          response.cacheable?.should == false
+
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Date" => "invalid date")))
           response.cacheable?.should == false
         end
 
@@ -147,7 +155,7 @@ module Wrest
           response.cacheable?.should == false
         end
 
-        it "should not be cacheable for response without a max-age, and its Expiry is already less than its Date" do
+        it "should not be cacheable for response without a max-age, and its Expires is already less than its Date" do
           one_day_before = (Time.now - (24*60*60)).httpdate
           response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Expires" => one_day_before)))
           response.cacheable?.should == false
@@ -157,6 +165,28 @@ module Wrest
           response = Native::Response.new(build_ok_response('', cacheable_headers.merge('Vary' => 'something')))
           response.cacheable?.should == false
         end
+      end
+
+      it "should return correct values for current_age" do
+        current_time    =Time.now
+
+        ten_mins_early  = current_time - (10*60)
+        half_hour_after = current_time + (30*60)
+
+        # All responses in the caching block returns a cacheable response by default
+        headers         = {
+            "Date"          => ten_mins_early.httpdate,
+            "Expires"       => half_hour_after,
+            "Age"           => 5*60,
+            "Last-Modified" => ten_mins_early
+        }
+
+        response        = Native::Response.new(build_ok_response('', headers))
+        (response.current_age - (10*60)).abs.to_i.should == 0 # the current_age should be 600
+
+        headers["Age"] = 100*60    # 100 minutes - Age is larger than Now-Expires
+        response        = Native::Response.new(build_ok_response('', headers))
+        (response.current_age - (100*60)).abs.to_i.should == 0
       end
     end
 
