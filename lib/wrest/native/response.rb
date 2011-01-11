@@ -156,10 +156,10 @@ module Wrest #:nodoc:
         m=max_age
         return m if m
 
-        # Chrome (and I guess Firefox also) uses a heuristic based on (current_time-last_modified_value/10) as the freshness period if
-        # there is no 'Max-Age' or 'Expires' headers. Browsers can afford to be optimistic, but an HTTP client library
-        # like this can't. So Wrest uses cached responses if and only if there is a clear expiry/max-age header that validates.
-        # cacheability? ensures this.
+        # Chrome (and I guess Firefox also) uses a heuristic based on (current_time-last_modified_value)/10 as the freshness period if
+        # there is no 'Max-Age' or 'Expires' headers. Browsers can afford to be optimistic but we can't.
+        # So Wrest uses cached responses if and only if there is a clear expiry/max-age header that validates.
+        # The method cacheable? ensures this.
 
         response_date = DateTime.parse(headers['Date']).to_i
         expires_date  = DateTime.parse(headers['Expires']).to_i
@@ -167,20 +167,6 @@ module Wrest #:nodoc:
         return (expires_date - response_date)
       end
 
-
-      :private
-
-      def correct_expires_headers(cache_headers)
-        # The expires header "Expires = Sun, 06 Nov 1994 08:49:37 GMT" would have split into two ['Expires = Sun',' 06 Nov 1994 08:49:37 GMT']
-        expires_index = cache_headers.find_index(){ |a| a.include? 'Expires' }
-        if expires_index
-          expires_part_1 = cache_headers.delete(cache_headers[expires_index])
-          # earlier delete shifted the second part on same index
-          expires_part_2 = cache_headers.delete(cache_headers[expires_index])
-          cache_headers.push(expires_part_1+','+expires_part_2)
-        end
-        cache_headers
-      end
     end
   end
 end
