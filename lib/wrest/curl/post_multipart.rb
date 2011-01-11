@@ -11,9 +11,7 @@ module Wrest::Curl
   class PostMultipart < Request
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       parameters = parameters.inject({}) {|parameters_sym, (k,v)| parameters_sym[k.to_sym] = v; parameters_sym}
-      options.merge!(:data => parameters[:data])
-      options.merge!(:file => parameters[:file])
-      options.merge!({:multipart => true})
+      options = options.merge({:data => parameters[:data], :file => parameters[:file], :multipart => true})
       parameters.delete(:data)
       parameters.delete(:file)
       super(

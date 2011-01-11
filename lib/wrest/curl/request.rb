@@ -36,8 +36,8 @@ module Wrest
         @headers = headers.stringify_keys
         @parameters = parameters
         @body = body
-        @multipart = options[:multipart] || options[:multipart.to_s]
-        @file_name = options[:file] || options[:file.to_s]
+        @multipart = options[:multipart]
+        @file_name = options[:file]
 
         @options = options.clone
         @auth_type = @options[:auth_type] || :basic
@@ -56,7 +56,7 @@ module Wrest
         @http_request.username = username
         @http_request.password = password
         @http_request.multipart = multipart
-        @http_request.upload_data = body
+        @http_request.upload_data = body 
         @http_request.file_name = file_name
         @http_request.auth_type = auth_type
         @http_request.url = parameters.empty? ? uri.to_s : "#{uri.to_s}?#{parameters.to_query}"
