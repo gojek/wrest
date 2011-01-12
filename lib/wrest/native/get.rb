@@ -22,6 +22,9 @@ module Wrest::Native
           )
     end
 
+    # Checks equality between two Wrest::Native::Get objects.
+    # Comparing two Wrest::Native::Get objects with identical values for the following properties would return True.
+    #   uri, parameters, username, password and ssh verify_mode.
     def ==(other)
       return true if self.equal?(other)
       return false unless other.class == self.class
@@ -32,36 +35,45 @@ module Wrest::Native
         self.verify_mode == other.verify_mode
     end
 
+    # Returns a hash value for this Wrest::Native::Get object.
+    # Objects that returns true when compared using the == operator would return the same hash value also.
     def hash
       self.uri.hash + self.parameters.hash + self.username.hash + self.password.hash + self.verify_mode.hash + 20110106
     end
     
     #:nodoc:
     def invoke_with_cache_check
-      cached_response = get_cached_response
-      if cached_response.nil? then
-        response = invoke_without_cache_check
-        cache_response(response) if !response.nil? && response.cacheable?
-        response
+      cached_response = cache_store[self.hash]
+
+      if cached_response.nil?
+        get_fresh_response
+      elsif cached_response.expired?
+        if cached_response.can_be_validated?
+          get_new_response_after_cache_validation
+        else
+          get_fresh_response
+        end
       else
         cached_response
       end
     end
 
     #:nodoc:
-    def get_cached_response
-      response = nil
-      if cache_store.has_key?(self.hash)
-        response = cache_store.fetch(self.hash)
-      end
+    def get_fresh_response
+      cache_store.delete self.hash
+
+      response = invoke_without_cache_check
+      
+      cache_store[self.hash] = response if response && response.cacheable?
+
       response
     end
-
+    
     #:nodoc:
-    def cache_response(response)
-      cache_store[self.hash] = response
-    end
-
+    # TODO: implement this
+    #def get_new_response_after_cache_validation
+    #end
+    
     alias_method_chain :invoke, :cache_check
   end
 end

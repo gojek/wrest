@@ -45,34 +45,85 @@ describe Wrest::Native::Get do
         @get.stub!(:invoke_without_cache_check).and_return(@ok_response)
       end
 
-      it "should call get_cached_response before making actual request" do
-        @get.should_receive(:get_cached_response)
+      it "should cache the response after invoke makes a fresh request" do
+        @cache.should_receive(:[]).and_return(nil)
+        @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
+        @cache.should_receive(:[]=).with(@get.hash, @ok_response)
         @get.invoke
       end
 
-      it "should call cache_response after calling invoke method for fresh request" do
-        @get.should_receive(:get_cached_response).and_return(nil)
-        @get.should_receive(:cache_response)
+      it "should check if response already exists in cache before making a request" do
+        @cache.should_receive(:[]).with(@get.hash)
         @get.invoke
       end
 
-      it "should check if response already exists cache before making a request" do
-        @cache.should_receive(:has_key?).with(@get.hash)
+      it "should check whether the cache entry has expired" do
+        @cache.should_receive(:[]).and_return(@ok_response)
+        @ok_response.should_receive(:expired?)
         @get.invoke
       end
+
     end
 
     it "should call invoke_without_cache_check if response does not exist in cache" do
-      @cache.should_receive(:has_key?).with(@get.hash).and_return(false)
+      @cache.should_receive(:[]).with(@get.hash).and_return(nil)
       @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
       @get.invoke
     end
 
     it "should not call invoke_without_cache_check if response exists in cache" do
-      @cache.should_receive(:has_key?).with(@get.hash).and_return(true)
-      @cache.should_receive(:fetch).with(@get.hash).and_return(@ok_response)
+      @cache.should_receive(:[]).with(@get.hash).and_return(@ok_response)
       @get.should_not_receive(:invoke_without_cache_check)
       @get.invoke
+    end
+
+    it "should check if an expired cache entry whether it can be validated" do
+      @cache.should_receive(:[]).with(@get.hash).and_return(@ok_response)
+
+      @ok_response.should_receive(:expired?).and_return(true)
+      @ok_response.should_receive(:can_be_validated?).and_return(false)
+
+      @get.should_receive(:invoke_without_cache_check).and_return(nil)
+
+      @get.invoke
+    end
+
+    describe "when a cache entry can be validated by sending an If-Modified-Since or If-None-Match" do
+
+      it "should say a cache entry with Last-Modified can be validated" do
+        @ok_response.should_receive(:expired?).and_return(true)
+        @ok_response.can_be_validated?.should == true # by default @ok_response has cacheable_headers that has a Last-Modified.
+
+        @cache.should_receive(:[]).with(@get.hash).and_return(@ok_response)
+
+        @get.should_receive(:get_new_response_after_cache_validation).and_return(@ok_response)
+
+        @get.invoke
+      end
+
+      it "should say a cache entry with ETag can be validated" do
+
+        @ok_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers().tap { |h| h.delete "Last-Modified"; h["ETag"]='123' }))
+        @ok_response.should_receive(:expired?).and_return(true)
+        @ok_response.can_be_validated?.should == true
+
+        @cache.should_receive(:[]).with(@get.hash).and_return(@ok_response)
+
+        @get.should_receive(:get_new_response_after_cache_validation).and_return(@ok_response)
+        
+        @get.invoke
+      end
+
+      it "should say a cache entry with neither Last-Modified nor ETag cannot be validated" do
+        @ok_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers().tap { |h| h.delete "Last-Modified" }))
+        @ok_response.should_receive(:expired?).and_return(true)
+        @ok_response.can_be_validated?.should == false
+
+        @cache.should_receive(:[]).with(@get.hash).and_return(@ok_response)
+
+        @get.should_receive(:invoke_without_cache_check).and_return(nil)
+        @get.invoke
+      end
     end
 
     describe "conditions where the response should not be cached" do
@@ -94,10 +145,9 @@ describe Wrest::Native::Get do
 
     describe "conditions where the response should be cached" do
       it "should store response in cache if it did not exist in cache" do
-        response = @ok_response
-        @cache.should_receive(:has_key?).with(@get.hash).and_return(false)
-        @get.should_receive(:invoke_without_cache_check).and_return(response)
-        @cache.should_receive(:[]=).with(@get.hash, response)
+        @cache.should_receive(:[]).with(@get.hash).and_return(nil)
+        @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
+        @cache.should_receive(:[]=).with(@get.hash, @ok_response)
         @get.invoke
       end
 

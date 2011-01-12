@@ -26,7 +26,7 @@ module Wrest #:nodoc:
               :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
               :get_fields, :key?, :type_params
 
-      # We're overriding :new to act as a factory so 
+      # We're overriding :new to act as a factory so
       # we can build the appropriate Response instance based
       # on th response code.
       def self.new(http_response)
@@ -55,7 +55,7 @@ module Wrest #:nodoc:
 
       # A null object implementation - invoking this method on
       # a response simply returns the same response unless
-      # the response is Redirection (code 3xx), in which case a 
+      # the response is Redirection (code 3xx), in which case a
       # get is invoked on the url stored in the response headers
       # under the key 'location' and the new Response is returned.
       def follow(redirect_request_options = {})
@@ -65,6 +65,9 @@ module Wrest #:nodoc:
       def connection_closed?
         self[Native::StandardHeaders::Connection].downcase == Native::StandardTokens::Close.downcase
       end
+
+
+      # The functions below deal with Caching.
 
       def cacheable?
         code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? &&
@@ -175,6 +178,15 @@ module Wrest #:nodoc:
 
         freshness <= current_age
       end
+
+      def last_modified
+        DateTime.parse(headers['Last-Modified']) rescue nil
+      end
+
+      def can_be_validated?
+        not (last_modified.nil? and headers['ETag'].nil?)
+      end
+
     end
   end
 end
