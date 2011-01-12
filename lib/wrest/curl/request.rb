@@ -36,10 +36,10 @@ module Wrest
         @headers = headers.stringify_keys
         @parameters = parameters
         @body = body
-        @multipart = options[:multipart]
-        @file_name = options[:file]
 
         @options = options.clone
+        @multipart = @options[:multipart]
+        @file_name = @options[:file]
         @auth_type = @options[:auth_type] || :basic
         @username = @options[:username]
         @password = @options[:password]

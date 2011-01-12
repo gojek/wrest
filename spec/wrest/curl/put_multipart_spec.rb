@@ -4,7 +4,7 @@ require "#{Wrest::Root}/wrest/multipart"
 
 module Wrest
   describe Curl::PutMultipart do
-    context "functional", :functional => true do
+    context "functional" do 
 
       before :all do
         Wrest.use_curl
