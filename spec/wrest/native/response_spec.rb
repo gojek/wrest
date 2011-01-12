@@ -198,11 +198,36 @@ module Wrest
           response.freshness_lifetime.should == (40*60)
 
           @headers["Cache-Control"] = "max-age=600"
-          response = Native::Response.new(build_ok_response('', @headers))
-          response.freshness_lifetime.should == 600    # max-age takes priority over Expires
+          response                  = Native::Response.new(build_ok_response('', @headers))
+          response.freshness_lifetime.should == 600 # max-age takes priority over Expires
         end
+
+        it "should say not expired for requests with Expires in the future" do
+          response = Native::Response.new(build_ok_response('', @headers))
+          response.expired?.should == false
+        end
+
+        it "should say expired for requests with Expires in the past" do
+          time_in_past        =(Time.now - (10*60)).httpdate
+          @headers["Expires"] = time_in_past
+          response            = Native::Response.new(build_ok_response('', @headers))
+          response.expired?.should == true
+        end
+
+        it "should say expired for requests that have lived past its max-age" do
+          @headers.delete "Expires"
+          @headers["Cache-Control"] = "max-age=0"
+          response                  = Native::Response.new(build_ok_response('', @headers))
+          response.expired?.should == true
+        end
+
+        it "should say not expired for requests that haven't reached max-age" do
+          @headers["Cache-Control"] = "max-age=60000"
+          response                  = Native::Response.new(build_ok_response('', @headers))
+          response.expired?.should == false
+        end
+
       end
-      
     end
 
     context "functional", :functional => true do

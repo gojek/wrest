@@ -167,6 +167,14 @@ module Wrest #:nodoc:
         return (expires_date - response_date)
       end
 
+      def expired?
+        freshness=freshness_lifetime
+        if freshness <= 0
+          return true
+        end
+
+        freshness <= current_age
+      end
     end
   end
 end
