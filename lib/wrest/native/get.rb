@@ -11,7 +11,6 @@ module Wrest::Native
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       follow_redirects = options[:follow_redirects]
       options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
-      options[:cache_store] ||= {}
       super(
             wrest_uri, 
             Net::HTTP::Get, 
@@ -43,13 +42,16 @@ module Wrest::Native
     
     #:nodoc:
     def invoke_with_cache_check
+
+      return invoke_without_cache_check if cache_store.nil?
+
       cached_response = cache_store[self.hash]
 
       if cached_response.nil?
         get_fresh_response
       elsif cached_response.expired?
         if cached_response.can_be_validated?
-          get_new_response_after_cache_validation
+          get_validated_response_for(cached_response)
         else
           get_fresh_response
         end
@@ -58,22 +60,51 @@ module Wrest::Native
       end
     end
 
+    def cache(response)
+      cache_store[self.hash] = response if response && response.cacheable?
+    end
+    
     #:nodoc:
     def get_fresh_response
       cache_store.delete self.hash
 
       response = invoke_without_cache_check
       
-      cache_store[self.hash] = response if response && response.cacheable?
-
+      cache(response)
+      
       response
     end
-    
+
     #:nodoc:
-    # TODO: implement this
-    #def get_new_response_after_cache_validation
-    #end
-    
+    def get_validated_response_for(cached_response)
+      new_response = send_validation_request_for(cached_response)
+      if new_response.code == 304
+        cached_response
+      else
+        cache(new_response)
+        new_response
+      end
+    end
+
+    #:nodoc:
+    # Send a cache-validation request to the server. This would be the actual Get request with extra cache-validation headers.
+    # If a 304 (Not Modified) is received, Wrest would use the cached_response itself. Otherwise the new response is cached and used.
+    def send_validation_request_for(cached_response)
+      last_modified = cached_response.last_modified
+      etag = cached_response.headers["ETag"]
+
+      cache_validation_headers = {}
+      cache_validation_headers["If-Modified-Since"] = last_modified unless last_modified.nil?
+      cache_validation_headers["If-None-Match"] = etag unless etag.nil?
+
+      new_headers=headers.clone.merge cache_validation_headers
+      new_options=options.clone.tap {|opts| opts.delete :cache_store }  # do not run this through the caching mechanism.
+
+      new_request = Wrest::Native::Get.new(uri, parameters, new_headers, new_options)
+
+      new_request.invoke
+    end
+
     alias_method_chain :invoke, :cache_check
   end
 end
