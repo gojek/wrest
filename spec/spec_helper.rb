@@ -54,6 +54,7 @@ def xml_backends
   backends
 end
 
+# Return a Hash of headers that are HTTP cacheable and will expire in 30 minutes, has Date to be current time, Age 0 and Last Modified ten minutes early.
 def cacheable_headers
   half_hour_after = (Time.now + (60*30)).httpdate
   ten_mins_early  = (Time.now - (10*30)).httpdate
