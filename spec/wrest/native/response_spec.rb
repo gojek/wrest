@@ -53,33 +53,33 @@ module Wrest
       response = Native::Response.new(http_response)
       
       response.deserialise.should == { "commands"=>[{"title"=>"New",
-        "action"=>"CreateDoc"},
-        {"title"=>"Open","action"=>"OpenDoc"},{"title"=>"Close",
-          "action"=>"CloseDoc"}], "menu"=>"File"}
-      
+            "action"=>"CreateDoc"},
+          {"title"=>"Open","action"=>"OpenDoc"},{"title"=>"Close",
+            "action"=>"CloseDoc"}], "menu"=>"File"}
+
     end
 
     it "should simply return itself when asked to follow (null object behaviour - see MovedPermanently for more context)" do
       http_response = mock('response')
       http_response.stub!(:code).and_return('422')
-      
+
       response = Native::Response.new(http_response)
       response.follow.equal?(response).should be_true
     end
-    
+
     describe 'Keep-Alive' do
       it "should know when a connection has been closed" do
         http_response = build_ok_response
         http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('Close')
-    
+
         response = Native::Response.new(http_response)
         response.should be_connection_closed
       end
-      
+
       it "should know when a keep-alive connection has been estalished" do
         http_response = build_ok_response
         http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('')
-    
+
         response = Native::Response.new(http_response)
         response.should_not be_connection_closed
       end
@@ -169,39 +169,51 @@ module Wrest
 
       describe "page validity and expiry" do
         before :each do
-          current_time    =Time.now
-
-          ten_mins_early  = (current_time - (10*60)).httpdate
-          half_hour_after = (current_time + (30*60)).httpdate
-
-          # All responses in the caching block returns a cacheable response by default
-          @headers        = {
-              "Date"          => ten_mins_early,
-              "Expires"       => half_hour_after,
-              "Age"           => 5*60,
-              "Last-Modified" => ten_mins_early
-          }
+          @headers        = cacheable_headers
         end
 
-
         it "should return correct values for current_age" do
-          response = Native::Response.new(build_ok_response('', @headers))
-          (response.current_age - (10*60)).abs.to_i.should == 0 # current_age should be 600, but it is temporal - so the rounding off.
 
-          @headers["Age"] = 100*60 # 100 minutes - Age is larger than Now-Expires
+          @headers["Date"] = (Time.now - 10*60).httpdate
+          response = Native::Response.new(build_ok_response('', @headers))
+          (response.current_age - (10*60)).abs.to_i.should == 0
+
+          @headers["Age"] = 100*60 # 100 minutes : Age is larger than Time.now-Expires
           response        = Native::Response.new(build_ok_response('', @headers))
           (response.current_age - (100*60)).abs.to_i.should == 0
         end
 
         it "should return correct values for freshness_lifetime" do
+
+          # @headers would Expire in 30 minutes.
           response = Native::Response.new(build_ok_response('', @headers))
-          response.freshness_lifetime.should == (40*60)
+          response.freshness_lifetime.should == (30*60)
 
           @headers["Cache-Control"] = "max-age=600"
           response                  = Native::Response.new(build_ok_response('', @headers))
           response.freshness_lifetime.should == 600 # max-age takes priority over Expires
         end
 
+        it "should correctly say whether a response has its Expires in its past" do
+          @headers['Expires'] =  (Time.now - (5*60)).httpdate
+          response = Native::Response.new(build_ok_response('', @headers))
+          response.expires_header_not_in_its_past?.should == false
+
+          @headers['Expires'] =  (Time.now + (5*60)).httpdate
+          response = Native::Response.new(build_ok_response('', @headers))
+          response.expires_header_not_in_its_past?.should == true
+        end
+
+        it "should correctly say whether a response has its Expires in our past" do
+          @headers['Expires'] = (Time.now - (24*60*60)).httpdate
+          response = Native::Response.new(build_ok_response('', @headers))
+          response.expires_header_not_in_our_past?.should == false
+
+          @headers['Expires'] = (Time.now + (24*60*60)).httpdate
+          response = Native::Response.new(build_ok_response('', @headers))
+          response.expires_header_not_in_our_past?.should == true
+        end
+        
         it "should say not expired for requests with Expires in the future" do
           response = Native::Response.new(build_ok_response('', @headers))
           response.expired?.should == false
@@ -227,6 +239,22 @@ module Wrest
           response.expired?.should == false
         end
 
+        describe "when can a response be validated by sending If-Not-Modified or If-None-Match" do
+          it "should say a response with Last-Modified can be cache-validated" do
+            response = Native::Response.new(build_ok_response('', @headers))
+            response.can_be_validated?.should == true # by default @headers has Last-Modified.
+          end
+
+          it "should say a response with ETag can be cache-validated" do
+            response = Wrest::Native::Response.new(build_ok_response('', @headers.tap { |h| h.delete "Last-Modified"; h["ETag"]='123' }))
+            response.can_be_validated?.should == true
+          end
+
+          it "should say a response with neither Last-Modified nor ETag cannot be cache-validated" do
+            response = Wrest::Native::Response.new(build_ok_response('', @headers.tap { |h| h.delete "Last-Modified" }))
+            response.can_be_validated?.should == false
+          end
+        end
       end
     end
 

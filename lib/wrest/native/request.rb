@@ -13,7 +13,7 @@ module Wrest::Native
   # or Wrest::Native::Get etc. instead.
   class Request
     attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
-                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters, :cache_store, :verify_mode
+                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters, :cache_store, :verify_mode, :options
     # Valid tuples for the options are:
     #   :username => String, defaults to nil
     #   :password => String, defaults to nil

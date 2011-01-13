@@ -117,7 +117,7 @@ module Wrest #:nodoc:
           rescue ArgumentError
             0 # Invalid Expires means the response is not cacheable.
           end
-          expires_on > DateTime.now.to_i
+          expires_on > Time.now.to_i
         end
       end
 
@@ -180,7 +180,7 @@ module Wrest #:nodoc:
       end
 
       def last_modified
-        DateTime.parse(headers['Last-Modified']) rescue nil
+        headers['Last-Modified']
       end
 
       def can_be_validated?
