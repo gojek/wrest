@@ -8,6 +8,8 @@ Features under a numbered section are complete and available in the Wrest gem.
  * GH#61 Option propogate while converting uri to UriTemplate and back.
  * GH#64 Removed Caching.
  * GH#32 Callback for response status codes.
+ * GH#53 Add to_uri_template helper to String
+ * GH#12 Add Post/Put Multipart support when using the Patron adapter
 
 == 1.0.0
  * GH#56 Detailed Net::HTTP debug output option added to Wrest::Native:Request.
