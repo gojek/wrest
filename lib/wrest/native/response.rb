@@ -20,6 +20,7 @@ module Wrest #:nodoc:
     # They behave exactly like their Net::HttpResponse equivalents.
     class Response
       attr_reader :http_response
+      include HttpCodes
       
       extend Forwardable
       def_delegators  :@http_response,  :code, :message, :body, :Http_version,

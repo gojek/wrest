@@ -89,6 +89,7 @@ require "#{Wrest::Root}/wrest/xml_mini"
 # Load Wrest Core
 require "#{Wrest::Root}/wrest/version"
 require "#{Wrest::Root}/wrest/http_shared"
+require "#{Wrest::Root}/wrest/http_codes"
 require "#{Wrest::Root}/wrest/native"
 
 # Load Wrest Wrappers

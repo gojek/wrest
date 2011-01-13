@@ -13,6 +13,7 @@ module Wrest #:nodoc:
     class Response              
       attr_reader :http_response
       include HttpShared::Headers
+      include HttpCodes
       
       extend Forwardable
       def_delegators  :@http_response, :body, :headers
