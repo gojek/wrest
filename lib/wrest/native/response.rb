@@ -100,15 +100,15 @@ module Wrest #:nodoc:
       end
 
       def pragma_nocache_not_set?
-        headers['Pragma'].nil? || (not headers['Pragma'].include? 'no-cache')
+        headers['pragma'].nil? || (not headers['pragma'].include? 'no-cache')
       end
 
       def vary_tag_not_set?
-        headers['Vary'].nil?
+        headers['vary'].nil?
       end
 
       def expires_header_not_in_our_past?
-        expires_header = headers['Expires']
+        expires_header = headers['expires']
         if expires_header.nil?
           false
         else
@@ -122,8 +122,8 @@ module Wrest #:nodoc:
       end
 
       def expires_header_not_in_its_past?
-        expires_header = headers['Expires']
-        date_header    = headers['Date']
+        expires_header = headers['expires']
+        date_header    = headers['date']
         # Invalid Date or Expires means the response is not cacheable
         if expires_header.nil? || date_header.nil?
           false
@@ -141,8 +141,8 @@ module Wrest #:nodoc:
         current_time = Time.now.to_i
 
         # RFC 2616 13.2.3 Age Calculations. TODO: include response_delay in the calculation as defined in RFC. For this, include original Request with Response.
-        date_value             = DateTime.parse(headers['Date']).to_i rescue current_time
-        age_value              = headers['Age'].to_i || 0
+        date_value             = DateTime.parse(headers['date']).to_i rescue current_time
+        age_value              = headers['age'].to_i || 0
 
         apparent_age           = current_time - date_value
 
@@ -152,7 +152,7 @@ module Wrest #:nodoc:
       def cache_control_headers
         return @cache_control_headers if @cache_control_headers
 
-        @cache_control_headers = headers['Cache-Control'].split(",") rescue []
+        @cache_control_headers = headers['cache-control'].split(",") rescue []
       end
 
       def freshness_lifetime
@@ -164,8 +164,8 @@ module Wrest #:nodoc:
         # So Wrest uses cached responses if and only if there is a clear expiry/max-age header that validates.
         # The method cacheable? ensures this.
 
-        response_date = DateTime.parse(headers['Date']).to_i
-        expires_date  = DateTime.parse(headers['Expires']).to_i
+        response_date = DateTime.parse(headers['date']).to_i
+        expires_date  = DateTime.parse(headers['expires']).to_i
 
         return (expires_date - response_date)
       end
@@ -180,11 +180,11 @@ module Wrest #:nodoc:
       end
 
       def last_modified
-        headers['Last-Modified']
+        headers['last-modified']
       end
 
       def can_be_validated?
-        not (last_modified.nil? and headers['ETag'].nil?)
+        not (last_modified.nil? and headers['etag'].nil?)
       end
 
     end

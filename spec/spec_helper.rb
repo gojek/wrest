@@ -60,6 +60,6 @@ def cacheable_headers
   ten_mins_early  = (Time.now - (10*30)).httpdate
 
   # All responses in the caching block returns a cacheable response by default
-  headers         = {"Date" => Time.now.httpdate, "Expires" => half_hour_after, "Age" => 0, "Last-Modified" => ten_mins_early}
+  headers         = {"date" => Time.now.httpdate, "expires" => half_hour_after, "age" => 0, "last-modified" => ten_mins_early}
   headers
 end

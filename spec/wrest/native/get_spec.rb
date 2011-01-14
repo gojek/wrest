@@ -77,7 +77,7 @@ describe Wrest::Native::Get do
       end
 
       it "should use the cached response if it finds a matching one that hasn't expired" do
-        @cached_response=Wrest::Native::Response.new(build_ok_response('', cacheable_headers())).tap { |h| h.headers["Random"] = 123 }
+        @cached_response=Wrest::Native::Response.new(build_ok_response('', cacheable_headers())).tap { |h| h.headers["random"] = 123 }
         
         @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
         @cached_response.should_receive(:expired?).and_return(false)
@@ -111,13 +111,13 @@ describe Wrest::Native::Get do
           direct_get = Wrest::Native::Get.new(@request_uri)
           direct_get.should_receive(:invoke).and_return(@ok_response)
 
-          Wrest::Native::Get.should_receive(:new).with(@request_uri, {}, {"If-Modified-Since" => @ok_response.headers["Last-Modified"]}, @default_options).and_return(direct_get)
+          Wrest::Native::Get.should_receive(:new).with(@request_uri, {}, {"if-modified-since" => @ok_response.headers["last-modified"]}, @default_options).and_return(direct_get)
 
           @get.invoke
         end
         it "should send an If-None-Match Get request if the cache has an ETag" do
-          @ok_response.headers.delete "Last-Modified"
-          @ok_response.headers["ETag"]='123'
+          @ok_response.headers.delete "last-modified"
+          @ok_response.headers["etag"]='123'
           
           @ok_response.should_receive(:expired?).and_return(true)
           @ok_response.can_be_validated?.should == true
@@ -127,7 +127,7 @@ describe Wrest::Native::Get do
           direct_get = Wrest::Native::Get.new(@request_uri)
           direct_get.should_receive(:invoke).and_return(@ok_response)
 
-          Wrest::Native::Get.should_receive(:new).with(@request_uri, {}, {"If-None-Match" => "123"}, @default_options).and_return(direct_get)
+          Wrest::Native::Get.should_receive(:new).with(@request_uri, {}, {"if-none-match" => "123"}, @default_options).and_return(direct_get)
 
           @get.invoke
         end
@@ -138,8 +138,8 @@ describe Wrest::Native::Get do
           one_day_back = (Time.now - 60*60*24).httpdate
           
           @cached_response=Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
-          @cached_response.headers["Random"] = 235
-          @cached_response.headers["Expires"]=one_day_back
+          @cached_response.headers["random"] = 235
+          @cached_response.headers["expires"]=one_day_back
 
           @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
         end

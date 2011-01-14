@@ -91,11 +91,11 @@ module Wrest::Native
     # If a 304 (Not Modified) is received, Wrest would use the cached_response itself. Otherwise the new response is cached and used.
     def send_validation_request_for(cached_response)
       last_modified = cached_response.last_modified
-      etag = cached_response.headers["ETag"]
+      etag = cached_response.headers["etag"]
 
       cache_validation_headers = {}
-      cache_validation_headers["If-Modified-Since"] = last_modified unless last_modified.nil?
-      cache_validation_headers["If-None-Match"] = etag unless etag.nil?
+      cache_validation_headers["if-modified-since"] = last_modified unless last_modified.nil?
+      cache_validation_headers["if-none-match"] = etag unless etag.nil?
 
       new_headers=headers.clone.merge cache_validation_headers
       new_options=options.clone.tap {|opts| opts.delete :cache_store }  # do not run this through the caching mechanism.
