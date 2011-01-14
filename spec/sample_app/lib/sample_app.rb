@@ -3,13 +3,6 @@ require File.expand_path('../../config/boot', __FILE__)
 module SampleApp
   class Application < Sinatra::Application
 
-    # almost all caching handlers use seconds_to_cache.
-    before do
-      if params.include?(:seconds_to_cache)
-        params[:seconds_to_cache] = params[:seconds_to_cache].to_i
-      end
-    end
-
     get '/multiple_response_headers' do
       response.set_cookie('foo', {:value => "bar", :path => '/', :expires => Time.now})
       response.set_cookie('baz', {:value => "woot", :path => '/', :expires => Time.now})
@@ -122,7 +115,7 @@ module SampleApp
     get '/cacheable/cant_be_validated/with_both_max_age_and_expires/:seconds_to_cache' do
       headers "Date" => Time.now.httpdate
       headers "Cache-Control" => "max-age=#{params[:seconds_to_cache]}"
-      headers "Expires" => (Time.now+params[:seconds_to_cache]).httpdate
+      headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
 
       "This response has a Date, max-age and Expires. Wrest will cache this for #{params[:seconds_to_cache]}. 
       However there is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."

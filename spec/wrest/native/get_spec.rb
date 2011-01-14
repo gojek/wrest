@@ -212,4 +212,17 @@ describe Wrest::Native::Get do
       end
     end
   end
+
+  context "functional", :functional => true do
+    before :each do
+      @cache_store = {}
+      @l = "http://localhost:3000".to_uri(:cache_store => @cache_store)
+    end
+    it "should cache a cacheable response" do
+      response    = @l["cacheable/cant_be_validated/with_both_max_age_and_expires/300"].get
+
+      @cache_store.values.first.should == response
+    end
+  end
+
 end
