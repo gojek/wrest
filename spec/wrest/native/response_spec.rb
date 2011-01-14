@@ -2,6 +2,37 @@ require "spec_helper"
 
 module Wrest
   describe Native::Response do
+
+    describe "HTTP Response Headers" do
+      before :each do
+        @http_response = mock
+        @http_response.stub!(:code).and_return('200')
+
+        @http_response.stub!(:to_hash).and_return(
+            "Expires"       =>["Fri, 14 Jan 2011 18:04:05 GMT"],
+            "Content-Type"  =>["text/html"],
+            "date"          =>["THIS IS AN INVALID DATE!"],
+            "Cache-Control" => ["max-age=4000", "no-cache"]
+        )
+      end
+      it "should correctly build the headers from a Net::HTTP response" do
+        Native::Response.new(@http_response).headers.should == {
+            "expires"       => "Fri, 14 Jan 2011 18:04:05 GMT",
+            "content-type"  => "text/html",
+            "date"          => "THIS IS AN INVALID DATE!",
+            "cache-control" => "max-age=4000,no-cache"
+        }
+      end
+
+      it "should correctly return the Expiry a response" do
+        # this test would also test parse_datefield - which is used by both expires and response_date
+
+        response=Native::Response.new(@http_response)
+        response.expires.should == DateTime.parse("Fri, 14 Jan 2011 18:04:05 GMT")
+        response.response_date.should == nil
+      end
+    end
+
     it "should build a Redirection instead of a normal response if the code is 301..303 or 305..3xx" do
       http_response = mock(Net::HTTPRedirection)
       http_response.stub!(:code).and_return('301')

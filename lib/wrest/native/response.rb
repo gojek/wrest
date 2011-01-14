@@ -107,33 +107,31 @@ module Wrest #:nodoc:
         headers['vary'].nil?
       end
 
-      def expires_header_not_in_our_past?
-        expires_header = headers['expires']
-        if expires_header.nil?
+      def response_date
+        return @response_date if @response_date
+        @response_date = parse_datefield(headers, "date")
+      end
+
+
+      def expires
+        return @expires if @expires
+        @expires = parse_datefield(headers, "expires")
+      end
+
+      def expires_not_in_our_past?
+        if expires.nil?
           false
         else
-          expires_on = begin
-            DateTime.parse(expires_header).to_i
-          rescue ArgumentError
-            0 # Invalid Expires means the response is not cacheable.
-          end
-          expires_on > Time.now.to_i
+          expires.to_i > Time.now.to_i
         end
       end
 
-      def expires_header_not_in_its_past?
-        expires_header = headers['expires']
-        date_header    = headers['date']
-        # Invalid Date or Expires means the response is not cacheable
-        if expires_header.nil? || date_header.nil?
+      def expires_not_in_its_past?
+        # Invalid header value for Date or Expires means the response is not cacheable
+        if  expires.nil? || response_date.nil?
           false
         else
-          # Can't trust external input. Do not crash even if invalid dates are passed.
-          begin
-            DateTime.parse(expires_header) > DateTime.parse(date_header)
-          rescue ArgumentError
-            false
-          end
+           expires > response_date
         end
       end
 
@@ -185,6 +183,22 @@ module Wrest #:nodoc:
 
       def can_be_validated?
         not (last_modified.nil? and headers['etag'].nil?)
+      end
+
+
+      # helper function. Used to parse date fields.
+      # this function is used and tested by the expires and response_date methods
+      def parse_datefield(hash, key)
+        if hash[key]
+          # Can't trust external input. Do not crash even if invalid dates are passed.
+          begin
+            DateTime.parse(hash[key].to_s)
+          rescue ArgumentError
+            nil
+          end
+        else
+          nil
+        end
       end
 
     end
