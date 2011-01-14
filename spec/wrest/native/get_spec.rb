@@ -70,8 +70,15 @@ describe Wrest::Native::Get do
         @get.invoke
       end
 
+      it "should check whether the cache entry has expired" do
+        @cache.should_receive(:[]).and_return(@ok_response)
+        @ok_response.should_receive(:expired?)
+        @get.invoke
+      end
+
       it "should use the cached response if it finds a matching one that hasn't expired" do
-        @cached_response=@ok_response.clone.tap { |h| h.headers["Random"] = 123 }
+        @cached_response=Wrest::Native::Response.new(build_ok_response('', cacheable_headers())).tap { |h| h.headers["Random"] = 123 }
+        
         @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
         @cached_response.should_receive(:expired?).and_return(false)
 
@@ -79,17 +86,11 @@ describe Wrest::Native::Get do
         @get.invoke.should == @cached_response
       end
 
-      it "should check whether the cache entry has expired" do
-        @cache.should_receive(:[]).and_return(@ok_response)
-        @ok_response.should_receive(:expired?)
-        @get.invoke
-      end
-
       it "should check whether an expired cache entry can be validated" do
         @cache.should_receive(:[]).with(@get.hash).and_return(@ok_response)
 
         @ok_response.should_receive(:expired?).and_return(true)
-        @ok_response.should_receive(:can_be_validated?).and_return(false)
+        @ok_response.should_receive(:can_be_validated?)
 
         @get.should_receive(:invoke_without_cache_check).and_return(nil)
 
@@ -101,7 +102,7 @@ describe Wrest::Native::Get do
           @default_options =  {:follow_redirects=>true, :follow_redirects_count=>0, :follow_redirects_limit=>5}
         end
         
-        it "should send an If-Not-Modified if the cache has a Last-Modified" do
+        it "should send an If-Not-Modified Get request if the cache has a Last-Modified" do
           @ok_response.should_receive(:expired?).and_return(true)
           @ok_response.can_be_validated?.should == true
 
@@ -114,8 +115,10 @@ describe Wrest::Native::Get do
 
           @get.invoke
         end
-        it "should send an If-None-Match if the cache has an ETag" do
-          @ok_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers().tap { |h| h.delete "Last-Modified"; h["ETag"]='123' }))
+        it "should send an If-None-Match Get request if the cache has an ETag" do
+          @ok_response.headers.delete "Last-Modified"
+          @ok_response.headers["ETag"]='123'
+          
           @ok_response.should_receive(:expired?).and_return(true)
           @ok_response.can_be_validated?.should == true
 
@@ -133,7 +136,11 @@ describe Wrest::Native::Get do
       describe "what happens when validating an expired cache entry" do
         before :each do
           one_day_back = (Time.now - 60*60*24).httpdate
-          @cached_response=@ok_response.clone.tap { |h| h.headers["Random"] = 235; h.headers["Expires"]=one_day_back }
+          
+          @cached_response=Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
+          @cached_response.headers["Random"] = 235
+          @cached_response.headers["Expires"]=one_day_back
+
           @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
         end
 
