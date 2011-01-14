@@ -180,7 +180,6 @@ Run the tests in a different terminal:
   # Runs the functional test suite.
   rake rspec:functional
 
-
 == Contributors
  
 * Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]

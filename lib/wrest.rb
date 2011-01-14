@@ -52,34 +52,8 @@ end
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
 
-begin
-  gem 'libxml-ruby', '>= 1.1.3'
-  ActiveSupport::XmlMini.backend='LibXML'
-rescue Gem::LoadError
-  begin
-    gem 'nokogiri', '~> 1.4.3.1'
-    ActiveSupport::XmlMini.backend='Nokogiri'
-  rescue Gem::LoadError
-    unless RUBY_PLATFORM =~ /java/
-      Wrest.logger.debug "Warning: LibXML >= 1.1.3 not found, attempting to use Nokogiri. To install LibXML run `(sudo) gem install libxml-ruby` (libxml-ruby is not available on JRuby)"
-    end
-    Wrest.logger.debug "Warning: Nokogiri >= 1.3.3 not found, falling back to #{ActiveSupport::XmlMini.backend} (which is probably significantly slower). To install Nokogiri run `(sudo) (jruby -S) gem install nokogiri`"
-    if RUBY_PLATFORM =~ /java/
-      begin
-        gem 'jrexml', '~> 0.5.3'
-        require 'jrexml'
-        Wrest.logger.debug "Detected JRuby, JREXML loaded."
-      rescue Gem::LoadError
-        Wrest.logger.debug "Warning: Detected JRuby, but failed to load JREXML. JREXML offers *some* performance improvement when using REXML on JRuby. To install JREXML run `(sudo) jruby -S gem install jrexml`"
-      end
-    end
-  end
-end
-
 RUBY_PLATFORM =~ /java/ ? gem('json-jruby', '>= 1.4.2') : gem('json', '>= 1.4.2')
 ActiveSupport::JSON.backend = "JSONGem"
-
-
 
 require "#{Wrest::Root}/wrest/core_ext/string"
 

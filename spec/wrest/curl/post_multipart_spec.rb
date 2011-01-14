@@ -1,8 +1,9 @@
 require "spec_helper"
-require "#{Wrest::Root}/wrest/curl"
 require "#{Wrest::Root}/wrest/multipart"
 
 unless RUBY_PLATFORM =~ /java/
+  require "#{Wrest::Root}/wrest/curl"
+  
   module Wrest
     describe Curl::PostMultipart do
 

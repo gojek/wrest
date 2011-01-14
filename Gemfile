@@ -47,7 +47,7 @@ group :development do
 end
 
 group :test do
-  gem 'rspec', '> 2.0.0'
+  gem 'rspec', '~> 2.0.0'
   gem 'sinatra', '~> 1.0.0'
   gem 'metric_fu' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
 end
