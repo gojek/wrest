@@ -50,7 +50,14 @@ module Wrest #:nodoc:
       end
 
       def headers
-        @http_response.to_hash
+        return @headers if @headers
+
+        @headers = @http_response.to_hash.inject({}) { |new_headers, (oldkey, oldvalue)|
+          new_headers[oldkey.downcase] = oldvalue.join(",")
+          new_headers
+        }
+
+        @headers
       end
 
       # A null object implementation - invoking this method on

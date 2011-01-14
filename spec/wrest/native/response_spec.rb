@@ -136,7 +136,7 @@ module Wrest
         end
 
         it "should be cacheable for response with max-age still not expired" do
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('cache-control' => "max-age=#{10*30}".tap {|h| h.delete("expires")}))) # 30mins max-age
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('cache-control' => ["max-age=#{10*30}"].tap {|h| h.delete("expires")}))) # 30mins max-age
           response.cacheable?.should == true
         end
       end
@@ -157,43 +157,43 @@ module Wrest
         end
 
         it "should not be cacheable for responses with invalid Expires or Date values" do
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("expires" => "invalid date")))
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("expires" => ["invalid date"])))
           response.cacheable?.should == false
 
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("date" => "invalid date")))
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("date" => ["invalid date"])))
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for responses with cache-control header no-cache" do
-          response = Native::Response.new(build_ok_response('', 'cache-control' => 'no-cache'))
+          response = Native::Response.new(build_ok_response('', 'cache-control' => ['no-cache']))
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for responses with cache-control header no-store" do
-          response = Native::Response.new(build_ok_response('', 'cache-control' => 'no-store'))
+          response = Native::Response.new(build_ok_response('', 'cache-control' => ['no-store']))
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for responses with header pragma no-cache" do
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('pragma' => 'no-cache')))    # HTTP 1.0
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('pragma' => ['no-cache'])))    # HTTP 1.0
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for response with Expires header in past" do
           ten_mins_early = (Time.now - (10*30)).httpdate
 
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("expires" => ten_mins_early)))
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("expires" => [ten_mins_early])))
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for response without a max-age, and its Expires is already less than its Date" do
           one_day_before = (Time.now - (24*60*60)).httpdate
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("expires" => one_day_before)))
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge("expires" => [one_day_before])))
           response.cacheable?.should == false
         end
 
         it "should not be cacheable for response with a vary tag" do
-          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('vary' => 'something')))
+          response = Native::Response.new(build_ok_response('', cacheable_headers.merge('vary' => ['something'])))
           response.cacheable?.should == false
         end
       end
@@ -205,11 +205,11 @@ module Wrest
 
         it "should return correct values for current_age" do
 
-          @headers["date"] = (Time.now - 10*60).httpdate
+          @headers["date"] = [(Time.now - 10*60).httpdate]
           response = Native::Response.new(build_ok_response('', @headers))
           (response.current_age - (10*60)).abs.to_i.should == 0
 
-          @headers["age"] = 100*60 # 100 minutes : Age is larger than Time.now-Expires
+          @headers["age"] = [ (100*60).to_s ] # 100 minutes : Age is larger than Time.now-Expires
           response        = Native::Response.new(build_ok_response('', @headers))
           (response.current_age - (100*60)).abs.to_i.should == 0
         end
@@ -220,29 +220,29 @@ module Wrest
           response = Native::Response.new(build_ok_response('', @headers))
           response.freshness_lifetime.should == (30*60)
 
-          @headers["cache-control"] = "max-age=600"
+          @headers["cache-control"] = ["max-age=600"]
           response                  = Native::Response.new(build_ok_response('', @headers))
           response.freshness_lifetime.should == 600 # max-age takes priority over Expires
         end
 
         it "should correctly say whether a response has its Expires in its past" do
-          @headers['expires'] =  (Time.now - (5*60)).httpdate
+          @headers['expires'] =  [(Time.now - (5*60)).httpdate]
           response = Native::Response.new(build_ok_response('', @headers))
-          response.expires_header_not_in_its_past?.should == false
+          response.expires_not_in_its_past?.should == false
 
-          @headers['expires'] =  (Time.now + (5*60)).httpdate
+          @headers['expires'] =  [(Time.now + (5*60)).httpdate]
           response = Native::Response.new(build_ok_response('', @headers))
-          response.expires_header_not_in_its_past?.should == true
+          response.expires_not_in_its_past?.should == true
         end
 
         it "should correctly say whether a response has its Expires in our past" do
-          @headers['expires'] = (Time.now - (24*60*60)).httpdate
+          @headers['expires'] = [(Time.now - (24*60*60)).httpdate]
           response = Native::Response.new(build_ok_response('', @headers))
-          response.expires_header_not_in_our_past?.should == false
+          response.expires_not_in_our_past?.should == false
 
-          @headers['expires'] = (Time.now + (24*60*60)).httpdate
+          @headers['expires'] = [(Time.now + (24*60*60)).httpdate]
           response = Native::Response.new(build_ok_response('', @headers))
-          response.expires_header_not_in_our_past?.should == true
+          response.expires_not_in_our_past?.should == true
         end
         
         it "should say not expired for requests with Expires in the future" do
@@ -251,7 +251,7 @@ module Wrest
         end
 
         it "should say expired for requests with Expires in the past" do
-          time_in_past        =(Time.now - (10*60)).httpdate
+          time_in_past        = [(Time.now - (10*60)).httpdate]
           @headers["expires"] = time_in_past
           response            = Native::Response.new(build_ok_response('', @headers))
           response.expired?.should == true
@@ -259,13 +259,13 @@ module Wrest
 
         it "should say expired for requests that have lived past its max-age" do
           @headers.delete "Expires"
-          @headers["cache-control"] = "max-age=0"
+          @headers["cache-control"] = ["max-age=0"]
           response                  = Native::Response.new(build_ok_response('', @headers))
           response.expired?.should == true
         end
 
         it "should say not expired for requests that haven't reached max-age" do
-          @headers["cache-control"] = "max-age=60000"
+          @headers["cache-control"] = ["max-age=60000"]
           response                  = Native::Response.new(build_ok_response('', @headers))
           response.expired?.should == false
         end
@@ -277,7 +277,7 @@ module Wrest
           end
 
           it "should say a response with ETag can be cache-validated" do
-            response = Wrest::Native::Response.new(build_ok_response('', @headers.tap { |h| h.delete "last-modified"; h["etag"]='123' }))
+            response = Wrest::Native::Response.new(build_ok_response('', @headers.tap { |h| h.delete "last-modified"; h["etag"]= ['123'] }))
             response.can_be_validated?.should == true
           end
 
@@ -299,7 +299,7 @@ module Wrest
       end
 
       it "should provide access to its headers in a case-insensitive manner via []" do
-        @response.headers['content-type'].should == ['application/xml; charset=utf-8']
+        @response.headers['content-type'].should == 'application/xml; charset=utf-8'
         @response.headers['Content-Type'].should be_nil
 
         @response['Content-Type'].should == 'application/xml; charset=utf-8'
