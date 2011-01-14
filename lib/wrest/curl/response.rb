@@ -10,6 +10,10 @@
 module Wrest #:nodoc:
   module Curl #:nodoc:
     # Decorates a response providing support for deserialisation.
+    #
+    # Also provides set of HTTP response code checkers. For instance, the method ok? checks if the response was
+    # successful with HTTP code 200.
+    # See HttpCodes for a list of all such response checkers.
     class Response              
       attr_reader :http_response
       include HttpShared::Headers

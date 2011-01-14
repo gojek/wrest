@@ -8,8 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest
-  # Contains functionality that is independent of
-  # the underlying HTTP libs
+  # Contains convenience methods to check HTTP response codes
   module HttpCodes
 
     def ok?
