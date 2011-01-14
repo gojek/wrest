@@ -2,6 +2,11 @@ require File.expand_path('../../config/boot', __FILE__)
 
 module SampleApp
   class Application < Sinatra::Application
+    helpers do
+      def request_headers
+        env.inject({}){|acc, (k,v)| acc[$1.downcase] = v if k =~ /^http_(.*)/i; acc}
+      end
+    end
     get '/multiple_response_headers' do
       response.set_cookie('foo', {:value => "bar", :path => '/', :expires => Time.now})
       response.set_cookie('baz', {:value => "woot", :path => '/', :expires => Time.now})
@@ -27,7 +32,12 @@ module SampleApp
     end
     
     post '/uploads' do
-      params[:file][:tempfile].read
+      response.headers["Content-Type"] = 'application/json'
+      {
+        'parameters' => request.params,
+        'headers' => request_headers,
+        'file' => params[:file][:tempfile].read
+      }.to_json
     end
 
     get '/redirect_n_times/:times' do
