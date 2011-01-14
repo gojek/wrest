@@ -78,8 +78,8 @@ module Wrest #:nodoc:
 
       def cacheable?
         code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? &&
-        (not max_age.nil? or (expires_header_not_in_our_past? && expires_header_not_in_its_past?)) && pragma_nocache_not_set? &&
-        vary_tag_not_set?
+            (not max_age.nil? or (expires_not_in_our_past? && expires_not_in_its_past?)) && pragma_nocache_not_set? &&
+            vary_tag_not_set?
       end
 
       def code_cacheable?
