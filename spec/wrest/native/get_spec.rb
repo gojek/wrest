@@ -42,7 +42,7 @@ describe Wrest::Native::Get do
     end
 
     context "workflow - what happens when a GET request is made" do
-      
+
       it "should check if response already exists in cache before making a request" do
         @cache.should_receive(:[]).with(@get.hash)
         @get.invoke
@@ -78,7 +78,7 @@ describe Wrest::Native::Get do
 
       it "should use the cached response if it finds a matching one that hasn't expired" do
         @cached_response=Wrest::Native::Response.new(build_ok_response('', cacheable_headers())).tap { |h| h.headers["random"] = 123 }
-        
+
         @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
         @cached_response.should_receive(:expired?).and_return(false)
 
@@ -101,7 +101,7 @@ describe Wrest::Native::Get do
         before :all do
           @default_options =  {:follow_redirects=>true, :follow_redirects_count=>0, :follow_redirects_limit=>5}
         end
-        
+
         it "should send an If-Not-Modified Get request if the cache has a Last-Modified" do
           @ok_response.should_receive(:expired?).and_return(true)
           @ok_response.can_be_validated?.should == true
@@ -118,7 +118,7 @@ describe Wrest::Native::Get do
         it "should send an If-None-Match Get request if the cache has an ETag" do
           @ok_response.headers.delete "last-modified"
           @ok_response.headers["etag"]='123'
-          
+
           @ok_response.should_receive(:expired?).and_return(true)
           @ok_response.can_be_validated?.should == true
 
@@ -136,7 +136,7 @@ describe Wrest::Native::Get do
       describe "what happens when validating an expired cache entry" do
         before :each do
           one_day_back = (Time.now - 60*60*24).httpdate
-          
+
           @cached_response=Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
           @cached_response.headers["random"] = 235
           @cached_response.headers["expires"]=one_day_back
@@ -218,10 +218,30 @@ describe Wrest::Native::Get do
       @cache_store = {}
       @l = "http://localhost:3000".to_uri(:cache_store => @cache_store)
     end
-    it "should cache a cacheable response" do
-      response    = @l["cacheable/cant_be_validated/with_both_max_age_and_expires/300"].get
 
-      @cache_store.values.first.should == response
+    describe "cacheable responses" do
+      it "should cache cacheable but cant_be_validated response" do
+        response = @l["cacheable/cant_be_validated/with_expires/300"].get
+        @cache_store.values.should include(response)
+
+        response = @l["cacheable/cant_be_validated/with_max_age/300"].get
+        @cache_store.values.should include(response)
+
+        response = @l["cacheable/cant_be_validated/with_both_max_age_and_expires/300"].get
+        @cache_store.values.should include(response)        
+      end
+
+      it "should not cache any non-cacheable response" do
+
+        @l["non_cacheable/nothing_explicitly_defined"].get
+        @l["non_cacheable/non_cacheable_statuscode"].get
+        @l["non_cacheable/no_store"].get
+        @l["non_cacheable/no_cache"].get
+        @l["non_cacheable/with_etag"].get
+
+        @cache_store.should be_empty
+
+      end
     end
   end
 
