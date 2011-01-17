@@ -50,14 +50,8 @@ module Wrest #:nodoc:
       end
 
       def headers
-        return @headers if @headers
-
-        @headers = @http_response.to_hash.inject({}) { |new_headers, (oldkey, oldvalue)|
-          new_headers[oldkey.downcase] = oldvalue.join(",")
-          new_headers
-        }
-
-        @headers
+        # TODO: Cloning the response would make the original value immutable. But is it required? Net/HTTP allows you to change the headers in an HTTPResponse.
+        @http_response.clone
       end
 
       # A null object implementation - invoking this method on
