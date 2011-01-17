@@ -38,6 +38,7 @@ def build_response(code,message = '', body = '', headers = {})
     response.stub!(:message).and_return(message)
     response.stub!(:body).and_return(body)
     response.stub!(:to_hash).and_return(headers)
+    response.stub!('[]').and_return(nil)
     headers.each{|k,v|
       response.stub!('[]').with(k).and_return(v)
     }
@@ -60,6 +61,6 @@ def cacheable_headers
   ten_mins_early  = (Time.now - (10*30)).httpdate
 
   # All responses in the caching block returns a cacheable response by default
-  headers         = {"date" => [Time.now.httpdate], "expires" => [half_hour_after], "age" => ["0"], "last-modified" => [ten_mins_early]}
+  headers         = {"date" => Time.now.httpdate, "expires" => half_hour_after, "age" => "0", "last-modified" => ten_mins_early}
   headers
 end
