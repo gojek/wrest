@@ -289,7 +289,7 @@ module Wrest
 
       it "should provide access to its headers in a case-insensitive manner via []" do
         @response.headers['content-type'].should == 'application/xml; charset=utf-8'
-        @response.headers['Content-Type'].should be_nil
+        @response.headers['Content-Type'].should == 'application/xml; charset=utf-8'
 
         @response['Content-Type'].should == 'application/xml; charset=utf-8'
         @response['content-type'].should == 'application/xml; charset=utf-8'
