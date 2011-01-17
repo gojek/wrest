@@ -1,8 +1,15 @@
+require 'fileutils'
 require File.expand_path('../../config/boot', __FILE__)
+
+current_path = File.dirname(__FILE__)
 
 module SampleApp
   class Application < Sinatra::Application
-
+    helpers do
+      def request_headers
+        env.inject({}){|acc, (k,v)| acc[$1.downcase] = v if k =~ /^http_(.*)/i; acc}
+      end
+    end
     get '/multiple_response_headers' do
       response.set_cookie('foo', {:value => "bar", :path => '/', :expires => Time.now})
       response.set_cookie('baz', {:value => "woot", :path => '/', :expires => Time.now})
@@ -99,29 +106,78 @@ module SampleApp
     get '/cacheable/cant_be_validated/with_expires/:seconds_to_cache' do
       headers "Date" => Time.now.httpdate
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
+      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "This response has a Date and Expires header. Wrest will cache this for #{params[:seconds_to_cache]} seconds.
-       However there is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
+       "There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
     end
 
     get '/cacheable/cant_be_validated/with_max_age/:seconds_to_cache' do
       headers "Date" => Time.now.httpdate
       headers "Cache-Control" => "max-age=#{params[:seconds_to_cache]}"
+      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "This response has a Date and max-age. Wrest will cache this for #{params[:seconds_to_cache]} seconds.
-       However there is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
+       "There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
     end
 
     get '/cacheable/cant_be_validated/with_both_max_age_and_expires/:seconds_to_cache' do
       headers "Date" => Time.now.httpdate
       headers "Cache-Control" => "max-age=#{params[:seconds_to_cache]}"
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
+      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "This response has a Date, max-age and Expires. Wrest will cache this for #{params[:seconds_to_cache]}. 
-      However there is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
+      "There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
     end
 
-    # TODO: Cacheable and validatable
+    # NOTE: The expiry times (1,2 sec intervals) maybe affected and will yield incorrect results when debugging/single-stepping through code. 
+
+    get '/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/:seconds_to_cache' do
+
+      headers "Last-Modified" => Time.now.httpdate
+      headers "Date" => Time.now.httpdate
+      headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
+      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
+
+      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. But this URI will never validate and always sends a new response"
+    end
+
+    get '/cacheable/can_be_validated/with_etag/always_give_fresh_response/:seconds_to_cache' do
+
+      headers "ETAG" => "1234"
+      headers "Date" => Time.now.httpdate
+      headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
+      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
+
+      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. But this URI will never validate and always sends a new response"
+    end
+
+
+    get '/cacheable/can_be_validated/with_last_modified/always_304/:seconds_to_cache' do
+
+      if request_headers.include? "if_modified_since"
+        headers "Last-Modified" => request_headers["if_modified_since"]
+        status 304
+      else
+        headers "Last-Modified" => Time.now.httpdate
+      end
+
+      headers "Date" => Time.now.httpdate
+      headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
+      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
+
+      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
+    end
+
+    get '/cacheable/can_be_validated/with_etag/always_304/:seconds_to_cache' do
+
+      status 304 if request_headers.include? "if_none_match"
+
+      headers "ETAG" => "1234"
+      headers "Date" => Time.now.httpdate
+      headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
+      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
+
+      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
+    end
 
   end
 end

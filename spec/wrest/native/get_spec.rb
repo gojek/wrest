@@ -215,12 +215,26 @@ describe Wrest::Native::Get do
   end
 
   context "functional", :functional => true do
+    before :all do
+      UNIQUE_HEADER = "Random-Header-To-Identify-Fresh-Response"
+    end
     before :each do
       @cache_store = {}
       @l = "http://localhost:3000".to_uri(:cache_store => @cache_store)
     end
 
     describe "cacheable responses" do
+
+      it "should not cache any non-cacheable response" do
+        @l["non_cacheable/nothing_explicitly_defined"].get
+        @l["non_cacheable/non_cacheable_statuscode"].get
+        @l["non_cacheable/no_store"].get
+        @l["non_cacheable/no_cache"].get
+        @l["non_cacheable/with_etag"].get
+
+        @cache_store.should be_empty
+      end
+
       it "should cache cacheable but cant_be_validated response" do
         response = @l["cacheable/cant_be_validated/with_expires/300"].get
         @cache_store.values.should include(response)
@@ -232,15 +246,44 @@ describe Wrest::Native::Get do
         @cache_store.values.should include(response)        
       end
 
-      it "should not cache any non-cacheable response" do
+      it "should give the cached response itself when it has not expired" do
+        initial_response = @l["cacheable/cant_be_validated/with_expires/1"].get
+        next_response = @l["cacheable/cant_be_validated/with_expires/1"].get
 
-        @l["non_cacheable/nothing_explicitly_defined"].get
-        @l["non_cacheable/non_cacheable_statuscode"].get
-        @l["non_cacheable/no_store"].get
-        @l["non_cacheable/no_cache"].get
-        @l["non_cacheable/with_etag"].get
+        next_response.headers[UNIQUE_HEADER].should == initial_response.headers[UNIQUE_HEADER]
+      end
 
-        @cache_store.should be_empty
+      it "should give a new response after it has expired (for a non-validatable cache entry)" do
+        initial_response = @l["cacheable/cant_be_validated/with_expires/1"].get
+        sleep 1
+        next_response = @l["cacheable/cant_be_validated/with_expires/1"].get
+
+        next_response.headers[UNIQUE_HEADER].should_not == initial_response.headers[UNIQUE_HEADER]
+      end
+
+      context "validatable cache entry" do
+        it "should give the cached response itself if server gives a 304 (not modified)" do
+          first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
+          first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
+          sleep 2
+          second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
+          second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
+
+          first_response_with_last_modified.headers[UNIQUE_HEADER].should == second_response_with_last_modified.headers[UNIQUE_HEADER]
+          first_response_with_etag.headers[UNIQUE_HEADER].should == second_response_with_etag.headers[UNIQUE_HEADER]
+
+        end
+        
+        it "should give the new response if server sends a new one" do
+          first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
+          first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
+          sleep 1
+          second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
+          second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
+
+          first_response_with_last_modified.headers[UNIQUE_HEADER].should_not == second_response_with_last_modified.headers[UNIQUE_HEADER]
+          first_response_with_etag.headers[UNIQUE_HEADER].should_not == second_response_with_etag.headers[UNIQUE_HEADER]
+        end
 
       end
     end
