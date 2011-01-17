@@ -78,7 +78,7 @@ module Wrest::Native
     #:nodoc:
     def get_validated_response_for(cached_response)
       new_response = send_validation_request_for(cached_response)
-      if new_response.code == 304
+      if new_response.code == "304"
         cached_response
       else
         cache(new_response)

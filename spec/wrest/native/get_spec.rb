@@ -148,7 +148,7 @@ describe Wrest::Native::Get do
         # 304 is Not Modified
         it "should use the cached response if the server returns 304" do
           not_modified_response = @ok_response.clone
-          not_modified_response.should_receive(:code).any_number_of_times.and_return(304)
+          not_modified_response.should_receive(:code).any_number_of_times.and_return('304')
 
           @get.should_receive(:send_validation_request_for).and_return(not_modified_response)
 
@@ -157,7 +157,7 @@ describe Wrest::Native::Get do
 
         it "should use it if the server returns a new response" do
           new_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
-          new_response.should_receive(:code).any_number_of_times.and_return(200)
+          new_response.should_receive(:code).any_number_of_times.and_return('200')
 
           @get.should_receive(:send_validation_request_for).and_return(new_response)
 
@@ -166,7 +166,7 @@ describe Wrest::Native::Get do
 
         it "should also cache it when the server returns a new response" do
           new_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
-          new_response.should_receive(:code).any_number_of_times.and_return(200)
+          new_response.should_receive(:code).any_number_of_times.and_return('200')
 
           @get.should_receive(:send_validation_request_for).and_return(new_response)
           @cache.should_receive(:[]=).once
