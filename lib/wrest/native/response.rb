@@ -151,7 +151,7 @@ module Wrest #:nodoc:
       def cache_control_headers
         return @cache_control_headers if @cache_control_headers
 
-        @cache_control_headers = headers['cache-control'].split(",") rescue []
+        @cache_control_headers = headers['cache-control'].split(",").collect {|cc| cc.strip } rescue []
       end
 
       def freshness_lifetime
