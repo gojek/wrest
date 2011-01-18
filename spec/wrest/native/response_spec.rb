@@ -3,25 +3,6 @@ require "spec_helper"
 module Wrest
   describe Native::Response do
 
-    describe "HTTP Response Headers" do
-      before :each do
-        @http_response = mock(Net::HTTPResponse)
-        @http_response.stub!(:code).and_return('200')
-        @http_response.stub!(:[]).with('cache-control').and_return("max-age=4000, no-cache")
-        @http_response.stub!(:[]).with('expires').and_return("Fri, 14 Jan 2011 18:04:05 GMT")
-        @http_response.stub!(:[]).with('content-type').and_return("text/html")
-        @http_response.stub!(:[]).with('date').and_return("THIS IS AN INVALID DATE")
-      end
-
-      it "should correctly return the Expiry of a response" do
-        # this test would also test parse_datefield - which is used by both expires and response_date
-
-        response=Native::Response.new(@http_response)
-        response.expires.should == DateTime.parse("Fri, 14 Jan 2011 18:04:05 GMT")
-        response.response_date.should == nil
-      end
-    end
-
     it "should build a Redirection instead of a normal response if the code is 301..303 or 305..3xx" do
       http_response = mock(Net::HTTPRedirection)
       http_response.stub!(:code).and_return('301')
@@ -190,6 +171,75 @@ module Wrest
       describe "page validity and expiry" do
         before :each do
           @headers        = cacheable_headers
+        end
+
+        it "should return correct values for code_cacheable?" do
+          http_response = build_ok_response('', cacheable_headers)
+          http_response.stub!(:code).and_return('300')
+          Native::Response.new(http_response).code_cacheable?.should == true
+
+          http_response.stub!(:code).and_return('500')
+          Native::Response.new(http_response).code_cacheable?.should == false
+        end
+
+        it "should return correct values for max_age" do
+          http_response = build_ok_response
+          Native::Response.new(http_response).max_age.should == nil
+
+          http_response = build_ok_response('', cacheable_headers.merge("cache-control" => "public=200, max-age=30"))
+          Native::Response.new(http_response).max_age.should == 30
+        end
+
+        it "should return correct values for no_cache_flag_not_set?" do
+          http_response = build_ok_response
+          Native::Response.new(http_response).no_cache_flag_not_set?.should == true
+
+          http_response = build_ok_response('', cacheable_headers.merge("cache-control" => " abcd, no-cache "))
+          Native::Response.new(http_response).no_cache_flag_not_set?.should == false
+        end
+
+        it "should return correct values for no_store_flag_not_set?" do
+          http_response = build_ok_response
+          Native::Response.new(http_response).no_store_flag_not_set?.should == true
+
+          http_response = build_ok_response('', cacheable_headers.merge("cache-control" => "no-store"))
+          Native::Response.new(http_response).no_store_flag_not_set?.should == false
+        end
+
+        it "should return correct values for pragma_nocache_not_set?" do
+          http_response = build_ok_response
+          Native::Response.new(http_response).pragma_nocache_not_set?.should == true
+
+          http_response = build_ok_response('', cacheable_headers.merge("pragma" => "no-cache "))
+          Native::Response.new(http_response).pragma_nocache_not_set?.should == false
+        end
+
+        it "should return correct values for vary" do
+          http_response = build_ok_response
+          Native::Response.new(http_response).vary_tag_not_set?.should == true
+
+          http_response = build_ok_response('', cacheable_headers.merge("vary" => "something"))
+          Native::Response.new(http_response).vary_tag_not_set?.should == false
+        end
+
+        it "should return correct values for response_date" do
+          headers=cacheable_headers
+
+          http_response = build_ok_response('', cacheable_headers)
+          Native::Response.new(http_response).response_date.should == DateTime.parse(headers["date"])
+
+          http_response = build_ok_response('', cacheable_headers.merge("date" => "INVALID DATE"))
+          Native::Response.new(http_response).response_date.should == nil
+        end
+
+        it "should return correct values for expires" do
+          headers=cacheable_headers
+
+          http_response = build_ok_response('', cacheable_headers)
+          Native::Response.new(http_response).expires.should == DateTime.parse(headers["expires"])
+
+          http_response = build_ok_response('', cacheable_headers.merge("expires" => "INVALID DATE"))
+          Native::Response.new(http_response).expires.should == nil
         end
 
         it "should return correct values for current_age" do
