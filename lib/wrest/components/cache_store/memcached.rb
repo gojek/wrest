@@ -1,14 +1,11 @@
+require 'dalli'
+
 module Wrest
   module Components
     module CacheStore
-      class Memcached
-        def set(key, value)
-
-        end
-
-        def get(key, value)
-          
-        end
+      class Memcached < Dalli::Client
+        alias_method :[], :get
+        alias_method :[]=, :set
       end
     end
   end
