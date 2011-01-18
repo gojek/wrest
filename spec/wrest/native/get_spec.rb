@@ -278,8 +278,8 @@ describe Wrest::Native::Get do
           second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
           second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
 
-          first_response_with_last_modified.headers.body.split.first.should_not == second_response_with_last_modified.headers.body.split.first
-          first_response_with_etag.headers.body.split.first.should_not == second_response_with_etag.headers.body.split.first
+          first_response_with_last_modified.body.split.first.should_not == second_response_with_last_modified.body.split.first
+          first_response_with_etag.body.split.first.should_not == second_response_with_etag.body.split.first
         end
 
       end
