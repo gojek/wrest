@@ -215,9 +215,6 @@ describe Wrest::Native::Get do
   end
 
   context "functional", :functional => true do
-    before :all do
-      UNIQUE_HEADER = "Random-Header-To-Identify-Fresh-Response"
-    end
     before :each do
       @cache_store = {}
       @l = "http://localhost:3000".to_uri(:cache_store => @cache_store)
@@ -250,7 +247,7 @@ describe Wrest::Native::Get do
         initial_response = @l["cacheable/cant_be_validated/with_expires/1"].get
         next_response = @l["cacheable/cant_be_validated/with_expires/1"].get
 
-        next_response.headers[UNIQUE_HEADER].should == initial_response.headers[UNIQUE_HEADER]
+        next_response.body.split.first.should == initial_response.body.split.first
       end
 
       it "should give a new response after it has expired (for a non-validatable cache entry)" do
@@ -258,7 +255,7 @@ describe Wrest::Native::Get do
         sleep 1
         next_response = @l["cacheable/cant_be_validated/with_expires/1"].get
 
-        next_response.headers[UNIQUE_HEADER].should_not == initial_response.headers[UNIQUE_HEADER]
+        next_response.body.split.first.should_not == initial_response.body.split.first
       end
 
       context "validatable cache entry" do
@@ -269,11 +266,11 @@ describe Wrest::Native::Get do
           second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
           second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
 
-          first_response_with_last_modified.headers[UNIQUE_HEADER].should == second_response_with_last_modified.headers[UNIQUE_HEADER]
-          first_response_with_etag.headers[UNIQUE_HEADER].should == second_response_with_etag.headers[UNIQUE_HEADER]
+          first_response_with_last_modified.body.split.first.should == second_response_with_last_modified.body.split.first
+          first_response_with_etag.body.split.first.should == second_response_with_etag.body.split.first
 
         end
-        
+
         it "should give the new response if server sends a new one" do
           first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
           first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
@@ -281,8 +278,8 @@ describe Wrest::Native::Get do
           second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
           second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
 
-          first_response_with_last_modified.headers[UNIQUE_HEADER].should_not == second_response_with_last_modified.headers[UNIQUE_HEADER]
-          first_response_with_etag.headers[UNIQUE_HEADER].should_not == second_response_with_etag.headers[UNIQUE_HEADER]
+          first_response_with_last_modified.headers.body.split.first.should_not == second_response_with_last_modified.headers.body.split.first
+          first_response_with_etag.headers.body.split.first.should_not == second_response_with_etag.headers.body.split.first
         end
 
       end

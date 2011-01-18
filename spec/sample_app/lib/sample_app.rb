@@ -106,26 +106,26 @@ module SampleApp
     get '/cacheable/cant_be_validated/with_expires/:seconds_to_cache' do
       headers "Date" => Time.now.httpdate
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
-      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-       "There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
+      "#{rand(1000).to_s} (random value to identify a fresh response)
+       There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
     end
 
     get '/cacheable/cant_be_validated/with_max_age/:seconds_to_cache' do
       headers "Date" => Time.now.httpdate
       headers "Cache-Control" => "max-age=#{params[:seconds_to_cache]}"
-      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-       "There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
+      "#{rand(1000).to_s} (random value to identify a fresh response)
+      There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
     end
 
     get '/cacheable/cant_be_validated/with_both_max_age_and_expires/:seconds_to_cache' do
       headers "Date" => Time.now.httpdate
       headers "Cache-Control" => "max-age=#{params[:seconds_to_cache]}"
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
-      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
+      "#{rand(1000).to_s} (random value to identify a fresh response)
+      There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
     end
 
     # NOTE: The expiry times (1,2 sec intervals) maybe affected and will yield incorrect results when debugging/single-stepping through code. 
@@ -135,9 +135,9 @@ module SampleApp
       headers "Last-Modified" => Time.now.httpdate
       headers "Date" => Time.now.httpdate
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
-      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. But this URI will never validate and always sends a new response"
+      "#{rand(1000).to_s} (random value to identify a fresh response)
+      When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. But this URI will never validate and always sends a new response"
     end
 
     get '/cacheable/can_be_validated/with_etag/always_give_fresh_response/:seconds_to_cache' do
@@ -145,9 +145,9 @@ module SampleApp
       headers "ETAG" => "1234"
       headers "Date" => Time.now.httpdate
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
-      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. But this URI will never validate and always sends a new response"
+      "#{rand(1000).to_s} (random value to identify a fresh response)
+      When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. But this URI will never validate and always sends a new response"
     end
 
 
@@ -155,6 +155,7 @@ module SampleApp
 
       if request_headers.include? "if_modified_since"
         headers "Last-Modified" => request_headers["if_modified_since"]
+        headers "New-Header-For-Cache" => "5678"
         status 304
       else
         headers "Last-Modified" => Time.now.httpdate
@@ -162,9 +163,9 @@ module SampleApp
 
       headers "Date" => Time.now.httpdate
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
-      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
+      "#{rand(1000).to_s} (random value to identify a fresh response) 
+      When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
     end
 
     get '/cacheable/can_be_validated/with_etag/always_304/:seconds_to_cache' do
@@ -174,9 +175,9 @@ module SampleApp
       headers "ETAG" => "1234"
       headers "Date" => Time.now.httpdate
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
-      headers "Random-Header-To-Identify-Fresh-Response" => rand(1000).to_s
 
-      "When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
+      "#{rand(1000).to_s} (random value to identify a fresh response)
+      When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
     end
 
   end
