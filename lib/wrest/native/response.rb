@@ -40,6 +40,9 @@ module Wrest #:nodoc:
         @http_response = http_response
       end
 
+      def initialize_copy(source)
+        @headers = source.headers.clone
+      end
 
       def deserialise(options = {})
         deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
@@ -50,8 +53,15 @@ module Wrest #:nodoc:
       end
 
       def headers
-        # TODO: Cloning the response would make the original value immutable. But is it required? Net/HTTP allows you to change the headers in an HTTPResponse.
-        @http_response.clone
+        return @headers if @headers
+
+        nethttp_headers_with_string_values=@http_response.to_hash.inject({}) {|new_headers, (old_key, old_value)|
+          new_headers[old_key] = old_value.is_a?(Array) ? old_value.join(",") : old_value
+          new_headers
+          }
+        
+        @headers=Wrest::HashWithCaseInsensitiveAccess.new(nethttp_headers_with_string_values)
+
       end
 
       # A null object implementation - invoking this method on

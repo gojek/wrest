@@ -3,6 +3,22 @@ require "spec_helper"
 module Wrest
   describe Native::Response do
 
+    it "should clone its headers whenever the response is cloned" do
+      headers       = {"foo" => "original"}
+      http_response = mock(Net::HTTPResponse, :code => '200', :to_hash => headers)
+
+      response      = Wrest::Native::Response.new(http_response)
+      response.headers["foo"].should == "original"
+
+      new_response = response.clone
+      new_response.headers["foo"].should == "original"
+
+      new_response.headers["foo"] = "new"
+      new_response.headers["foo"].should == "new"
+
+      response.headers["foo"].should == "original"
+    end
+
     it "should build a Redirection instead of a normal response if the code is 301..303 or 305..3xx" do
       http_response = mock(Net::HTTPRedirection)
       http_response.stub!(:code).and_return('301')
