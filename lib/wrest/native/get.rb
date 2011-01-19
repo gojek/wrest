@@ -32,6 +32,7 @@ module Wrest::Native
         self.username == other.username and
         self.password == other.password and
         self.verify_mode == other.verify_mode
+      false
     end
 
     # Returns a hash value for this Wrest::Native::Get object.

@@ -58,6 +58,7 @@ module Wrest #:nodoc:
             self.http_version == other.http_version and
             self.message == other.message and
             self.body == other.body
+        false
       end
 
       # Return the hash of a Wrest::Native::Response object.
