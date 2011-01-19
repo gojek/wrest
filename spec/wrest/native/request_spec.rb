@@ -49,10 +49,10 @@ describe Wrest::Native::Request do
     raw_response.stub!(:code).and_return('301')
     raw_response.stub!(:message).and_return('')
     raw_response.stub!(:body).and_return('')
-    raw_response.stub!(:[]).with('location').and_return(redirect_location)
-    
+
     response = Wrest::Native::Redirection.new(raw_response)
-    
+    response.stub!(:[]).with('location').and_return(redirect_location)
+
     mock_connection.should_receive(:request).and_return(raw_response)
     mock_connection.should_receive(:set_debug_output)
     

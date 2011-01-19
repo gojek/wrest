@@ -22,9 +22,14 @@ module Wrest #:nodoc:
       attr_reader :http_response
 
       extend Forwardable
-      def_delegators  :@http_response,  :code, :message, :body, :Http_version,
-              :[], :content_length, :content_type, :each_header, :each_name, :each_value, :fetch,
-              :get_fields, :key?, :type_params
+      def_delegators  :@http_response,  :code, :message, :body, :http_version,
+              :content_length, :content_type
+
+      def_delegators :headers, :[]
+
+      # TODO : Are these needed in the Response namespace itself? Can be accessed from the headers method.
+      def_delegators :@http_response, :each_header, :each_name, :each_value, :fetch,
+                     :get_fields, :key?, :type_params
 
       # We're overriding :new to act as a factory so
       # we can build the appropriate Response instance based

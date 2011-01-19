@@ -106,17 +106,17 @@ module Wrest
     describe 'Keep-Alive' do
       it "should know when a connection has been closed" do
         http_response = build_ok_response
-        http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('Close')
-
         response = Native::Response.new(http_response)
+
+        response.should_receive(:[]).with(Wrest::H::Connection).and_return('Close')
         response.should be_connection_closed
       end
 
       it "should know when a keep-alive connection has been estalished" do
         http_response = build_ok_response
-        http_response.should_receive(:[]).with(Wrest::H::Connection).and_return('')
-
         response = Native::Response.new(http_response)
+
+        response.should_receive(:[]).with(Wrest::H::Connection).and_return('')
         response.should_not be_connection_closed
       end
     end
