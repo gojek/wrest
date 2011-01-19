@@ -44,6 +44,23 @@ module Wrest #:nodoc:
         @headers = source.headers.clone
       end
 
+      # Checks equality between two Wrest::Native::Response objects.
+      def ==(other)
+        return true if self.equal?(other)
+        return false unless other.class == self.class
+        return true if self.code == other.code and
+            self.headers == other.headers and
+            self.http_version == other.http_version and
+            self.message == other.message and
+            self.body == other.body
+      end
+
+      # Return the hash of a Wrest::Native::Response object.
+      def hash
+        self.code.hash + self.message.hash + self.headers.hash + self.http_version.hash + self.body.hash
+      end
+
+
       def deserialise(options = {})
         deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
       end

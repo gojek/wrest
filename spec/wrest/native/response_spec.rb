@@ -3,6 +3,25 @@ require "spec_helper"
 module Wrest
   describe Native::Response do
 
+    describe "hashing and comparison" do
+      it "should return true for equality between two identical Wrest::Response objects and their hashes" do
+        http_response = build_ok_response
+        response = Wrest::Native::Response.new(http_response)
+
+        response.should == response.clone
+        response.hash.should == response.clone.hash
+
+        identical_response = Wrest::Native::Response.new(http_response)
+        response.should == identical_response
+        response.hash.should == identical_response.hash
+
+        different_response = Wrest::Native::Response.new(build_response("301"))
+
+        response.should_not == different_response
+        response.hash.should_not == different_response.hash
+      end
+    end
+
     it "should clone its headers whenever the response is cloned" do
       headers       = {"foo" => "original"}
       http_response = mock(Net::HTTPResponse, :code => '200', :to_hash => headers)
