@@ -37,6 +37,7 @@ def build_response(code,message = '', body = '', headers = {})
     response.stub!(:code).and_return(code)
     response.stub!(:message).and_return(message)
     response.stub!(:body).and_return(body)
+    response.stub!(:http_version).and_return("1.1")
     response.stub!(:to_hash).and_return(headers)
     response.stub!('[]').and_return(nil)
     headers.each{|k,v|
