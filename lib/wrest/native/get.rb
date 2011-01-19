@@ -60,8 +60,13 @@ module Wrest::Native
       end
     end
 
+    def update_cache_headers_for(cached_response, new_response)
+      # RFC 2616 13.5.3 (Combining Headers)
+      cached_response.headers.merge!(new_response.headers)
+    end
+    
     def cache(response)
-      cache_store[self.hash] = response if response && response.cacheable?
+      cache_store[self.hash] = response.clone if response && response.cacheable?
     end
     
     #:nodoc:
@@ -79,6 +84,7 @@ module Wrest::Native
     def get_validated_response_for(cached_response)
       new_response = send_validation_request_for(cached_response)
       if new_response.code == "304"
+        update_cache_headers_for(cached_response, new_response)
         cached_response
       else
         cache(new_response)

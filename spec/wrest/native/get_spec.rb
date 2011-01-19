@@ -271,6 +271,18 @@ describe Wrest::Native::Get do
 
         end
 
+        it "should update the headers of an existing cache entry when the server sends a 304" do
+          # RFC 2616
+          # If a cache uses a received 304 response to update a cache entry, the cache MUST update the entry to reflect any new field values given in the response.
+          first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
+          sleep 2
+          second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
+
+          first_response_with_last_modified["New-Header-For-Cache"].should == nil
+          second_response_with_last_modified["New-Header-For-Cache"].should == "5678"
+        end
+
+
         it "should give the new response if server sends a new one" do
           first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
           first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
