@@ -29,8 +29,10 @@ module Wrest
       Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive}).and_return(request_one)
       Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {H::Connection=>T::KeepAlive}).and_return(request_two)
 
-      ok_response = build_ok_response
-      ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).twice.and_return(Native::StandardTokens::KeepAlive)
+      # TODO: Discuss whether these changes would be appropriate. Were made since the Headers responsibility was 
+      # totally moved to Wrest::Native directly instead of using the componenet Net::HTTP response object.
+      ok_response = build_ok_response('', {Native::StandardHeaders::Connection => Native::StandardTokens::KeepAlive})
+      #ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).twice.and_return(Native::StandardTokens::KeepAlive)
       
       http.should_receive(:request).with(request_one, nil).and_return(ok_response)
       http.should_receive(:request).with(request_two, nil).and_return(ok_response)
@@ -55,11 +57,14 @@ module Wrest
       Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive}).and_return(request_one)
       Net::HTTP::Get.should_receive(:new).with('/bottles.xml', {H::Connection=>T::KeepAlive}).and_return(request_two)
 
-      ok_response = build_ok_response
-      ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).once.and_return(Native::StandardTokens::KeepAlive)
+      # TODO: Discuss whether these changes would be appropriate. Were made since the Headers responsibility was
+      # totally moved to Wrest::Native directly instead of using the componenet Net::HTTP response object.
 
-      ok_response_with_connection_close = build_ok_response
-      ok_response_with_connection_close.should_receive(:[]).with(Native::StandardHeaders::Connection).once.and_return(Native::StandardTokens::Close)
+      ok_response = build_ok_response('', {Native::StandardHeaders::Connection => Native::StandardTokens::KeepAlive})
+      #ok_response.should_receive(:[]).with(Native::StandardHeaders::Connection).once.and_return(Native::StandardTokens::KeepAlive)
+
+      ok_response_with_connection_close = build_ok_response('', {Native::StandardHeaders::Connection => Native::StandardTokens::Close})
+      #ok_response_with_connection_close.should_receive(:[]).with(Native::StandardHeaders::Connection).once.and_return(Native::StandardTokens::Close)
       
       http.should_receive(:request).with(request_one, nil).and_return(ok_response)
       http.should_receive(:request).with(request_two, nil).and_return(ok_response_with_connection_close)
