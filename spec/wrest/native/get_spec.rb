@@ -24,13 +24,6 @@ describe Wrest::Native::Get do
 
       @get.should_not == @another_get_with_extra_parameter
       @get.hash.should_not == @another_get_with_extra_parameter.hash
-
-      half_hour_after = (Time.now + (60*30)).httpdate
-      ten_mins_early  = (Time.now - (10*30)).httpdate
-
-      # All responses in the caching block returns a cacheable response by default
-      headers         = {"Date" => Time.now.httpdate, "Expires" => half_hour_after, "Age" => 0, "Last-Modified" => ten_mins_early}
-
     end
   end
 

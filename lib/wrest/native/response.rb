@@ -28,7 +28,7 @@ module Wrest #:nodoc:
 
       # We're overriding :new to act as a factory so
       # we can build the appropriate Response instance based
-      # on th response code.
+      # on the response code.
       def self.new(http_response)
         code = http_response.code.to_i
         instance = ((300..303).include?(code) || (305..399).include?(code)  ? Wrest::Native::Redirection : self).allocate
