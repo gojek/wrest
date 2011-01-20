@@ -42,7 +42,12 @@ If the server determines the cached entry at the client side is invalid, it send
 
 If the cache-entry is expired, but cannot be validated, then Wrest sends a full blown GET request to the server. The response is passed to the client after updating the existing cache entry with the new response.
 
-----
+#### Edge Case for HTML documents ####
+
+	   <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+
+Firefox respects the Pragma header in the HTML document (nsHttpResponseHead.h:NoCache). Wrest cannot since it does not parse the response body.
+
 
 ## A Rough note on how the browsers (Firefox and Chrome) implement caching ##
 
@@ -53,53 +58,57 @@ A large chunk of caching logic for Firefox 3 is in the file netwerk/protcols/htt
 
 The browsers are optimistic with respect to caching - if a response does not explicitly specify an Expiration mechanism, it uses its own heuristics to calculate an Expiry time. However Wrest is pessimistic - if a document does not specifiy an explicit cache expiration mechanism, the response is not cached at all.
 
-### nsHttpChannell::CheckCache() ###
+The following is a rough outline that I'd written to understand how the browsers implement caching. However, they do not necessarily reflect the browsers' behaviour accurately and has been heaviliy adapted to suit Wrest.
 
-	do_fetch if method.head != cache.head
-	do_fetch if not (method.head = 'GET' || method.head = 'HEAD')
-	
-	use_cache if Cache-Control: max-age validates. Refer [cache_expired?]
-	
-	re_validate if:
-	 * Expires: header is a past date OR [cache_expired?]
-	 * the cache entry has 'must-revalidate' header.  http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.4
+## Firefox: nsHttpChannell::CheckCache() ##
 
-### doValidation ###
-	Add an If-Modified-Since to the request if the cache has a Last-Modified value.
-	Add an If-None-Match to the request if the cache had an ETag
-	
-	Send Request.
-	
-	If a full response is received, update cache and return the result.
-	If a Not-Modified received, return the cache itself.
- 
-### Do Not Store in Cache If ###
-	* Original request was not (GET or HEAD)
-	
-    * Any response with a code other than given MUST NOT be cached. 
-	 (success codes) 200,203 (cacheable redirects) 300, 301, 302, 304, 307. 
-	 [from Mozilla: nsHttpResponseHead.cpp::MustValidate(), also we cannot support 206 (partial content)]
-	 
-	* this is a response to a cache validation request: ie: the original request contained
-	 an 'if-modified-since' or 'if-match' (http://codesearch.google.com/codesearch/p#OAMlx_jo-ck/src/net/http/http_cache_transaction.cc&l=45)
-	 
-    * has tags 'cache-control: no-cach or no-store', or 'pragma: no-cache' [HTTP 1.0]
-   
-    * does not provide any explicit expiration time. (http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.2.2)
-     to maintain maximum semantic transparency, we only cache those responses that explicitly permit caching.
-     
-	* if no max-age defined AND the cache expires in its past itself: cache.expires < cache.date	
-	 
-	* the response has the Vary tag at all 
-		 [TODO: implement fully.
-		  (http://www.subbu.org/blog/2007/12/vary-header-for-restful-applications)
-		  (http://devel.squid-cache.org/vary/vary-header.html) ]
+do_fetch if method.head != cache.head
+do_fetch if not (method.head = 'GET' || method.head = 'HEAD')
+
+use_cache if Cache-Control: max-age validates. Refer cache_expired?
+
+re_validate if:
+
+ * Expires: header is a past date OR cache_expired?
+ * the cache entry has 'must-revalidate' header.  [RFC 2616 14.9.4](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.4)
+
+## doValidation ##
+
+Add an If-Modified-Since to the request if the cache has a Last-Modified value.
+Add an If-None-Match to the request if the cache had an ETag
+
+Send Request.
+
+If a full response is received, update cache and return the result.
+If a Not-Modified received, return the cache itself.
+
+## Do Not Store in Cache If ##
+
+ * Original request was not (GET or HEAD)
+
+ * Any response with a code other than given MUST NOT be cached.
+  (success codes) 200,203 (cacheable redirects) 300, 301, 302, 304, 307.
+  [from Mozilla: nsHttpResponseHead.cpp::MustValidate(), also we cannot support 206 (partial content)]
+
+ * this is a response to a cache validation request: ie: the original request contained
+  an 'if-modified-since' or 'if-match' (http://codesearch.google.com/codesearch/p#OAMlx_jo-ck/src/net/http/http_cache_transaction.cc&l=45)
+
+ * has tags 'cache-control: no-cach or no-store', or 'pragma: no-cache' [HTTP 1.0]
+
+ * does not provide any explicit expiration time. to maintain maximum semantic transparency, we only cache those responses that explicitly permit caching. [RFC 2616 13.2.2](http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.2.2)
+
+ * if no max-age defined AND the cache expires in its past itself: cache.expires < cache.date
+
+ * the response has the Vary tag at all
+     [TODO: implement fully.
+      (http://www.subbu.org/blog/2007/12/vary-header-for-restful-applications)
+      (http://devel.squid-cache.org/vary/vary-header.html) ]
 
 	
-### cache_expired? ###
+## cache_expired? ##
 
 Firefox: nsHttpResponseHead.cpp: ComputeCurrentAge
-[Chrome: RequiresValidation() in http_response_headers.cc](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&sa=N&cd=2&ct=rc)	
+[Chrome: RequiresValidation in http_response_headers.cc](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation&exact_package=chromium&sa=N&cd=2&ct=rc)	
 
 	freshness_time=freshness_lifetime
 	if fresh <= 0
@@ -109,9 +118,9 @@ Firefox: nsHttpResponseHead.cpp: ComputeCurrentAge
 	return freshness_time <= current_age
 
 
-### current_age ###
+## current_age ##
 
-Verbatim from [Chrome's http_response_headers.cc](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&l=817)
+Verbatim from [Chrome's http_response_headers.cc](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation&exact_package=chromium&l=817)
 
 	date_value = headers['Date'] || response_time;
 	age_value=headers['Age'] || 0
@@ -125,19 +134,12 @@ Verbatim from [Chrome's http_response_headers.cc](http://codesearch.google.com/c
 	corrected_initial_age + resident_time;
 
 
-### freshness_lifetime ###
+## freshness_lifetime ##
 
-This is a [link to Chrome source code](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&l=817) where freshness_lifetime is defined. 
+This is a [link to Chrome source code](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=GetFreshnessLifetime&exact_package=chromium&l=848) where freshness_lifetime is defined. 
 
-#### Edge Case for HTML documents ####
+# Alternate Cache Implementations #
 
-	   <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-	   
-Firefox respects the Pragma header in the HTML document (nsHttpResponseHead.h:NoCache). Wrest cannot since it does not parse the response body.
-
---
-## Alternate Cache Implementations ##
-
-[Resourceful - Ruby HTTP client that does caching](https://github.com/paul/resourceful/blob/master/lib/resourceful/request.rb#L187)
+[Resourceful - Ruby HTTP client that does caching](https://github.com/pezra/resourceful/blob/master/lib/resourceful/response.rb#L25)
 
 [Python Httplib2 library](http://code.google.com/p/httplib2/source/browse/python3/httplib2/__init__.py?r=c86239ee0b6271309be2374f0ebfffd4455b7fb7#237)
