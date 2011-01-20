@@ -1,6 +1,6 @@
 # Caching in Wrest #
 
-RFC 2616's Caching[http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html] section describes in detail how Caching is to be implemented by the clients.
+[RFC 2616's Caching section ](http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html) describes in detail how Caching is to be implemented by the clients.
 
 A response should obey the following conditions to be considered cacheable by Wrest:
 
@@ -44,9 +44,9 @@ If the cache-entry is expired, but cannot be validated, then Wrest sends a full 
 
 ----
 
-## A Rough note of how the browsers (Firefox and Chrome) implements Caching ##
+## A Rough note on how the browsers (Firefox and Chrome) implement caching ##
 
-Browsers usually cache all responses including non-cacheable ones. These are for use in the browser History (Forward, Back buttons). [RFC 2616 13.13 History Lists]
+Browsers usually cache all responses including non-cacheable ones. These are for use in the browser History (Forward, Back buttons). [ [RFC 2616](http://www.ietf.org/rfc/rfc2616.txt) 13.13 History Lists]
 The non-cachebility restriction is usually observed after fetching a cache entry - if the stored response was not cacheable, it is not used.
 
 A large chunk of caching logic for Firefox 3 is in the file netwerk/protcols/http/nsHttpChannel.cpp inside its source tree.
@@ -92,15 +92,14 @@ The browsers are optimistic with respect to caching - if a response does not exp
 	 
 	* the response has the Vary tag at all 
 		 [TODO: implement fully.
-		  http://www.subbu.org/blog/2007/12/vary-header-for-restful-applications
-		  http://devel.squid-cache.org/vary/vary-header.html]
+		  (http://www.subbu.org/blog/2007/12/vary-header-for-restful-applications)
+		  (http://devel.squid-cache.org/vary/vary-header.html) ]
 
 	
 ### cache_expired? ###
 
 Firefox: nsHttpResponseHead.cpp: ComputeCurrentAge
-Chrome: RequiresValidation() in http_response_headers.cc:	
-http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&sa=N&cd=2&ct=rc
+[Chrome: RequiresValidation() in http_response_headers.cc](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&sa=N&cd=2&ct=rc)	
 
 	freshness_time=freshness_lifetime
 	if fresh <= 0
@@ -112,7 +111,7 @@ http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_re
 
 ### current_age ###
 
-Verbatim from http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&l=817
+Verbatim from [Chrome's http_response_headers.cc](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&l=817)
 
 	date_value = headers['Date'] || response_time;
 	age_value=headers['Age'] || 0
@@ -128,19 +127,17 @@ Verbatim from http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/ne
 
 ### freshness_lifetime ###
 
-Freshness lifetime in Chrome: http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&l=817
+This is a [link to Chrome source code](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=RequiresValidation()&exact_package=chromium&l=817) where freshness_lifetime is defined. 
 
 #### Edge Case for HTML documents ####
 
-	   pragma-nocache in HTML head:
 	   <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-Firefox respects it in nsHttpResponseHead.h:NoCache(). Wrest does not - can't read and check an HTML body.
-
 	   
+Firefox respects the Pragma header in the HTML document (nsHttpResponseHead.h:NoCache). Wrest cannot since it does not parse the response body.
+
+--
 ## Alternate Cache Implementations ##
 
-https://github.com/paul/resourceful/blob/master/lib/resourceful/request.rb#L187
+[Resourceful - Ruby HTTP client that does caching](https://github.com/paul/resourceful/blob/master/lib/resourceful/request.rb#L187)
 
-Python Httplib2 library:
-http://code.google.com/p/httplib2/source/browse/python3/httplib2/__init__.py?r=c86239ee0b6271309be2374f0ebfffd4455b7fb7#237
-
+[Python Httplib2 library](http://code.google.com/p/httplib2/source/browse/python3/httplib2/__init__.py?r=c86239ee0b6271309be2374f0ebfffd4455b7fb7#237)
