@@ -167,43 +167,29 @@ describe Wrest::Native::Get do
 
           @get.invoke.should == new_response
         end
-
       end
     end
 
     context "conditions governing caching" do
-      describe "conditions where the response should not be cached" do
-        it "should not store response in cache if the original request was not GET" do
-          post = Wrest::Native::Post.new(@request_uri, {}, {}, cacheable_headers, {:cache_store => @cache})
-          post.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
-
-          @cache.should_not_receive(:has_key?)
-          post.invoke
-        end
-
-        it "should not store response in cache if response is not cacheable" do
-          response = Wrest::Native::Response.new(build_response('404', 'redirect', '', cacheable_headers))
-          @get.should_receive(:invoke_without_cache_check).and_return(response)
-          @cache.should_not_receive(:[]=).with(@request_uri, response)
-          @get.invoke
-        end
+      it "should try to cache a response if was not already cached" do
+        @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
+        @get.should_receive(:cache).with(@ok_response)
+        @get.invoke
       end
 
-      describe "conditions where the response should be cached" do
-        it "should store response in cache if it did not exist in cache" do
-          @cache.should_receive(:[]).with(@get.hash).and_return(nil)
-          @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
-          @cache.should_receive(:[]=).with(@get.hash, @ok_response)
-          @get.invoke
-        end
+      it "should check whether a response is cacheable when trying to cache a response" do
+        @cache.should_receive(:[]).with(@get.hash).and_return(nil)
+        @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
+        @ok_response.should_receive(:cacheable?).and_return(false)
+        @get.invoke
+      end
 
-        it "should store response in cache if response is cacheable" do
-          response = @ok_response
-          response.cacheable?.should == true
-          @get.should_receive(:invoke_without_cache_check).and_return(response)
-          @cache.should_receive(:[]=).with(@get.hash, response)
-          @get.invoke
-        end
+      it "should store response in cache if response is cacheable" do
+        response = @ok_response
+        response.cacheable?.should == true
+        @get.should_receive(:invoke_without_cache_check).and_return(response)
+        @cache.should_receive(:[]=).with(@get.hash, response)
+        @get.invoke
       end
     end
   end

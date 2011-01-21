@@ -112,6 +112,15 @@ describe Wrest::Native::Request do
     request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
   end
 
+  it "should not store response in cache if the original request was not GET" do
+    cache = {}
+    post = Wrest::Native::Post.new("http://localhost".to_uri, {}, {}, cacheable_headers, {:cache_store => cache})
+    post.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
+
+    cache.should_not_receive(:[])
+    post.invoke
+  end
+
   context "callbacks" do
     it "should run the appropriate callbacks" do
       cb = mock
