@@ -3,8 +3,8 @@ require 'dalli'
 module Wrest::Components::CacheStore
   class Memcached
 
-    def initialize(servers='', options={})
-      @memcached = Dalli::Client.new
+    def initialize(server_urls=nil, options={})
+      @memcached = Dalli::Client.new(server_urls, options)
     end
 
     def [](key)

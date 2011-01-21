@@ -8,6 +8,17 @@ describe Wrest::Components::CacheStore::Memcached do
       @memcached["abc"]="xyz"
     end
 
+    context "initialization defaults" do
+      it "should always default the list of server urls to nil" do
+        Dalli::Client.should_receive(:new).with(nil, {})
+        client = Wrest::Components::CacheStore::Memcached.new
+      end
+      it "should always default the options to an empty hash" do
+        Dalli::Client.should_receive(:new).with(nil, {})
+        client = Wrest::Components::CacheStore::Memcached.new
+      end
+    end
+
     it "should know how to retrieve a cache entry" do
       @memcached["abc"].should =="xyz"
     end
