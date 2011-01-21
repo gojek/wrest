@@ -182,19 +182,20 @@ module Wrest #:nodoc:
       end
 
       def cache_control_headers
-        return @cache_control_headers if @cache_control_headers
-
-        @cache_control_headers = headers['cache-control'].split(",").collect {|cc| cc.strip } rescue []
+        @cache_control_headers ||= recalculate_cache_control_headers
+      end
+      
+      def recalculate_cache_control_headers
+        headers['cache-control'].split(",").collect {|cc| cc.strip } rescue []
       end
 
       def freshness_lifetime
-        m=max_age
-        return m if m
+        @freshness_lifetime ||= recalculate_freshness_lifetime
+      end
 
-        # Chrome (and I guess Firefox also) uses a heuristic based on (current_time-last_modified_value)/10 as the freshness period if
-        # there is no 'Max-Age' or 'Expires' headers. Browsers can afford to be optimistic but we can't.
-        # So Wrest uses cached responses if and only if there is a clear expiry/max-age header that validates.
-        # The method cacheable? ensures this.
+      #:nodoc:
+      def recalculate_freshness_lifetime
+        return max_age if max_age
 
         response_date = DateTime.parse(headers['date']).to_i
         expires_date  = DateTime.parse(headers['expires']).to_i

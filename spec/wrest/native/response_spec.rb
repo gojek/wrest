@@ -112,7 +112,7 @@ module Wrest
         response.should be_connection_closed
       end
 
-      it "should know when a keep-alive connection has been estalished" do
+      it "should know when a keep-alive connection has been established" do
         http_response = build_ok_response
         response = Native::Response.new(http_response)
 
@@ -129,15 +129,34 @@ module Wrest
           ['200', '203', '300', '301'].each do |code|
             http_response.stub!(:code).and_return(code)
             response = Native::Response.new(http_response)
-            response.cacheable?.should == true
+            response.should be_cacheable
           end
         end
 
 
         it "should be cacheable for response with Expires header in future" do
-          ten_mins_after = (Time.now + (10*30)).httpdate
           response = Native::Response.new(build_ok_response('', cacheable_headers))
-          response.cacheable?.should == true
+          response.should be_cacheable
+        end
+
+        context "cache control headers" do
+          it "should parse the cache-control header into an array" do
+            http_response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Cache-Control" => "abc,test=100,max-age=20")))
+            http_response.cache_control_headers.should == ["abc", "test=100", "max-age=20"]
+          end
+          
+          it "should parse the cache-control header when it has leading and trailing spaces" do
+            http_response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Cache-Control" => "  abc, test=100 , max-age=20 ")))
+            http_response.cache_control_headers.should == ["abc", "test=100", "max-age=20"]
+          end
+
+          it "should cache the result of the Cache-Control header parse" do
+            http_response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Cache-Control" => "xyz")))
+            http_response.should_receive(:recalculate_cache_control_headers).once.and_return(["xyz"])
+
+            http_response.cache_control_headers
+            http_response.cache_control_headers.should == ["xyz"]
+          end
         end
 
         it "should be cacheable for response with max-age still not expired" do
@@ -288,15 +307,28 @@ module Wrest
           (response.current_age - (100*60)).abs.to_i.should == 0
         end
 
-        it "should return correct values for freshness_lifetime" do
+        context "freshness lifetime" do
 
-          # @headers would Expire in 30 minutes.
-          response = Native::Response.new(build_ok_response('', @headers))
-          response.freshness_lifetime.should == (30*60)
+          it "should cache the calculated freshness_lifetime" do
+            response = Native::Response.new(build_ok_response('', @headers))
 
-          @headers["cache-control"] = "max-age=600"
-          response                  = Native::Response.new(build_ok_response('', @headers))
-          response.freshness_lifetime.should == 600 # max-age takes priority over Expires
+            response.should_receive(:recalculate_freshness_lifetime).once.and_return(100)
+
+            response.freshness_lifetime
+            response.freshness_lifetime.should == 100
+          end
+
+
+          it "should calculate freshness_lifetime for response with an Expiry header" do
+            response = Native::Response.new(build_ok_response('', @headers))
+            response.recalculate_freshness_lifetime.should == (30*60)
+          end
+
+          it "should calculate freshness_lifetime for response with a Cache-Control: max-age header" do
+            @headers["cache-control"] = "max-age=600"
+            response                  = Native::Response.new(build_ok_response('', @headers))
+            response.recalculate_freshness_lifetime.should == 600 # max-age takes priority over Expires
+          end
         end
 
         it "should correctly say whether a response has its Expires in its past" do
