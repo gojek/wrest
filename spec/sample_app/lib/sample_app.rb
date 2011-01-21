@@ -155,10 +155,11 @@ module SampleApp
 
       if request_headers.include? "if_modified_since"
         headers "Last-Modified" => request_headers["if_modified_since"]
-        headers "New-Header-For-Cache" => "5678"
+        headers "header-that-changes-everytime" => (rand(10000)+1).to_s
         status 304
       else
         headers "Last-Modified" => Time.now.httpdate
+        headers "Header-that-was-in-the-first-response" => "42"
       end
 
       headers "Date" => Time.now.httpdate

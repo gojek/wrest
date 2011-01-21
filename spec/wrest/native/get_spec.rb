@@ -145,7 +145,8 @@ describe Wrest::Native::Get do
 
           @get.should_receive(:send_validation_request_for).and_return(not_modified_response)
 
-          @get.invoke.should == @cached_response
+          # only check the body, can't compare the entire object - the headers from 304 would be merged with the cached response's headers. 
+          @get.invoke.body.should == @cached_response.body
         end
 
         it "should use it if the server returns a new response" do
@@ -226,14 +227,14 @@ describe Wrest::Native::Get do
       end
 
       it "should cache cacheable but cant_be_validated response" do
-        response = @l["cacheable/cant_be_validated/with_expires/300"].get
-        @cache_store.values.should include(response)
+        # The server returns a different body for the same url on every call. So if the copy is cached by the client,
+        # they should be equal.
 
-        response = @l["cacheable/cant_be_validated/with_max_age/300"].get
-        @cache_store.values.should include(response)
+        @l["cacheable/cant_be_validated/with_expires/300"].get.should == @l["cacheable/cant_be_validated/with_expires/300"].get
+        @l["cacheable/cant_be_validated/with_max_age/300"].get.should == @l["cacheable/cant_be_validated/with_max_age/300"].get
+        @l["cacheable/cant_be_validated/with_both_max_age_and_expires/300"].get.should == @l["cacheable/cant_be_validated/with_both_max_age_and_expires/300"].get
 
-        response = @l["cacheable/cant_be_validated/with_both_max_age_and_expires/300"].get
-        @cache_store.values.should include(response)        
+        @l["cacheable/cant_be_validated/with_both_max_age_and_expires/300"].get.should_not == @l["cacheable/cant_be_validated/with_max_age/300"].get
       end
 
       it "should give the cached response itself when it has not expired" do
@@ -267,12 +268,25 @@ describe Wrest::Native::Get do
         it "should update the headers of an existing cache entry when the server sends a 304" do
           # RFC 2616
           # If a cache uses a received 304 response to update a cache entry, the cache MUST update the entry to reflect any new field values given in the response.
-          first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
-          sleep 2
-          second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
 
-          first_response_with_last_modified["New-Header-For-Cache"].should == nil
-          second_response_with_last_modified["New-Header-For-Cache"].should == "5678"
+          uri = "http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1".to_uri(:cache_store => Wrest::Components::CacheStore::Memcached.new(nil, :namespace => "wrest#{rand 1000}"))
+
+          first_response_with_last_modified = uri.get # Gets a 200 OK
+          first_response_with_last_modified.headers["Header-that-was-in-the-first-response"].should == "42"
+          first_response_with_last_modified["header-that-changes-everytime"].should == nil
+
+          sleep 1
+
+          second_response_with_last_modified = uri.get   # Cache expired. Wrest would send an If-Not-Modified, server will send 304 (Not Modified) with a header-that-changes-everytime
+          second_response_with_last_modified.body.should == first_response_with_last_modified.body
+          second_response_with_last_modified["header-that-changes-everytime"].to_i.should > 0
+          second_response_with_last_modified.headers["Header-that-was-in-the-first-response"].should == "42"
+
+          a_new_get_request_to_same_resource = uri.get
+          a_new_get_request_to_same_resource.body.should == first_response_with_last_modified.body
+          a_new_get_request_to_same_resource["header-that-changes-everytime"].to_i.should > 0
+          a_new_get_request_to_same_resource["header-that-changes-everytime"].should_not == second_response_with_last_modified["header-that-changes-everytime"]
+          a_new_get_request_to_same_resource.headers["Header-that-was-in-the-first-response"].should == "42"
         end
 
 
