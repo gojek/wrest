@@ -121,8 +121,8 @@ module Wrest
       end
     end
 
-    describe 'caching' do
-      describe "cases where response should be cached" do
+    context 'caching' do
+      context "cases where response should be cached" do
         it "should say its cacheable if the response code is cacheable" do
           # the cacheable codes are enumerated in Firefox source code: nsHttpResponseHead.cpp::MustValidate
           http_response = build_ok_response('', cacheable_headers)
@@ -165,7 +165,7 @@ module Wrest
         end
       end
 
-      describe "cases where response should not be cached" do
+      context "cases where response should not be cached" do
         it "should say its not cacheable if the response code is not range of 200-299" do
           http_response = build_ok_response('', cacheable_headers)
           ['100', '206', '400', '401', '500'].each do |code|
