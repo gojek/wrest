@@ -1,4 +1,4 @@
-= Wrest 1.0.1
+= Wrest 1.0.2
 
 (c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -188,7 +188,6 @@ Run the tests in a different terminal:
 
   # Runs the functional test suite.
   rake rspec:functional
-
 
 == Contributors
  

@@ -6,6 +6,7 @@ gemfile = File.expand_path('../../Gemfile', __FILE__)
 begin
   ENV['BUNDLE_GEMFILE'] = gemfile
   require 'bundler'
+  require 'json'
   Bundler.setup
 rescue Bundler::GemNotFound => e
   STDERR.puts e.message

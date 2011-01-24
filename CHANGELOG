@@ -1,30 +1,20 @@
-Features under the section marked 'In Progress' are currently in the process of being implemented. They are to be considered unstable and not ready for use.
-
 Features under the section marked 'Current' are completed but pending release as a gem. If you need any of these, you'll need to use the latest source from the git repository.
 
 Features under a numbered section are complete and available in the Wrest gem.
 
-== Coming soon
- * Proxy support
- * Multi-part post support on curl
- 
-== In progress
- * Caching 
- * Keep-alive support for libcurl
- * Explicit cookie helpers - #cookie=, #cookie?
- * Response code checkers: ok?, redirect?, created? etc.
- * Alias deserialise as deserialize
- * Ensure Components::Container is ActiveModel compliant
-
-== Current
- * GH#53 Add to_uri_template helper to String
+== 1.0.2
+ * GH#12 Post Multipart support when using the Patron adapter
+ * GH#72 Response code checkers: ok?, redirect?, created? etc.
+ * GH#85 Do not auto-load Nokogiri/libxml-ruby and remove warnings at startup
+ * GH#79 Update Patron version.
 
 == 1.0.1
- * GH#61 Option propogate while converting uri to UriTemplate and back.
+ * GH#61 Option propagate while converting uri to UriTemplate and back.
  * GH#64 Removed Caching.
  * GH#32 Callback for response status codes.
  * GH#53 Add to_uri_template helper to String
  * GH#12 Add Post/Put Multipart support when using the Patron adapter
+ * GH#72 Response code checkers: ok?, redirect?, created? etc.
 
 == 1.0.0
  * GH#56 Detailed Net::HTTP debug output option added to Wrest::Native:Request.
@@ -35,6 +25,7 @@ Features under a numbered section are complete and available in the Wrest gem.
  * GH#52 Wrest console (bin/wrest) fails on 1.9.2
  * GH#55 Fix connection.verify_mode for Net::HTTP https connection to VERIFY_PEER
  * GH#57 Feature #24 doesn't autoload correctly
+ 
 == 1.0.0.beta7
  * GH#46 Response.deserialise for Json responses
 

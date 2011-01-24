@@ -38,7 +38,12 @@ module SampleApp
     end
 
     post '/uploads' do
-      params[:file][:tempfile].read
+      response.headers["Content-Type"] = 'application/json'
+      {
+        'parameters' => request.params,
+        'headers' => request_headers,
+        'file' => params[:file][:tempfile].read
+      }.to_json
     end
 
     # XML deserialise

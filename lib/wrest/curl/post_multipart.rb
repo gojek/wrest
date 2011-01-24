@@ -10,7 +10,7 @@
 module Wrest::Curl
   class PostMultipart < Request
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
-      parameters = parameters.inject({}) {|parameters_sym, (k,v)| parameters_sym[k.to_sym] = v; parameters_sym}
+      parameters = parameters.symbolize_keys
 
       data = parameters[:data] ? {:data => parameters[:data]} : {:data => " "}
       file = parameters[:file].is_a?(File) ? {:file => parameters[:file].path} : {:file => parameters[:file]}
