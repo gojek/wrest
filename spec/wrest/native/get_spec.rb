@@ -35,34 +35,13 @@ describe Wrest::Native::Get do
 
   context "caching" do
     it "should initialize CacheLogic" do
-      CacheLogic.should_receive(:new)
+      Wrest::CacheLogic.should_receive(:new)
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
     end
 
     it "should route all requests through cache logic" do
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
-      @get.cache_logic.should_receive(:get).with(@get, @cache)
-      @get.invoke
-    end
-
-    it "should call invoke_without_cache_check to make a fresh request if cache logic gives nothing" do
-      @cache_logic.stub!(:get, nil)
-      @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
-      @get.invoke
-    end
-
-    it "should cache the response after invoke makes a fresh request" do
-      @cache_logic.stub!(:get, nil)
-      @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
-      @cache_logic.should_receive(:set).with(@get.hash, @ok_response)
-      @get.invoke
-    end
-
-
-    # When already in cache:
-    it "should not call invoke_without_cache_check if response exists in cache" do
-      @cache_logic.should_receive(:get).and_return(@ok_response)
-      @get.should_not_receive(:invoke_without_cache_check)
+      @get.cache_logic.should_receive(:get)
       @get.invoke
     end
   end
@@ -128,7 +107,7 @@ describe Wrest::Native::Get do
           # RFC 2616
           # If a cache uses a received 304 response to update a cache entry, the cache MUST update the entry to reflect any new field values given in the response.
 
-          uri                               = "http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1".to_uri(:cache_store => Wrest::Components::CacheStore::Memcached.new(nil, :namespace => "wrest#{rand 1000}"))
+          uri = "http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1".to_uri(:cache_store => Wrest::Components::CacheStore::Memcached.new(nil, :namespace => "wrest#{rand 1000}"))
 
           first_response_with_last_modified = uri.get # Gets a 200 OK
           first_response_with_last_modified.headers["Header-that-was-in-the-first-response"].should == "42"
