@@ -75,6 +75,7 @@ module Wrest #:nodoc:
         translator.deserialise(@http_response,options)
       end
 
+      # Gives a hash of the response headers. The keys of the hash are case-insensitive.
       def headers
         return @headers if @headers
 
@@ -100,19 +101,19 @@ module Wrest #:nodoc:
         self[Native::StandardHeaders::Connection].downcase == Native::StandardTokens::Close.downcase
       end
 
-
-      # The functions below deal with Caching.
-
+      # Returns whether this response is cacheable. 
       def cacheable?
         code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? &&
             (not max_age.nil? or (expires_not_in_our_past? && expires_not_in_its_past?)) && pragma_nocache_not_set? &&
             vary_tag_not_set?
       end
 
+      #:nodoc:
       def code_cacheable?
         !code.nil? && ([200, 203, 300, 301, 302, 304, 307].include?(code.to_i))
       end
 
+      #:nodoc:
       def max_age
         return @max_age if @max_age
 
@@ -137,21 +138,25 @@ module Wrest #:nodoc:
         headers['pragma'].nil? || (not headers['pragma'].include? 'no-cache')
       end
 
+      #:nodoc:
       def vary_tag_not_set?
         headers['vary'].nil?
       end
 
+      # Returns the Date from the response headers.
       def response_date
         return @response_date if @response_date
         @response_date = parse_datefield(headers, "date")
       end
 
 
+      # Returns the Expires date from the response headers.
       def expires
         return @expires if @expires
         @expires = parse_datefield(headers, "expires")
       end
 
+      # Returns whether the Expires header of this response is earlier than current time.    
       def expires_not_in_our_past?
         if expires.nil?
           false
@@ -160,6 +165,7 @@ module Wrest #:nodoc:
         end
       end
 
+      # Is the Expires of this response earlier than its Date header.
       def expires_not_in_its_past?
         # Invalid header value for Date or Expires means the response is not cacheable
         if  expires.nil? || response_date.nil?
@@ -169,6 +175,7 @@ module Wrest #:nodoc:
         end
       end
 
+      # Age of the response calculated according to RFC 2616 13.2.3
       def current_age
         current_time = Time.now.to_i
 
@@ -181,14 +188,17 @@ module Wrest #:nodoc:
         [apparent_age, age_value].max
       end
 
+      # The values in Cache-Control header as an array.
       def cache_control_headers
         @cache_control_headers ||= recalculate_cache_control_headers
       end
-      
+
+      #:nodoc:
       def recalculate_cache_control_headers
         headers['cache-control'].split(",").collect {|cc| cc.strip } rescue []
       end
 
+      # How long (in seconds) is this response expected to be fresh
       def freshness_lifetime
         @freshness_lifetime ||= recalculate_freshness_lifetime
       end
@@ -203,6 +213,7 @@ module Wrest #:nodoc:
         return (expires_date - response_date)
       end
 
+      # Has this response expired? The expiry is calculated from the Max-Age/Expires header.
       def expired?
         freshness=freshness_lifetime
         if freshness <= 0
@@ -216,11 +227,14 @@ module Wrest #:nodoc:
         headers['last-modified']
       end
 
+      # Can this response be validated by sending a validation request to the server. The response need to have either
+      # Last-Modified or ETag header (or both) for it to be validatable.
       def can_be_validated?
         not (last_modified.nil? and headers['etag'].nil?)
       end
 
 
+      #:nodoc:
       # helper function. Used to parse date fields.
       # this function is used and tested by the expires and response_date methods
       def parse_datefield(hash, key)

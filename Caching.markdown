@@ -10,9 +10,10 @@ A response should obey the following conditions to be considered cacheable by Wr
  * There should not be Pragma: no-cache header. (this header is only used by HTTP 1.0 servers)
  * Either Cache-Control: max-age or the Expires headers (or both) should be set. (Cache-control: max-age always take priority over Expires header.)
  * If only Expires header is set, it should not be lesser than the response's Date header. It should also be greater than the time when the response was received by the client.
- * The Vary header should not be present at all. (The Vary mechanism is used to conditionally control caching, which Wrest does not implement. Section 14.44 of the RFC 2616 describes the Vary tag in detail)
+ * The date headers (Date, Expires) should be in [RFC 1123 format](http://www.ietf.org/rfc/rfc1123.txt).
+ * The Vary header should not be present at all. (The Vary mechanism is used to conditionally control caching, which Wrest does not currently implement. Section 14.44 of the RFC 2616 describes the Vary tag in detail)
 
-Whenever a GET request is sent to Wrest, it consults the Cache Store for a matching entry. If an entry is found and has not expired, it is used returned back as the response without making a request to the server.
+Whenever a GET request is sent to Wrest, it consults the Cache Store for a matching entry. If an entry is found and has not expired, it is returned back as the response without making a request to the server.
 
 A cache entry is considered to be fresh (not expired) if:
 	
