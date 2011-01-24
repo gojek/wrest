@@ -5,7 +5,7 @@ Features under a numbered section are complete and available in the Wrest gem.
 == 1.0.2
  * GH#12 Post Multipart support when using the Patron adapter
  * GH#72 Response code checkers: ok?, redirect?, created? etc.
- * GH#85 Do not autoload Nokogiri/Libxml, and remove warnings.
+ * GH#85 Do not auto-load Nokogiri/libxml-ruby and remove warnings at startup
  * GH#79 Update Patron version.
 
 == 1.0.1
