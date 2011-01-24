@@ -46,19 +46,7 @@ module Wrest::Native
 
       return invoke_without_cache_check if cache_store.nil?
 
-      cached_response = cache_store[self.hash]
-
-      if cached_response.nil?
-        get_fresh_response
-      elsif cached_response.expired?
-        if cached_response.can_be_validated?
-          get_validated_response_for(cached_response)
-        else
-          get_fresh_response
-        end
-      else
-        cached_response
-      end
+      response = cache_logic.get || get_fresh_response
     end
 
     def update_cache_headers_for(cached_response, new_response)
