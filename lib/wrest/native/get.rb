@@ -9,12 +9,12 @@
 module Wrest::Native
   class Get < Request
 
-    attr_reader :cache_logic
+    attr_reader :cache_proxy
 
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       follow_redirects = options[:follow_redirects]
       options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
-      @cache_logic = Wrest::CacheLogic::new(self, options[:cache_store])
+      @cache_proxy = Wrest::CacheProxy::new(self, options[:cache_store])
       super(
             wrest_uri,
             Net::HTTP::Get,
@@ -47,7 +47,7 @@ module Wrest::Native
 
     #:nodoc:
     def invoke_with_cache_check
-      cache_logic.get
+      cache_proxy.get
     end
 
     alias_method_chain :invoke, :cache_check

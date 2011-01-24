@@ -89,7 +89,7 @@ require "#{Wrest::Root}/wrest/xml_mini"
 
 # Load Wrest Core
 require "#{Wrest::Root}/wrest/version"
-require "#{Wrest::Root}/wrest/cache_logic"
+require "#{Wrest::Root}/wrest/cache_proxy"
 require "#{Wrest::Root}/wrest/http_shared"
 require "#{Wrest::Root}/wrest/native"
 

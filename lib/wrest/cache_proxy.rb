@@ -1,17 +1,17 @@
 module Wrest
 
-  class CacheLogic
+  class CacheProxy
     class << self
       def new(get, cache_store)
         if cache_store
-          DefaultCacheLogic.new(get, cache_store)
+          DefaultCacheProxy.new(get, cache_store)
         else
-          NullCacheLogic.new(get)
+          NullCacheProxy.new(get)
         end
       end
     end
 
-    class NullCacheLogic
+    class NullCacheProxy
       def initialize(get)
         @get = get
       end
@@ -20,7 +20,7 @@ module Wrest
       end
     end
 
-    class DefaultCacheLogic
+    class DefaultCacheProxy
       def initialize(get, cache_store)
         @get         = get
         @cache_store = cache_store

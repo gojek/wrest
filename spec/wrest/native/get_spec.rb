@@ -34,14 +34,14 @@ describe Wrest::Native::Get do
   end
 
   context "caching" do
-    it "should initialize CacheLogic" do
-      Wrest::CacheLogic.should_receive(:new)
+    it "should initialize CacheProxy" do
+      Wrest::CacheProxy.should_receive(:new)
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
     end
 
     it "should route all requests through cache logic" do
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
-      @get.cache_logic.should_receive(:get)
+      @get.cache_proxy.should_receive(:get)
       @get.invoke
     end
   end
