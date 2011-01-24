@@ -139,7 +139,15 @@ Verbatim from [Chrome's http_response_headers.cc](http://codesearch.google.com/c
 
 This is a [link to Chrome source code](http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/net/http/http_response_headers.cc&q=GetFreshnessLifetime&exact_package=chromium&l=848) where freshness_lifetime is defined. 
 
-# Alternate Cache Implementations #
+# References #
+
+[RFC 2616 Section 13](HTTP Caching protocol)](http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html)
+[Mozilla HTTP Caching FAQ](http://www.mozilla.org/projects/netlib/http/http-caching-faq.html)
+[Mark Nottingham's Caching Tutorial](http://www.mnot.net/cache_docs/)
+[Redbot for analyzing HTTP headers](http://redbot.org)
+
+
+### Alternate Cache Implementations ###
 
 [Resourceful - Ruby HTTP client that does caching](https://github.com/pezra/resourceful/blob/master/lib/resourceful/response.rb#L25)
 
