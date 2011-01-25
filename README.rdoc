@@ -44,7 +44,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     c42 = "http://c42.in".to_uri(:cache_store => Wrest::Components::CacheStore::Memcached.new("localhost:11211"))
     response = c42.get
 
-  A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at [Caching.markdown](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
+  A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at {Wrest Caching Doc}[https://github.com/kaiwren/wrest/blob/caching/Caching.markdown]
     
 * Deserialise with XPath filtering
   

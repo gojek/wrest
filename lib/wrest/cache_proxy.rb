@@ -21,13 +21,21 @@ module Wrest
     end
 
     class DefaultCacheProxy
+      HOP_BY_HOP_HEADERS = ["connection",
+                           "keep-alive",
+                           "proxy-authenticate",
+                           "proxy-authorization",
+                           "te",
+                           "trailers",
+                           "transfer-encoding",
+                           "upgrade"]
+
       def initialize(get, cache_store)
         @get         = get
         @cache_store = cache_store
       end
 
       def get
-
         cached_response = @cache_store[@get.hash]
         return get_fresh_response if cached_response.nil?
 
@@ -44,7 +52,7 @@ module Wrest
 
       def update_cache_headers_for(cached_response, new_response)
         # RFC 2616 13.5.3 (Combining Headers)
-        cached_response.headers.merge!(new_response.headers)
+        cached_response.headers.merge!(new_response.headers.select {|key, value| not (HOP_BY_HOP_HEADERS.include? key.downcase)})
       end
 
       def cache(response)
