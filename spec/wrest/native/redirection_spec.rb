@@ -6,7 +6,7 @@ describe Wrest::Native::Redirection do
     mock_net_http_response = mock(Net::HTTPRedirection)
     redirect_url = 'http://redirect.com'
     redirect_uri = redirect_url.to_uri
-    mock_net_http_response.should_receive(:[]).with('location').and_return(redirect_url)
+    mock_net_http_response.should_receive(:to_hash).and_return('location' => redirect_url)
     mock_net_http_response.should_receive(:code).and_return('200')
     
     Wrest::Uri.should_receive(:new).with(redirect_url, anything).and_return(redirect_uri)
@@ -32,7 +32,7 @@ describe Wrest::Native::Redirection do
     response.stub!(:code).and_return('301')
     response.stub!(:message).and_return('')
     response.stub!(:body).and_return('')
-    response.should_receive(:[]).with('location').exactly(5).times.and_return(request_url)
+    response.stub!(:to_hash).and_return('location' => request_url)
 
     http_connection = mock(Net::HTTP)
     http_connection.stub!(:read_timeout=)

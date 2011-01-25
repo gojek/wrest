@@ -8,18 +8,48 @@
 
 module Wrest::Native
   class Get < Request
+
+    attr_reader :cache_proxy
+
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       follow_redirects = options[:follow_redirects]
       options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
-      options[:cache_store] ||= {}
+      @cache_proxy = Wrest::CacheProxy::new(self, options[:cache_store])
       super(
-            wrest_uri, 
-            Net::HTTP::Get, 
+            wrest_uri,
+            Net::HTTP::Get,
             parameters,
             nil,
             headers,
             options
           )
     end
+
+    # Checks equality between two Wrest::Native::Get objects.
+    # Comparing two Wrest::Native::Get objects with identical values for the following properties would return True.
+    #   uri, parameters, username, password and ssh verify_mode.
+    def ==(other)
+      return true if self.equal?(other)
+      return false unless other.class == self.class
+      return true if self.uri == other.uri and
+        self.parameters == other.parameters and
+        self.username == other.username and
+        self.password == other.password and
+        self.verify_mode == other.verify_mode
+      false
+    end
+
+    # Returns a hash value for this Wrest::Native::Get object.
+    # Objects that returns true when compared using the == operator would return the same hash value also.
+    def hash
+      self.uri.hash + self.parameters.hash + self.username.hash + self.password.hash + self.verify_mode.hash + 20110106
+    end
+
+    #:nodoc:
+    def invoke_with_cache_check
+      cache_proxy.get
+    end
+
+    alias_method_chain :invoke, :cache_check
   end
 end

@@ -42,6 +42,7 @@ group :fast_xml_deserialisation_rexml do
 end
 
 group :development do
+  gem 'dalli'
   gem 'rubyforge'
   gem 'hanna'
 end

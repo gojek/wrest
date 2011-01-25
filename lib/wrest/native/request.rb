@@ -13,7 +13,7 @@ module Wrest::Native
   # or Wrest::Native::Get etc. instead.
   class Request
     attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
-                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters, :cache_store
+                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters, :cache_store, :verify_mode, :options
     # Valid tuples for the options are:
     #   :username => String, defaults to nil
     #   :password => String, defaults to nil
@@ -32,12 +32,12 @@ module Wrest::Native
     #   :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #                  used for multiple requests.
     #   :verify_mode => The  verification mode to be used for Net::HTTP https connections. Defaults to OpenSSL::SSL::VERIFY_PEER
-    #   :cache_store => The object which should be used as cache store for cacheable responses (caching is not supported in this version)
+    #   :cache_store => The object which should be used as cache store for cacheable responses. If not supplied, caching will be disabled.
     #   :detailed_http_logging => nil/$stdout/$stderr or File/Logger/IO object. Defaults to nil (recommended).
     #   :callback => A Hash whose keys are the response codes (or Range of response codes),
     #                        and the values are the callback functions to be executed.
     #                        eg: { <response code> => lambda { |response| some_operation } }
-    #   
+    #
     # *WARNING* : detailed_http_logging causes a serious security hole. Never use it in production code.
     #
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})

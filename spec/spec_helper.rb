@@ -37,7 +37,9 @@ def build_response(code,message = '', body = '', headers = {})
     response.stub!(:code).and_return(code)
     response.stub!(:message).and_return(message)
     response.stub!(:body).and_return(body)
+    response.stub!(:http_version).and_return("1.1")
     response.stub!(:to_hash).and_return(headers)
+    response.stub!('[]').and_return(nil)
     headers.each{|k,v|
       response.stub!('[]').with(k).and_return(v)
     }
@@ -52,4 +54,14 @@ def xml_backends
   backends = ['Nokogiri','REXML']
   backends << 'LibXML' unless (RUBY_PLATFORM =~ /java/ || (Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/))
   backends
+end
+
+# Return a Hash of headers that are HTTP cacheable and will expire in 30 minutes, has Date to be current time, Age 0 and Last Modified ten minutes early.
+def cacheable_headers
+  half_hour_after = (Time.now + (60*30)).httpdate
+  ten_mins_early  = (Time.now - (10*30)).httpdate
+
+  # All responses in the caching block returns a cacheable response by default
+  headers         = {"date" => Time.now.httpdate, "expires" => half_hour_after, "age" => "0", "last-modified" => ten_mins_early}
+  headers
 end

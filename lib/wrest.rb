@@ -56,15 +56,18 @@ RUBY_PLATFORM =~ /java/ ? gem('json-jruby', '>= 1.4.2') : gem('json', '>= 1.4.2'
 ActiveSupport::JSON.backend = "JSONGem"
 
 require "#{Wrest::Root}/wrest/core_ext/string"
+require "#{Wrest::Root}/wrest/hash_with_case_insensitive_access"
 
 # Load XmlMini Extensions
 require "#{Wrest::Root}/wrest/xml_mini"
 
 # Load Wrest Core
 require "#{Wrest::Root}/wrest/version"
+require "#{Wrest::Root}/wrest/cache_proxy"
 require "#{Wrest::Root}/wrest/http_shared"
 require "#{Wrest::Root}/wrest/http_codes"
 require "#{Wrest::Root}/wrest/native"
+
 
 # Load Wrest Wrappers
 require "#{Wrest::Root}/wrest/uri"

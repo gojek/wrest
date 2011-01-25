@@ -49,10 +49,10 @@ describe Wrest::Native::Request do
     raw_response.stub!(:code).and_return('301')
     raw_response.stub!(:message).and_return('')
     raw_response.stub!(:body).and_return('')
-    raw_response.stub!(:[]).with('location').and_return(redirect_location)
-    
+
     response = Wrest::Native::Redirection.new(raw_response)
-    
+    response.stub!(:[]).with('location').and_return(redirect_location)
+
     mock_connection.should_receive(:request).and_return(raw_response)
     mock_connection.should_receive(:set_debug_output)
     
@@ -112,6 +112,15 @@ describe Wrest::Native::Request do
     request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
   end
 
+  it "should not store response in cache if the original request was not GET" do
+    cache = {}
+    post = Wrest::Native::Post.new("http://localhost".to_uri, {}, {}, cacheable_headers, {:cache_store => cache})
+    post.should_receive(:do_request).and_return(mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {}))
+
+    cache.should_not_receive(:[])
+    post.invoke
+  end
+
   context "callbacks" do
     it "should run the appropriate callbacks" do
       cb = mock
@@ -132,7 +141,7 @@ describe Wrest::Native::Request do
       response_200 = mock(Net::HTTPOK, :code => "200", :message => 'OK', :body => '', :to_hash => {})
       response_501 = mock(Net::HTTPOK, :code => "501", :message => 'not implemented', :body => '', :to_hash => {})
 
-      request.should_receive(:do_request).and_return(response_204, response_501, response_200)
+      request.should_receive(:do_request).and_return(response_200, response_501, response_204)
 
       request.invoke
       request.invoke
