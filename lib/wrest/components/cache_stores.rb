@@ -1,1 +1,0 @@
-require "#{Wrest::Root}/wrest/components/cache_store/memcached"

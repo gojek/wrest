@@ -14,7 +14,8 @@ Gem::Specification.new do |s|
  
   s.required_rubygems_version = ">= 1.3.7"
   s.rubyforge_project = "wrest"
-  
+
+  s.requirements << "To use Memcached as caching back-end, install the 'dalli' gem."
   s.requirements << "To use multipart post, install the 'multipart-post' gem."
   s.requirements << "To use curl as the http engine, install the 'patron' gem. This feature is not available (and should be unneccessary) on jruby."
   
@@ -24,11 +25,22 @@ Gem::Specification.new do |s|
   s.executables       = ['wrest']
   s.require_path      = 'lib'
 
-  s.add_development_dependency "rspec", ["~> 2.0.0.beta.22"]
-  s.add_runtime_dependency "activesupport", ["~> 3.0.0"]  
-  s.add_runtime_dependency "builder", ["~> 2.1.2"]  
+  s.add_development_dependency "rubyforge"
+  s.add_development_dependency "hanna"
+
+  # Test dependencies
+  s.add_development_dependency "rspec", ["~> 2.0.0"]
+  s.add_development_dependency "sinatra", ["~> 1.0.0"]
+  s.add_development_dependency "metric_fu" unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
+
+  s.add_runtime_dependency "activesupport", ["~> 3.0.0"]
+  s.add_runtime_dependency "builder", ["~> 2.1.2"]
+  s.add_runtime_dependency "i18n", ['>= 0.4.1']
+  s.add_runtime_dependency "tzinfo", ['>= 0.3.23']
+
   case RUBY_PLATFORM
   when /java/
+    s.add_runtime_dependency("jruby-openssl", ["~> 0.7.1"])
     s.add_runtime_dependency("json-jruby", ["~> 1.4.3.1"])
     s.add_runtime_dependency("nokogiri", ["~> 1.4.3.1"])
     s.platform    = Gem::Platform::CURRENT
