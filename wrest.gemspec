@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "hanna"
 
   # Test dependencies
-  s.add_development_dependency "rspec", ["~> 2.0.0"]
+  s.add_development_dependency "rspec", ["~> 2.4.0"]
   s.add_development_dependency "sinatra", ["~> 1.0.0"]
   s.add_development_dependency "metric_fu" unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
 
