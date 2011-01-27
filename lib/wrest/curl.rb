@@ -8,7 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 begin
-  gem 'patron', '~> 0.4.9'
+  gem 'patron', '~> 0.4.11'
 rescue Gem::LoadError => e
   Wrest.logger.debug "Patron ~> 0.4.9 not found. Patron is necessary to use libcurl. To install Patron run `sudo gem install patron` (patron is not available on JRuby, but you shouldn't need it anyway)."
   raise e
