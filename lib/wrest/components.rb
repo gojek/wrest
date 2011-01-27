@@ -17,4 +17,3 @@ end
 
 require "#{Wrest::Root}/wrest/components/container"
 require "#{Wrest::Root}/wrest/components/translators"
-require "#{Wrest::Root}/wrest/components/cache_stores"

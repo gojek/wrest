@@ -47,6 +47,10 @@ module Wrest
     require "#{Wrest::Root}/wrest/curl"
     silence_warnings{ Wrest.const_set('Http', Wrest::Curl) }
   end
+
+  def self.enable_memcached_caching!
+    require "#{Wrest::Root}/wrest/components/cache_store/memcached"
+  end
 end
 
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
