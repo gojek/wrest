@@ -39,7 +39,7 @@ describe Wrest::Native::Get do
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
     end
 
-    it "should route all requests through cache logic" do
+    it "should route all requests through cache proxy" do
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
       @get.cache_proxy.should_receive(:get)
       @get.invoke

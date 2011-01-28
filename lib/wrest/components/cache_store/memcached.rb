@@ -1,3 +1,10 @@
+begin
+  gem 'dalli', '~> 1.0.1'
+rescue Gem::LoadError => e
+  Wrest.logger.debug "Dalli ~> 1.0.1 not found. Dalli is necessary to use the memcached caching back-end. To install dalli run `(sudo) gem install dalli`."
+  raise e
+end
+
 require 'dalli'
 
 module Wrest::Components::CacheStore

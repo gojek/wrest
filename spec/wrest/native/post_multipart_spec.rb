@@ -7,7 +7,7 @@ module Wrest
     context "functional", :functional => true do
 
       before :all do
-        Wrest.use_native
+        Wrest.use_native!
       end
 
       it "should know how to post files using multipart" do

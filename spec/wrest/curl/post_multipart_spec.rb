@@ -7,7 +7,7 @@ unless RUBY_PLATFORM =~ /java/
   module Wrest
     describe Curl::PostMultipart do
       before :all do
-        Wrest.use_curl
+        Wrest.use_curl!
       end
       let(:file_path){ File.expand_path(__FILE__) }
 

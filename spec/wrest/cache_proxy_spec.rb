@@ -12,11 +12,11 @@ describe Wrest::CacheProxy do
   end
 
   context "Factory" do
-    it "should create a Null class if cache store is nil" do
+    it "should create a Null cache proxy if cache store is nil" do
       Wrest::CacheProxy::NullCacheProxy.should_receive(:new)
       Wrest::CacheProxy::new(@get, nil)
     end
-    it "should create a Default cache logic class if cache store is available" do
+    it "should create a Default cache proxy class if cache store is available" do
       Wrest::CacheProxy::DefaultCacheProxy.should_receive(:new)
       Wrest::CacheProxy::new(@get, {})
     end

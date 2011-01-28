@@ -14,7 +14,7 @@ module Wrest::Native
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       follow_redirects = options[:follow_redirects]
       options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
-      @cache_proxy = Wrest::CacheProxy::new(self, options[:cache_store])
+      @cache_proxy = Wrest::CacheProxy::new(self, options[:cache_store] || Wrest.default_cachestore)
       super(
             wrest_uri,
             Net::HTTP::Get,

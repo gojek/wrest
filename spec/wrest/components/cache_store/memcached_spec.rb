@@ -1,6 +1,8 @@
 require "spec_helper"
 require 'rspec'
 
+Wrest::enable_memcached_caching!
+
 describe Wrest::Components::CacheStore::Memcached do
   context "functional", :functional => true do
     before :each do

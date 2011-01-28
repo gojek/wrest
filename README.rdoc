@@ -1,14 +1,14 @@
-= Wrest 1.0.2
+= Wrest 1.1.0
 
-(c) Copyright 2009-2010 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
+(c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
 Wrest is a ruby REST/HTTP client library which
 
 * Allows you to quickly build object oriented wrappers around any web service 
 * Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
-* Runs on Ruby 1.8, Ruby 1.9.2, JRuby and Rubinius with MacRuby and IronRuby support on the way
-* Provides convenient HTTP wrappers, redirect handling, serialisation and deserialisation with response caching in the works
+* Runs on Ruby 1.8, Ruby 1.9.2, JRuby and Rubinius with MacRuby and IronRuby support on the way ({Continuous Integration server}[http://ci.c42.in])
+* Provides convenient HTTP wrappers, redirect handling, serialisation, deserialisation and response {caching}[https://github.com/kaiwren/wrest/blob/caching/Caching.markdown]
 * Supports using either Net::HTTP or libcurl as the underlying HTTP library
 
 To receive notifications whenever new features are added to Wrest, please subscribe to my {twitter feed}[http://twitter.com/ponnappa].
@@ -36,15 +36,6 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     'http://google.com'.to_uri(:follow_redirects_limit => 1).get
 
   :follow_redirects_limit defaults to 5 if not specified.
-
-* Caching
-
-  The following example will use Memcached to cache the response.
-
-    c42 = "http://c42.in".to_uri(:cache_store => Wrest::Components::CacheStore::Memcached.new("localhost:11211"))
-    response = c42.get
-
-  A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at {Wrest Caching Doc}[https://github.com/kaiwren/wrest/blob/caching/Caching.markdown]
     
 * Deserialise with XPath filtering
   
@@ -109,6 +100,31 @@ To delete a resource:
 To find out what actions are permitted on a URI:
 
  'http://www.yahoo.com'.to_uri.options.headers['allow']
+
+==== Caching
+
+Wrest supports caching with pluggable back-ends.
+
+    Wrest.always_cache_using_hash!     # Hash should NEVER be used in a production environment. It is unbounded and will keep increasing in size.
+    c42 = "http://c42.in".to_uri.get
+
+A Memcached based caching back-end is available in Wrest. You can get instructions on how to install Memcached on your system {here}[http://code.google.com/p/memcached/wiki/NewInstallFromPackage].
+The Dalli gem is used by Wrest to interface with Memcached. Install dalli using 'gem install dalli'.
+
+Use the following method to enable caching for all requests, and set Memcached as the default back-end.
+  
+    Wrest.always_cache_using_memcached!
+
+For fine-grained control over the cache store (or to use multiple cache stores in the same codebase), you can use this API:
+    memcache_store = Wrest::Components::CacheStore::Memcached.new("localhost:11211")
+    hash_store = {}
+    
+    r1 = "http://c42.in".to_uri(:cache_store => memcache_store).get
+    r2 = "http://c42.in".to_uri(:cache_store => hash_store).get
+
+A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at {Wrest Caching Doc}[https://github.com/kaiwren/wrest/blob/master/Caching.markdown]
+
+You can create your own back-ends for Wrest caching by implementing the interface implemented in https://github.com/kaiwren/wrest/blob/master/lib/wrest/components/cache_store/memcached.rb
 
 ==== Callbacks
 

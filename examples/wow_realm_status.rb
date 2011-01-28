@@ -15,7 +15,7 @@ Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disa
 # Optionally uncomment the following line to use the significantly faster libcurl library.
 # This uses the patron gem - (sudo) gem install patron
 # IMPORTANT: Libcurl support is currently in alpha and is both incomplete and unstable!
-# Wrest.use_curl
+# Wrest.use_curl!
 
 
 include Wrest

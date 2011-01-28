@@ -9,7 +9,7 @@ unless RUBY_PLATFORM =~ /java/
       context "functional" do 
 
         before :all do
-          Wrest.use_curl
+          Wrest.use_curl!
         end
 
         it "should raise Wrest::Exceptions::UnsupportedFeature error" do

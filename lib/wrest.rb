@@ -38,14 +38,45 @@ module Wrest
   end
 
   # Switch Wrest to using Net::HTTP.
-  def self.use_native
+  def self.use_native!
     silence_warnings{ Wrest.const_set('Http', Wrest::Native) }
   end
 
   # Switch Wrest to using libcurl.
-  def self.use_curl
+  def self.use_curl!
     require "#{Wrest::Root}/wrest/curl"
     silence_warnings{ Wrest.const_set('Http', Wrest::Curl) }
+  end
+
+  # Loads the Memcached caching back-end and the Dalli gem 
+  def self.enable_memcached_caching!
+    require "#{Wrest::Root}/wrest/components/cache_store/memcached"
+  end
+
+  # Assign the default cache store to be used. Default is none.
+  def self.default_cachestore=(cachestore)
+    @default_cachestore = cachestore
+  end
+
+  # Returns the default cache store, if any is set.
+  def self.default_cachestore
+    @default_cachestore
+  end
+
+  # Configures Wrest to cache all requests. This will use the Memcached backend.
+  def self.always_cache_using_memcached!
+    self.enable_memcached_caching!
+    self.default_cachestore=Wrest::Components::CacheStore::Memcached.new
+  end
+
+  # Configures Wrest to cache all requests. This will use a Ruby Hash.
+  # WARNING: This should NEVER be used in a real environment. The Hash will keep on growing since Wrest does not limit the size of a cache store.
+  #
+  # Use the Memcached caching back-end for production since the Memcached process uses an LRU based cache removal policy
+  # that keeps the number of entries stored within bounds.
+  def self.always_cache_using_hash!
+    Wrest.logger.warn "Using an in-memory Hash as a cache store. This is dangerous if used in a production environment."
+    self.default_cachestore=Hash.new
   end
 end
 
