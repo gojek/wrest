@@ -66,8 +66,8 @@ module Wrest::Native
     # Data about the request is and logged to Wrest.logger
     # The log entry contains the following information:
     #
-    #   --> indicates a request
-    #   <-- indicates a response
+    #   <- indicates a request
+    #   -> indicates a response
     #
     # The type of request is mentioned in caps, followed by a hash 
     # uniquely identifying a particular request/response pair.
