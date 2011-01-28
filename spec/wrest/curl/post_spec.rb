@@ -8,7 +8,7 @@ unless RUBY_PLATFORM =~ /java/
       context "functional", :functional => true do
 
         before :all do
-          Wrest.use_curl
+          Wrest.use_curl!
         end
 
         it "should know how to post" do

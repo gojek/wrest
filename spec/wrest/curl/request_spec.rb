@@ -5,7 +5,7 @@ unless RUBY_PLATFORM =~ /java/
   module Wrest
     describe Curl::Request do
       before :all do
-        Wrest.use_curl
+        Wrest.use_curl!
       end
 
       it "should raise an exception if an options is invoked" do
@@ -26,7 +26,7 @@ unless RUBY_PLATFORM =~ /java/
       end
 
       after :all do
-        Wrest.use_native
+        Wrest.use_native!
       end
     end
   end
