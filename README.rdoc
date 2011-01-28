@@ -1,4 +1,4 @@
-= Wrest 1.1
+= Wrest 1.1.0
 
 (c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -105,22 +105,22 @@ To find out what actions are permitted on a URI:
 
 Wrest supports caching with pluggable back-ends.
 
-    Wrest::always_cache_using_hash!     # Hash should NEVER be used in a server. It is unbounded and will keep on increasing in size.
+    Wrest.always_cache_using_hash!     # Hash should NEVER be used in a production environment. It is unbounded and will keep increasing in size.
     c42 = "http://c42.in".to_uri.get
 
-A Memcached based caching back-end is available in Wrest. For instructions on how to install Memcached on your system, refer to http://code.google.com/p/memcached/wiki/NewInstallFromPackage.
-The Dalli gem is used by Wrest to interface with Memcached. Install dalli using 'gem install dalli'
+A Memcached based caching back-end is available in Wrest. You can get instructions on how to install Memcached on your system {here}[http://code.google.com/p/memcached/wiki/NewInstallFromPackage].
+The Dalli gem is used by Wrest to interface with Memcached. Install dalli using 'gem install dalli'.
 
 Use the following method to enable caching for all requests, and set Memcached as the default back-end.
   
-    Wrest::always_cache_using_memcached!
+    Wrest.always_cache_using_memcached!
 
-For fine-grained control, you can use this API:
-
-    Wrest::enable_memcached_caching!
-
-    uses_cache_store = "http://c42.in".to_uri(:cache_store => Wrest::Components::CacheStore::Memcached.new("localhost:11211"))
-    response = c42.get
+For fine-grained control over the cache store (or to use multiple cache stores in the same codebase), you can use this API:
+    memcache_store = Wrest::Components::CacheStore::Memcached.new("localhost:11211")
+    hash_store = {}
+    
+    r1 = "http://c42.in".to_uri(:cache_store => memcache_store).get
+    r2 = "http://c42.in".to_uri(:cache_store => hash_store).get
 
 A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at {Wrest Caching Doc}[https://github.com/kaiwren/wrest/blob/master/Caching.markdown]
 
