@@ -94,14 +94,7 @@ To delete a resource:
                                               :url => 'http://c2.com'
                                             )
  
-
-==== OPTIONS
-
-To find out what actions are permitted on a URI:
-
- 'http://www.yahoo.com'.to_uri.options.headers['allow']
-
-==== Caching
+=== Caching
 
 Wrest supports caching with pluggable back-ends.
 
