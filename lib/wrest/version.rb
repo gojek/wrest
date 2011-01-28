@@ -8,16 +8,5 @@
 # See the License for the specific language governing permissions and limitations under the License. 
 
 module Wrest
-  module VERSION
-    unless defined? MAJOR
-      MAJOR  = 1
-      MINOR  = 0
-      TINY   = 2
-      BUILD = nil
-      
-      STRING = [MAJOR, MINOR, TINY, BUILD].compact.join('.')
-
-      SUMMARY = "wrest version #{STRING}"
-    end
-  end
+  VERSION = "1.1.0"
 end

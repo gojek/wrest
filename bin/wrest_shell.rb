@@ -17,5 +17,5 @@ libs =  " -r irb/completion"
 libs << " -r #{entry_point}"
 
 require version
-puts "Loading Wrest #{Wrest::VERSION::STRING}"
+puts "Loading Wrest #{Wrest::VERSION}"
 exec "#{options[:irb]} #{libs} --simple-prompt"

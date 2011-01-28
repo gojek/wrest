@@ -31,7 +31,7 @@ class Twitter
   end
   
   def post(text)
-    Tweet.new @uri['/statuses/update.json'].post('', {'User-Agent' => "Wrest/#{Wrest::VERSION::STRING}"}, :status => text).deserialise
+    Tweet.new @uri['/statuses/update.json'].post('', {'User-Agent' => "Wrest/#{Wrest::VERSION}"}, :status => text).deserialise
   end  
 end
 
@@ -60,7 +60,7 @@ end
 
 twitter = Twitter.new(:username => 'ponnappa', :password => '00g@b00g@')
 
-pp twitter.post("This tweet via the Twitter example in #wrest #{Wrest::VERSION::STRING}, http://github.com/kaiwren/wrest")
+pp twitter.post("This tweet via the Twitter example in #wrest #{Wrest::VERSION}, http://github.com/kaiwren/wrest")
 
 puts '', '*'*70, ''
 
