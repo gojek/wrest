@@ -35,6 +35,10 @@ module Wrest
         @cache_store = cache_store
       end
 
+      def log_cached_response
+          Wrest.logger.debug "<*> (GET #{@get.hash}) #{@get.uri.protocol}://#{@get.uri.host}:#{@get.uri.port}#{@get.http_request.path}"
+      end
+      
       def get
         cached_response = @cache_store[@get.hash]
         return get_fresh_response if cached_response.nil?
@@ -46,6 +50,7 @@ module Wrest
             get_fresh_response
           end
         else
+          log_cached_response
           cached_response
         end
       end
@@ -75,6 +80,7 @@ module Wrest
         new_response = send_validation_request_for(cached_response)
         if new_response.code == "304"
           update_cache_headers_for(cached_response, new_response)
+          log_cached_response
           cached_response
         else
           cache(new_response)
