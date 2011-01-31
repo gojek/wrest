@@ -98,6 +98,7 @@ require "#{Wrest::Root}/wrest/cache_proxy"
 require "#{Wrest::Root}/wrest/http_shared"
 require "#{Wrest::Root}/wrest/http_codes"
 require "#{Wrest::Root}/wrest/callback_builder"
+require "#{Wrest::Root}/wrest/callback"
 require "#{Wrest::Root}/wrest/native"
 
 
