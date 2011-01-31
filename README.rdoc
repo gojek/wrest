@@ -128,6 +128,8 @@ You can create your own back-ends for Wrest caching by implementing the interfac
 
 ==== Callbacks
 
+===== Uri level callbacks
+
 You can define a set of callbacks that are invoked based on the http code of the response.
 
   "http://google.com".to_uri(:callback => {
@@ -135,6 +137,24 @@ You can define a set of callbacks that are invoked based on the http code of the
               400..499 => lambda {|response| Wrest.logger.error "Invalid. #{response.body}"},
               300..302 => lambda {|response| Wrest.logger.debug "Redirected. #{response.message}" }
             }).get
+
+===== Per request callbacks
+
+You can define callbacks executed for a response to a particular request.
+
+  "http://google.com".to_uri.get do |callback|
+    callback.on_ok do |response|
+      Wrest.logger.info "Ok."
+    end
+
+    callback.on(202) do |response|
+      Wrest.logger.info "Accepted."
+    end
+
+    callback.on(200..206) do |response|
+      Wrest.logger.info "Successful."
+    end
+  end
 
 Please note that Wrest is a synchronous library. All requests are blocking, and will not return till the request is completed and appropriate callbacks executed.
 

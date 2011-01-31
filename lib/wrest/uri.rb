@@ -91,16 +91,18 @@ module Wrest #:nodoc:
     # that creates a Wrest::Native::Get, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    def get(parameters = {}, headers = {})
-      Http::Get.new(self, parameters, headers, @options).invoke
+    def get(parameters = {}, headers = {}, &block)
+      callbacks = build_callbacks_hash(block)
+      Http::Get.new(self, parameters, headers, @options.merge(callbacks)).invoke
     end
 
     # Make a PUT request to this URI. This is a convenience API
     # that creates a Wrest::Native::Put, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    def put(body = '', headers = {}, parameters = {})
-      Http::Put.new(self, body.to_s, headers, parameters, @options).invoke
+    def put(body = '', headers = {}, parameters = {}, &block)
+      callbacks = build_callbacks_hash(block)
+      Http::Put.new(self, body.to_s, headers, parameters, @options.merge(callbacks)).invoke
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -108,8 +110,9 @@ module Wrest #:nodoc:
     # Note that sending an empty body will blow up if you're using libcurl.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    def post(body = '', headers = {}, parameters = {})
-      Http::Post.new(self, body.to_s, headers, parameters, @options).invoke
+    def post(body = '', headers = {}, parameters = {}, &block)
+      callbacks = build_callbacks_hash(block)
+      Http::Post.new(self, body.to_s, headers, parameters, @options.merge(callbacks)).invoke
     end
     
     # Makes a POST request to this URI. This is a convenience API
@@ -119,18 +122,20 @@ module Wrest #:nodoc:
     # Form encoding involves munging the parameters into a string and placing them
     # in the body, as well as setting the Content-Type header to
     # application/x-www-form-urlencoded
-    def post_form(parameters = {}, headers = {})
+    def post_form(parameters = {}, headers = {}, &block)
+      callbacks = build_callbacks_hash(block)
       headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
       body = parameters.to_query
-      Http::Post.new(self, body, headers, {}, @options).invoke
+      Http::Post.new(self, body, headers, {}, @options.merge(callbacks)).invoke
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
     # that creates a Wrest::Native::Delete, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    def delete(parameters = {}, headers = {})
-      Http::Delete.new(self, parameters, headers, @options).invoke
+    def delete(parameters = {}, headers = {}, &block)
+      callbacks = build_callbacks_hash(block)
+      Http::Delete.new(self, parameters, headers, @options.merge(callbacks)).invoke
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API
@@ -165,5 +170,12 @@ module Wrest #:nodoc:
     end
     
     include Http::ConnectionFactory
+
+    private 
+
+    def build_callbacks_hash(block)
+      result = {:callback => CallbackBuilder.new(@options[:callback] || {}).update(block).build}
+      result[:callback].empty? ? {} : result
+    end
   end
 end

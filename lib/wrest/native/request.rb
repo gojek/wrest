@@ -57,7 +57,7 @@ module Wrest::Native
       @cache_store = options[:cache_store]
       @verify_mode = @options[:verify_mode]
       @detailed_http_logging = options[:detailed_http_logging]
-      @callback = @options[:callback] || {}
+      @callback = Wrest::CallbackBuilder.new(@options[:callback] || {})
     end
 
     # Makes a request, runs the appropriate callback if any and
@@ -114,14 +114,7 @@ module Wrest::Native
 
     #:nodoc:
     def execute_callback_if_any(actual_response)
-      @callback.each do |callback_response_range, callback|
-        callback.call(actual_response) if case callback_response_range
-        when Range
-          callback_response_range.include?(actual_response.code.to_i)
-        when Fixnum
-          callback_response_range == actual_response.code.to_i
-        end
-      end
+      @callback.execute_callbacks(actual_response)
     end
   end
 end
