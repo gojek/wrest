@@ -130,7 +130,7 @@ You can create your own back-ends for Wrest caching by implementing the interfac
 
 ===== Uri level callbacks
 
-You can define a set of callbacks that are invoked based on the http code of the response.
+You can define a set of callbacks that are invoked based on the http codes of the responses to any requests on a given uri.
 
   "http://google.com".to_uri(:callback => {
               200      => lambda {|response| Wrest.logger.info "Ok." },
@@ -140,7 +140,7 @@ You can define a set of callbacks that are invoked based on the http code of the
 
 ===== Per request callbacks
 
-You can define callbacks executed for a response to a particular request.
+You can also define callbacks that are invoked based on the http code of the response to a particular request.
 
   "http://google.com".to_uri.get do |callback|
     callback.on_ok do |response|
@@ -235,4 +235,5 @@ Run the tests in a different terminal:
 * Nikhil Vallishayee : {nikhilvallishayee}[http://github.com/nikhilvallishayee]
 * Jacques Crocker : {railsjedi}[http://github.com/railsjedi]
 * Jasim A Basheer: {jasim}[http://github.com/jasim]
+* Arvind Laxminarayan: {ardsrk}[http://github.com/ardsrk]
 
