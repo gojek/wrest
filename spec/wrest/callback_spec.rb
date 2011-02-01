@@ -36,6 +36,12 @@ module Wrest
         merged_callback = callback.merge(block)
         merged_callback.should_not equal(callback)
       end
+
+      it "should return the callback object it's called on if no block is provided" do
+        callback = Callback.new
+        merged_callback = callback.merge(nil)
+        merged_callback.should equal(callback)
+      end
     end
 
     context "on_ok" do
@@ -63,6 +69,56 @@ module Wrest
         callback.on_ok
         callback.execute(response_200)
         on_ok.should be_false
+      end
+    end
+
+    context "custom codes" do
+      let(:code){200}
+      it "should register a callback given a code as integer" do
+        on_ok = false
+        callback = Callback.new
+        callback.on(code) {|response| on_ok = true}
+        callback.execute(response_200)
+        on_ok.should be_true
+      end
+
+      it "should register another callback given a code as integer is already registered" do
+        on_ok = false
+        another_ok = false
+        callback = Callback.new(code => lambda{|response| on_ok = true})
+        callback.on(code) {|response| another_ok = true}
+        callback.execute(response_200)
+        on_ok.should be_true
+        another_ok.should be_true
+      end
+
+      it "should register a callback given a code as range" do
+        on_success = false
+        code = 200..206
+        callback = Callback.new
+        callback.on(code) {|response| on_success = true}
+        callback.execute(response_200)
+        on_success.should be_true
+      end
+
+      it "should register a callback given a code as range is already registered" do
+        on_success = false
+        another_success = false
+        code = 200..206
+        callback = Callback.new(code => lambda{|response| on_success = true})
+        callback.on(code) {|response| another_success = true}
+        callback.execute(response_200)
+        on_success.should be_true
+        another_success.should be_true
+      end
+
+      it "should not execute a callback registered for a range of response codes given a reponse with code that does not fall in the range" do
+        block_executed = false
+        code = 200..206
+        callback = Callback.new(code => lambda{|response| block_executed = true})
+        response_301 = mock(Net::HTTPOK, :code => 301, :message => "moved permanenlty", :body => '', :to_hash => {})
+        callback.execute(response_301)
+        block_executed.should be_false
       end
     end
   end

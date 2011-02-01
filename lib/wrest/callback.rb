@@ -17,15 +17,28 @@ module Wrest
     end
 
     def merge(block)
-      callback = Callback.new(@callbacks) 
-      block.call(callback)
-      callback
+      if block
+        callback = Callback.new(@callbacks) 
+        block.call(callback)
+        callback
+      else
+        self
+      end
     end
 
     def execute(response)
       @callbacks.each do |code, callback_list|
-        callback_list.each {|callback| callback.call(response)} if code == response.code.to_i
+        callback_list.each {|callback| callback.call(response)} if case code
+        when Range
+          code.include?(response.code.to_i)
+        when Fixnum
+          code == response.code.to_i
+        end
       end
+    end
+
+    def on(code, &block)
+      @callbacks[code] ? @callbacks[code] << block : @callbacks[code] = [block]
     end
 
     {200 => "ok", 201 => "created", 202 => "accepted", 204 => "no_content", 301 => "moved_permanently", 302 => "found", 303 => "see_other", 304 => "not_modified",
