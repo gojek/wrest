@@ -28,8 +28,13 @@ module Wrest
       end
     end
 
-    def on_ok(&block)
-      (@callbacks[200] ? @callbacks[200] << block : @callbacks[200] = [block]) if block
-    end
+    {200 => "ok", 201 => "created", 202 => "accepted", 204 => "no_content", 301 => "moved_permanently", 302 => "found", 303 => "see_other", 304 => "not_modified",
+      307 => "temporary_redirect", 400 => "bad_request", 401 => "unauthorized", 403 => "forbidden", 404 => "not_found", 405 => "method_not_allowed",
+      406 => "not_acceptable", 422 => "unprocessable_entity", 500 => "internal_server_error"}.each do |code, method|
+        method_name = "on_#{method}".to_sym
+        define_method method_name do |&block|
+          (@callbacks[code] ? @callbacks[code] << block : @callbacks[code] = [block]) if block
+        end
+      end
   end
 end
