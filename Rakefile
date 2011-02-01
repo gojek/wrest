@@ -10,6 +10,9 @@
 # Note that some optional libraries/gems that the build (not Wrest itself) uses may not be available on all implementations of Ruby.
 puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
+require 'bundler'
+Bundler::GemHelper.install_tasks
+
 if Object.const_defined?('RAILS_ROOT') || Object.const_defined?('Rails') 
   require File.dirname(__FILE__) + '/../../../config/environment'
 else

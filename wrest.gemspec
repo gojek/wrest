@@ -5,7 +5,7 @@ require 'wrest/version'
 
 Gem::Specification.new do |s|  
   s.name        = "wrest"
-  s.version     = Wrest::VERSION::STRING
+  s.version     = Wrest::VERSION
   s.authors     = ["Sidu Ponnappa", "Niranjan Paranjape"]
   s.email       = ["sidu@c42.in"]
   s.homepage    = "http://c42.in/open_source"
