@@ -35,15 +35,13 @@ module Wrest
     #     'http://localhost:3000/uploads'.to_uri.post_multipart('file' => UploadIO.new(file, "image/jpg", '/path/to/image.jpg'))
     #   end
     def post_multipart(parameters = {}, headers = {}, &block)
-      callbacks = build_callbacks_hash(block)
-      Http::PostMultipart.new(self, parameters, headers, @options.merge(callbacks)).invoke
+      Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
     
     # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
     # that mimics a multipart form being put. I sincerely hope you never need to use this.
     def put_multipart(parameters = {}, headers = {}, &block)
-      callbacks = build_callbacks_hash(block)
-      Http::PutMultipart.new(self, parameters, headers, @options.merge(callbacks)).invoke
+      Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
   end
   
