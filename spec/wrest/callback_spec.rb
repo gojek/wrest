@@ -10,11 +10,9 @@ module Wrest
         on_another_ok = false
 
         hash = {200 => lambda{|response| on_ok = true}}
-        block = lambda{|callback| 
-          callback.on_ok do |response| 
-            on_another_ok = true
-          end
-        }
+        block = lambda do |callback| 
+          callback.on_ok{|response| on_another_ok = true}
+        end
         Callback.new(hash).merge(block).execute(response_200)
         on_ok.should be_true
         on_another_ok.should be_true
@@ -27,11 +25,9 @@ module Wrest
         on_another_ok = false
 
         hash = {200 => lambda{|response| on_ok = true}}
-        block = lambda{|callback|
-          callback.on_ok do |response|
-            on_another_ok = true
-          end
-        }
+        block = lambda do |callback|
+          callback.on_ok{|response| on_another_ok = true} 
+        end
         callback = Callback.new(hash)
         merged_callback = callback.merge(block)
         merged_callback.should_not equal(callback)
