@@ -92,8 +92,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def get(parameters = {}, headers = {}, &block)
-      callbacks = build_callbacks_hash(block)
-      Http::Get.new(self, parameters, headers, @options.merge(callbacks)).invoke
+      Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
     # Make a PUT request to this URI. This is a convenience API
@@ -101,8 +100,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def put(body = '', headers = {}, parameters = {}, &block)
-      callbacks = build_callbacks_hash(block)
-      Http::Put.new(self, body.to_s, headers, parameters, @options.merge(callbacks)).invoke
+      Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -111,8 +109,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def post(body = '', headers = {}, parameters = {}, &block)
-      callbacks = build_callbacks_hash(block)
-      Http::Post.new(self, body.to_s, headers, parameters, @options.merge(callbacks)).invoke
+      Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options).invoke
     end
     
     # Makes a POST request to this URI. This is a convenience API
@@ -123,10 +120,9 @@ module Wrest #:nodoc:
     # in the body, as well as setting the Content-Type header to
     # application/x-www-form-urlencoded
     def post_form(parameters = {}, headers = {}, &block)
-      callbacks = build_callbacks_hash(block)
       headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
       body = parameters.to_query
-      Http::Post.new(self, body, headers, {}, @options.merge(callbacks)).invoke
+      Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
@@ -134,8 +130,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def delete(parameters = {}, headers = {}, &block)
-      callbacks = build_callbacks_hash(block)
-      Http::Delete.new(self, parameters, headers, @options.merge(callbacks)).invoke
+      Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API
@@ -170,12 +165,5 @@ module Wrest #:nodoc:
     end
     
     include Http::ConnectionFactory
-
-    private 
-
-    def build_callbacks_hash(block)
-      result = {:callback => CallbackBuilder.new(@options[:callback] || {}).update(block).build}
-      result[:callback].empty? ? {} : result
-    end
   end
 end
