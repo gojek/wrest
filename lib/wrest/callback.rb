@@ -9,25 +9,32 @@
 #
 module Wrest
   class Callback
-    def initialize(callbacks={})
-      @callbacks = callbacks.clone
-      @callbacks.each do |code, block|
-        @callbacks[code] = [block] unless block.is_a?(Array)
+    attr_reader :callback_hash
+
+    def initialize(callable)
+      if callable.is_a?(Hash)
+        @callback_hash = callable.clone
+        @callback_hash.each do |code, block|
+          @callback_hash[code] = [block] unless block.is_a?(Array)
+        end
+      elsif callable.is_a?(Proc)
+        @callback_hash = {}
+        callable.call(self)
       end
     end
 
-    def merge(block)
-      if block
-        callback = Callback.new(@callbacks) 
-        block.call(callback)
-        callback
-      else
-        self
+    def merge(callback)
+      merged_callback_hash = callback_hash.clone
+      other_callback_hash = callback.callback_hash
+      other_callback_hash.each do |code, callback_blocks|
+        merged_callback_hash[code] ||= [] 
+        merged_callback_hash[code] += callback_blocks
       end
+      Callback.new(merged_callback_hash)
     end
 
     def execute(response)
-      @callbacks.each do |code, callback_list|
+      callback_hash.each do |code, callback_list|
         callback_list.each {|callback| callback.call(response)} if case code
         when Range
           code.include?(response.code.to_i)
@@ -38,7 +45,7 @@ module Wrest
     end
 
     def on(code, &block)
-      @callbacks[code] ? @callbacks[code] << block : @callbacks[code] = [block]
+      @callback_hash[code] ? @callback_hash[code] << block : @callback_hash[code] = [block]
     end
 
     {200 => "ok", 201 => "created", 202 => "accepted", 204 => "no_content", 301 => "moved_permanently", 302 => "found", 303 => "see_other", 304 => "not_modified",
@@ -46,7 +53,7 @@ module Wrest
       406 => "not_acceptable", 422 => "unprocessable_entity", 500 => "internal_server_error"}.each do |code, method|
         method_name = "on_#{method}".to_sym
         define_method method_name do |&block|
-          (@callbacks[code] ? @callbacks[code] << block : @callbacks[code] = [block]) if block
+          (@callback_hash[code] ? @callback_hash[code] << block : @callback_hash[code] = [block]) if block
         end
       end
   end

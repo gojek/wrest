@@ -13,55 +13,44 @@ module Wrest
         block = lambda do |callback| 
           callback.on_ok{|response| on_another_ok = true}
         end
-        Callback.new(hash).merge(block).execute(response_200)
+        uri_callback = Callback.new(hash)
+        request_callback = Callback.new(block)
+        callback = uri_callback.merge(request_callback)
+        callback.execute(response_200)
         on_ok.should be_true
         on_another_ok.should be_true
       end
     end
 
     context "merge" do
-      it "should return a new Callback instance" do
-        on_ok = false
-        on_another_ok = false
-
-        hash = {200 => lambda{|response| on_ok = true}}
+      it "should return a new Callback instance that has callbacks hash from both Callback instances" do
+        callback1 = Callback.new({200 => lambda{|response| }})
         block = lambda do |callback|
-          callback.on_ok{|response| on_another_ok = true} 
+          callback.on_ok{|response| }
         end
-        callback = Callback.new(hash)
-        merged_callback = callback.merge(block)
-        merged_callback.should_not equal(callback)
-      end
+        callback2 = Callback.new(block)
+        merged_callback = callback1.merge(callback2)
 
-      it "should return the callback object it's called on if no block is provided" do
-        callback = Callback.new
-        merged_callback = callback.merge(nil)
-        merged_callback.should equal(callback)
+        merged_callback.callback_hash.should have(2).callbacks_for(200)
       end
     end
 
     context "on_ok" do
       it "should register a callback on HTTP 200 with the given block" do
-        on_ok = false
-        callback = Callback.new
-        callback.on_ok {|response| on_ok = true}
-        callback.execute(response_200)
-        on_ok.should be_true
+        callback = Callback.new({})
+        callback.on_ok {|response| }
+        callback.callback_hash.should have(1).callbacks_for(200)
       end
 
       it "should register additional callback if a callback for HTTP 200 already exists with the given block" do
-        on_ok = false
-        on_another_ok = false
-        callback = Callback.new(200 => lambda{|response| on_another_ok = true})
-        callback.on_ok {|response| on_ok = true}
-        callback.execute(response_200)
-        on_ok.should be_true
-        on_another_ok.should be_true
+        callback = Callback.new(200 => lambda{|response| })
+        callback.on_ok {|response| }
+        callback.callback_hash.should have(2).callbacks_for(200)
       end
 
       it "should not have any effect if called without a block" do
         on_ok = false
-        callback = Callback.new
+        callback = Callback.new({})
         callback.on_ok
         callback.execute(response_200)
         on_ok.should be_false
@@ -71,41 +60,38 @@ module Wrest
     context "custom codes" do
       let(:code){200}
       it "should register a callback given a code as integer" do
-        on_ok = false
-        callback = Callback.new
-        callback.on(code) {|response| on_ok = true}
-        callback.execute(response_200)
-        on_ok.should be_true
+        callback = Callback.new({})
+        callback.on(code) {|response| }
+        callback.callback_hash.should have(1).callbacks_for(200)
       end
 
       it "should register another callback given a code as integer is already registered" do
-        on_ok = false
-        another_ok = false
-        callback = Callback.new(code => lambda{|response| on_ok = true})
-        callback.on(code) {|response| another_ok = true}
-        callback.execute(response_200)
-        on_ok.should be_true
-        another_ok.should be_true
+        callback = Callback.new(code => lambda{|response| })
+        callback.on(code) {|response| }
+        callback.callback_hash.should have(2).callbacks_for(200)
       end
 
       it "should register a callback given a code as range" do
-        on_success = false
         code = 200..206
-        callback = Callback.new
-        callback.on(code) {|response| on_success = true}
-        callback.execute(response_200)
-        on_success.should be_true
+        callback = Callback.new({})
+        callback.on(code) {|response| }
+        callback.callback_hash.should have(1).callbacks_for(200..206)
       end
 
       it "should register a callback given a code as range is already registered" do
-        on_success = false
-        another_success = false
         code = 200..206
-        callback = Callback.new(code => lambda{|response| on_success = true})
-        callback.on(code) {|response| another_success = true}
+        callback = Callback.new(code => lambda{|response| })
+        callback.on(code) {|response| }
+        callback.callback_hash.should have(2).callbacks_for(200..206)
+      end
+
+      it "should execute a callback registered for a range of response codes given a response with code that falls in the range" do
+        on_ok = false
+        code = 200..206
+        callback = Callback.new({})
+        callback.on(code) {|response| on_ok = true}
         callback.execute(response_200)
-        on_success.should be_true
-        another_success.should be_true
+        on_ok.should be_true
       end
 
       it "should not execute a callback registered for a range of response codes given a reponse with code that does not fall in the range" do
