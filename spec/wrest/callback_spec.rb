@@ -4,6 +4,33 @@ require "#{Wrest::Root}/wrest"
 module Wrest
   describe Callback do
     let(:response_200){mock(Net::HTTPOK, :code => 200, :message => "OK", :body => '', :to_hash => {})}
+    context "new" do
+      context "ensure_values_are_collections" do
+        it "should return a hash whose values are collections given a hash with values that are not collections" do
+          hash = {200 => lambda{|response| }}
+          hash = Callback.new(hash).callback_hash
+          hash[200].should be_an_instance_of(Array)
+        end
+
+        it "should return the hash unchanged if the given hash has values that are collections" do
+          hash = {200 => [lambda{|response| }]}
+          Callback.new(hash).callback_hash.should == hash
+        end
+      end
+
+      it "should create a new Callback instance with callback_hash as a key/value pair of HTTP code and collection of lambdas given a block" do
+        block = lambda do |callback|
+          callback.on_ok{|response| }
+        end
+        Callback.new(block).callback_hash.should have(1).callbacks_for(200)
+      end
+
+      it "should create a new Callback instance with empty callback_hash given an empty block" do
+        block = lambda{|callback| }
+        Callback.new(block).callback_hash.should be_empty
+      end
+    end
+
     context "execute" do
       it "should execute all callbacks registered for HTTP code 200 given a response with the same code" do
         on_ok = false
@@ -78,7 +105,7 @@ module Wrest
         callback.callback_hash.should have(1).callbacks_for(200..206)
       end
 
-      it "should register a callback given a code as range is already registered" do
+      it "should register another callback given a code as range is already registered" do
         code = 200..206
         callback = Callback.new(code => lambda{|response| })
         callback.on(code) {|response| }
