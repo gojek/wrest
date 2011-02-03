@@ -1,4 +1,4 @@
-= Wrest 1.1.0
+= Wrest 1.2.0
 
 (c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
