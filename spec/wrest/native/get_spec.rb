@@ -33,12 +33,44 @@ describe Wrest::Native::Get do
     end
   end
 
+  context "build an identical request with caching disabled" do
+    it "should call Wrest::Get.new to build the new request" do
+      Wrest::Native::Get.should_receive(:new).with(@get.uri, {}, {}, anything())
+      new_get = @get.build_request_without_cache_store({})
+    end
+    
+    it "should merge the validation headers with the new request's headers" do
+      new_get = @get.build_request_without_cache_store(:foo => "bar")
+      new_get.headers["foo"].should == "bar"
+    end
+
+    it "should return a similar get request with disable_cache and without cache store" do
+      new_get = @get.build_request_without_cache_store({})
+
+      new_get.parameters.should == @get.parameters
+      new_get.uri.should == @get.uri
+      new_get.options.should == @get.options.merge(:disable_cache => true).except(:cache_store)
+    end
+  end
+
   context "caching" do
+    after :each do
+      Wrest.default_cachestore = nil
+    end
+    
     it "should initialize CacheProxy" do
       Wrest::CacheProxy.should_receive(:new)
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
     end
 
+    it "should call the CacheProxy with nil cache store if disable_cache is passed" do
+
+      Wrest::CacheProxy.should_receive(:new).with(anything(), nil)
+
+      Wrest.always_cache_using_hash!
+      @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:disable_cache => true})
+    end
+    
     it "should route all requests through cache proxy" do
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
       @get.cache_proxy.should_receive(:get)

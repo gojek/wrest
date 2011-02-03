@@ -116,6 +116,7 @@ Use the following method to enable caching for all requests, and set Memcached a
     Wrest.always_cache_using_memcached!
 
 For fine-grained control over the cache store (or to use multiple cache stores in the same codebase), you can use this API:
+
     memcache_store = Wrest::Components::CacheStore::Memcached.new("localhost:11211")
     hash_store = {}
     
@@ -125,6 +126,10 @@ For fine-grained control over the cache store (or to use multiple cache stores i
 A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at {Wrest Caching Doc}[https://github.com/kaiwren/wrest/blob/master/Caching.markdown]
 
 You can create your own back-ends for Wrest caching by implementing the interface implemented in https://github.com/kaiwren/wrest/blob/master/lib/wrest/components/cache_store/memcached.rb
+
+To explicitly disable caching for specific requests:
+
+    "http://c42.in".to_uri(:disable_cache => true).get
 
 ==== Callbacks
 

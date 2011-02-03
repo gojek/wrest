@@ -99,10 +99,7 @@ module Wrest
         cache_validation_headers["if-modified-since"] = last_modified unless last_modified.nil?
         cache_validation_headers["if-none-match"] = etag unless etag.nil?
 
-        new_headers =@get.headers.clone.merge cache_validation_headers
-        new_options =@get.options.clone.tap { |opts| opts.delete :cache_store } # do not run this through the caching mechanism.
-
-        new_request = Wrest::Native::Get.new(@get.uri, @get.parameters, new_headers, new_options)
+        new_request = @get.build_request_without_cache_store(cache_validation_headers)
 
         new_request.invoke
       end

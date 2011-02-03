@@ -14,7 +14,10 @@ module Wrest::Native
     def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
       follow_redirects = options[:follow_redirects]
       options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
-      @cache_proxy = Wrest::CacheProxy::new(self, options[:cache_store] || Wrest.default_cachestore)
+
+      cache_store = (options[:cache_store] || Wrest.default_cachestore) unless options[:disable_cache]
+      @cache_proxy = Wrest::CacheProxy::new(self, cache_store)
+      
       super(
             wrest_uri,
             Net::HTTP::Get,
@@ -51,5 +54,14 @@ module Wrest::Native
     end
 
     alias_method_chain :invoke, :cache_check
+
+    def build_request_without_cache_store(cache_validation_headers)
+      new_headers = headers.clone.merge cache_validation_headers
+      new_options = options.clone.tap { |opts| opts.delete :cache_store; opts[:disable_cache] = true } # do not run this through the caching mechanism.
+
+      new_request = Wrest::Native::Get.new(uri, parameters, new_headers, new_options)
+      new_request
+    end
+
   end
 end

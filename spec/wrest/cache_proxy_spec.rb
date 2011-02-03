@@ -83,20 +83,19 @@ describe Wrest::CacheProxy do
     context "Cache Validation" do
 
       context "how to validate a cache entry" do
-        before :all do
-          @default_options = {:follow_redirects=>true, :follow_redirects_count=>0, :follow_redirects_limit=>5}
+        before :each do
+          @direct_get = Wrest::Native::Get.new(@request_uri)
+          @default_options_with_cache_disabled = {:follow_redirects=>true, :follow_redirects_count=>0, :follow_redirects_limit=>5, :disable_cache => true}
         end
 
-        it "should send an If-Not-Modified Get request if the cache has a Last-Modified" do
+        it "should build a new identical Get with an If-Not-Modified if the cache has a Last-Modified" do
           @ok_response.should_receive(:expired?).and_return(true)
           @ok_response.can_be_validated?.should == true
 
           @cache.should_receive(:[]).with(@get.hash).and_return(@ok_response)
 
-          direct_get = Wrest::Native::Get.new(@request_uri)
-          direct_get.should_receive(:invoke).and_return(@ok_response)
-
-          Wrest::Native::Get.should_receive(:new).with(@request_uri, {}, {"if-modified-since" => @ok_response.headers["last-modified"]}, @default_options).and_return(direct_get)
+          @get.should_receive(:build_request_without_cache_store).with("if-modified-since" => @ok_response.headers["last-modified"]).and_return(@direct_get)
+          @direct_get.should_receive(:invoke).and_return(@ok_response)
 
           @cache_proxy.get
         end
@@ -112,10 +111,8 @@ describe Wrest::CacheProxy do
 
           @cache.should_receive(:[]).with(@get.hash).and_return(response_with_etag)
 
-          direct_get = Wrest::Native::Get.new(@request_uri)
-          direct_get.should_receive(:invoke).and_return(response_with_etag)
-
-          Wrest::Native::Get.should_receive(:new).with(@request_uri, {}, {"if-none-match" => "123"}, @default_options).and_return(direct_get)
+          @get.should_receive(:build_request_without_cache_store).with("if-none-match" => "123").and_return(@direct_get)
+          @direct_get.should_receive(:invoke).and_return(response_with_etag)
 
           @cache_proxy.get
         end
