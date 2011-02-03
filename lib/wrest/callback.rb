@@ -13,10 +13,7 @@ module Wrest
 
     def initialize(callable)
       if callable.is_a?(Hash)
-        @callback_hash = callable.clone
-        @callback_hash.each do |code, block|
-          @callback_hash[code] = [block] unless block.is_a?(Array)
-        end
+        @callback_hash = Callback.ensure_values_are_collections(callable)
       elsif callable.is_a?(Proc)
         @callback_hash = {}
         callable.call(self)
@@ -56,5 +53,13 @@ module Wrest
           (@callback_hash[code] ? @callback_hash[code] << block : @callback_hash[code] = [block]) if block
         end
       end
+
+    def self.ensure_values_are_collections(hash)
+      result = {}
+      hash.each do |code, block|
+        result[code] = block.is_a?(Array) ? block : [block]
+      end
+      result
+    end
   end
 end
