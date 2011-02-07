@@ -37,11 +37,34 @@ module Wrest
     def post_multipart(parameters = {}, headers = {}, &block)
       Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
+
+    # Makes a multipart/form-data encoded POST request to this URI. This is a convenience API
+    # that mimics a multipart form being posted; some allegedly RESTful APIs like FCBK require 
+    # this for file uploads.
+    #
+    #   File.open('/path/to/image.jpg') do |file|
+    #     'http://localhost:3000/uploads'.to_uri.post_multipart_async('file' => UploadIO.new(file, "image/jpg", '/path/to/image.jpg'))
+    #   end
+    # Note: post_multipart_async does not return a response and should be accessed through callbacks
+    def post_multipart_async(parameters = {}, headers = {}, &block)
+      Thread.new do
+        post_multipart(parameters, headers, &block)
+      end
+    end
     
     # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
     # that mimics a multipart form being put. I sincerely hope you never need to use this.
     def put_multipart(parameters = {}, headers = {}, &block)
       Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
+    end
+
+    # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
+    # that mimics a multipart form being put. I sincerely hope you never need to use this.
+    # Note: put_multipart_async does not return a response and should be accessed through callbacks
+    def put_multipart_async(parameters = {}, headers = {}, &block)
+      Thread.new do
+        put_multipart(parameters, headers, &block)
+      end
     end
   end
   

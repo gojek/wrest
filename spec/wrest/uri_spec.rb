@@ -669,6 +669,34 @@ module Wrest
             hash.key?("success").should be_true
           end
         end
+
+        context "POST MULTIPART" do
+          it "should execute the request and the given callback in a separate thread" do
+            uri = "http://localhost:3000/uploads".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+            file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
+            file = File.open(file_name)
+            uri.post_multipart_async('file' => UploadIO.new(file, "text/plain", file_name), :calback => {200 => lambda{|response| hash["success"] = true}})
+
+            while Thread.list.size > 1
+              sleep 0.1
+            end
+            hash.key?("success").should be_true
+          end
+        end
+
+        context "PUT MULTIPART" do
+          it "should execute the request and the given callback in a separate thread" do
+            uri = "http://localhost:3000/uploads/1".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+            file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
+            file = File.open(file_name)
+            uri.put_multipart_async('file' => UploadIO.new(file, "text/plain", file_name), :calback => {200 => lambda{|response| hash["success"] = true}})
+
+            while Thread.list.size > 1
+              sleep 0.1
+            end
+            hash.key?("success").should be_true
+          end
+        end
       end
     end  
   end
