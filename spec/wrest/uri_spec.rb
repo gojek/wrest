@@ -607,6 +607,69 @@ module Wrest
           another_ok.should be_true
         end
       end
+
+      context "asynchronous", :functional => true do
+        let(:hash){Hash.new}
+        context "GET" do
+          it "should execute the request and the given callback in a separate thread" do
+            uri = "http://localhost:3000/no_body".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+            uri.get_async
+
+            while Thread.list.size > 1
+              sleep 0.1
+            end
+            hash.key?("success").should be_true
+          end
+        end
+
+        context "PUT" do
+          it "should execute the request and the given callback in a separate thread" do
+            uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
+            uri.put_async
+
+            while Thread.list.size > 1
+              sleep 0.1
+            end
+            hash.key?("success").should be_true
+          end
+        end
+
+        context "POST" do
+          it "should execute the request and the given callback in a separate thread" do
+            uri = "http://localhost:3000/nothing".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+            uri.post_async
+
+            while Thread.list.size > 1
+              sleep 0.1
+            end
+            hash.key?("success").should be_true
+          end
+        end
+
+        context "DELETE" do
+          it "should execute the request and the given callback in a separate thread" do
+            uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
+            uri.delete_async
+
+            while Thread.list.size > 1
+              sleep 0.1
+            end
+            hash.key?("success").should be_true
+          end
+        end
+
+        context "POST FORM" do
+          it "should execute the request and the given callback in a separate thread" do
+            uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
+            uri.delete_async
+
+            while Thread.list.size > 1
+              sleep 0.1
+            end
+            hash.key?("success").should be_true
+          end
+        end
+      end
     end  
   end
 end

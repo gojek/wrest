@@ -95,12 +95,34 @@ module Wrest #:nodoc:
       Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
+    # Make a GET request to this URI. This is a convenience API
+    # that creates a Wrest::Native::Get.
+    # 
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    # Note: get_async does not return a response and should be accessed through callbacks 
+    def get_async(parameters = {}, headers = {}, &block)
+      Thread.new do
+        get(parameters, headers, &block)
+      end
+    end
+
     # Make a PUT request to this URI. This is a convenience API
     # that creates a Wrest::Native::Put, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def put(body = '', headers = {}, parameters = {}, &block)
       Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options).invoke
+    end
+
+    # Make a PUT request to this URI. This is a convenience API
+    # that creates a Wrest::Native::Put.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    # Note: put_async does not return a response and should be accessed through callbacks
+    def put_async(body = '', headers = {}, parameters = {}, &block)
+      Thread.new do
+        put(body, headers, parameters, &block)
+      end
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -110,6 +132,18 @@ module Wrest #:nodoc:
     # Remember to escape all parameter strings if necessary, using URI.escape
     def post(body = '', headers = {}, parameters = {}, &block)
       Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options).invoke
+    end
+
+    # Makes a POST request to this URI. This is a convenience API
+    # that creates a Wrest::Native::Post.
+    # Note that sending an empty body will blow up if you're using libcurl.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    # Note: post_async does not return a response and should be accessed through callbacks
+    def post_async(body = '', headers = {}, parameters = {}, &block)
+      Thread.new do
+        post(body, headers, parameters, &block)
+      end
     end
     
     # Makes a POST request to this URI. This is a convenience API
@@ -125,12 +159,37 @@ module Wrest #:nodoc:
       Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
+    # Makes a POST request to this URI. This is a convenience API
+    # that mimics a form being posted; some allegly RESTful APIs like FCBK require 
+    # this.
+    #
+    # Form encoding involves munging the parameters into a string and placing them
+    # in the body, as well as setting the Content-Type header to
+    # application/x-www-form-urlencoded
+    # Note: post_form_async does not return a response and should be accessed through callbacks
+    def post_form_async(parameters = {}, headers = {}, &block)
+      Thread.new do
+        post_form(parameters, headers, &block)
+      end
+    end
+
     # Makes a DELETE request to this URI. This is a convenience API
     # that creates a Wrest::Native::Delete, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def delete(parameters = {}, headers = {}, &block)
       Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
+    end
+
+    # Makes a DELETE request to this URI. This is a convenience API
+    # that creates a Wrest::Native::Delete.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    # Note: delete_async does not return a response and should be accessed through callbacks
+    def delete_async(parameters = {}, headers = {}, &block)
+      Thread.new do
+        delete(parameters, headers, &block)
+      end
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API
