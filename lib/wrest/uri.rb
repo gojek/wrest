@@ -108,6 +108,7 @@ module Wrest #:nodoc:
       Thread.new do
         get(parameters, headers, &block)
       end
+      nil
     end
 
     # Make a PUT request to this URI. This is a convenience API
@@ -130,6 +131,7 @@ module Wrest #:nodoc:
       Thread.new do
         put(body, headers, parameters, &block)
       end
+      nil
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -154,6 +156,7 @@ module Wrest #:nodoc:
       Thread.new do
         post(body, headers, parameters, &block)
       end
+      nil
     end
     
     # Makes a POST request to this URI. This is a convenience API
@@ -184,6 +187,7 @@ module Wrest #:nodoc:
       Thread.new do
         post_form(parameters, headers, &block)
       end
+      nil
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
@@ -206,6 +210,7 @@ module Wrest #:nodoc:
       Thread.new do
         delete(parameters, headers, &block)
       end
+      nil
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API

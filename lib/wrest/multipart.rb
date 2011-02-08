@@ -53,6 +53,7 @@ module Wrest
       Thread.new do
         post_multipart(parameters, headers, &block)
       end
+      nil
     end
     
     # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
@@ -71,6 +72,7 @@ module Wrest
       Thread.new do
         put_multipart(parameters, headers, &block)
       end
+      nil
     end
   end
   

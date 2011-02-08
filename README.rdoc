@@ -161,11 +161,13 @@ Please note that Wrest is a synchronous library. All requests are blocking, and 
 Asynchronous requests are non-blocking. They do not return a response and the request is executed on a separate thread. The only way to access the response 
 while using asynchronous request is through callbacks. 
 
-  "http://www.google.com".to_uri.get_async do |callback|
+  "http://c42.in".to_uri.get_async do |callback|
     callback.on_ok do |response|
       Wrest.logger.info "Ok."
     end
   end
+
+  Thread.main.stop # Causes thread created by get_async to execute
 
 Note: The current implementation of asynchronous requests is naive and not production ready.
 
