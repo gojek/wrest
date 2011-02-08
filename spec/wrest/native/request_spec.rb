@@ -128,11 +128,11 @@ describe Wrest::Native::Request do
       cb.should_receive(:cb_200)
       cb.should_receive(:cb_range)
 
-      response_handler = {
+      response_handler = Wrest::Callback.new({
         200 => lambda { |response| cb.cb_200 },
         204 => lambda { |response| cb.cb_204},
         500..599 => lambda { |response| cb.cb_range}
-      }
+      })
 
       uri = 'http://localhost/foo'.to_uri
       request = Wrest::Native::Get.new(uri,{},{},:callback => response_handler)

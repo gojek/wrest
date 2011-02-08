@@ -35,6 +35,7 @@ module Wrest #:nodoc:
         @query = uri_scheme[-2] || ''
         @username = (@options[:username] ||= @uri.user)
         @password = (@options[:password] ||= @uri.password)
+        @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
     end 
     
     def to_template(pattern)

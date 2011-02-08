@@ -57,8 +57,8 @@ module Wrest::Native
       @cache_store = options[:cache_store]
       @verify_mode = @options[:verify_mode]
       @detailed_http_logging = options[:detailed_http_logging]
-      @uri_callback = Wrest::Callback.new(@options[:callback] || {})
-      @request_callback = Wrest::Callback.new(@options[:callback_block] || {})
+      @callback = @options[:callback] || Wrest::Callback.new({})
+      @callback = @callback.merge(Wrest::Callback.new(@options[:callback_block] || {}))
     end
 
     # Makes a request, runs the appropriate callback if any and
@@ -115,7 +115,7 @@ module Wrest::Native
 
     #:nodoc:
     def execute_callback_if_any(actual_response)
-      @uri_callback.merge(@request_callback).execute(actual_response)
+      @callback.execute(actual_response)
     end
   end
 end

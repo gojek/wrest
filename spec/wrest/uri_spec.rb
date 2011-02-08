@@ -444,8 +444,8 @@ module Wrest
       end
 
       require "#{Wrest::Root}/wrest/multipart"
-      http_hash = {"get" => Wrest::Native::Get, "delete" => Wrest::Native::Delete, "post_multipart" => Wrest::Native::PostMultipart, "put_multipart" => Wrest::Native::PutMultipart}
-      http_hash.each do |http_method, klass|
+      http_methods = ["get", "delete", "post_multipart", "put_multipart"]
+      http_methods.each do |http_method|
         context "#{http_method}" do
           it "should call the given block with a Callback object" do
             connection = setup_connection
@@ -459,24 +459,24 @@ module Wrest
             callback_called.should be_true
           end
 
-          it "should create a Wrest::Native::#{http_method.capitalize} object with a callbacks hash in options" do
+          it "should execute the request callback after receiving a successful response" do
             connection = setup_connection
+            on_ok = false
             uri = "http://localhost:3000/".to_uri
             uri.stub!(:create_connection).and_return(connection)
-            request = klass.new(uri)
-            klass.should_receive(:new).with(uri, {}, {}, {:username => nil, :password => nil, :callback_block => an_instance_of(Proc)}).and_return(request)
             uri.send(http_method.to_sym) do |callback| 
-              callback.on_ok{|response| }
+              callback.on_ok{|response| on_ok = true}
             end
+            on_ok.should be_true
           end
 
-          it "should create a Wrest::Native::#{http_method.capitalize} object with callbacks hash from uri#options even when no block is given" do
+          it "should execute the uri callback after receiving a successful response" do
             connection = setup_connection
-            uri = "http://localhost:3000/".to_uri(:callback => {200 => lambda{|response| }})
+            on_ok = false
+            uri = "http://localhost:3000/".to_uri(:callback => {200 => lambda{|response| on_ok = true}})
             uri.stub(:create_connection).and_return(connection)
-            request = klass.new(uri)
-            klass.should_receive(:new).with(uri, {}, {}, {:username => nil, :password => nil, :callback => {200 => an_instance_of(Proc)}}).and_return(request)
             uri.send(http_method.to_sym)
+            on_ok.should be_true
           end
 
           it "should execute both callbacks after the successful response is received" do
@@ -488,8 +488,6 @@ module Wrest
             block = lambda do |callback|
               callback.on_ok{|response| another_ok = true }
             end
-            request = klass.new(uri, {}, {}, {:username => nil, :password => nil, :callback => {200 => lambda{|response| on_ok = true}}, :callback_block => block})
-            klass.should_receive(:new).with(uri, {}, {}, {:username => nil, :password => nil, :callback => {200 => an_instance_of(Proc)}, :callback_block => an_instance_of(Proc)}).and_return(request)
             uri.send(http_method.to_sym) do |callback| 
               callback.on_ok{|response| another_ok = true }
             end
@@ -499,7 +497,7 @@ module Wrest
         end
       end
 
-      {"put" => Wrest::Native::Put, "post" => Wrest::Native::Post}.each do |http_method, klass|
+      ["put", "post"].each do |http_method|
         context "#{http_method}" do
           context "Native API" do
             it "should yield callback object if a block is given for Uri::get" do
@@ -514,24 +512,24 @@ module Wrest
               callback_called.should be_true
             end
 
-            it "should create a Wrest::Native::#{http_method.capitalize} object with callbacks hash in options" do
+            it "should execute the request callback after receiving a successful response" do
               connection = setup_connection
+              on_ok = false
               uri = "http://localhost:3000/".to_uri
               uri.stub!(:create_connection).and_return(connection)
-              request = klass.new(uri)
-              klass.should_receive(:new).with(uri, "", {}, {}, {:username => nil, :password => nil, :callback_block => an_instance_of(Proc)}).and_return(request)
               uri.send(http_method.to_sym) do |callback| 
-                callback.on_ok{|response| }
+                callback.on_ok{|response| on_ok = true}
               end
+              on_ok.should be_true
             end
 
-            it "should create a Wrest::Native::#{http_method.capitalize} object with callbacks hash from uri#options even when no block is given" do
+            it "should execute the uri callback after receiving a successful response" do
               connection = setup_connection
-              uri = "http://localhost:3000/".to_uri(:callback => {200 => lambda{|response| }})
+              on_ok = false
+              uri = "http://localhost:3000/".to_uri(:callback => {200 => lambda{|response| on_ok = true}})
               uri.stub(:create_connection).and_return(connection)
-              request = klass.new(uri)
-              klass.should_receive(:new).with(uri, "", {}, {}, {:username => nil, :password => nil, :callback => {200 => an_instance_of(Proc)}}).and_return(request)
               uri.send(http_method.to_sym) 
+              on_ok.should be_true
             end
 
             it "should execute both callbacks after the successful response is received" do
@@ -543,8 +541,6 @@ module Wrest
               block = lambda do |callback|
                 callback.on_ok {|response| another_ok = true}
               end
-              request = klass.new(uri, "", {}, {}, {:username => nil, :password => nil, :callback => {200 => lambda{|response| on_ok = true}}, :callback_block => block})
-              klass.should_receive(:new).with(uri, "", {}, {}, {:username => nil, :password => nil, :callback => {200 => an_instance_of(Proc)}, :callback_block => an_instance_of(Proc)}).and_return(request)
               uri.send(http_method.to_sym) do |callback| 
                 callback.on_ok {|response| another_ok = true}
               end 
@@ -568,24 +564,25 @@ module Wrest
           callback_called.should be_true
         end
 
-        it "should create a Wrest::Native::Post object with callbacks hash in options" do
+        it "should execute the request callback after receiving a successful response" do
           connection = setup_connection
+          on_ok = false
           uri = "http://localhost:3000/".to_uri
           uri.stub!(:create_connection).and_return(connection)
           request = Wrest::Native::Post.new(uri)
-          Wrest::Native::Post.should_receive(:new).with(uri, "", {"content-type"=>"application/x-www-form-urlencoded"}, {}, {:username => nil, :password => nil, :callback_block => an_instance_of(Proc)}).and_return(request)
           uri.post_form do |callback| 
-            callback.on_ok{|response| }
+            callback.on_ok{|response| on_ok = true}
           end
+          on_ok.should be_true
         end
 
-        it "should create a Wrest::Native::Post object with callbacks hash from uri#options even when no block is given" do
+        it "should execute the uri callback after receiving a successful response" do
           connection = setup_connection
-          uri = "http://localhost:3000/".to_uri(:callback => {200 => lambda{|response| }})
+          on_ok = false
+          uri = "http://localhost:3000/".to_uri(:callback => {200 => lambda{|response| on_ok = true}})
           uri.stub(:create_connection).and_return(connection)
-          request = Wrest::Native::Post.new(uri)
-          Wrest::Native::Post.should_receive(:new).with(uri, "", {"content-type"=>"application/x-www-form-urlencoded"}, {}, {:username => nil, :password => nil, :callback => {200 => an_instance_of(Proc)}}).and_return(request)
           uri.post_form 
+          on_ok.should be_true
         end
 
         it "should execute both callbacks after the successful response is received" do
@@ -597,9 +594,6 @@ module Wrest
           block = lambda do |callback|
             callback.on_ok{|response| another_ok = true}
           end
-          request = Wrest::Native::Post.new(uri, "", {"content-type"=>"application/x-www-form-urlencoded"}, {}, {:username => nil, :password => nil, :callback => {200 => lambda{|response| on_ok = true}}, :callback_block => block})
-          Wrest::Native::Post.should_receive(:new).with(uri, "", {"content-type"=>"application/x-www-form-urlencoded"}, {}, {:username => nil, :password => nil, :callback => {200 => an_instance_of(Proc)}, 
-                                                        :callback_block => an_instance_of(Proc)}).and_return(request)
           uri.post_form do |callback| 
             callback.on_ok{|response| another_ok = true}
           end
