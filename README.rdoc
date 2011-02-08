@@ -167,7 +167,7 @@ while using asynchronous request is through callbacks.
     end
   end
 
-  Thread.main.stop # Causes thread created by get_async to execute
+  sleep 1 # Causes thread created by get_async to execute
 
 Note: The current implementation of asynchronous requests is naive and not production ready.
 
