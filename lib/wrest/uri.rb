@@ -26,7 +26,7 @@ module Wrest #:nodoc:
         
     # See Wrest::Native::Request for the available options and their default values.
     def initialize(uri_string, options = {})
-        @options = options
+        @options = options.clone
         @uri_string = uri_string.to_s
         @uri = URI.parse(@uri_string)
         uri_scheme = URI.split(@uri_string)
