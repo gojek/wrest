@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+=== 1.3.0
+ * GH#95 Asynchronous requests on Wrest::Uri.
+
 == 1.2.1 
  * GH#91 Remove dependency on tzinfo
 

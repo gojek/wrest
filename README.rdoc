@@ -1,4 +1,4 @@
-= Wrest 1.2.1
+= Wrest 1.3.0
 
 (c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -155,6 +155,17 @@ You can also define callbacks that are invoked based on the http code of the res
   end
 
 Please note that Wrest is a synchronous library. All requests are blocking, and will not return till the request is completed and appropriate callbacks executed.
+
+=== Asynchronous requests
+
+Asynchronous requests are non-blocking. They do not return a response and the request is executed on a separate thread. The only way to access the response 
+while using asynchronous request is through callbacks. 
+
+  "http://www.google.com".to_uri.get_async do |callback|
+    callback.on_ok do |response|
+      Wrest.logger.info "Ok."
+    end
+  end
 
 === Other useful stuff
 
