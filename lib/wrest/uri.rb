@@ -99,7 +99,10 @@ module Wrest #:nodoc:
     # that creates a Wrest::Native::Get.
     # 
     # Remember to escape all parameter strings if necessary, using URI.escape
-    # Note: get_async does not return a response and should be accessed through callbacks 
+    #
+    # Note: get_async does not return a response and the response should be accessed through callbacks.
+    # This implementation of asynchronous get is very naive and should not be used in production.
+    # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def get_async(parameters = {}, headers = {}, &block)
       Thread.new do
         get(parameters, headers, &block)
@@ -118,7 +121,10 @@ module Wrest #:nodoc:
     # that creates a Wrest::Native::Put.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    # Note: put_async does not return a response and should be accessed through callbacks
+    #
+    # Note: put_async does not return a response and the response should be accessed through callbacks.
+    # This implementation of asynchronous put is very naive and should not be used in production.
+    # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def put_async(body = '', headers = {}, parameters = {}, &block)
       Thread.new do
         put(body, headers, parameters, &block)
@@ -139,7 +145,10 @@ module Wrest #:nodoc:
     # Note that sending an empty body will blow up if you're using libcurl.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    # Note: post_async does not return a response and should be accessed through callbacks
+    #
+    # Note: post_async does not return a response and the response should be accessed through callbacks.
+    # This implementation of asynchronous post is very naive and should not be used in production.
+    # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def post_async(body = '', headers = {}, parameters = {}, &block)
       Thread.new do
         post(body, headers, parameters, &block)
@@ -166,7 +175,10 @@ module Wrest #:nodoc:
     # Form encoding involves munging the parameters into a string and placing them
     # in the body, as well as setting the Content-Type header to
     # application/x-www-form-urlencoded
-    # Note: post_form_async does not return a response and should be accessed through callbacks
+    #
+    # Note: post_form_async does not return a response and the response should be accessed through callbacks.
+    # This implementation of asynchronous post_form is very naive and should not be used in production.
+    # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def post_form_async(parameters = {}, headers = {}, &block)
       Thread.new do
         post_form(parameters, headers, &block)
@@ -185,7 +197,10 @@ module Wrest #:nodoc:
     # that creates a Wrest::Native::Delete.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    # Note: delete_async does not return a response and should be accessed through callbacks
+    #
+    # Note: delete_async does not return a response and the response should be accessed through callbacks.
+    # This implementation of asynchronous delete is very naive and should not be used in production.
+    # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def delete_async(parameters = {}, headers = {}, &block)
       Thread.new do
         delete(parameters, headers, &block)

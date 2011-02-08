@@ -45,7 +45,10 @@ module Wrest
     #   File.open('/path/to/image.jpg') do |file|
     #     'http://localhost:3000/uploads'.to_uri.post_multipart_async('file' => UploadIO.new(file, "image/jpg", '/path/to/image.jpg'))
     #   end
-    # Note: post_multipart_async does not return a response and should be accessed through callbacks
+    #
+    # Note: post_multipart_async does not return a response and the response should be accessed through callbacks
+    # This implementation of asynchronous post_multipart is very naive and should not be used in production.
+    # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def post_multipart_async(parameters = {}, headers = {}, &block)
       Thread.new do
         post_multipart(parameters, headers, &block)
@@ -60,7 +63,10 @@ module Wrest
 
     # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
     # that mimics a multipart form being put. I sincerely hope you never need to use this.
-    # Note: put_multipart_async does not return a response and should be accessed through callbacks
+    #
+    # Note: put_multipart_async does not return a response and the response should be accessed through callbacks
+    # This implementation of asynchronous put_multipart is very naive and should not be used in production.
+    # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def put_multipart_async(parameters = {}, headers = {}, &block)
       Thread.new do
         put_multipart(parameters, headers, &block)
