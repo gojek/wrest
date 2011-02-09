@@ -602,93 +602,130 @@ module Wrest
         end
       end
 
+      context "using_threads" do
+        it "should return a new uri" do
+          uri = "http://localhost:3000/no_body".to_uri
+          threaded_uri = uri.using_threads
+          uri.should_not equal(threaded_uri)
+        end
+
+        it "should have the thread backend in options hash" do
+          uri = "http://localhost:3000/no_body".to_uri
+          threaded_uri = uri.using_threads
+          threaded_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::ThreadBackend)
+        end
+      end
+
+      context "using_eventmachine" do
+        it "should return a new uri" do
+          uri = "http://localhost:3000/no_body".to_uri
+          evented_uri = uri.using_eventmachine
+          uri.should_not equal(evented_uri)
+        end
+
+        it "should have the thread backend in options hash" do
+          uri = "http://localhost:3000/no_body".to_uri
+          evented_uri = uri.using_eventmachine
+          evented_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::EventMachineBackend)
+        end
+      end
+
       context "asynchronous", :functional => true do
         let(:hash){Hash.new}
-        context "GET" do
-          it "should execute the request and the given callback in a separate thread" do
-            uri = "http://localhost:3000/no_body".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
-            uri.get_async
-
-            while Thread.list.size > 1
-              sleep 0.1
+        asynchronous_backends = {"threads" => "use_threads!", "eventmachine" => "use_eventmachine!"}
+        asynchronous_backends.each do |backend_type, backend_method|
+          context "#{backend_type}" do
+            before :each do
+              Wrest.send(backend_method.to_sym)
             end
-            hash.key?("success").should be_true
-          end
-        end
 
-        context "PUT" do
-          it "should execute the request and the given callback in a separate thread" do
-            uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
-            uri.put_async
+            context "GET" do
+              it "should execute the request and the given callback in a separate thread" do
+                uri = "http://localhost:3000/no_body".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+                uri.get_async
 
-            while Thread.list.size > 1
-              sleep 0.1
+                while Thread.list.size > 1
+                  sleep 0.1
+                end
+                hash.key?("success").should be_true
+              end
             end
-            hash.key?("success").should be_true
-          end
-        end
 
-        context "POST" do
-          it "should execute the request and the given callback in a separate thread" do
-            uri = "http://localhost:3000/nothing".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
-            uri.post_async
+            context "PUT" do
+              it "should execute the request and the given callback in a separate thread" do
+                uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
+                uri.put_async
 
-            while Thread.list.size > 1
-              sleep 0.1
+                while Thread.list.size > 1
+                  sleep 0.1
+                end
+                hash.key?("success").should be_true
+              end
             end
-            hash.key?("success").should be_true
-          end
-        end
 
-        context "DELETE" do
-          it "should execute the request and the given callback in a separate thread" do
-            uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
-            uri.delete_async
+            context "POST" do
+              it "should execute the request and the given callback in a separate thread" do
+                uri = "http://localhost:3000/nothing".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+                uri.post_async
 
-            while Thread.list.size > 1
-              sleep 0.1
+                while Thread.list.size > 1
+                  sleep 0.1
+                end
+                hash.key?("success").should be_true
+              end
             end
-            hash.key?("success").should be_true
-          end
-        end
 
-        context "POST FORM" do
-          it "should execute the request and the given callback in a separate thread" do
-            uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
-            uri.delete_async
+            context "DELETE" do
+              it "should execute the request and the given callback in a separate thread" do
+                uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
+                uri.delete_async
 
-            while Thread.list.size > 1
-              sleep 0.1
+                while Thread.list.size > 1
+                  sleep 0.1
+                end
+                hash.key?("success").should be_true
+              end
             end
-            hash.key?("success").should be_true
-          end
-        end
 
-        context "POST MULTIPART" do
-          it "should execute the request and the given callback in a separate thread" do
-            uri = "http://localhost:3000/uploads".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
-            file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
-            file = File.open(file_name)
-            uri.post_multipart_async('file' => UploadIO.new(file, "text/plain", file_name), :calback => {200 => lambda{|response| hash["success"] = true}})
+            context "POST FORM" do
+              it "should execute the request and the given callback in a separate thread" do
+                uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
+                uri.delete_async
 
-            while Thread.list.size > 1
-              sleep 0.1
+                while Thread.list.size > 1
+                  sleep 0.1
+                end
+                hash.key?("success").should be_true
+              end
             end
-            hash.key?("success").should be_true
-          end
-        end
 
-        context "PUT MULTIPART" do
-          it "should execute the request and the given callback in a separate thread" do
-            uri = "http://localhost:3000/uploads/1".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
-            file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
-            file = File.open(file_name)
-            uri.put_multipart_async('file' => UploadIO.new(file, "text/plain", file_name), :calback => {200 => lambda{|response| hash["success"] = true}})
+            context "POST MULTIPART" do
+              it "should execute the request and the given callback in a separate thread" do
+                uri = "http://localhost:3000/uploads".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+                file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
+                file = File.open(file_name)
+                uri.post_multipart_async('file' => UploadIO.new(file, "text/plain", file_name), :calback => {200 => lambda{|response| hash["success"] = true}})
 
-            while Thread.list.size > 1
-              sleep 0.1
+                while Thread.list.size > 1
+                  sleep 0.1
+                end
+                hash.key?("success").should be_true
+              end
             end
-            hash.key?("success").should be_true
+
+            context "PUT MULTIPART" do
+              it "should execute the request and the given callback in a separate thread" do
+                uri = "http://localhost:3000/uploads/1".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+                file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
+                file = File.open(file_name)
+                uri.put_multipart_async('file' => UploadIO.new(file, "text/plain", file_name), :calback => {200 => lambda{|response| hash["success"] = true}})
+
+                while Thread.list.size > 1
+                  sleep 0.1
+                end
+                hash.key?("success").should be_true
+              end
+            end
           end
         end
       end
