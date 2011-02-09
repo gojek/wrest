@@ -36,6 +36,19 @@ module Wrest
     @logger
   end
 
+  def self.use_threads!
+    @asynchronous_backend = Wrest::ThreadBackend.new
+  end
+
+  def self.use_eventmachine!
+    Wrest.enable_evented_requests!
+    @asynchronous_backend = Wrest::EventMachineBackend.new
+  end
+
+  def self.asynchronous_backend
+    @asynchronous_backend
+  end
+
   # Switch Wrest to using Net::HTTP.
   def self.use_native!
     silence_warnings{ Wrest.const_set('Http', Wrest::Native) }
@@ -50,6 +63,10 @@ module Wrest
   # Loads the Memcached caching back-end and the Dalli gem 
   def self.enable_memcached_caching!
     require "#{Wrest::Root}/wrest/components/cache_store/memcached"
+  end
+
+  def self.enable_evented_requests!
+    require "#{Wrest::Root}/wrest/event_machine_backend"
   end
 
   # Assign the default cache store to be used. Default is none.
@@ -97,6 +114,7 @@ require "#{Wrest::Root}/wrest/cache_proxy"
 require "#{Wrest::Root}/wrest/http_shared"
 require "#{Wrest::Root}/wrest/http_codes"
 require "#{Wrest::Root}/wrest/callback"
+require "#{Wrest::Root}/wrest/thread_backend"
 require "#{Wrest::Root}/wrest/native"
 
 
