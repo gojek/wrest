@@ -36,17 +36,29 @@ module Wrest
     @logger
   end
 
-  def self.use_threads!
-    @asynchronous_backend = Wrest::ThreadBackend.new
+  def self.enable_evented_requests!
+    require "#{Wrest::Root}/wrest/event_machine_backend"
   end
 
-  def self.use_eventmachine!
-    Wrest.enable_evented_requests!
-    @asynchronous_backend = Wrest::EventMachineBackend.new
+  # Switch default backend for asynchronous requests to use threads.
+  def self.always_use_eventmachine_for_asynchronous_requests!
+    self.enable_evented_requests!
+    @default_asynchronous_backend = Wrest::EventMachineBackend.new
   end
 
-  def self.asynchronous_backend
-    @asynchronous_backend
+  # Switch default backend for asynchronous requests to use eventmachine.
+  def self.always_use_threads_for_asynchronous_requests!
+    @default_asynchronous_backend = Wrest::ThreadBackend.new
+  end
+
+  # Assign the default backend for performing asynchronous requests. Default is to use threads. 
+  def self.default_asynchronous_backend=(asynchronous_backend)
+    @default_asynchronous_backend = asynchronous_backend
+  end
+
+  # Returns the default backend used for performing asynchronous requests.
+  def self.default_asynchronous_backend
+    @default_asynchronous_backend
   end
 
   # Switch Wrest to using Net::HTTP.
@@ -63,10 +75,6 @@ module Wrest
   # Loads the Memcached caching back-end and the Dalli gem 
   def self.enable_memcached_caching!
     require "#{Wrest::Root}/wrest/components/cache_store/memcached"
-  end
-
-  def self.enable_evented_requests!
-    require "#{Wrest::Root}/wrest/event_machine_backend"
   end
 
   # Assign the default cache store to be used. Default is none.
@@ -114,9 +122,10 @@ require "#{Wrest::Root}/wrest/cache_proxy"
 require "#{Wrest::Root}/wrest/http_shared"
 require "#{Wrest::Root}/wrest/http_codes"
 require "#{Wrest::Root}/wrest/callback"
-require "#{Wrest::Root}/wrest/thread_backend"
 require "#{Wrest::Root}/wrest/native"
 
+require "#{Wrest::Root}/wrest/thread_backend"
+Wrest.default_asynchronous_backend = Wrest::ThreadBackend.new # default to using threads for asynchronous requests
 
 # Load Wrest Wrappers
 require "#{Wrest::Root}/wrest/uri"

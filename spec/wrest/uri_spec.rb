@@ -632,7 +632,18 @@ module Wrest
 
       context "asynchronous", :functional => true do
         let(:hash){Hash.new}
-        asynchronous_backends = {"threads" => "use_threads!", "eventmachine" => "use_eventmachine!"}
+
+        context "default backend" do
+          it "should execute the request and the given callback on a separate thread by default" do
+            uri = "http://localhost:3000/no_body".to_uri(:callback => {200 => lambda{|response| hash["success"] = true}})
+            uri.get_async
+
+            sleep 0.1
+            hash.key?("success").should be_true
+          end
+        end
+
+        asynchronous_backends = {"threads" => "always_use_threads_for_asynchronous_requests!", "eventmachine" => "always_use_eventmachine_for_asynchronous_requests!"}
         asynchronous_backends.each do |backend_type, backend_method|
           context "#{backend_type}" do
             before :each do
