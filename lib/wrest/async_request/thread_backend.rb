@@ -8,10 +8,12 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest
-  class ThreadBackend 
-    def execute(block)
-      Thread.new do
-        block.invoke
+  module AsyncRequest
+    class ThreadBackend 
+      def execute(block)
+        Thread.new do
+          block.invoke
+        end
       end
     end
   end

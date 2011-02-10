@@ -7,15 +7,28 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require 'eventmachine'
 
 module Wrest
-  class EventMachineBackend 
-    def execute(block)
-      EventMachine.run do
-        block.invoke
-        EventMachine.stop_event_loop
-      end
+  module AsyncRequest
+    def self.enable_em
+      require "#{Wrest::Root}/wrest/async_request/event_machine_backend"
+    end
+
+    def self.default_backend=(backend)
+      @default_backend = backend
+    end
+
+    def self.default_to_em!
+      self.enable_em
+      self.default_backend = Wrest::AsyncRequest::EventMachineBackend.new
+    end
+
+    def self.default_to_threads!
+      self.default_backend = Wrest::AsyncRequest::ThreadBackend.new
+    end
+
+    def self.default_backend
+      @default_backend
     end
   end
 end

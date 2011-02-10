@@ -50,7 +50,7 @@ module Wrest
     # This implementation of asynchronous post_multipart is very naive and should not be used in production.
     # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def post_multipart_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest.default_asynchronous_backend).execute(Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil
     end
     
@@ -67,7 +67,7 @@ module Wrest
     # This implementation of asynchronous put_multipart is very naive and should not be used in production.
     # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def put_multipart_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest.default_asynchronous_backend).execute(Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil
     end
   end
