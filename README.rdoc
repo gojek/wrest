@@ -1,4 +1,4 @@
-= Wrest 1.3.0
+= Wrest 1.3.1
 
 (c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -161,6 +161,8 @@ Please note that Wrest is a synchronous library. All requests are blocking, and 
 Asynchronous requests are non-blocking. They do not return a response and the request is executed on a separate thread. The only way to access the response 
 while using asynchronous request is through callbacks. 
 
+Asynchronous requests support pluggable backends. The default backend used for asynchronous requests is ruby threads.
+
   "http://c42.in".to_uri.get_async do |callback|
     callback.on_ok do |response|
       Wrest.logger.info "Ok."
@@ -168,6 +170,18 @@ while using asynchronous request is through callbacks.
   end
 
   sleep 1 # Causes thread created by get_async to execute
+
+You can change the default to eventmachine.
+
+  Wrest.always_use_eventmachine_for_asynchronous_requests!
+
+You can also override the default on Uri objects.
+
+  "http://c42.in".to_uri.using_eventmachine.get_async do |callback|
+    callback.on_ok do |response|
+      Wrest.logger.info "Ok."
+    end
+  end
 
 Note: The current implementation of asynchronous requests is naive and not production ready.
 
