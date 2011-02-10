@@ -612,7 +612,7 @@ module Wrest
         it "should have the thread backend in options hash" do
           uri = "http://localhost:3000/no_body".to_uri
           threaded_uri = uri.using_threads
-          threaded_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::ThreadBackend)
+          threaded_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::AsyncRequest::ThreadBackend)
         end
       end
 
@@ -626,7 +626,7 @@ module Wrest
         it "should have the eventmachine backend in options hash" do
           uri = "http://localhost:3000/no_body".to_uri
           evented_uri = uri.using_eventmachine
-          evented_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::EventMachineBackend)
+          evented_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::AsyncRequest::EventMachineBackend)
         end
       end
 
@@ -643,11 +643,11 @@ module Wrest
           end
         end
 
-        asynchronous_backends = {"threads" => "always_use_threads_for_asynchronous_requests!", "eventmachine" => "always_use_eventmachine_for_asynchronous_requests!"}
+        asynchronous_backends = {"threads" => "default_to_threads!", "eventmachine" => "default_to_em!"}
         asynchronous_backends.each do |backend_type, backend_method|
           context "#{backend_type}" do
             before :each do
-              Wrest.send(backend_method.to_sym)
+              Wrest::AsyncRequest.send(backend_method.to_sym)
             end
 
             context "GET" do
@@ -693,7 +693,7 @@ module Wrest
             context "POST FORM" do
               it "should execute the request and the given callback" do
                 uri = "http://localhost:3000/not_found".to_uri(:callback => {404 => lambda{|response| hash["success"] = true}})
-                uri.delete_async
+                uri.post_form_async
 
                 sleep 0.1
                 hash.key?("success").should be_true

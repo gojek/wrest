@@ -40,27 +40,6 @@ module Wrest
     require "#{Wrest::Root}/wrest/event_machine_backend"
   end
 
-  # Switch default backend for asynchronous requests to use threads.
-  def self.always_use_eventmachine_for_asynchronous_requests!
-    self.enable_evented_requests!
-    @default_asynchronous_backend = Wrest::EventMachineBackend.new
-  end
-
-  # Switch default backend for asynchronous requests to use eventmachine.
-  def self.always_use_threads_for_asynchronous_requests!
-    @default_asynchronous_backend = Wrest::ThreadBackend.new
-  end
-
-  # Assign the default backend for performing asynchronous requests. Default is to use threads. 
-  def self.default_asynchronous_backend=(asynchronous_backend)
-    @default_asynchronous_backend = asynchronous_backend
-  end
-
-  # Returns the default backend used for performing asynchronous requests.
-  def self.default_asynchronous_backend
-    @default_asynchronous_backend
-  end
-
   # Switch Wrest to using Net::HTTP.
   def self.use_native!
     silence_warnings{ Wrest.const_set('Http', Wrest::Native) }
@@ -124,8 +103,9 @@ require "#{Wrest::Root}/wrest/http_codes"
 require "#{Wrest::Root}/wrest/callback"
 require "#{Wrest::Root}/wrest/native"
 
-require "#{Wrest::Root}/wrest/thread_backend"
-Wrest.default_asynchronous_backend = Wrest::ThreadBackend.new # default to using threads for asynchronous requests
+require "#{Wrest::Root}/wrest/async_request"
+require "#{Wrest::Root}/wrest/async_request/thread_backend"
+Wrest::AsyncRequest.default_to_threads!
 
 # Load Wrest Wrappers
 require "#{Wrest::Root}/wrest/uri"

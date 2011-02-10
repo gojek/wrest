@@ -98,14 +98,14 @@ module Wrest #:nodoc:
 
     def using_threads
       options = @options.clone
-      options[:asynchronous_backend] = Wrest::ThreadBackend.new
+      options[:asynchronous_backend] = Wrest::AsyncRequest::ThreadBackend.new
       Uri.new(uri_string, options)
     end
 
     def using_eventmachine
-      Wrest.enable_evented_requests!
       options = @options.clone
-      options[:asynchronous_backend] = Wrest::EventMachineBackend.new
+      Wrest::AsyncRequest.enable_em
+      options[:asynchronous_backend] = Wrest::AsyncRequest::EventMachineBackend.new
       Uri.new(uri_string, options)
     end
 
@@ -118,7 +118,7 @@ module Wrest #:nodoc:
     # This implementation of asynchronous get is very naive and should not be used in production.
     # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def get_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest.default_asynchronous_backend).execute(Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil
     end
 
@@ -139,7 +139,7 @@ module Wrest #:nodoc:
     # This implementation of asynchronous put is very naive and should not be used in production.
     # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def put_async(body = '', headers = {}, parameters = {}, &block)
-      (@options[:asynchronous_backend] || Wrest.default_asynchronous_backend).execute(Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
       nil
     end
 
@@ -162,7 +162,7 @@ module Wrest #:nodoc:
     # This implementation of asynchronous post is very naive and should not be used in production.
     # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def post_async(body = '', headers = {}, parameters = {}, &block)
-      (@options[:asynchronous_backend] || Wrest.default_asynchronous_backend).execute(Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
       nil
     end
     
@@ -193,7 +193,7 @@ module Wrest #:nodoc:
     def post_form_async(parameters = {}, headers = {}, &block)
       headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
       body = parameters.to_query
-      (@options[:asynchronous_backend] || Wrest.default_asynchronous_backend).execute(Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options))
       nil
     end
 
@@ -214,7 +214,7 @@ module Wrest #:nodoc:
     # This implementation of asynchronous delete is very naive and should not be used in production.
     # Stable implementation of asynchronous requests involving thread pools would be out soon.
     def delete_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest.default_asynchronous_backend).execute(Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil
     end
 
