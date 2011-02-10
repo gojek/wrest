@@ -177,7 +177,7 @@ Asynchronous requests support pluggable backends. The default backend used for a
 
 You can change the default to eventmachine.
 
-  Wrest.always_use_eventmachine_for_asynchronous_requests!
+  Wrest::AsyncRequest.default_to_em!
 
 You can also override the default on Uri objects.
 
