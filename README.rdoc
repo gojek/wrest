@@ -4,12 +4,12 @@
 
 Wrest is a ruby REST/HTTP client library which
 
-* Pick your HTTP: use Net::HTTP or LibCurl
-* Pick your Ruby: use 1.8.7, 1.9.2, JRuby and Rubinius ({Continuous Integration server}[http://ci.c42.in])
-* RFC 2616 based {caching}[https://github.com/kaiwren/wrest/blob/caching/Caching.markdown]
-* [Alpha] Go async: use Threads or EventMachine
+* Allows you to use Net::HTTP or libCurl
+* Allows you to pick your Ruby: use 1.8.7, 1.9.2, JRuby and Rubinius ({Continuous Integration server}[http://ci.c42.in])
+* Supports RFC 2616 based {caching}[https://github.com/kaiwren/wrest/blob/caching/Caching.markdown]
+* [Alpha] Allows you to go async: use Threads or EventMachine
 * Allows you to quickly build object oriented wrappers around any web service 
-* Designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
+* Is designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
 * Provides convenient HTTP wrappers, redirect handling, serialisation, deserialisation and xpath based lookup
 
