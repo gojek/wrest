@@ -55,7 +55,7 @@ describe Wrest::Native::Get do
 
   context "caching" do
     after :each do
-      Wrest.default_cachestore = nil
+      Wrest::Caching.default_store = nil
     end
     
     it "should initialize CacheProxy" do
@@ -67,7 +67,7 @@ describe Wrest::Native::Get do
 
       Wrest::CacheProxy.should_receive(:new).with(anything(), nil)
 
-      Wrest.always_cache_using_hash!
+      Wrest::Caching.default_to_hash!
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {:disable_cache => true})
     end
     

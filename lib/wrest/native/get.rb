@@ -15,7 +15,7 @@ module Wrest::Native
       follow_redirects = options[:follow_redirects]
       options[:follow_redirects] = (follow_redirects == nil ? true : follow_redirects)
 
-      cache_store = (options[:cache_store] || Wrest.default_cachestore) unless options[:disable_cache]
+      cache_store = (options[:cache_store] || Wrest::Caching.default_store) unless options[:disable_cache]
       @cache_proxy = Wrest::CacheProxy::new(self, cache_store)
       
       super(

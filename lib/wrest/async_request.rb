@@ -10,23 +10,28 @@
 
 module Wrest
   module AsyncRequest
+    # Loads Wrest eventmachine backend alongwith eventmachine gem
     def self.enable_em
       require "#{Wrest::Root}/wrest/async_request/event_machine_backend"
     end
 
+    # Assign default backend to be used for asynchronous request. Default is to use threads
     def self.default_backend=(backend)
       @default_backend = backend
     end
 
+    # Assign default backend for asynchronous request to using eventmachine. 
     def self.default_to_em!
       self.enable_em
       self.default_backend = Wrest::AsyncRequest::EventMachineBackend.new
     end
 
+    # Assign default backend for asynchronous request to using threads. 
     def self.default_to_threads!
       self.default_backend = Wrest::AsyncRequest::ThreadBackend.new
     end
 
+    # Returns the default backend
     def self.default_backend
       @default_backend
     end
