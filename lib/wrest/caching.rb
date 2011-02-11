@@ -11,7 +11,7 @@ module Wrest
   module Caching
     # Loads the Memcached caching back-end and the Dalli gem 
     def self.enable_memcached
-      require "#{Wrest::Root}/wrest/components/cache_store/memcached"
+      require "#{Wrest::Root}/wrest/caching/memcached"
     end
 
     # Configures Wrest to cache all requests. This will use a Ruby Hash.
@@ -26,7 +26,7 @@ module Wrest
     # Default Wrest to using memcached for caching requests. 
     def self.default_to_memcached!
       self.enable_memcached
-      self.default_store = Wrest::Components::CacheStore::Memcached.new 
+      self.default_store = Wrest::Caching::Memcached.new 
     end
 
     # Assign the default cache store to be used. Default is none.

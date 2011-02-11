@@ -3,21 +3,21 @@ require 'rspec'
 
 Wrest::Caching.enable_memcached
 
-describe Wrest::Components::CacheStore::Memcached do
+describe Wrest::Caching do
   context "functional", :functional => true do
     before :each do
-      @memcached       = Wrest::Components::CacheStore::Memcached.new
+      @memcached = Wrest::Caching::Memcached.new
       @memcached["abc"]="xyz"
     end
 
     context "initialization defaults" do
       it "should always default the list of server urls to nil" do
         Dalli::Client.should_receive(:new).with(nil, {})
-        client = Wrest::Components::CacheStore::Memcached.new
+        client = Wrest::Caching::Memcached.new
       end
       it "should always default the options to an empty hash" do
         Dalli::Client.should_receive(:new).with(nil, {})
-        client = Wrest::Components::CacheStore::Memcached.new
+        client = Wrest::Caching::Memcached.new
       end
     end
 

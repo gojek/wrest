@@ -12,7 +12,7 @@ module Wrest
     context "default_to_memcached!" do
       it "should change the default store for caching to memcached" do
         Caching.default_to_memcached!
-        Caching.default_store.should be_an_instance_of(Wrest::Components::CacheStore::Memcached)
+        Caching.default_store.should be_an_instance_of(Wrest::Caching::Memcached)
       end
     end
 

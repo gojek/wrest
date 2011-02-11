@@ -7,7 +7,7 @@ end
 
 require 'dalli'
 
-module Wrest::Components::CacheStore
+module Wrest::Caching
   class Memcached
 
     def initialize(server_urls=nil, options={})

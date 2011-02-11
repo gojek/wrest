@@ -139,7 +139,7 @@ describe Wrest::Native::Get do
           # RFC 2616
           # If a cache uses a received 304 response to update a cache entry, the cache MUST update the entry to reflect any new field values given in the response.
 
-          uri = "http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1".to_uri(:cache_store => Wrest::Components::CacheStore::Memcached.new(nil, :namespace => "wrest#{rand 1000}"))
+          uri = "http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1".to_uri(:cache_store => Wrest::Caching::Memcached.new(nil, :namespace => "wrest#{rand 1000}"))
 
           first_response_with_last_modified = uri.get # Gets a 200 OK
           first_response_with_last_modified.headers["Header-that-was-in-the-first-response"].should == "42"
