@@ -74,11 +74,7 @@ module Wrest #:nodoc:
 
 
       def deserialise(options = {})
-        if @deserialised_body.nil?
-          @deserialised_body = deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
-        else
-          @deserialised_body
-        end
+          @deserialised_body ||= deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
       end
 
       def deserialise_using(translator,options = {})
