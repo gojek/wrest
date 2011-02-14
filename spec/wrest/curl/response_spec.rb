@@ -36,6 +36,22 @@ EOJS
               "action"=>"CloseDoc"}], "menu"=>"File"}
       end
      
+      
+      describe "cache deserialised body" do
+      it "should return the catched deserialised body when deserialise is called more than once" do
+        http_response = mock('curl response')
+        http_response.stub!(:headers).and_return({'Content-type' => 'text/xml;charset=utf-8'})
+
+        response = Wrest::Curl::Response.new(http_response)
+
+        response.should_receive(:deserialise_using).exactly(1).times.and_return("deserialise")
+
+        response.deserialise
+        response.deserialise
+      end
+    end
+
+
       context "functional", :functional => true do
         context 'simple headers' do
           before :all do
