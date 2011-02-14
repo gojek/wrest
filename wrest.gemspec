@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Sidu Ponnappa", "Niranjan Paranjape"]
   s.email       = ["sidu@c42.in"]
   s.homepage    = "http://c42.in/open_source"
-  s.summary     = "Wrest is an elegant, object oriented HTTP client library for 1.8, 1.9, JRuby and Rubinius."
-  s.description = "Wrest is a HTTP and REST client library which allows you to quickly build well encapsulated, object oriented wrappers around any web service."
+  s.summary     = "Wrest is a fluent, object oriented HTTP client library for 1.8, 1.9, JRuby and Rubinius."
+  s.description = "Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for RFC2616 HTTP caching, multiple HTTP backends and async calls using EventMachine that runs on CRuby, JRuby and Rubinius."
  
   s.required_rubygems_version = ">= 1.3.7"
   s.rubyforge_project = "wrest"
