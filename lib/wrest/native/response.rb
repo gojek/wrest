@@ -24,6 +24,7 @@ module Wrest #:nodoc:
     # See HttpCodes for a list of all such response checkers.
     class Response
       attr_reader :http_response
+      attr_accessor :deserialised_body
       include HttpCodes
       
       extend Forwardable
@@ -73,7 +74,11 @@ module Wrest #:nodoc:
 
 
       def deserialise(options = {})
-        deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
+        if @deserialised_body.nil?
+          @deserialised_body = deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
+        else
+          @deserialised_body
+        end
       end
 
       def deserialise_using(translator,options = {})

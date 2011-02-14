@@ -4,7 +4,7 @@ module Wrest
   describe Native::Response do
 
     describe "hashing and comparison" do
-      it "should return true for equality between two identical Wrest::Response objects and their hashes" do
+      it "_should return true for equality between two identical Wrest::Response objects and their hashes" do
         http_response = build_ok_response
         response = Wrest::Native::Response.new(http_response)
 
@@ -395,6 +395,19 @@ module Wrest
       end
     end
 
+    describe "cache deserialised body" do
+      it "should return the catched deserialised body when deserialise is called more than once" do
+        http_response = build_ok_response
+        http_response.should_receive(:content_type).and_return('application/xml')
+        response = Wrest::Native::Response.new(http_response)
+
+        response.should_receive(:deserialise_using).exactly(1).times.and_return("deserialise")
+
+        response.deserialise
+        response.deserialise
+      end
+    end
+
     context "functional", :functional => true do
       before :each do
         @response = Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke
@@ -411,6 +424,8 @@ module Wrest
         @response['Content-Type'].should == 'application/xml; charset=utf-8'
         @response['content-type'].should == 'application/xml; charset=utf-8'
       end
+
+
     end
   end
 end
