@@ -96,16 +96,40 @@ module Wrest #:nodoc:
       Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
+    # Returns a Uri object that uses threads to perform asynchronous requests.
     def using_threads
       options = @options.clone
       options[:asynchronous_backend] = Wrest::AsyncRequest::ThreadBackend.new
       Uri.new(uri_string, options)
     end
 
-    def using_eventmachine
+    # Returns a Uri object that uses eventmachine to perform asynchronous requests.
+    def using_em
       options = @options.clone
       Wrest::AsyncRequest.enable_em
       options[:asynchronous_backend] = Wrest::AsyncRequest::EventMachineBackend.new
+      Uri.new(uri_string, options)
+    end
+
+    # Returns a Uri object that uses hash for caching responses.
+    def using_hash
+      options = @options.clone
+      options[:cache_store] = Hash.new
+      Uri.new(uri_string, options)
+    end
+
+    # Returns a Uri object that uses memcached for caching responses.
+    def using_memcached
+      options = @options.clone
+      Wrest::Caching.enable_memcached
+      options[:cache_store] = Wrest::Caching::Memcached.new
+      Uri.new(uri_string, options)
+    end
+
+    def disable_cache
+      options = @options.clone
+      Wrest::Caching.enable_memcached
+      options[:disable_cache] = true 
       Uri.new(uri_string, options)
     end
 
