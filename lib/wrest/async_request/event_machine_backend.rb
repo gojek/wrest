@@ -22,7 +22,7 @@ module Wrest
       def execute(block)
         EventMachine.run do
           block.invoke
-          EventMachine.stop_event_loop
+          EventMachine.stop
         end
       end
     end

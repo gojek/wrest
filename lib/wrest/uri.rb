@@ -139,8 +139,7 @@ module Wrest #:nodoc:
     # Remember to escape all parameter strings if necessary, using URI.escape
     #
     # Note: get_async does not return a response and the response should be accessed through callbacks.
-    # This implementation of asynchronous get is very naive and should not be used in production.
-    # Stable implementation of asynchronous requests involving thread pools would be out soon.
+    # This implementation of asynchronous get is currently in alpha. Hence, it should not be used in production.
     def get_async(parameters = {}, headers = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil
@@ -160,8 +159,7 @@ module Wrest #:nodoc:
     # Remember to escape all parameter strings if necessary, using URI.escape
     #
     # Note: put_async does not return a response and the response should be accessed through callbacks.
-    # This implementation of asynchronous put is very naive and should not be used in production.
-    # Stable implementation of asynchronous requests involving thread pools would be out soon.
+    # This implementation of asynchronous put is currently in alpha. Hence, it should not be used in production.
     def put_async(body = '', headers = {}, parameters = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
       nil
@@ -183,8 +181,7 @@ module Wrest #:nodoc:
     # Remember to escape all parameter strings if necessary, using URI.escape
     #
     # Note: post_async does not return a response and the response should be accessed through callbacks.
-    # This implementation of asynchronous post is very naive and should not be used in production.
-    # Stable implementation of asynchronous requests involving thread pools would be out soon.
+    # This implementation of asynchronous post is currently in alpha. Hence, it should not be used in production.
     def post_async(body = '', headers = {}, parameters = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
       nil
@@ -212,8 +209,7 @@ module Wrest #:nodoc:
     # application/x-www-form-urlencoded
     #
     # Note: post_form_async does not return a response and the response should be accessed through callbacks.
-    # This implementation of asynchronous post_form is very naive and should not be used in production.
-    # Stable implementation of asynchronous requests involving thread pools would be out soon.
+    # This implementation of asynchronous post_form is currently in alpha. Hence, it should not be used in production.
     def post_form_async(parameters = {}, headers = {}, &block)
       headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
       body = parameters.to_query
@@ -235,8 +231,7 @@ module Wrest #:nodoc:
     # Remember to escape all parameter strings if necessary, using URI.escape
     #
     # Note: delete_async does not return a response and the response should be accessed through callbacks.
-    # This implementation of asynchronous delete is very naive and should not be used in production.
-    # Stable implementation of asynchronous requests involving thread pools would be out soon.
+    # This implementation of asynchronous delete is currently in alpha. Hence, it should not be used in production.
     def delete_async(parameters = {}, headers = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil

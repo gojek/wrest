@@ -46,9 +46,8 @@ module Wrest
     #     'http://localhost:3000/uploads'.to_uri.post_multipart_async('file' => UploadIO.new(file, "image/jpg", '/path/to/image.jpg'))
     #   end
     #
-    # Note: post_multipart_async does not return a response and the response should be accessed through callbacks
-    # This implementation of asynchronous post_multipart is very naive and should not be used in production.
-    # Stable implementation of asynchronous requests involving thread pools would be out soon.
+    # Note: post_multipart_async does not return a response and the response should be accessed through callbacks.
+    # This implementation of asynchronous post_multipart is currently in alpha. Hence, it should not be used in production.
     def post_multipart_async(parameters = {}, headers = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil
@@ -64,8 +63,7 @@ module Wrest
     # that mimics a multipart form being put. I sincerely hope you never need to use this.
     #
     # Note: put_multipart_async does not return a response and the response should be accessed through callbacks
-    # This implementation of asynchronous put_multipart is very naive and should not be used in production.
-    # Stable implementation of asynchronous requests involving thread pools would be out soon.
+    # This implementation of asynchronous put_multipart is currently in alpha. Hence, it should not be used in production.
     def put_multipart_async(parameters = {}, headers = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
       nil
