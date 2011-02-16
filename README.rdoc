@@ -1,4 +1,4 @@
-= Wrest 1.3.0
+= Wrest 1.4.0
 
 (c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -114,11 +114,8 @@ Use the following method to enable caching for all requests, and set Memcached a
 
 For fine-grained control over the cache store (or to use multiple cache stores in the same codebase), you can use this API:
 
-    memcache_store = Wrest::Components::CacheStore::Memcached.new("localhost:11211")
-    hash_store = {}
-    
-    r1 = "http://c42.in".to_uri(:cache_store => memcache_store).get
-    r2 = "http://c42.in".to_uri(:cache_store => hash_store).get
+    r1 = "http://c42.in".to_uri.using_memcached.get
+    r2 = "http://c42.in".to_uri.using_hash.get
 
 A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at {Wrest Caching Doc}[https://github.com/kaiwren/wrest/blob/master/Caching.markdown]
 
@@ -181,13 +178,13 @@ You can change the default to eventmachine.
 
 You can also override the default on Uri objects.
 
-  "http://c42.in".to_uri.using_eventmachine.get_async do |callback|
+  "http://c42.in".to_uri.using_em.get_async do |callback|
     callback.on_ok do |response|
       Wrest.logger.info "Ok."
     end
   end
 
-Note: The current implementation of asynchronous requests is naive and not production ready.
+Note: The current implementation of asynchronous requests is currently in alpha and should not be used in production.
 
 === Other useful stuff
 
