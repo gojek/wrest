@@ -13,7 +13,8 @@ module Wrest::Native
   # or Wrest::Native::Get etc. instead.
   class Request
     attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
-                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters, :cache_store, :verify_mode, :options
+                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters, 
+                :cache_store, :verify_mode, :options, :ca_path
     # Valid tuples for the options are:
     #   :username => String, defaults to nil
     #   :password => String, defaults to nil
@@ -31,15 +32,15 @@ module Wrest::Native
     #               in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
     #   :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #                  used for multiple requests.
-    #   :verify_mode => The  verification mode to be used for Net::HTTP https connections. Defaults to OpenSSL::SSL::VERIFY_PEER
     #   :cache_store => The object which should be used as cache store for cacheable responses. If not supplied, caching will be disabled.
-    #   :detailed_http_logging => nil/$stdout/$stderr or File/Logger/IO object. Defaults to nil (recommended).
     #   :callback => A Hash whose keys are the response codes (or Range of response codes),
     #                        and the values are the callback functions to be executed.
     #                        eg: { <response code> => lambda { |response| some_operation } }
-    #
-    # *WARNING* : detailed_http_logging causes a serious security hole. Never use it in production code.
-    #
+    #  The following options are Net::HTTP specific config options
+    #   :detailed_http_logging => nil/$stdout/$stderr or File/Logger/IO object. Defaults to nil (recommended).
+    #                             *WARNING* : detailed_http_logging causes a serious security hole. Never use it in production code.  
+    #   :verify_mode => The verification mode to be used for Net::HTTP https connections. Defaults to OpenSSL::SSL::VERIFY_PEER
+    #   :ca_path => The path to the certificates
     def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
       @uri = wrest_uri
       @headers = headers.stringify_keys
@@ -54,8 +55,9 @@ module Wrest::Native
       @timeout = @options[:timeout]
       @connection = @options[:connection]
       @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
-      @cache_store = options[:cache_store]
+      @cache_store = @options[:cache_store]
       @verify_mode = @options[:verify_mode]
+      @ca_path = @options[:ca_path]
       @detailed_http_logging = options[:detailed_http_logging]
       @callback = @options[:callback] || Wrest::Callback.new({})
       @callback = @callback.merge(Wrest::Callback.new(@options[:callback_block] || {}))
@@ -82,7 +84,7 @@ module Wrest::Native
     # This is followed by the response code, the payload size and the time taken.
     def invoke
       response = nil
-      @connection ||= @uri.create_connection({:timeout => timeout, :verify_mode => @verify_mode})
+      @connection ||= @uri.create_connection(:timeout => timeout, :verify_mode => verify_mode, :ca_path => ca_path)
       @connection.set_debug_output @detailed_http_logging
       http_request.basic_auth username, password unless username.nil? || password.nil?
 

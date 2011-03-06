@@ -88,14 +88,6 @@ module Wrest #:nodoc:
       uri_string
     end
     
-    # Make a GET request to this URI. This is a convenience API
-    # that creates a Wrest::Native::Get, executes it and returns a Wrest::Native::Response.
-    #
-    # Remember to escape all parameter strings if necessary, using URI.escape
-    def get(parameters = {}, headers = {}, &block)
-      Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
-    end
-
     # Returns a Uri object that uses threads to perform asynchronous requests.
     def using_threads
       options = @options.clone
@@ -131,6 +123,14 @@ module Wrest #:nodoc:
       Wrest::Caching.enable_memcached
       options[:disable_cache] = true 
       Uri.new(uri_string, options)
+    end
+
+    # Make a GET request to this URI. This is a convenience API
+    # that creates a Wrest::Native::Get, executes it and returns a Wrest::Native::Response.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    def get(parameters = {}, headers = {}, &block)
+      Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
     end
 
     # Make a GET request to this URI. This is a convenience API

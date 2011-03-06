@@ -15,8 +15,8 @@ module Wrest::Native
       connection.read_timeout = options[:timeout]
       if self.https?
         connection.use_ssl     = true
-        connection.verify_mode = options[:verify_mode]? options[:verify_mode] : OpenSSL::SSL::VERIFY_PEER 
-        
+        connection.verify_mode = options[:verify_mode] ? options[:verify_mode] : OpenSSL::SSL::VERIFY_PEER 
+        connection.ca_path = options[:ca_path] if options[:ca_path]
       end
       connection
     end
