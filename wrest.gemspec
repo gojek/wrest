@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.require_path      = 'lib'
 
   s.add_development_dependency "rubyforge"
-  s.add_development_dependency "hanna"
 
   # Test dependencies
   s.add_development_dependency "rspec", ["~> 2.4.0"]
@@ -40,9 +39,9 @@ Gem::Specification.new do |s|
 
   case RUBY_PLATFORM
   when /java/
-    s.add_runtime_dependency("jruby-openssl", ["~> 0.7.1"])
-    s.add_runtime_dependency("json-jruby", ["~> 1.4.3.1"])
-    s.add_runtime_dependency("nokogiri", ["~> 1.4.3.1"])
+    s.add_runtime_dependency("jruby-openssl", ["~> 0.7.0"])
+    s.add_runtime_dependency("json-jruby", ["~> 1.1.0"])
+    s.add_runtime_dependency("nokogiri", ["~> 1.4.4"])
     s.platform    = Gem::Platform::CURRENT
   else
     s.add_runtime_dependency "json", ["~> 1.4.6"]

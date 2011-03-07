@@ -1,4 +1,4 @@
-= Wrest 1.4.0
+= Wrest 1.4.1
 
 (c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -243,7 +243,10 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 === Testing
 
 Start the Sinatra test server for functional test.
-  rake -f spec/sample_app/Rakefile  
+  rake -f spec/sample_app/Rakefile  # runs on port 3000
+
+Start a memcached daemon/process on port 11211
+  /usr/local/bin/memcached
 
 Run the tests in a different terminal:
 

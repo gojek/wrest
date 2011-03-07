@@ -12,7 +12,7 @@ group :libcurl_support do
 end
 
 group :fast_xml_deserialisation_nokogiri do
-  gem 'nokogiri', '~> 1.4.3.1'
+  gem 'nokogiri', '~> 1.4.4'
 end
 
 group :fast_xml_deserialisation_ruby_libxml do
