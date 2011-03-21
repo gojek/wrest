@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   case RUBY_PLATFORM
   when /java/
     s.add_runtime_dependency("jruby-openssl", ["~> 0.7.0"])
-    s.add_runtime_dependency("json-jruby", ["~> 1.1.0"])
+    s.add_runtime_dependency("json-jruby", ["~> 1.5.0"])
     s.add_runtime_dependency("nokogiri", ["~> 1.4.4"])
     s.platform    = Gem::Platform::CURRENT
   else
