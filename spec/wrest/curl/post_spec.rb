@@ -10,6 +10,10 @@ unless RUBY_PLATFORM =~ /java/
         before :all do
           Wrest.use_curl!
         end
+        
+        after(:all) do
+          Wrest.use_native!
+        end
 
         it "should know how to post" do
           response = 'http://localhost:3000/nothing'.to_uri.post

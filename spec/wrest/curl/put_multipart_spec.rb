@@ -12,6 +12,10 @@ unless RUBY_PLATFORM =~ /java/
           Wrest.use_curl!
         end
 
+        after(:all) do
+          Wrest.use_native!
+        end
+        
         it "should raise Wrest::Exceptions::UnsupportedFeature error" do
           response = nil
           File.open(File.expand_path(__FILE__)) do |file|

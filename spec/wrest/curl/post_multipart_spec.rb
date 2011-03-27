@@ -9,6 +9,11 @@ unless RUBY_PLATFORM =~ /java/
       before :all do
         Wrest.use_curl!
       end
+      
+      after(:all) do
+        Wrest.use_native!
+      end
+      
       let(:file_path){ File.expand_path(__FILE__) }
 
       context 'parameter key formats' do
