@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "Wrest is a fluent, object oriented HTTP client library for 1.8, 1.9, JRuby and Rubinius."
   s.description = "Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for RFC2616 HTTP caching, multiple HTTP backends and async calls using EventMachine. It runs on CRuby, JRuby and Rubinius."
  
-  s.required_rubygems_version = ">= 1.3.7"
+  s.required_rubygems_version = "> 1.5"
   s.rubyforge_project = "wrest"
 
   s.requirements << "To use Memcached as caching back-end, install the 'dalli' gem."
@@ -29,22 +29,19 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rubyforge"
 
   # Test dependencies
-  s.add_development_dependency "rspec", ["~> 2.4.0"]
+  s.add_development_dependency "rspec", ["~> 2.5.0"]
   s.add_development_dependency "sinatra", ["~> 1.0.0"]
   s.add_development_dependency "metric_fu" unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
 
-  s.add_runtime_dependency "activesupport", ["~> 3.0.0"]
-  s.add_runtime_dependency "builder", ["~> 2.1.2"]
-  s.add_runtime_dependency "i18n", ['>= 0.4.1']
-
+  s.add_runtime_dependency "activesupport", ["~> 3.0"]
+  s.add_runtime_dependency "builder", ["~> 2.0"]
+  s.add_runtime_dependency "i18n", ['~> 0.4']
+  s.add_runtime_dependency("json", ["~> 1.5"])
+  
   case RUBY_PLATFORM
   when /java/
-    s.add_runtime_dependency("jruby-openssl", ["~> 0.7.0"])
-    s.add_runtime_dependency("json-jruby", ["~> 1.5.0"])
-    s.add_runtime_dependency("nokogiri", ["~> 1.4.4"])
+    s.add_runtime_dependency("jruby-openssl", ["~> 0.7"])
     s.platform    = Gem::Platform::CURRENT
-  else
-    s.add_runtime_dependency "json", ["~> 1.4.6"]
   end
 end
  

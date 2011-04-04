@@ -7,7 +7,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'rubygems'
-gem 'activesupport', '>= 3.0.0'
+gem 'activesupport', '~> 3.0'
 
 require 'net/http'
 require 'net/https'
@@ -55,7 +55,7 @@ end
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
 
-RUBY_PLATFORM =~ /java/ ? gem('json-jruby', '>= 1.5.0') : gem('json', '>= 1.4.2')
+gem('json', '~> 1.5')
 ActiveSupport::JSON.backend = "JSONGem"
 
 require "#{Wrest::Root}/wrest/core_ext/string"

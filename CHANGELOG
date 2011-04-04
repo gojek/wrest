@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+== 1.4.2
+ * GH#102 Code and gemspec mismatch for json-jruby
+
 == 1.4.1
  * GH#66 HTTPS requests using the Net::HTTP backend failing on Ruby 1.8.x
 
