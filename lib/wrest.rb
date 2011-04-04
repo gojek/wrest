@@ -55,7 +55,7 @@ end
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
 
-RUBY_PLATFORM =~ /java/ ? gem('json-jruby', '>= 1.4.2') : gem('json', '>= 1.4.2')
+RUBY_PLATFORM =~ /java/ ? gem('json-jruby', '>= 1.5.0') : gem('json', '>= 1.4.2')
 ActiveSupport::JSON.backend = "JSONGem"
 
 require "#{Wrest::Root}/wrest/core_ext/string"
