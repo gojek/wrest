@@ -34,8 +34,8 @@ module Wrest
       
       it "should pass options to the uriTemplate being built" do
         "http://localhost:3000".to_uri(:name => 'abc').to_template('/user/:name').to_uri.should == "http://localhost:3000/user/abc".to_uri
-              
       end
+      
       it "should handle / positions with wisdom while creating UriTemplate from a given Uri" do
         "http://localhost:3000/".to_uri.to_template('/user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")
         "http://localhost:3000".to_uri.to_template('/user/:name').should == UriTemplate.new("http://localhost:3000/user/:name")

@@ -35,6 +35,7 @@ module Wrest #:nodoc:
         @query = uri_scheme[-2] || ''
         @username = (@options[:username] ||= @uri.user)
         @password = (@options[:password] ||= @uri.password)
+        @asynchronous_backend = @options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend
         @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
     end 
     
@@ -125,12 +126,39 @@ module Wrest #:nodoc:
       Uri.new(uri_string, options)
     end
 
+    #:nodoc:
+    def build_get(parameters = {}, headers = {}, &block)
+      Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options)
+    end
+    
+    #:nodoc:
+    def build_put(body = '', headers = {}, parameters = {}, &block)
+      Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options)
+    end
+    
+    #:nodoc:
+    def build_post(body = '', headers = {}, parameters = {}, &block)
+      Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options)
+    end
+
+    #:nodoc:
+    def build_post_form(parameters ={}, headers = {}, &block)
+      headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
+      body = parameters.to_query
+      Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options)
+    end
+
+    #:nodoc:
+    def build_delete(parameters = {}, headers = {}, &block)
+      Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options)
+    end
+    
     # Make a GET request to this URI. This is a convenience API
     # that creates a Wrest::Native::Get, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def get(parameters = {}, headers = {}, &block)
-      Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
+      build_get(parameters, headers, &block).invoke
     end
 
     # Make a GET request to this URI. This is a convenience API
@@ -141,7 +169,7 @@ module Wrest #:nodoc:
     # Note: get_async does not return a response and the response should be accessed through callbacks.
     # This implementation of asynchronous get is currently in alpha. Hence, it should not be used in production.
     def get_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      @asynchronous_backend.execute(build_get(parameters, headers, &block))
       nil
     end
 
@@ -150,7 +178,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def put(body = '', headers = {}, parameters = {}, &block)
-      Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options).invoke
+      build_put(body, headers, parameters, &block).invoke
     end
 
     # Make a PUT request to this URI. This is a convenience API
@@ -161,7 +189,7 @@ module Wrest #:nodoc:
     # Note: put_async does not return a response and the response should be accessed through callbacks.
     # This implementation of asynchronous put is currently in alpha. Hence, it should not be used in production.
     def put_async(body = '', headers = {}, parameters = {}, &block)
-      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
+      @asynchronous_backend.execute(build_put(body, headers, parameters, &block))
       nil
     end
 
@@ -171,7 +199,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def post(body = '', headers = {}, parameters = {}, &block)
-      Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options).invoke
+      build_post(body, headers, parameters, &block).invoke
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -183,7 +211,7 @@ module Wrest #:nodoc:
     # Note: post_async does not return a response and the response should be accessed through callbacks.
     # This implementation of asynchronous post is currently in alpha. Hence, it should not be used in production.
     def post_async(body = '', headers = {}, parameters = {}, &block)
-      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options))
+      @asynchronous_backend.execute(build_post(body, headers, parameters, &block))
       nil
     end
     
@@ -195,9 +223,7 @@ module Wrest #:nodoc:
     # in the body, as well as setting the Content-Type header to
     # application/x-www-form-urlencoded
     def post_form(parameters = {}, headers = {}, &block)
-      headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
-      body = parameters.to_query
-      Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options).invoke
+      build_post_form(parameters, headers, &block).invoke
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -211,9 +237,7 @@ module Wrest #:nodoc:
     # Note: post_form_async does not return a response and the response should be accessed through callbacks.
     # This implementation of asynchronous post_form is currently in alpha. Hence, it should not be used in production.
     def post_form_async(parameters = {}, headers = {}, &block)
-      headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
-      body = parameters.to_query
-      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options))
+      @asynchronous_backend.execute(build_post_form(parameters, headers, &block))
       nil
     end
 
@@ -222,7 +246,7 @@ module Wrest #:nodoc:
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def delete(parameters = {}, headers = {}, &block)
-      Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
+      build_delete(parameters, headers, &block).invoke
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
@@ -233,7 +257,7 @@ module Wrest #:nodoc:
     # Note: delete_async does not return a response and the response should be accessed through callbacks.
     # This implementation of asynchronous delete is currently in alpha. Hence, it should not be used in production.
     def delete_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      @asynchronous_backend.execute(build_delete(parameters, headers, &block))
       nil
     end
 

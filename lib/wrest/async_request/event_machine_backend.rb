@@ -19,9 +19,9 @@ require 'eventmachine'
 module Wrest
   module AsyncRequest
     class EventMachineBackend 
-      def execute(block)
+      def execute(request)
         EventMachine.run do
-          block.invoke
+          request.invoke
           EventMachine.stop
         end
       end

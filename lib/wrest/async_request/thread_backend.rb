@@ -10,9 +10,9 @@
 module Wrest
   module AsyncRequest
     class ThreadBackend 
-      def execute(block)
+      def execute(request)
         Thread.new do
-          block.invoke
+          request.invoke
         end
       end
     end
