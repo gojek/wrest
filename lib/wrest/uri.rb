@@ -23,8 +23,12 @@ module Wrest #:nodoc:
   # You can find examples that use real APIs (like delicious) under the wrest/examples directory.
   class Uri
     attr_reader :uri, :username, :password, :uri_string, :uri_path, :query 
-        
-    # See Wrest::Native::Request for the available options and their default values.
+    
+    # Valid tuples for the options are:
+    #   :asynchronous_backend => Wrest
+    #   :password => String, defaults to nil
+    #   :follow_redirects => Boolean, defaults to true for Get, false for anything else
+    # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
         @options = options.clone
         @uri_string = uri_string.to_s
@@ -91,39 +95,28 @@ module Wrest #:nodoc:
     
     # Returns a Uri object that uses threads to perform asynchronous requests.
     def using_threads
-      options = @options.clone
-      options[:asynchronous_backend] = Wrest::AsyncRequest::ThreadBackend.new
-      Uri.new(uri_string, options)
+      clone(:asynchronous_backend => Wrest::AsyncRequest::ThreadBackend.new)
     end
 
     # Returns a Uri object that uses eventmachine to perform asynchronous requests.
+    # Remember to do Wrest::AsyncRequest.enable_em first so that em is available for use.
     def using_em
-      options = @options.clone
-      Wrest::AsyncRequest.enable_em
-      options[:asynchronous_backend] = Wrest::AsyncRequest::EventMachineBackend.new
-      Uri.new(uri_string, options)
+      clone(:asynchronous_backend => Wrest::AsyncRequest::EventMachineBackend.new)
     end
 
     # Returns a Uri object that uses hash for caching responses.
     def using_hash
-      options = @options.clone
-      options[:cache_store] = Hash.new
-      Uri.new(uri_string, options)
+      clone(:cache_store => {})
     end
 
     # Returns a Uri object that uses memcached for caching responses.
+    # Remember to do Wrest::AsyncRequest.enable_memcached first so that memcached is available for use.
     def using_memcached
-      options = @options.clone
-      Wrest::Caching.enable_memcached
-      options[:cache_store] = Wrest::Caching::Memcached.new
-      Uri.new(uri_string, options)
+      clone(:cache_store => Wrest::Caching::Memcached.new)
     end
 
     def disable_cache
-      options = @options.clone
-      Wrest::Caching.enable_memcached
-      options[:disable_cache] = true 
-      Uri.new(uri_string, options)
+      clone(:disable_cache => true )
     end
 
     #:nodoc:

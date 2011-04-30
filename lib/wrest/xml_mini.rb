@@ -6,5 +6,3 @@ module ActiveSupport
     delegate :filter, :to => :backend
   end
 end
-
-

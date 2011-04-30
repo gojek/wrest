@@ -617,6 +617,7 @@ module Wrest
       end
 
       context "using_em" do
+        before(:all){ Wrest::AsyncRequest.enable_em }
         it "should return a new uri" do
           uri = "http://localhost:3000/no_body".to_uri
           evented_uri = uri.using_em
@@ -626,7 +627,7 @@ module Wrest
         it "should have the eventmachine backend in options hash" do
           uri = "http://localhost:3000/no_body".to_uri
           evented_uri = uri.using_em
-          evented_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::AsyncRequest::EventMachineBackend)
+          evented_uri.instance_eval("@options")[:asynchronous_backend].should be_a(Wrest::AsyncRequest::EventMachineBackend)
         end
       end
 
@@ -645,6 +646,7 @@ module Wrest
       end
 
       context "using_memcached" do
+        before(:all){ Wrest::Caching.enable_memcached }
         it "should return a new uri" do
           uri = "http://localhost:3000/no_body".to_uri
           cache_enabled_uri = uri.using_memcached
