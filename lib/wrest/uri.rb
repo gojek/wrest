@@ -32,8 +32,9 @@ module Wrest #:nodoc:
     #                            the values are the corresponding blocks that will be invoked should the response
     #                            code match the key.
     #   :default_headers      => Accepts a hash containing a set of default request headers with which the headers
-    #                            passed to Uri#get, Uri#post etc. are merged. These latter headers will override the
-    #                            defaults if there are any clashes.
+    #                            passed to Uri#get, Uri#post etc. are merged. Incoming headers will override the
+    #                            defaults if there are any clashes. Use this to set cookies or use OAuth2 Authorize
+    #                            headers.
     # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
       @options = options.clone
