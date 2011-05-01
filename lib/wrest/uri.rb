@@ -34,7 +34,8 @@ module Wrest #:nodoc:
     #   :default_headers      => Accepts a hash containing a set of default request headers with which the headers
     #                            passed to Uri#get, Uri#post etc. are merged. Incoming headers will override the
     #                            defaults if there are any clashes. Use this to set cookies or use OAuth2 Authorize
-    #                            headers.
+    #                            headers. When extending or cloning a Uri, passing in a new set of default_headers
+    #                            will result in the old set being overridden.
     # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
       @options = options.clone
@@ -103,36 +104,6 @@ module Wrest #:nodoc:
       uri_string
     end
     
-    # Returns a Uri object that uses threads to perform asynchronous requests.
-    def using_threads
-      clone(:asynchronous_backend => Wrest::AsyncRequest::ThreadBackend.new)
-    end
-
-    # Returns a Uri object that uses eventmachine to perform asynchronous requests.
-    # Remember to do Wrest::AsyncRequest.enable_em first so that 
-    # EventMachine is available for use.
-    def using_em
-      clone(:asynchronous_backend => Wrest::AsyncRequest::EventMachineBackend.new)
-    end
-
-    # Returns a Uri object that uses hash for caching responses.
-    def using_hash
-      clone(:cache_store => {})
-    end
-
-    # Returns a Uri object that uses memcached for caching responses.
-    # Remember to do Wrest::AsyncRequest.enable_memcached first so that 
-    # memcached is available for use.
-    def using_memcached
-      clone(:cache_store => Wrest::Caching::Memcached.new)
-    end
-    
-    # Disables using the globally configured cache for GET requests 
-    # made using the Uri returned by this method.
-    def disable_cache
-      clone(:disable_cache => true)
-    end
-
     #:nodoc:
     def build_get(parameters = {}, headers = {}, &block)
       Http::Get.new(self, parameters, default_headers.merge(headers), block ? @options.merge(:callback_block => block) : @options)
@@ -300,8 +271,6 @@ module Wrest #:nodoc:
     end
     
     include Http::ConnectionFactory
-    private
-    def build_callback_blocks
-    end
+    include Uri::Builders
   end
 end

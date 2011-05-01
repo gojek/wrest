@@ -607,6 +607,14 @@ module Wrest
         let(:alternative_oauth_header) { {'Authorization' => 'OAuth YOUR_OTHER_ACCESS_TOKEN'} }
         let(:content_type_header) { {'Content-Type' => 'application/json'} }
         let(:uri) { 'http://ooga.com'.to_uri(:default_headers => oauth_header) }
+        it "lets incoming default_headers take precedence when the Uri is cloned" do
+          uri.clone(:default_headers => content_type_header).default_headers.should eq(content_type_header)
+        end
+
+        it "lets incoming default_headers take precedence when the Uri is extended" do
+          uri['/foo', :default_headers => content_type_header].default_headers.should eq(content_type_header)
+        end
+        
         {
           'get' => {},
           'delete' => {},
@@ -629,6 +637,7 @@ module Wrest
             end
           end
         end
+        
         context "POST (form-encoded)" do
           it "sets the default headers if there are no request headers" do
             uri.build_post_form.headers.should eq(oauth_header.merge(Wrest::H::ContentType => Wrest::T::FormEncoded))
@@ -646,77 +655,6 @@ module Wrest
         end
       end
       
-      context "using_threads" do
-        it "should return a new uri" do
-          uri = "http://localhost:3000/no_body".to_uri
-          threaded_uri = uri.using_threads
-          uri.should_not equal(threaded_uri)
-        end
-
-        it "should have the thread backend in options hash" do
-          uri = "http://localhost:3000/no_body".to_uri
-          threaded_uri = uri.using_threads
-          threaded_uri.instance_eval("@options")[:asynchronous_backend].should be_an_instance_of(Wrest::AsyncRequest::ThreadBackend)
-        end
-      end
-
-      context "using_em" do
-        before(:all){ Wrest::AsyncRequest.enable_em }
-        it "should return a new uri" do
-          uri = "http://localhost:3000/no_body".to_uri
-          evented_uri = uri.using_em
-          uri.should_not equal(evented_uri)
-        end
-
-        it "should have the eventmachine backend in options hash" do
-          uri = "http://localhost:3000/no_body".to_uri
-          evented_uri = uri.using_em
-          evented_uri.instance_eval("@options")[:asynchronous_backend].should be_a(Wrest::AsyncRequest::EventMachineBackend)
-        end
-      end
-
-      context "using_hash" do
-        it "should return a new uri" do
-          uri = "http://localhost:3000/no_body".to_uri
-          cache_enabled_uri = uri.using_hash
-          uri.should_not equal(cache_enabled_uri)
-        end
-
-        it "should set a hash as cache store in options hash" do
-          uri = "http://localhost:3000/no_body".to_uri
-          cache_enabled_uri = uri.using_hash
-          cache_enabled_uri.instance_eval("@options")[:cache_store].should be_an_instance_of(Hash)
-        end
-      end
-
-      context "using_memcached" do
-        before(:all){ Wrest::Caching.enable_memcached }
-        it "should return a new uri" do
-          uri = "http://localhost:3000/no_body".to_uri
-          cache_enabled_uri = uri.using_memcached
-          uri.should_not equal(cache_enabled_uri)
-        end
-
-        it "should set memcached as cache store in options hash" do
-          uri = "http://localhost:3000/no_body".to_uri
-          cache_enabled_uri = uri.using_memcached
-          cache_enabled_uri.instance_eval("@options")[:cache_store].should be_an_instance_of(Wrest::Caching::Memcached)
-        end
-      end
-
-      context "disable_cache" do
-        it "should return a new uri" do
-          uri = "http://localhost:3000/no_body".to_uri
-          cache_disabled_uri = uri.disable_cache
-          uri.should_not equal(cache_disabled_uri)
-        end
-
-        it "should set a flag indicating to disable cache on requests made through the uri" do
-          cache_disabled_uri = "http://localhost:3000/no_body".to_uri.disable_cache
-          cache_disabled_uri.instance_eval("@options")[:disable_cache].should be_true
-        end
-      end
-
       context "asynchronous", :functional => true do
         let(:hash){Hash.new}
 

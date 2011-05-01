@@ -79,6 +79,7 @@ Wrest::AsyncRequest.default_to_threads!
 require "#{Wrest::Root}/wrest/caching"
 
 # Load Wrest Wrappers
+require "#{Wrest::Root}/wrest/uri/builders"
 require "#{Wrest::Root}/wrest/uri"
 require "#{Wrest::Root}/wrest/uri_template"
 require "#{Wrest::Root}/wrest/exceptions"

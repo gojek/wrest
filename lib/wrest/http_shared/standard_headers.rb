@@ -14,6 +14,7 @@ module Wrest
       ContentType = 'content-type'
       ContentLength = 'content-length'
       IfNoneMatch = 'if-none-match'
+      Cookie = 'cookie'
     end
   end
 end
