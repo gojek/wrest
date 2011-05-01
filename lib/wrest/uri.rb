@@ -22,7 +22,7 @@ module Wrest #:nodoc:
   #
   # You can find examples that use real APIs (like delicious) under the wrest/examples directory.
   class Uri
-    attr_reader :uri, :username, :password, :uri_string, :uri_path, :query 
+    attr_reader :uri, :username, :password, :uri_string, :uri_path, :query, :default_headers
     
     # Valid tuples for the options are:
     #   :asynchronous_backend => Can currently be set to either Wrest::AsyncRequest::EventMachineBackend.new
@@ -31,20 +31,23 @@ module Wrest #:nodoc:
     #   :callback             => Accepts a hash where the keys are response codes or ranges of response codes and
     #                            the values are the corresponding blocks that will be invoked should the response
     #                            code match the key.
-    #   :
+    #   :default_headers      => Accepts a hash containing a set of default request headers with which the headers
+    #                            passed to Uri#get, Uri#post etc. are merged. These latter headers will override the
+    #                            defaults if there are any clashes.
     # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
-        @options = options.clone
-        @uri_string = uri_string.to_s
-        @uri = URI.parse(@uri_string)
-        uri_scheme = URI.split(@uri_string)
-        @uri_path = uri_scheme[-4].split('?').first || ''
-        @uri_path = (@uri_path.empty? ? '/' : @uri_path) 
-        @query = uri_scheme[-2] || ''
-        @username = (@options[:username] ||= @uri.user)
-        @password = (@options[:password] ||= @uri.password)
-        @asynchronous_backend = @options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend
-        @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
+      @options = options.clone
+      @uri_string = uri_string.to_s
+      @uri = URI.parse(@uri_string)
+      uri_scheme = URI.split(@uri_string)
+      @uri_path = uri_scheme[-4].split('?').first || ''
+      @uri_path = (@uri_path.empty? ? '/' : @uri_path) 
+      @query = uri_scheme[-2] || ''
+      @username = (@options[:username] ||= @uri.user)
+      @password = (@options[:password] ||= @uri.password)
+      @asynchronous_backend = @options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend
+      @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
+      @default_headers = @options[:default_headers] || {}
     end 
     
     # Builds a Wrest::UriTemplate by extending the current URI 
@@ -131,29 +134,29 @@ module Wrest #:nodoc:
 
     #:nodoc:
     def build_get(parameters = {}, headers = {}, &block)
-      Http::Get.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options)
+      Http::Get.new(self, parameters, default_headers.merge(headers), block ? @options.merge(:callback_block => block) : @options)
     end
     
     #:nodoc:
     def build_put(body = '', headers = {}, parameters = {}, &block)
-      Http::Put.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options)
+      Http::Put.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
     end
     
     #:nodoc:
     def build_post(body = '', headers = {}, parameters = {}, &block)
-      Http::Post.new(self, body.to_s, headers, parameters, block ? @options.merge(:callback_block => block) : @options)
+      Http::Post.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
     end
 
     #:nodoc:
     def build_post_form(parameters ={}, headers = {}, &block)
-      headers = headers.merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
+      headers = default_headers.merge(headers).merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
       body = parameters.to_query
       Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options)
     end
 
     #:nodoc:
     def build_delete(parameters = {}, headers = {}, &block)
-      Http::Delete.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options)
+      Http::Delete.new(self, parameters, default_headers.merge(headers), block ? @options.merge(:callback_block => block) : @options)
     end
     
     # Make a GET request to this URI. This is a convenience API
@@ -296,5 +299,8 @@ module Wrest #:nodoc:
     end
     
     include Http::ConnectionFactory
+    private
+    def build_callback_blocks
+    end
   end
 end

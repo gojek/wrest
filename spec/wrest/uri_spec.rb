@@ -443,10 +443,10 @@ module Wrest
         connection
       end
 
-      require "#{Wrest::Root}/wrest/multipart"
       http_methods = ["get", "delete", "post_multipart", "put_multipart"]
       http_methods.each do |http_method|
         context "#{http_method}" do
+          before(:all) { require "#{Wrest::Root}/wrest/multipart" }
           it "should call the given block with a Callback object" do
             connection = setup_connection
             uri = "http://localhost:3000/".to_uri
@@ -602,6 +602,50 @@ module Wrest
         end
       end
 
+      context "default headers" do
+        let(:oauth_header) { {'Authorization' => 'OAuth YOUR_ACCESS_TOKEN'} }
+        let(:alternative_oauth_header) { {'Authorization' => 'OAuth YOUR_OTHER_ACCESS_TOKEN'} }
+        let(:content_type_header) { {'Content-Type' => 'application/json'} }
+        let(:uri) { 'http://ooga.com'.to_uri(:default_headers => oauth_header) }
+        {
+          'get' => {},
+          'delete' => {},
+          'post' => '',
+          'put' => '',
+        }.each do |verb, blank_first_param_value|
+          context "#{verb.upcase}" do
+            it "sets the default headers if there are no request headers" do
+              uri.send("build_#{verb}").headers.should eq(oauth_header)
+            end
+          
+            it "merges the default headers into the request headers" do
+              uri.send("build_#{verb}", blank_first_param_value, 
+                        content_type_header
+                      ).headers.should eq(oauth_header.merge(content_type_header))
+            end
+          
+            it "lets the incoming headers take precedent over the defaults" do
+              uri.send("build_#{verb}", blank_first_param_value, alternative_oauth_header).headers.should eq(alternative_oauth_header)
+            end
+          end
+        end
+        context "POST (form-encoded)" do
+          it "sets the default headers if there are no request headers" do
+            uri.build_post_form.headers.should eq(oauth_header.merge(Wrest::H::ContentType => Wrest::T::FormEncoded))
+          end
+        
+          it "merges the default headers into the request headers" do
+            uri.build_post_form({}, content_type_header).headers.should eq(
+                                          oauth_header.merge(content_type_header).merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
+                                        )
+          end
+        
+          it "lets the incoming headers take precedent over the defaults" do
+            uri.build_post_form({}, alternative_oauth_header).headers.should eq(alternative_oauth_header.merge(Wrest::H::ContentType => Wrest::T::FormEncoded))
+          end
+        end
+      end
+      
       context "using_threads" do
         it "should return a new uri" do
           uri = "http://localhost:3000/no_body".to_uri
