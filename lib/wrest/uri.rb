@@ -25,9 +25,13 @@ module Wrest #:nodoc:
     attr_reader :uri, :username, :password, :uri_string, :uri_path, :query 
     
     # Valid tuples for the options are:
-    #   :asynchronous_backend => Wrest
-    #   :password => String, defaults to nil
-    #   :follow_redirects => Boolean, defaults to true for Get, false for anything else
+    #   :asynchronous_backend => Can currently be set to either Wrest::AsyncRequest::EventMachineBackend.new
+    #                            or Wrest::AsyncRequest::ThreadBackend.new. Easier to do using Uri#using_em and
+    #                            Uri#using_threads.
+    #   :callback             => Accepts a hash where the keys are response codes or ranges of response codes and
+    #                            the values are the corresponding blocks that will be invoked should the response
+    #                            code match the key.
+    #   :
     # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
         @options = options.clone
@@ -43,6 +47,8 @@ module Wrest #:nodoc:
         @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
     end 
     
+    # Builds a Wrest::UriTemplate by extending the current URI 
+    # with the pattern passed to it.
     def to_template(pattern)
       template_pattern = URI.join(uri_string,pattern).to_s
       UriTemplate.new(template_pattern, @options)
@@ -99,7 +105,8 @@ module Wrest #:nodoc:
     end
 
     # Returns a Uri object that uses eventmachine to perform asynchronous requests.
-    # Remember to do Wrest::AsyncRequest.enable_em first so that em is available for use.
+    # Remember to do Wrest::AsyncRequest.enable_em first so that 
+    # EventMachine is available for use.
     def using_em
       clone(:asynchronous_backend => Wrest::AsyncRequest::EventMachineBackend.new)
     end
@@ -110,13 +117,16 @@ module Wrest #:nodoc:
     end
 
     # Returns a Uri object that uses memcached for caching responses.
-    # Remember to do Wrest::AsyncRequest.enable_memcached first so that memcached is available for use.
+    # Remember to do Wrest::AsyncRequest.enable_memcached first so that 
+    # memcached is available for use.
     def using_memcached
       clone(:cache_store => Wrest::Caching::Memcached.new)
     end
-
+    
+    # Disables using the globally configured cache for GET requests 
+    # made using the Uri returned by this method.
     def disable_cache
-      clone(:disable_cache => true )
+      clone(:disable_cache => true)
     end
 
     #:nodoc:
