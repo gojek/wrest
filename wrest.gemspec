@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "Wrest is a fluent, object oriented HTTP client library for 1.8, 1.9, JRuby and Rubinius."
   s.description = "Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for RFC2616 HTTP caching, multiple HTTP backends and async calls using EventMachine. It runs on CRuby, JRuby and Rubinius."
  
-  s.required_rubygems_version = "> 1.5"
+  s.required_rubygems_version = ">= 1.3.0"
   s.rubyforge_project = "wrest"
 
   s.requirements << "To use Memcached as caching back-end, install the 'dalli' gem."
