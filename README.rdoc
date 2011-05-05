@@ -188,6 +188,8 @@ Note: The current implementation of asynchronous requests is currently in alpha 
 
 === Other useful stuff
 
+==== Hash container with ActiveResource-like semantics
+
 Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values. See examples/twitter.rb and examples/wow_realm_status.rb for more samples.
 
 Example:
@@ -208,6 +210,12 @@ Example:
  kai_wren.chi      # => #<Chi:0x113af8c @count="1024">
  kai_wren.energy   # => #<Chi:0x113af8c @count="1024">
  kai_wren.teacher  # => 'Viss'
+
+==== Opt-out of core extensions
+
+Uncomfortable with extending <tt>String</tt> to add <tt>to_uri</tt>? Simply do
+ gem "wrest", :require => "wrest_no_ext"
+in your Gemfile. You can now do <tt>Uri.new('http://localhost')</tt> to build Uris.
 
 === Logging
 
