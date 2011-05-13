@@ -13,6 +13,7 @@ module Wrest
       Close = 'close'
       KeepAlive = 'keep-alive'
       FormEncoded = 'application/x-www-form-urlencoded'
+      ApplicationXml = 'application/xml'
     end
   end
 end

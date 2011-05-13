@@ -71,4 +71,11 @@ describe Wrest::Uri::Builders do
       cookied_uri.default_headers.should eq(Wrest::H::Cookie => 'some-encoded-cookie-string')
     end
   end
+    
+  context "using_persistent" do
+    it "builds a new Uri that will create requests that use persistent connections" do
+      cookied_uri = uri.using_persistent
+      cookied_uri.default_headers.should eq(Wrest::H::Connection => Wrest::T::KeepAlive)
+    end
+  end
 end

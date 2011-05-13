@@ -144,25 +144,38 @@ module Wrest
     end
     
     describe 'Cloning' do
-      before :each do
-        @original = Uri.new('http://localhost:3000/ooga')
-        @clone = @original.clone        
-      end
-      
+      let(:original) { Uri.new('http://localhost:3000/ooga', :default_headers => { H::ContentType => T::FormEncoded }) }
+      let(:clone) { original.clone }
+
       it "should be equal to its clone" do
-        @original.should == @clone
+        original.should eq(clone)
       end
       
       it "should not be the same object as the clone" do
-        @original.should_not be_equal(@clone)
+        original.should_not be_equal(clone)
       end
       
       it "should allow options to be changed when building the clone" do
-        clone = @original.clone(:username => 'kaiwren', :password => 'bottle')
-        @original.should_not == clone
+        clone = original.clone(:username => 'kaiwren', :password => 'bottle')
+        original.should_not == clone
         clone.username.should == 'kaiwren'
         clone.password.should == 'bottle'
-        @original.username.should be_nil
+        original.username.should be_nil
+      end
+      
+      context "default headers" do
+        it "merges the default headers" do
+          original.clone(:default_headers => { H::Connection => T::KeepAlive }).default_headers.should eq(
+            H::Connection => T::KeepAlive,
+            H::ContentType => T::FormEncoded
+          )
+        end
+        
+        it "ensures incoming defaults have priority" do
+          original.clone(:default_headers => { H::ContentType => T::ApplicationXml }).default_headers.should eq(
+            H::ContentType => T::ApplicationXml
+          )
+        end
       end
     end
     
@@ -607,9 +620,6 @@ module Wrest
         let(:alternative_oauth_header) { {'Authorization' => 'OAuth YOUR_OTHER_ACCESS_TOKEN'} }
         let(:content_type_header) { {'Content-Type' => 'application/json'} }
         let(:uri) { 'http://ooga.com'.to_uri(:default_headers => oauth_header) }
-        it "lets incoming default_headers take precedence when the Uri is cloned" do
-          uri.clone(:default_headers => content_type_header).default_headers.should eq(content_type_header)
-        end
 
         it "lets incoming default_headers take precedence when the Uri is extended" do
           uri['/foo', :default_headers => content_type_header].default_headers.should eq(content_type_header)

@@ -81,7 +81,9 @@ module Wrest #:nodoc:
     # Clones a Uri, building a new instance with exactly the same uri string.
     # You can however change the Uri options or add new ones.
     def clone(opts = {})
-      Uri.new(@uri_string, @options.merge(opts))
+      merged_options =  @options.merge(opts)
+      merged_options[:default_headers] = opts[:default_headers] ? @default_headers.merge(opts[:default_headers]) : {}
+      Uri.new(@uri_string, merged_options)
     end
 
     def eql?(other)
