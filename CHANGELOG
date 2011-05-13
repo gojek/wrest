@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+== Current
+ * GH#106 Provide a Uri builder that allows for persistent connections
+
 == 1.4.4
  * GH#105 Reduce Rubgems version requirements to 1.3.x or greater from > 1.5
  
