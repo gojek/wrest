@@ -74,11 +74,19 @@ module Wrest #:nodoc:
 
 
       def deserialise(options = {})
-          @deserialised_body ||= deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
+        @deserialised_body ||= deserialise_using(Wrest::Components::Translators.lookup(@http_response.content_type),options)
+      end
+
+      def deserialize(options = {})
+        deserialise(options)
       end
 
       def deserialise_using(translator,options = {})
         translator.deserialise(@http_response,options)
+      end
+
+      def deserialize_using(options = {})
+        deserialise_using(options)
       end
 
       # Gives a hash of the response headers. The keys of the hash are case-insensitive.

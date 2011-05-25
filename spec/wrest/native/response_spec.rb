@@ -2,6 +2,21 @@ require "spec_helper"
 
 module Wrest
   describe Native::Response do
+    context 'Aliased methods' do
+      it "has #deserialize delegate to #deserialise" do
+        response = Wrest::Native::Response.new(mock('Response', :code => '200'))
+        
+        response.should_receive(:deserialise)
+        response.deserialize
+      end
+
+      it "has #deserialize_using delegate to #deserialise_using" do
+        response = Wrest::Native::Response.new(mock('Response', :code => '200'))
+        
+        response.should_receive(:deserialise_using)
+        response.deserialize_using
+      end
+    end
 
     describe "hashing and comparison" do
       it "_should return true for equality between two identical Wrest::Response objects and their hashes" do

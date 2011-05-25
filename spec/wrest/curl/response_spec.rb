@@ -3,6 +3,22 @@ require "spec_helper"
 unless RUBY_PLATFORM =~ /java/
   module Wrest
     describe Curl::Response do
+      context 'Aliased methods' do
+        it "has #deserialize delegate to #deserialise" do
+          response = Wrest::Curl::Response.new(mock('Response', :headers => {'Content-type' => 'text/xml;charset=utf-8'}))
+          
+          response.should_receive(:deserialise)
+          response.deserialize
+        end
+
+        it "has #deserialize_using delegate to #deserialise_using" do
+          response = Wrest::Curl::Response.new(mock('Response', :headers => {'Content-type' => 'text/xml;charset=utf-8'}))
+          
+          response.should_receive(:deserialise_using)
+          response.deserialize_using
+        end
+      end
+      
       describe 'Headers' do
         it "should know how to retrieve content type irrespective of the casing" do
           http_response = mock('Patron::Response')

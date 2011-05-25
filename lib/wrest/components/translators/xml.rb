@@ -19,8 +19,16 @@ module Wrest
         end
       end
 
+      def deserialize(response, options = {})
+        deserialise(response, options)
+      end
+
       def serialise(hash, options = {})
         hash.to_xml(options)
+      end
+      
+      def serialize(hash, options = {})
+        serialise(hash, options)
       end
     end
   end

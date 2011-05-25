@@ -37,11 +37,19 @@ module Wrest #:nodoc:
       end
 
       def deserialise(options = {})
-          @deserialised_body ||= deserialise_using(Wrest::Components::Translators.lookup(content_type),options)
+        @deserialised_body ||= deserialise_using(Wrest::Components::Translators.lookup(content_type),options)
+      end
+      
+      def deserialize(options = {})
+        deserialise(options)
+      end
+      
+      def deserialise_using(translator, options={})
+        translator.deserialise(@http_response,options)
       end
 
-      def deserialise_using(translator,options={})
-        translator.deserialise(@http_response,options)
+      def deserialize_using(options = {})
+        deserialise_using(options)
       end
       
       def code
