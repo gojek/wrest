@@ -37,12 +37,6 @@ module Wrest
       def using_cookie(cookie_string)
         clone(:default_headers => {Wrest::H::Cookie => cookie_string})
       end
-      
-      # Configures the headers to request persistent connections.
-      # This is an alternative to using Wrest::Native::Session.
-      def using_persistent
-        clone(:default_headers => {Wrest::H::Connection => Wrest::T::KeepAlive})
-      end
     end
   end
 end
