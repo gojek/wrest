@@ -23,3 +23,5 @@ TAGS
 .rvmrc
 .idea
 spec_all_rubies.sh
+.rbx
+vendor

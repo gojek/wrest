@@ -2,7 +2,6 @@ require File.expand_path('../../config/boot', __FILE__)
 require File.expand_path('../models/facebook_client', __FILE__)
 require File.expand_path('../models/facebook_user', __FILE__)
 require File.expand_path('../models/facebook_profile', __FILE__)
-require File.expand_path('../models/wall_post', __FILE__)
 
 module FacebookAuth
   class Application < Sinatra::Application
@@ -15,17 +14,6 @@ module FacebookAuth
       erb :facebook_profile, :locals => { :profile => facebook_user.profile }
     end
 
-    get '/new_wall_post' do
-      require_facebook_authentication(request.fullpath)
-      erb :new_wall_post
-    end
-
-    post '/wall_post' do
-      require_facebook_authentication('/new_wall_post')
-      message = params[:message]
-      erb :successful_wall_post, :locals => { :message => message }
-    end
-    
     get '/facebook_authenticate' do
       redirect FacebookClient.new.authorization_uri(facebook_post_authentication_url, :scope => "offline_access")
     end

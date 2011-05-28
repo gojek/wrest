@@ -1,2 +1,0 @@
-class WassPost
-end
