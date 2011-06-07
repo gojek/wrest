@@ -86,6 +86,8 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
      :image => UploadIO.new(File.open(file_path), "image/png", file_path), 
      :key => imgur_key
     ).deserialise
+    
+** Note: To enable Multipart support, you'll have to explicitly require 'wrest/multipart', which depends on a '{multipart-post}[https://rubygems.org/gems/multipart-post]'
 
 ==== DELETE
 
