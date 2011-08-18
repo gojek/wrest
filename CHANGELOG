@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+== 1.4.6
+ * Bump Builder dependency to allow both Builder 2.x and 3.x to be used
+
 == 1.4.5
  * GH#107 alias :deserialize :deserialise
 
