@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+== 1.4.7
+ * Switch to using multi_json to manage Json backend to play nice with Rails 3.1.
+
 == 1.4.6
  * Bump Builder dependency to allow both Builder 2.x and 3.x to be used
 

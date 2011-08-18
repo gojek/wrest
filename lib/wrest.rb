@@ -7,7 +7,6 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'rubygems'
-gem 'activesupport', '~> 3.0'
 
 require 'net/http'
 require 'net/https'
@@ -17,6 +16,7 @@ require 'cgi'
 require 'base64'
 require 'logger'
 require 'benchmark'
+require 'multi_json'
 require 'active_support'
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/hash'
@@ -54,9 +54,6 @@ end
 
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
-
-gem('json', '~> 1.5')
-ActiveSupport::JSON.backend = "JSONGem"
 
 require "#{Wrest::Root}/wrest/core_ext/string"
 require "#{Wrest::Root}/wrest/hash_with_case_insensitive_access"

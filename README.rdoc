@@ -1,4 +1,4 @@
-= Wrest 1.4.6
+= Wrest 1.4.7
 
 (c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
@@ -223,6 +223,13 @@ in your Gemfile. You can now do <tt>Uri.new('http://localhost')</tt> to build Ur
 
 The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT. If you're using Wrest in a Rails application, you can configure logging by adding a config/initializers/wrest.rb file with the following contents :
   Wrest.logger = Rails.logger
+
+=== Json Backend
+
+Wrest uses the multi_json gem to manage Json backends, allowing it to play nice with Rails 3.1. To change the backend used, you can do the following:
+  MultiJson.engine = :json_gem
+  
+For more information, look up the {multi_json}[http://github.com/intridea/multi_json] documentation.
 
 === Build
 
