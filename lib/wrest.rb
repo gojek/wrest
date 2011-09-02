@@ -55,8 +55,8 @@ end
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
 
-gem('json', '~> 1.5')
-ActiveSupport::JSON.backend = "JSONGem"
+#gem('json', '~> 1.5')
+#ActiveSupport::JSON.backend = "JSONGem"
 
 require "#{Wrest::Root}/wrest/core_ext/string"
 require "#{Wrest::Root}/wrest/hash_with_case_insensitive_access"
