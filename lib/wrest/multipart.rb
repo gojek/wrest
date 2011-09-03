@@ -50,7 +50,6 @@ module Wrest
     # This implementation of asynchronous post_multipart is currently in alpha. Hence, it should not be used in production.
     def post_multipart_async(parameters = {}, headers = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
-      nil
     end
     
     # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
@@ -66,7 +65,6 @@ module Wrest
     # This implementation of asynchronous put_multipart is currently in alpha. Hence, it should not be used in production.
     def put_multipart_async(parameters = {}, headers = {}, &block)
       (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
-      nil
     end
   end
   

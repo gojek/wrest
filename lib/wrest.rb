@@ -6,8 +6,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require 'rubygems'
-
 require 'net/http'
 require 'net/https'
 require 'forwardable'
@@ -84,7 +82,3 @@ require "#{Wrest::Root}/wrest/components"
 
 # Load Wrest::Resource
 # require "#{Wrest::Root}/wrest/resource"
-
-# if (ENV['RAILS_ENV'] == 'test' || (Kernel.const_defined?(:RAILS_ENV) && (RAILS_ENV == 'test')))
-#   require "#{Wrest::Root}/wrest/test"
-# end

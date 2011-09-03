@@ -150,7 +150,6 @@ module Wrest #:nodoc:
     # This implementation of asynchronous get is currently in alpha. Hence, it should not be used in production.
     def get_async(parameters = {}, headers = {}, &block)
       @asynchronous_backend.execute(build_get(parameters, headers, &block))
-      nil
     end
 
     # Make a PUT request to this URI. This is a convenience API
@@ -170,7 +169,6 @@ module Wrest #:nodoc:
     # This implementation of asynchronous put is currently in alpha. Hence, it should not be used in production.
     def put_async(body = '', headers = {}, parameters = {}, &block)
       @asynchronous_backend.execute(build_put(body, headers, parameters, &block))
-      nil
     end
 
     # Makes a POST request to this URI. This is a convenience API
@@ -192,7 +190,6 @@ module Wrest #:nodoc:
     # This implementation of asynchronous post is currently in alpha. Hence, it should not be used in production.
     def post_async(body = '', headers = {}, parameters = {}, &block)
       @asynchronous_backend.execute(build_post(body, headers, parameters, &block))
-      nil
     end
     
     # Makes a POST request to this URI. This is a convenience API
@@ -218,7 +215,6 @@ module Wrest #:nodoc:
     # This implementation of asynchronous post_form is currently in alpha. Hence, it should not be used in production.
     def post_form_async(parameters = {}, headers = {}, &block)
       @asynchronous_backend.execute(build_post_form(parameters, headers, &block))
-      nil
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
@@ -238,7 +234,6 @@ module Wrest #:nodoc:
     # This implementation of asynchronous delete is currently in alpha. Hence, it should not be used in production.
     def delete_async(parameters = {}, headers = {}, &block)
       @asynchronous_backend.execute(build_delete(parameters, headers, &block))
-      nil
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API
