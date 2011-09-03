@@ -1,7 +1,7 @@
 require "spec_helper"
 
 unless RUBY_PLATFORM =~ /java/
-  require "#{Wrest::Root}/wrest/curl"
+  require "wrest/curl"
 
   module Wrest
     describe Curl::Post do

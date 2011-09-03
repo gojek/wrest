@@ -32,9 +32,9 @@ module Wrest
     end
   end
 end
-require "#{Wrest::Root}/wrest/core_ext/hash"
-require "#{Wrest::Root}/wrest/components/mutators/base"
-require "#{Wrest::Root}/wrest/components/mutators/xml_simple_type_caster"
-require "#{Wrest::Root}/wrest/components/mutators/xml_mini_type_caster"
-require "#{Wrest::Root}/wrest/components/mutators/camel_to_snake_case"
+require "wrest/core_ext/hash"
+require "wrest/components/mutators/base"
+require "wrest/components/mutators/xml_simple_type_caster"
+require "wrest/components/mutators/xml_mini_type_caster"
+require "wrest/components/mutators/camel_to_snake_case"
 

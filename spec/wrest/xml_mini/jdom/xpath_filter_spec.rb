@@ -1,5 +1,5 @@
+require "spec_helper"
 if RUBY_PLATFORM =~ /java/
-  require "spec_helper"
   require 'wrest/xml_mini/jdom/xpath_filter'
   module XmlMini
     module JDOM

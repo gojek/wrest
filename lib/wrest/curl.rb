@@ -8,9 +8,9 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 begin
-  gem 'patron', '~> 0.4.11'
+  gem 'patron', '~> 0.4'
 rescue Gem::LoadError => e
-  Wrest.logger.debug "Patron ~> 0.4.11 not found. Patron is necessary to use libcurl. To install Patron run `sudo gem install patron` (patron is not available on JRuby, but you shouldn't need it anyway)."
+  Wrest.logger.debug "Patron ~> 0.4.x not found. Patron is necessary to use libcurl. To install Patron run `sudo gem install patron` (patron is not available on JRuby, but you shouldn't need it anyway)."
   raise e
 end
 require 'patron'
@@ -39,13 +39,13 @@ module Patron #:nodoc:
   end
 end
 
-require "#{Wrest::Root}/wrest/curl/response"
-require "#{Wrest::Root}/wrest/curl/request"
-require "#{Wrest::Root}/wrest/curl/get"
-require "#{Wrest::Root}/wrest/curl/put"
-require "#{Wrest::Root}/wrest/curl/post"
-require "#{Wrest::Root}/wrest/curl/delete"
-require "#{Wrest::Root}/wrest/curl/options"
-require "#{Wrest::Root}/wrest/curl/post_multipart"
-require "#{Wrest::Root}/wrest/curl/put_multipart"
-# require "#{Wrest::Root}/wrest/curl/session"
+require "wrest/curl/response"
+require "wrest/curl/request"
+require "wrest/curl/get"
+require "wrest/curl/put"
+require "wrest/curl/post"
+require "wrest/curl/delete"
+require "wrest/curl/options"
+require "wrest/curl/post_multipart"
+require "wrest/curl/put_multipart"
+# require "wrest/curl/session"

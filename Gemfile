@@ -1,7 +1,11 @@
 source "http://rubygems.org"
 
+gem 'hanna'
+gem 'rubyforge'
+gem 'simplecov', :platforms => :mri_19
+
 group :multipart_support do
-  gem 'multipart-post', '~> 1.0'
+  gem 'multipart-post', '~> 1'
 end
 
 group :libcurl_support do

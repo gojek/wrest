@@ -15,5 +15,5 @@ module Wrest
   end
 end
 
-require "#{Wrest::Root}/wrest/components/container"
-require "#{Wrest::Root}/wrest/components/translators"
+require "wrest/components/container"
+require "wrest/components/translators"

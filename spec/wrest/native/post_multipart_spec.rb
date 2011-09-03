@@ -1,6 +1,6 @@
 require "spec_helper"
-require "#{Wrest::Root}/wrest/native"
-require "#{Wrest::Root}/wrest/multipart"
+require "wrest/native"
+require "wrest/multipart"
 
 module Wrest
   describe Native::PostMultipart do

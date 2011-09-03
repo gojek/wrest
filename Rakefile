@@ -10,26 +10,22 @@
 # Note that some optional libraries/gems that the build (not Wrest itself) uses may not be available on all implementations of Ruby.
 puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
+require 'rubygems'
 require 'bundler'
-Bundler::GemHelper.install_tasks
+Bundler.setup
 
-if Object.const_defined?('RAILS_ROOT') || Object.const_defined?('Rails') 
-  require File.dirname(__FILE__) + '/../../../config/environment'
-else
-  require 'rubygems'
-  require 'rake'
-  require 'rspec'
-  require 'rspec/core/rake_task'
-  
-  begin
-    require 'metric_fu'
-    MetricFu::Configuration.run do |config|
-      config.rcov[:test_files] = ['spec/**/*_spec.rb']
-      config.rcov[:rcov_opts] << "-Ispec" # Needed to find spec_helper
-    end
-  rescue LoadError
-    puts 'metric_fu is not available. Install it with: gem install jscruggs-metric_fu -s http://gems.github.com'
+require 'rspec/core/rake_task'
+require 'hanna/rdoctask'
+require 'rake/contrib/sshpublisher'
+
+begin
+  require 'metric_fu'
+  MetricFu::Configuration.run do |config|
+    config.rcov[:test_files] = ['spec/**/*_spec.rb']
+    config.rcov[:rcov_opts] << "-Ispec" # Needed to find spec_helper
   end
+rescue LoadError
+  puts 'metric_fu is not available. Install it with: gem install jscruggs-metric_fu -s http://gems.github.com'
 end
 
 desc 'Default: run spec tests.'
@@ -56,12 +52,7 @@ namespace :rspec do
   end
 end
 
-begin
-  require 'hanna/rdoctask'
-rescue LoadError
-  puts 'Hanna not available, using standard Rake rdoctask. Install it with: gem install mislav-hanna.'
-  require 'rake/rdoctask'
-end
+
 desc 'Generate documentation for Wrest'
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
@@ -71,49 +62,27 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-begin
-  require 'rcov'
-  require 'rcov/rcovtask'
-  desc "Run all specs in spec directory with RCov"
-  RSpec::Core::RakeTask.new(:rcov) do |t|
-    #t.rspec_opts = ['--options', "spec/spec.opts"]
-    t.pattern = "spec/unit/wrest/**/*_spec.rb"
-    t.rcov = true
-    t.rcov_opts = lambda do
-      IO.readlines("spec/rcov.opts").map {|l| l.chomp.split " "}.flatten
-    end
-    # t.verbose = true
-  end
-rescue LoadError
-  puts "Rcov not available."
-end
+  
+namespace :rubyforge do
 
-begin
-  require 'rake/contrib/sshpublisher'
-  namespace :rubyforge do
+  desc "Release gem and RDoc documentation to RubyForge"
+  task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
 
-    desc "Release gem and RDoc documentation to RubyForge"
-    task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
+  namespace :release do
+    desc "Publish RDoc to RubyForge."
+    task :docs => [:rdoc] do
+      config = YAML.load(
+      File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+      )
 
-    namespace :release do
-      desc "Publish RDoc to RubyForge."
-      task :docs => [:rdoc] do
-        config = YAML.load(
-        File.read(File.expand_path('~/.rubyforge/user-config.yml'))
-        )
+      host = "#{config['username']}@rubyforge.org"
+      remote_dir = "/var/www/gforge-projects/wrest/"
+      local_dir = 'rdoc'
 
-        host = "#{config['username']}@rubyforge.org"
-        remote_dir = "/var/www/gforge-projects/wrest/"
-        local_dir = 'rdoc'
-
-        Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
-      end
+      Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
     end
   end
-rescue LoadError
-  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
 end
-
 
 namespace (:benchmark) do
   desc "Create classes to be used in Wrest::Resource vs. ActiveResource"

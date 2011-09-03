@@ -18,16 +18,16 @@ module Wrest
   end
 end
 
-require "#{Wrest::Root}/wrest/native/connection_factory"
-require "#{Wrest::Root}/wrest/native/response"
-require "#{Wrest::Root}/wrest/native/redirection"
-require "#{Wrest::Root}/wrest/native/request"
-require "#{Wrest::Root}/wrest/native/get"
-require "#{Wrest::Root}/wrest/native/put"
-require "#{Wrest::Root}/wrest/native/post"
-require "#{Wrest::Root}/wrest/native/delete"
-require "#{Wrest::Root}/wrest/native/options"
-require "#{Wrest::Root}/wrest/native/session"
+require "wrest/native/connection_factory"
+require "wrest/native/response"
+require "wrest/native/redirection"
+require "wrest/native/request"
+require "wrest/native/get"
+require "wrest/native/put"
+require "wrest/native/post"
+require "wrest/native/delete"
+require "wrest/native/options"
+require "wrest/native/session"
 
 # default to using Native libs
 Wrest::Http = Wrest::Native

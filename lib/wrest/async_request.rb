@@ -12,7 +12,7 @@ module Wrest
   module AsyncRequest
     # Loads Wrest eventmachine backend alongwith eventmachine gem
     def self.enable_em
-      require "#{Wrest::Root}/wrest/async_request/event_machine_backend"
+      require "wrest/async_request/event_machine_backend"
     end
 
     # Assign default backend to be used for asynchronous request. Default is to use threads

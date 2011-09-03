@@ -1,5 +1,5 @@
-if xml_backends.include?('LibXML')
-  require "spec_helper"
+require "spec_helper"
+if Helpers.xml_backends.include?('LibXML')
   require 'wrest/xml_mini/libxml/xpath_filter'
   require 'libxml'
   module XmlMini

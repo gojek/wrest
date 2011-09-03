@@ -1,5 +1,4 @@
 require "spec_helper"
-require "#{Wrest::Root}/wrest"
 
 module Wrest
   describe HttpCodes do

@@ -459,7 +459,7 @@ module Wrest
       http_methods = ["get", "delete", "post_multipart", "put_multipart"]
       http_methods.each do |http_method|
         context "#{http_method}" do
-          before(:all) { require "#{Wrest::Root}/wrest/multipart" }
+          before(:all) { require "wrest/multipart" }
           it "should call the given block with a Callback object" do
             connection = setup_connection
             uri = "http://localhost:3000/".to_uri

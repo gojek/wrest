@@ -35,7 +35,7 @@ module Wrest
   end
 
   def self.enable_evented_requests!
-    require "#{Wrest::Root}/wrest/event_machine_backend"
+    require "wrest/event_machine_backend"
   end
 
   # Switch Wrest to using Net::HTTP.
@@ -45,7 +45,7 @@ module Wrest
 
   # Switch Wrest to using libcurl.
   def self.use_curl!
-    require "#{Wrest::Root}/wrest/curl"
+    require "wrest/curl"
     silence_warnings{ Wrest.const_set('Http', Wrest::Curl) }
   end
 end
@@ -53,32 +53,32 @@ end
 Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
 
-require "#{Wrest::Root}/wrest/core_ext/string"
-require "#{Wrest::Root}/wrest/hash_with_case_insensitive_access"
+require "wrest/core_ext/string"
+require "wrest/hash_with_case_insensitive_access"
 
 # Load XmlMini Extensions
-require "#{Wrest::Root}/wrest/xml_mini"
+require "wrest/xml_mini"
 
 # Load Wrest Core
-require "#{Wrest::Root}/wrest/version"
-require "#{Wrest::Root}/wrest/cache_proxy"
-require "#{Wrest::Root}/wrest/http_shared"
-require "#{Wrest::Root}/wrest/http_codes"
-require "#{Wrest::Root}/wrest/callback"
-require "#{Wrest::Root}/wrest/native"
+require "wrest/version"
+require "wrest/cache_proxy"
+require "wrest/http_shared"
+require "wrest/http_codes"
+require "wrest/callback"
+require "wrest/native"
 
-require "#{Wrest::Root}/wrest/async_request"
-require "#{Wrest::Root}/wrest/async_request/thread_backend"
+require "wrest/async_request"
+require "wrest/async_request/thread_backend"
 Wrest::AsyncRequest.default_to_threads!
 
-require "#{Wrest::Root}/wrest/caching"
+require "wrest/caching"
 
 # Load Wrest Wrappers
-require "#{Wrest::Root}/wrest/uri/builders"
-require "#{Wrest::Root}/wrest/uri"
-require "#{Wrest::Root}/wrest/uri_template"
-require "#{Wrest::Root}/wrest/exceptions"
-require "#{Wrest::Root}/wrest/components"
+require "wrest/uri/builders"
+require "wrest/uri"
+require "wrest/uri_template"
+require "wrest/exceptions"
+require "wrest/components"
 
 # Load Wrest::Resource
-# require "#{Wrest::Root}/wrest/resource"
+# require "wrest/resource"
