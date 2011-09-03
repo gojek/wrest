@@ -1,6 +1,6 @@
 = Wrest 1.4.7
 
-(c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved. http://ci.c42.in/projects/wrest.png {CI Build}[http://ci.c42.in/projects/wrest]
+(c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved. {CI Status:}[http://ci.c42.in/projects/wrest] http://ci.c42.in/projects/wrest.png
 
 Wrest is a ruby REST/HTTP client library which
 
