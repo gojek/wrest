@@ -89,7 +89,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
      :key => imgur_key
     ).deserialise
     
-** Note: To enable Multipart support, you'll have to explicitly require 'wrest/multipart', which depends on a '{multipart-post}[https://rubygems.org/gems/multipart-post]'
+Note: To enable Multipart support, you'll have to explicitly require 'wrest/multipart', which depends on the multipart-post gem.
 
 ==== DELETE
 
