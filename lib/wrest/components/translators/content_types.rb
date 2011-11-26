@@ -14,7 +14,8 @@ module Wrest
       'application/xml' => Wrest::Components::Translators::Xml,
       'text/xml' => Wrest::Components::Translators::Xml,
       'application/json' => Wrest::Components::Translators::Json,
-      'text/javascript' => Wrest::Components::Translators::Json
+      'text/javascript' => Wrest::Components::Translators::Json,
+      'text/plain' => Wrest::Components::Translators::Txt
     }
   end
 end
