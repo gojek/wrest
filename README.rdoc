@@ -60,7 +60,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
                   :results=> '3',
                   :start  => '1'
                 ).deserialise_using(
-                  Wrest::Translators::Xml
+                  Wrest::Components::Translators::Xml
                 )
 * Basic HTTP auth and URI extensions using Wrest::Uri#[]
   
