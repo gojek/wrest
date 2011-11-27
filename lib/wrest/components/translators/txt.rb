@@ -20,7 +20,7 @@ module Wrest
       end
 
       def serialise(hash, options = {})
-        response.body
+        hash.to_s
       end
       
       def serialize(hash, options = {})
