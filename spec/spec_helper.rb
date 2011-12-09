@@ -1,5 +1,9 @@
-require 'simplecov'
-SimpleCov.start
+begin
+  require 'simplecov'
+  SimpleCov.start
+rescue LoadError
+  puts 'Simplecov is not available, no coverage report will be generated'
+end
 
 require "wrest"
 require "wrest/curl" unless RUBY_PLATFORM =~ /java/
