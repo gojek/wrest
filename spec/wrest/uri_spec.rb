@@ -622,7 +622,7 @@ module Wrest
         let(:uri) { 'http://ooga.com'.to_uri(:default_headers => oauth_header) }
 
         it "lets incoming default_headers take precedence when the Uri is extended" do
-          uri['/foo', :default_headers => content_type_header].default_headers.should eq(content_type_header)
+          uri['/foo', {:default_headers => content_type_header}].default_headers.should eq(content_type_header)
         end
         
         {

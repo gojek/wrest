@@ -30,7 +30,6 @@ module Wrest::Components::Translators
     end
     
     it "should know how to convert json to a hashmap" do
-      json = "{\"menu\":\"File\",\"commands\":[{\"title\":\"New\",\"action\":\"CreateDoc\"},{\"title\":\"Open\",\"action\":\"OpenDoc\"},{\"title\":\"Close\",\"action\":\"CloseDoc\"}]}"
       hash = {
         "menu"=>"File",
         "commands"=>[{
@@ -41,7 +40,8 @@ module Wrest::Components::Translators
             "action"=>"OpenDoc"},
             {"title"=>"Close", "action"=>"CloseDoc"}
       ]}
-      Json.serialise(hash).should eq(json)
+      Json.serialise(hash).should include("\"menu\":\"File\"")
+      Json.serialise(hash).should include("\"commands\":[{\"title\":\"New\",\"action\":\"CreateDoc\"},{\"title\":\"Open\",\"action\":\"OpenDoc\"},{\"title\":\"Close\",\"action\":\"CloseDoc\"}]")
     end
     
     it "has #deserialize delegate to #deserialise" do
