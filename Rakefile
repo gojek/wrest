@@ -12,6 +12,7 @@ puts "Building on Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
 require 'rubygems'
 require 'bundler'
+Bundler::GemHelper.install_tasks
 Bundler.setup
 
 require 'rspec/core/rake_task'

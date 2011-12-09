@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+== 1.5.0
+ * Introducing content type text/plain - pull request by buchin
+
 == 1.4.7
  * Switch to using multi_json to manage Json backend to play nice with Rails 3.1.
 
