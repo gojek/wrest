@@ -17,6 +17,12 @@ module Wrest
         end
       end
 
+      it "should create a new Callback instance with copy of callback_hash given a Callback instance" do
+          hash = {200 => [lambda{|response| }]}
+          callback = Callback.new hash
+          Callback.new(callback).callback_hash.should == hash
+      end
+
       it "should create a new Callback instance with callback_hash as a key/value pair of HTTP code and collection of lambdas given a block" do
         block = lambda do |callback|
           callback.on_ok{|response| }
@@ -36,7 +42,7 @@ module Wrest
         on_another_ok = false
 
         hash = {200 => lambda{|response| on_ok = true}}
-        block = lambda do |callback| 
+        block = lambda do |callback|
           callback.on_ok{|response| on_another_ok = true}
         end
         uri_callback = Callback.new(hash)
