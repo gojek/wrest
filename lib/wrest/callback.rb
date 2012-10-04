@@ -17,6 +17,8 @@ module Wrest
       elsif callable.is_a?(Proc)
         @callback_hash = {}
         callable.call(self)
+      elsif callable.is_a?(Callback)
+        @callback_hash = callable.callback_hash.dup
       end
     end
 
@@ -24,7 +26,7 @@ module Wrest
       merged_callback_hash = callback_hash.clone
       other_callback_hash = callback.callback_hash
       other_callback_hash.each do |code, callback_blocks|
-        merged_callback_hash[code] ||= [] 
+        merged_callback_hash[code] ||= []
         merged_callback_hash[code] += callback_blocks
       end
       Callback.new(merged_callback_hash)
