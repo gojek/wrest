@@ -20,20 +20,20 @@ module Wrest::Components
     end
 
     it "should allow instantiation with no attributes" do
-      lambda{ HumanBeing.new }.should_not raise_error
+      expect{ HumanBeing.new }.to_not raise_error
     end
 
     describe 'serialisation' do
       it "should know its xml element name" do
-        HumanBeing.element_name.should == 'human_being'
+        expect(HumanBeing.element_name).to eq('human_being')
       end
 
       it "should know how to serialise itself given any of the Wrest::Components::Translators" do
         result = HumanBeing.new(:age => "70", :name => 'Li Piao').serialise_using(Wrest::Components::Translators::Json)
         expectedPermutationOne = "{\"age\":\"70\",\"name\":\"Li Piao\"}"
         expectedPermutationTwo = "{\"name\":\"Li Piao\",\"age\":\"70\"}"
-        
-        (result == expectedPermutationOne || result == expectedPermutationTwo).should be_true
+
+        expect((result == expectedPermutationOne || result == expectedPermutationTwo)).to be_truthy
       end
 
       it "should have a to_xml helper that ensures that the name of the class is the root of the serilised form" do
@@ -41,13 +41,13 @@ module Wrest::Components
         expectedPermutationOne = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <age>70</age>\n  <name>Li Piao</name>\n</human-being>\n"
         expectedPermutationTwo = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <name>Li Piao</name>\n  <age>70</age>\n</human-being>\n"
 
-        (result == expectedPermutationOne || result == expectedPermutationTwo).should be_true
+        expect((result == expectedPermutationOne || result == expectedPermutationTwo)).to be_truthy
       end
 
       describe 'subclasses' do
         it "should not allow cached element name to clash" do
-          WaterMagician.element_name.should == 'water_magician'
-          HumanBeing.element_name.should == 'human_being'
+          expect(WaterMagician.element_name).to eq('water_magician')
+          expect(HumanBeing.element_name).to eq('human_being')
         end
       end
     end
@@ -65,14 +65,14 @@ module Wrest::Components
         @Demon.class_eval do
           typecast :foo => lambda{|value| value.to_i}
         end
-        @Demon.new(:foo => '1').foo.should == 1
+        expect(@Demon.new(:foo => '1').foo).to eq(1)
       end
 
       it "should provide helpers for common typecasts" do
         @Demon.class_eval do
           typecast :foo => as_integer
         end
-        @Demon.new(:foo => '1').foo.should == 1
+        expect(@Demon.new(:foo => '1').foo).to eq(1)
       end
     end
 
@@ -86,37 +86,37 @@ module Wrest::Components
         # allow us to build on both.
         it "should define attribute getters at the class level" do
           kai_wren = @Demon.new
-          kai_wren.methods.map(&:to_sym).should_not include(:trainer)
+          expect(kai_wren.methods.map(&:to_sym)).to_not include(:trainer)
 
           @Demon.class_eval{
             include Wrest::Components::Container
             always_has :trainer
           }
 
-          kai_wren.methods.map(&:to_sym).should include(:trainer)
+          expect(kai_wren.methods.map(&:to_sym)).to include(:trainer)
         end
 
         it "should define attribute setters at the class level" do
           kai_wren = @Demon.new
-          kai_wren.methods.map(&:to_sym).should_not include(:trainer=)
+          expect(kai_wren.methods.map(&:to_sym)).to_not include(:trainer=)
 
           @Demon.class_eval{
             include Wrest::Components::Container
             always_has :trainer
           }
 
-          kai_wren.methods.map(&:to_sym).should include(:trainer=)
+          expect(kai_wren.methods.map(&:to_sym)).to include(:trainer=)
         end
 
         it "should define attribute query methods at the class level" do
           kai_wren = @Demon.new
-          kai_wren.methods.map(&:to_sym).should_not include(:trainer?)
+          expect(kai_wren.methods.map(&:to_sym)).to_not include(:trainer?)
 
           @Demon.class_eval{
             include Wrest::Components::Container
             always_has :trainer
           }
-          kai_wren.methods.map(&:to_sym).should include(:trainer?)
+          expect(kai_wren.methods.map(&:to_sym)).to include(:trainer?)
         end
       end
 
@@ -139,18 +139,18 @@ module Wrest::Components
 
         it "should define attribute getters at the class level" do
           @kai_wren.instance_variable_get("@attributes")[:trainer] = 'Viss'
-          @kai_wren.trainer.should == 'Viss'
+          expect(@kai_wren.trainer).to eq('Viss')
         end
 
         it "should define attribute setters at the class level" do
           @kai_wren.trainer = 'Viss'
-          @kai_wren.instance_variable_get("@attributes")[:trainer].should == 'Viss'
+          expect(@kai_wren.instance_variable_get("@attributes")[:trainer]).to eq('Viss')
         end
 
         it "should define attribute query methods at the class level" do
-          @kai_wren.trainer?.should be_false
+          expect(@kai_wren.trainer?).to be_falsey
           @kai_wren.instance_variable_get("@attributes")[:trainer] = 'Viss'
-          @kai_wren.trainer?.should be_true
+          expect(@kai_wren.trainer?).to be_truthy
         end
       end
     end
@@ -163,96 +163,96 @@ module Wrest::Components
       context 'access key format' do
         it "should provide a generic key based setter that understands symbols" do
           @li_piao[:enhanced_by] = "Viss"
-          @li_piao.instance_variable_get('@attributes')['enhanced_by'].should == "Viss"
+          expect(@li_piao.instance_variable_get('@attributes')['enhanced_by']).to eq("Viss")
         end
 
         it "should provide a generic key based setter that understands strings" do
           @li_piao['enhanced_by'] = "Viss"
-          @li_piao.instance_variable_get('@attributes')['enhanced_by'].should == "Viss"
+          expect(@li_piao.instance_variable_get('@attributes')['enhanced_by']).to eq("Viss")
         end
 
         it "should provide a generic key based getter that understands symbols" do
-          @li_piao[:profession].should == "Natural Magician"
+          expect(@li_piao[:profession]).to eq("Natural Magician")
         end
 
         it "should provide a generic key based getter that understands strings" do
-          @li_piao['profession'].should == "Natural Magician"
+          expect(@li_piao['profession']).to eq("Natural Magician")
         end
       end
-      
+
       it "should fail when getter methods for attributes that don't exist are invoked" do
-        lambda{ @li_piao.ooga }.should raise_error(NoMethodError)
+        expect{ @li_piao.ooga }.to raise_error(NoMethodError)
       end
 
       it "should provide getter methods for attributes" do
-        @li_piao.profession.should == 'Natural Magician'
-        @li_piao.enhanced_by.should == 'Kai Wren'
+        expect(@li_piao.profession).to eq('Natural Magician')
+        expect(@li_piao.enhanced_by).to eq('Kai Wren')
       end
 
       it "should respond to getter methods for attributes" do
-        @li_piao.should respond_to(:profession)
-        @li_piao.should respond_to(:enhanced_by)
+        expect(@li_piao).to respond_to(:profession)
+        expect(@li_piao).to respond_to(:enhanced_by)
       end
 
       it "should not respond to getter methods for attributes that don't exist" do
-        @li_piao.should_not respond_to(:gods)
+        expect(@li_piao).to_not respond_to(:gods)
       end
 
       it "should create a setter method when one is invoked for attributes that don't exist" do
         @li_piao.niece = 'Li Plum'
-        @li_piao.instance_variable_get('@attributes')[:niece].should == 'Li Plum'
-        @li_piao.niece.should == 'Li Plum'
+        expect(@li_piao.instance_variable_get('@attributes')[:niece]).to eq('Li Plum')
+        expect(@li_piao.niece).to eq('Li Plum')
       end
 
       it "should provide setter methods for attributes" do
         @li_piao.enhanced_by = 'He of the Towers of Light'
-        @li_piao.instance_variable_get('@attributes')[:enhanced_by].should == 'He of the Towers of Light'
+        expect(@li_piao.instance_variable_get('@attributes')[:enhanced_by]).to eq('He of the Towers of Light')
       end
 
       it "should respond to setter methods for attributes" do
-        @li_piao.should respond_to(:profession=)
-        @li_piao.should respond_to(:enhanced_by=)
+        expect(@li_piao).to respond_to(:profession=)
+        expect(@li_piao).to respond_to(:enhanced_by=)
       end
 
       it "should not respond to setter methods for attributes that don't exist" do
-        @li_piao.should_not respond_to(:god=)
+        expect(@li_piao).to_not respond_to(:god=)
       end
 
       it "should return false when query methods for attributes that don't exist are invoked" do
-        @li_piao.ooga?.should be_false
+        expect(@li_piao.ooga?).to be_falsey
       end
 
       it "should provide query methods for attributes" do
         li_piao = HumanBeing.new( :profession => 'Natural Magician', :enhanced_by => nil)
-        li_piao.profession?.should be_true
-        li_piao.enhanced_by?.should be_false
-        li_piao.gender?.should be_false
+        expect(li_piao.profession?).to be_truthy
+        expect(li_piao.enhanced_by?).to be_falsey
+        expect(li_piao.gender?).to be_falsey
       end
 
       it "should respond to query methods for attributes" do
-        @li_piao.should respond_to(:profession?)
-        @li_piao.should respond_to(:enhanced_by?)
+        expect(@li_piao).to respond_to(:profession?)
+        expect(@li_piao).to respond_to(:enhanced_by?)
       end
 
       it "should not respond to query methods for attributes that don't exist" do
-        @li_piao.should_not respond_to(:theronic?)
+        expect(@li_piao).to_not respond_to(:theronic?)
       end
 
       it "should override methods which already exist on the container" do
-        @li_piao.id.should == 5
+        expect(@li_piao.id).to eq(5)
         @li_piao.id = 6
-        @li_piao.id.should == 6
+        expect(@li_piao.id).to eq(6)
       end
 
       it "should provide getter and query methods to instance which has corresponding attribute" do
         zotoh_zhaan = HumanBeing.new(:species => "Delvian")
-        zotoh_zhaan.species.should == "Delvian"
-        zotoh_zhaan.species?.should be_true
+        expect(zotoh_zhaan.species).to eq("Delvian")
+        expect(zotoh_zhaan.species?).to be_truthy
         zotoh_zhaan.species = "Human"
-        lambda{@li_piao.species}.should raise_error(NoMethodError)
-        @li_piao.species?.should be_false
-        @li_piao.should_not respond_to(:species=)
-        @li_piao.methods.grep(/:species=/).should be_empty
+        expect{ @li_piao.species }.to raise_error(NoMethodError)
+        expect(@li_piao.species?).to be_falsey
+        expect(@li_piao).to_not respond_to(:species=)
+        expect(@li_piao.methods.grep(/:species=/)).to be_empty
       end
     end
   end

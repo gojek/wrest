@@ -8,29 +8,29 @@ module Wrest
     end
 
     it "has values accessible irrespective of case" do
-      @hash['foo'].should == 'bar'
-      @hash["Foo"].should == 'bar'
+      expect(@hash['foo']).to eq('bar')
+      expect(@hash["Foo"]).to eq('bar')
 
-      @hash.values_at("foo", "bAZ").should == ['bar', 'bee']
-      @hash.delete("FOO").should == 'bar'
+      expect(@hash.values_at("foo", "bAZ")).to eq(['bar', 'bee'])
+      expect(@hash.delete("FOO")).to eq('bar')
     end
 
     it "merges keys independent irrespective of case" do
       @hash.merge!('force' => false, "bAz" => "boom")
-      @hash["force"].should == false
-      @hash["baz"].should == "boom"
+      expect(@hash["force"]).to eq(false)
+      expect(@hash["baz"]).to eq("boom")
     end
 
     it "creates a new hash by merging keys irrespective of case" do
       other = @hash.merge('force' => false, :baz => "boom")
-      other['force'].should == false
-      other['FORCE'].should == false
-      other[:baz].should == "boom"
+      expect(other['force']).to eq(false)
+      expect(other['FORCE']).to eq(false)
+      expect(other[:baz]).to eq("boom")
     end
 
     it "works normally for non-string keys" do
-      @hash[22].should == 2002
-      @hash[:xyz].should == "pqr"
+      expect(@hash[22]).to eq(2002)
+      expect(@hash[:xyz]).to eq("pqr")
     end
   end
 

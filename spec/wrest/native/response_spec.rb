@@ -4,15 +4,15 @@ module Wrest
   describe Native::Response do
     context 'Aliased methods' do
       it "has #deserialize delegate to #deserialise" do
-        response = Wrest::Native::Response.new(mock('Response', :code => '200'))
-        
+        response = Wrest::Native::Response.new(double('Response', :code => '200'))
+
         response.should_receive(:deserialise)
         response.deserialize
       end
 
       it "has #deserialize_using delegate to #deserialise_using" do
-        response = Wrest::Native::Response.new(mock('Response', :code => '200'))
-        
+        response = Wrest::Native::Response.new(double('Response', :code => '200'))
+
         response.should_receive(:deserialise_using)
         response.deserialize_using
       end
@@ -39,7 +39,7 @@ module Wrest
 
     it "should clone its headers whenever the response is cloned" do
       headers       = {"foo" => "original"}
-      http_response = mock(Net::HTTPResponse, :code => '200', :to_hash => headers)
+      http_response = double(Net::HTTPResponse, :code => '200', :to_hash => headers)
 
       response      = Wrest::Native::Response.new(http_response)
       response.headers["foo"].should == "original"
@@ -54,36 +54,36 @@ module Wrest
     end
 
     it "should build a Redirection instead of a normal response if the code is 301..303 or 305..3xx" do
-      http_response = mock(Net::HTTPRedirection)
-      http_response.stub!(:code).and_return('301')
-      
+      http_response = double(Net::HTTPRedirection)
+      allow(http_response).to receive(:code).and_return('301')
+
       Native::Response.new(http_response).class.should == Wrest::Native::Redirection
     end
 
     it "should build a normal response if the code is 304" do
-      http_response = mock(Net::HTTPRedirection)
-      http_response.stub!(:code).and_return('304')
-      
+      http_response = double(Net::HTTPRedirection)
+      allow(http_response).to receive(:code).and_return('304')
+
       Native::Response.new(http_response).class.should == Wrest::Native::Response
     end
-    
+
     it "should build a normal Response for non 3xx codes" do
-      http_response = mock(Net::HTTPResponse)
-      http_response.stub!(:code).and_return('200')
-      
+      http_response = double(Net::HTTPResponse)
+      allow(http_response).to receive(:code).and_return('200')
+
       Native::Response.new(http_response).class.should == Wrest::Native::Response
     end
-    
+
     it "should know how to delegate to a translator" do
-      http_response = mock('response')
-      http_response.stub!(:code).and_return('200')
+      http_response = double('response')
+      allow(http_response).to receive(:code).and_return('200')
       Components::Translators::Xml.should_receive(:deserialise).with(http_response,{})
       Native::Response.new(http_response).deserialise_using(Components::Translators::Xml)
     end
 
     it "should know how to load a translator based on content type" do
-      http_response = mock('response')
-      http_response.stub!(:code).and_return('422')
+      http_response = double('response')
+      allow(http_response).to receive(:code).and_return('422')
       http_response.should_receive(:content_type).and_return('application/xml')
 
       response = Native::Response.new(http_response)
@@ -93,8 +93,8 @@ module Wrest
     end
 
     it "should know how to deserialise a json response" do
-      http_response = mock('response')
-      http_response.stub!(:code).and_return('200')
+      http_response = double('response')
+      allow(http_response).to receive(:code).and_return('200')
       http_response.should_receive(:body).and_return("{ \"menu\": \"File\",
       \"commands\": [ { \"title\": \"New\", \"action\":\"CreateDoc\" }, {
       \"title\": \"Open\", \"action\": \"OpenDoc\" }, { \"title\": \"Close\",
@@ -102,7 +102,7 @@ module Wrest
       http_response.should_receive(:content_type).and_return('application/json')
 
       response = Native::Response.new(http_response)
-      
+
       response.deserialise.should == { "commands"=>[{"title"=>"New",
             "action"=>"CreateDoc"},
           {"title"=>"Open","action"=>"OpenDoc"},{"title"=>"Close",
@@ -111,11 +111,11 @@ module Wrest
     end
 
     it "should simply return itself when asked to follow (null object behaviour - see MovedPermanently for more context)" do
-      http_response = mock('response')
-      http_response.stub!(:code).and_return('422')
+      http_response = double('response')
+      allow(http_response).to receive(:code).and_return('422')
 
       response = Native::Response.new(http_response)
-      response.follow.equal?(response).should be_true
+      response.follow.equal?(response).should be_truthy
     end
 
     describe 'Keep-Alive' do
@@ -142,7 +142,7 @@ module Wrest
           # the cacheable codes are enumerated in Firefox source code: nsHttpResponseHead.cpp::MustValidate
           http_response = build_ok_response('', cacheable_headers)
           ['200', '203', '300', '301'].each do |code|
-            http_response.stub!(:code).and_return(code)
+            allow(http_response).to receive(:code).and_return(code)
             response = Native::Response.new(http_response)
             response.should be_cacheable
           end
@@ -159,7 +159,7 @@ module Wrest
             http_response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Cache-Control" => "abc,test=100,max-age=20")))
             http_response.cache_control_headers.should == ["abc", "test=100", "max-age=20"]
           end
-          
+
           it "should parse the cache-control header when it has leading and trailing spaces" do
             http_response = Native::Response.new(build_ok_response('', cacheable_headers.merge("Cache-Control" => "  abc, test=100 , max-age=20 ")))
             http_response.cache_control_headers.should == ["abc", "test=100", "max-age=20"]
@@ -184,7 +184,7 @@ module Wrest
         it "should say its not cacheable if the response code is not range of 200-299" do
           http_response = build_ok_response('', cacheable_headers)
           ['100', '206', '400', '401', '500'].each do |code|
-            http_response.stub!(:code).and_return(code)
+            allow(http_response).to receive(:code).and_return(code)
             response = Native::Response.new(http_response)
             response.cacheable?.should == false
           end
@@ -244,10 +244,10 @@ module Wrest
 
         it "should return correct values for code_cacheable?" do
           http_response = build_ok_response('', cacheable_headers)
-          http_response.stub!(:code).and_return('300')
+          allow(http_response).to receive(:code).and_return('300')
           Native::Response.new(http_response).code_cacheable?.should == true
 
-          http_response.stub!(:code).and_return('500')
+          allow(http_response).to receive(:code).and_return('500')
           Native::Response.new(http_response).code_cacheable?.should == false
         end
 
@@ -365,7 +365,7 @@ module Wrest
           response = Native::Response.new(build_ok_response('', @headers))
           response.expires_not_in_our_past?.should == true
         end
-        
+
         it "should say not expired for requests with Expires in the future" do
           response = Native::Response.new(build_ok_response('', @headers))
           response.expired?.should == false

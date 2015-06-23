@@ -1,3 +1,4 @@
+require 'sinatra'
 require 'fileutils'
 require File.expand_path('../../config/boot', __FILE__)
 
@@ -133,7 +134,7 @@ module SampleApp
       There is no Etag/Last-Modified and so the response can't be validated when it expires. A full blown Get request will be sent if this expires."
     end
 
-    # NOTE: The expiry times (1,2 sec intervals) maybe affected and will yield incorrect results when debugging/single-stepping through code. 
+    # NOTE: The expiry times (1,2 sec intervals) maybe affected and will yield incorrect results when debugging/single-stepping through code.
 
     get '/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/:seconds_to_cache' do
 
@@ -170,7 +171,7 @@ module SampleApp
       headers "Date" => Time.now.httpdate
       headers "Expires" => (Time.now+params[:seconds_to_cache].to_i).httpdate
 
-      "#{rand(1000).to_s} (random value to identify a fresh response) 
+      "#{rand(1000).to_s} (random value to identify a fresh response)
       When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
     end
 

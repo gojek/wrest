@@ -17,7 +17,7 @@ module Wrest::Components
     end
 
     it "should underscore the key in a tuple" do
-      @mutator.mutate(["universe-id", "1"]).should == ["universe_id", "1"]
+      expect(@mutator.mutate(["universe-id", "1"])).to eq(["universe_id", "1"])
     end
   end
 end

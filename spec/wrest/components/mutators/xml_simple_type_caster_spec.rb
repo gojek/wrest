@@ -19,30 +19,30 @@ module Wrest::Components
     # {"lead-bottle"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]}
 
     it "should typecast a nil value in a tuple" do
-      @mutator.mutate(
+      expect(@mutator.mutate(
       ["universe-id", [{"type"=>"integer", "nil"=>"true"}]]
-      ).should == ["universe-id", nil]
+      )).to eq(["universe-id", nil])
     end
 
     it "should leave a string value in a tuple unchanged" do
-      @mutator.mutate(
+      expect(@mutator.mutate(
       ["name", ["Wooz"]]
-      ).should == ["name", "Wooz"]
+      )).to eq(["name", "Wooz"])
     end
 
     it "should cast an integer value in a tuple" do
-      @mutator.mutate(
+      expect(@mutator.mutate(
       ["id", [{"type"=>"integer", "content"=>"1"}]]
-      ).should == ["id", 1]
+      )).to eq(["id", 1])
     end
-    
+
     it "should step into a value if it is a hash" do
-      @mutator.mutate(
+      expect(@mutator.mutate(
         ["Result", [{
-                      "PublishDate"=>["1240326000"], 
+                      "PublishDate"=>["1240326000"],
                       "NewsSource"=>[{"Online" => ["PC via News"], "UniqueId" => [{"type"=>"integer", "content"=>"1"}]}]
                     }]]
-      ).should == ["Result", {"PublishDate" => "1240326000", "NewsSource" => {"Online"=>"PC via News", "UniqueId"=>1}}]
+      )).to eq(["Result", {"PublishDate" => "1240326000", "NewsSource" => {"Online"=>"PC via News", "UniqueId"=>1}}])
     end
   end
 end

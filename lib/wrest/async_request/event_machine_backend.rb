@@ -8,7 +8,7 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 begin
-  gem 'eventmachine', '~> 0.12.10'
+  gem 'eventmachine'
 rescue Gem::LoadError => e
   Wrest.logger.debug "Eventmachine ~> 0.12.10 not found. Wrest uses Eventmachine to perform evented asynchronous requests"
   raise e
@@ -18,7 +18,7 @@ require 'eventmachine'
 
 module Wrest
   module AsyncRequest
-    class EventMachineBackend 
+    class EventMachineBackend
       def execute(request)
         EventMachine.run do
           request.invoke

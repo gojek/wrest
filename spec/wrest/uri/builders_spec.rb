@@ -27,7 +27,7 @@ describe Wrest::Uri::Builders do
       evented_uri.instance_variable_get("@options")[:asynchronous_backend].should be_a(Wrest::AsyncRequest::EventMachineBackend)
     end
   end
-  
+
   context "using_hash" do
     it "should return a new uri" do
       cache_enabled_uri = uri.using_hash
@@ -61,10 +61,10 @@ describe Wrest::Uri::Builders do
 
     it "should set a flag indicating to disable cache on requests made through the uri" do
       cache_disabled_uri = uri.disable_cache
-      cache_disabled_uri.instance_variable_get("@options")[:disable_cache].should be_true
+      cache_disabled_uri.instance_variable_get("@options")[:disable_cache].should be_truthy
     end
   end
-  
+
   context "using_cookie" do
     it "builds a new Uri that has the cookie as a default" do
       cookied_uri = uri.using_cookie('some-encoded-cookie-string')

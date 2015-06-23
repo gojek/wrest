@@ -6,7 +6,7 @@ unless RUBY_PLATFORM =~ /java/
 
   module Wrest
     describe Curl::PutMultipart do
-      context "functional" do 
+      context "functional" do
 
         before :all do
           Wrest.use_curl!
@@ -15,13 +15,13 @@ unless RUBY_PLATFORM =~ /java/
         after(:all) do
           Wrest.use_native!
         end
-        
+
         it "should raise Wrest::Exceptions::UnsupportedFeature error" do
           response = nil
           File.open(File.expand_path(__FILE__)) do |file|
-            lambda {
-            'http://localhost:3000/uploads'.to_uri.put_multipart('file' => UploadIO.new(file, "text/plain", File.expand_path(__FILE__)))
-            }.should raise_error(Wrest::Exceptions::UnsupportedFeature)
+            expect{
+              'http://localhost:3000/uploads'.to_uri.put_multipart('file' => UploadIO.new(file, "text/plain", File.expand_path(__FILE__)))
+            }.to raise_error(Wrest::Exceptions::UnsupportedFeature)
           end
         end
       end

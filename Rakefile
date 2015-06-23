@@ -16,14 +16,12 @@ Bundler::GemHelper.install_tasks
 Bundler.setup
 
 require 'rspec/core/rake_task'
-require 'hanna/rdoctask'
 require 'rake/contrib/sshpublisher'
+require 'rdoc/task'
 
 begin
   require 'metric_fu'
   MetricFu::Configuration.run do |config|
-    config.rcov[:test_files] = ['spec/**/*_spec.rb']
-    config.rcov[:rcov_opts] << "-Ispec" # Needed to find spec_helper
   end
 rescue LoadError
   puts 'metric_fu is not available. Install it with: gem install jscruggs-metric_fu -s http://gems.github.com'
@@ -47,7 +45,7 @@ namespace :rspec do
     ENV["wrest_functional_spec"] = "true"
     Rake::Task["rspec:spec_runner"].invoke
   end
-  
+
   RSpec::Core::RakeTask.new(:spec_runner) do |task|
     task.pattern = 'spec/wrest/**/*_spec.rb'
   end
@@ -55,7 +53,7 @@ end
 
 
 desc 'Generate documentation for Wrest'
-Rake::RDocTask.new(:rdoc) do |rdoc|
+RDoc::Task.new do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = 'Wrest Documentation'
   rdoc.options << '--line-numbers' << '--inline-source'
@@ -63,7 +61,7 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-  
+
 namespace :rubyforge do
 
   desc "Release gem and RDoc documentation to RubyForge"
@@ -93,7 +91,7 @@ namespace (:benchmark) do
 
     class Ooga < Wrest::Resource::Base
     end
-    class Booga < ActiveResource::Base 
+    class Booga < ActiveResource::Base
       self.site=''
     end
   end
@@ -219,8 +217,8 @@ namespace (:benchmark) do
         }
       end
     end
-  end  
-  
+  end
+
   desc "Benchmark keepalive connections (needs functional/sample_rails_app running with class-caching on and keep-alive enabled)"
   task :keep_alive => :setup_test_classes do
     n = 20
@@ -232,7 +230,7 @@ namespace (:benchmark) do
           'http://localhost:3000/lead_bottles.xml?owner=Kai&type=bottle'.to_uri.get
         }
       end
-      
+
       rpt.report("Keep-alive connection (Connection: Keep-Alive)") do
         Wrest::Native::Session.new('http://localhost:3000'.to_uri) do |session|
           n.times {
@@ -248,7 +246,7 @@ namespace (:benchmark) do
   task :deserialise_xml => :setup_test_classes do |t|
     n = 100
     puts "Deserialising using #{ActiveSupport::XmlMini.backend}"
-    
+
     Benchmark.bmbm(10) do |rpt|
       rpt.report("Hash.from_xml") do
         n.times {
@@ -257,7 +255,7 @@ namespace (:benchmark) do
       end
     end
   end
-    
+
   def serialised_data
       <<-EOXML
 <?xml version="1.0" encoding="UTF-8"?>

@@ -3,39 +3,39 @@ require "wrest/multipart"
 
 unless RUBY_PLATFORM =~ /java/
   require "wrest/curl"
-  
+
   module Wrest
     describe Curl::PostMultipart do
       before :all do
         Wrest.use_curl!
       end
-      
+
       after(:all) do
         Wrest.use_native!
       end
-      
+
       let(:file_path){ File.expand_path(__FILE__) }
 
       context 'parameter key formats' do
         let(:fake_file){ '/foo/bar.txt' }
         it "should handle strings as parameter keys" do
           request = Wrest::Curl::PostMultipart.new('http://ooga.com'.to_uri, {'file' => fake_file})
-          request.file_name.should == {:file => fake_file}
+          expect(request.file_name).to eq({:file => fake_file})
         end
-        
+
         it "should handle symbols as parameter keys" do
           request = Wrest::Curl::PostMultipart.new('http://ooga.com'.to_uri, {:file => fake_file})
-          request.file_name.should == {:file => fake_file}
+          expect(request.file_name).to eq({:file => fake_file})
         end
       end
-      
+
       context "options hash handling" do
         it "should not alter the options hash when creating multipart_post request" do
           options = {:username => "asdf", :password => "pass123"}
           saved_options = options.clone
           uri = Uri.new("http://localhost:3000/")
           Wrest::Curl::PostMultipart.new(uri, {'file' => File.expand_path(__FILE__)}, {}, options)
-          options.should == saved_options 
+          expect(options).to eq(saved_options)
         end
       end
 

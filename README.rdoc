@@ -1,18 +1,18 @@
-= Wrest 1.5.0
+= Wrest 1.5.1
 
-(c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved. 
+(c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
 
 {CI Status:}[http://ci.c42.in/projects/wrest] http://ci.c42.in/projects/wrest.png
 
 Wrest is a ruby REST/HTTP client library which
 
 * Allows you to use Net::HTTP or libCurl
-* Allows you to pick your Ruby: use 1.8.7, 1.9.2, JRuby and Rubinius ({Continuous Integration server}[http://ci.c42.in])
+* Allows you to pick your Ruby: use 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2 ({Continuous Integration server}[http://ci.c42.in])
 * Supports RFC 2616 based {caching}[https://github.com/kaiwren/wrest/blob/caching/Caching.markdown]
 * [Alpha] Allows you to go async: use Threads or EventMachine
-* Allows you to quickly build object oriented wrappers around any web service 
+* Allows you to quickly build object oriented wrappers around any web service
 * Is designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
-* Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments 
+* Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments
 * Provides convenient HTTP wrappers, redirect handling, serialisation, deserialisation and xpath based lookup
 
 To receive notifications whenever new features are added to Wrest, please subscribe to my {twitter feed}[http://twitter.com/ponnappa].
@@ -26,35 +26,35 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 ==== GET
 
 * Basic API calls
-  
+
     'http://twitter.com/statuses/public_timeline.json'.to_uri.get.deserialise  # works with json and xml out of the box
 
     'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise   # see lib/wrest/components/translators to add other formats
-    
+
 * Timeout support
-  
+
     'http://twitter.com/statuses/public_timeline.json'.to_uri.get(:timeout => 5).body
-    
+
 * Redirect support
-  
+
     'http://google.com'.to_uri(:follow_redirects => false).get
-  
+
     'http://google.com'.to_uri(:follow_redirects_limit => 1).get
 
   :follow_redirects_limit defaults to 5 if not specified.
-    
+
 * Deserialise with XPath filtering
-  
+
     ActiveSupport::XmlMini.backend = 'REXML'
-    
+
     'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise(
                                                   :xpath => '//user/name/text()'
                                                 )
 
 * More complex request with parameters and a custom deserialiser
-  
+
     'http://search.yahooapis.com/NewsSearchService/V1/newsSearch'.to_uri.get(
-                  :appid  => 'YahooDemo', 
+                  :appid  => 'YahooDemo',
                   :output => 'xml',
                   :query  => 'India',
                   :results=> '3',
@@ -63,17 +63,17 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
                   Wrest::Components::Translators::Xml
                 )
 * Basic HTTP auth and URI extensions using Wrest::Uri#[]
-  
+
     base_uri = 'https://api.del.icio.us/v1'.to_uri(:username => 'kaiwren', :password => 'fupupp1es')
     bookmarks = base_uri['/posts/get'].get.deserialise
 
 ==== POST
 
 * Regular, vanilla Post with a body and headers
-  
-    'http://my.api.com'.to_uri.post('YAML encoded body', 'Content-Type' => 'text/x-yaml')  
+
+    'http://my.api.com'.to_uri.post('YAML encoded body', 'Content-Type' => 'text/x-yaml')
 * Form encoded post
-    
+
     'https://api.del.icio.us/v1/posts/add'.to_uri(
              :username => 'kaiwren', :password => 'fupupp1es'
           ).post_form(
@@ -83,12 +83,12 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
              :tags => 'ruby hacking'
           )
 * Multipart posts
-   
+
    'http://imgur.com/api/upload.xml'.to_uri.post_multipart(
-     :image => UploadIO.new(File.open(file_path), "image/png", file_path), 
+     :image => UploadIO.new(File.open(file_path), "image/png", file_path),
      :key => imgur_key
     ).deserialise
-    
+
 Note: To enable Multipart support, you'll have to explicitly require 'wrest/multipart', which depends on the multipart-post gem.
 
 ==== DELETE
@@ -101,7 +101,7 @@ To delete a resource:
                                             ).delete(
                                               :url => 'http://c2.com'
                                             )
- 
+
 === Caching
 
 Wrest supports caching with pluggable back-ends.
@@ -113,7 +113,7 @@ A Memcached based caching back-end is available in Wrest. You can get instructio
 The Dalli gem is used by Wrest to interface with Memcached. Install dalli using 'gem install dalli'.
 
 Use the following method to enable caching for all requests, and set Memcached as the default back-end.
-  
+
     Wrest::Caching.default_to_memcached!
 
 For fine-grained control over the cache store (or to use multiple cache stores in the same codebase), you can use this API:
@@ -163,8 +163,8 @@ Please note that Wrest is a synchronous library. All requests are blocking, and 
 
 === Asynchronous requests
 
-Asynchronous requests are non-blocking. They do not return a response and the request is executed on a separate thread. The only way to access the response 
-while using asynchronous request is through callbacks. 
+Asynchronous requests are non-blocking. They do not return a response and the request is executed on a separate thread. The only way to access the response
+while using asynchronous request is through callbacks.
 
 Asynchronous requests support pluggable backends. The default backend used for asynchronous requests is ruby threads.
 
@@ -205,7 +205,7 @@ Example:
    typecast         :age          =>  as_integer,
                     :chi          =>  lambda{|chi| Chi.new(chi)}
 
-   alias_accessors  :chi => :energy                  
+   alias_accessors  :chi => :energy
  end
 
  kai_wren = Demon.new('id' => '1', 'age' => '1500', 'chi' => '1024', 'teacher' => 'Viss')
@@ -230,7 +230,7 @@ The Wrest logger can be set and accessed through Wrest.logger and is configured 
 
 Wrest uses the multi_json gem to manage Json backends, allowing it to play nice with Rails 3.1. To change the backend used, you can do the following:
   MultiJson.engine = :json_gem
-  
+
 For more information, look up the {multi_json}[http://github.com/intridea/multi_json] documentation.
 
 === Build
@@ -276,7 +276,7 @@ Run the tests in a different terminal:
   rake rspec:functional
 
 == Contributors
- 
+
 * Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]
 * Niranjan Paranjape : {achamian}[http://github.com/achamian]
 * Aakash Dharmadhkari : {aakashd}[http://github.com/aakashd]
@@ -286,4 +286,3 @@ Run the tests in a different terminal:
 * Jacques Crocker : {railsjedi}[http://github.com/railsjedi]
 * Jasim A Basheer: {jasim}[http://github.com/jasim]
 * Arvind Laxminarayan: {ardsrk}[http://github.com/ardsrk]
-

@@ -13,14 +13,14 @@ module Wrest::Components
     it "should know how to apply a lambda to the string value of a given key casting it to a new type" do
       @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
       kai_wren = @Demon.new('age' => '1')
-      kai_wren.age.should == 1
+      expect(kai_wren.age).to eq(1)
     end
 
     describe "where the value is not a typecastable type" do
       it "string should not typecast" do
         @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
         kai_wren = @Demon.new('age' => :ooga)
-        kai_wren.age.should == :ooga
+        expect(kai_wren.age).to eq(:ooga)
       end
 
       it "hash should not typecast" do
@@ -31,27 +31,27 @@ module Wrest::Components
         @Demon.class_eval{ typecast :user => lambda{|user| TestUser.new(user)}}
 
         kai_wren = @Demon.new('user' => {'foo' => 'bar'})
-        kai_wren.user.class.should == TestUser
-        kai_wren.user.foo.should == 'bar'
+        expect(kai_wren.user.class).to eq(TestUser)
+        expect(kai_wren.user.foo).to eq('bar')
       end
 
       it "array should not typecast" do
         @Demon.class_eval{ typecast :addresses => lambda{|addresses| addresses.first} }
         kai_wren = @Demon.new('addresses' => ['foo', 'bar'])
-        kai_wren.addresses.should == 'foo'
+        expect(kai_wren.addresses).to eq('foo')
       end
     end
 
     it "should leave nils unchanged" do
       @Demon.class_eval{ typecast :age => lambda{|id_string| id_string.to_i} }
       kai_wren = @Demon.new('age' => nil)
-      kai_wren.age.should be_nil
+      expect(kai_wren.age).to be_nil
     end
 
     it "should provide helpers for typcasting common types" do
       @Demon.class_eval{ typecast :age => as_integer }
       kai_wren = @Demon.new('age' => '1500')
-      kai_wren.age.should == 1500
+      expect(kai_wren.age).to eq(1500)
     end
 
     describe 'in subclasses' do
@@ -68,15 +68,15 @@ module Wrest::Components
       it "should inherit all defined typecasts" do
         @ChineseSidhe = Class.new(@Sidhe)
         kai_wren = @ChineseSidhe.new('age' => '1500')
-        kai_wren.age.should == 1500
+        expect(kai_wren.age).to eq(1500)
       end
 
       it "should discard all typecasts from parent if defined in child" do
         @ChineseSidhe = Class.new(@Sidhe)
         @ChineseSidhe.class_eval{ typecast :born_in => as_integer }
         kai_wren = @ChineseSidhe.new('age' => '1500', 'born_in' => '509')
-        kai_wren.age.should == '1500'
-        kai_wren.born_in.should == 509
+        expect(kai_wren.age).to eq('1500')
+        expect(kai_wren.born_in).to eq(509)
       end
     end
   end

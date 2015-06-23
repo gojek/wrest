@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+== 1.5.1
+ * Supports Ruby 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2
+
 == 1.5.0
  * Introducing content type text/plain - pull request by buchin
 
@@ -16,7 +19,7 @@ Features under a numbered section are complete and available in the Wrest gem.
 
 == 1.4.4
  * GH#105 Reduce Rubgems version requirements to 1.3.x or greater from > 1.5
- 
+
 == 1.4.3
  * GH#104 Allow default headers to be added to the uri that are then used for all requests
  * GH#31 Add explicit API for cookies
@@ -27,22 +30,22 @@ Features under a numbered section are complete and available in the Wrest gem.
 == 1.4.1
  * GH#66 HTTPS requests using the Net::HTTP backend failing on Ruby 1.8.x
 
-== 1.4.0 
+== 1.4.0
  * GH#96 Naive implementation of asynchronous requests using Eventmachine
  * GH#93 Since Wrest::Response is immutable, the results of Response#deserialise are cached
 
 == 1.3.0
  * GH#95 Asynchronous requests on Wrest::Uri.
 
-== 1.2.1 
+== 1.2.1
  * GH#91 Remove dependency on tzinfo
 
-== 1.2.0 
+== 1.2.0
  * GH#80 Add a convenience API to make it easy to use the existing URI callback API
 
 == 1.1.0
  * Caching support introduced. Includes Memcached support for the cache store. (GH# 69, 83, 87)
- 
+
 == 1.0.2
  * GH#12 Post Multipart support when using the Patron adapter
  * GH#72 Response code checkers: ok?, redirect?, created? etc.
@@ -66,36 +69,36 @@ Features under a numbered section are complete and available in the Wrest gem.
  * GH#52 Wrest console (bin/wrest) fails on 1.9.2
  * GH#55 Fix connection.verify_mode for Net::HTTP https connection to VERIFY_PEER
  * GH#57 Feature #24 doesn't autoload correctly
- 
+
 == 1.0.0.beta7
  * GH#46 Response.deserialise for Json responses
 
 == 1.0.0.beta6
  * GH#35 Wrest::UriTemplate extensions swallow existing path
  * GH#41 Make Hash core_ext opt out
- 
+
 == 1.0.0.beta5
  * GH#30 Replace rails app in spec/sample_rails_app with a lighter sinatra app
  * GH#37 Allow opting out of Adding to_uri to string
 
 == 1.0.0.beta4
  * GH#34 Wrest::Uri extensions swallow existing path
- 
+
 == 1.0.0.beta3
- * GH#13 Works for get and delete with parameters appended to the uri string and 
+ * GH#13 Works for get and delete with parameters appended to the uri string and
    with ? and no parameters appended to the uri string
  * GH#26 'http://localhost'.to_uri['foo/bar'] fails
  * GH#11 Handle gem dependencies using bundler
  * GH#22 Converts Uri to UriTemplate
  * GH#23 Supports extension of UriTemplate via #[]
- 
+
 == 1.0.0.beta2
  * GH#2 Make Components::Containers hash store a HashWithIndifferentAccess
  * GH#6 Net::HTTP based calls to Twitter public APIs fail
  * GH#5 Patron (curl) support failing for responses where headers have multiple values
  * GH#7 Build fails on Ruby 1.9
  * GH#16 Remove jeweler and use .gemspec direcly
- 
+
 == 1.0.0.beta1
  * If libxml-ruby isn't found but nokogiri, don't warn about libxml-ruby
 
@@ -116,15 +119,14 @@ Features under a numbered section are complete and available in the Wrest gem.
  * Create two convenience Post methods on Uri - one for application/x-www-form-urlencoded and the other normal
  * Optional libcurl implementations of the Request/Response classes (for those on MRI who need better performance). See examples/delicious.rb, examples/facebook.rb. Note that while there is a great deal of API compatibility, everything may not behave exactly the same under libcurl. Please do report inconsistencies.
  * Added live functional tests to codebase (rake spec:functional, needs spec/functional/sample_rails_app running on port 3000)
- 
+
 == 0.0.9
  * Added redirect follow support for GET requests (see examples/redirection.rb)
  * Auto redirection limit
  * Request timeout limit config
- * Added an alias_accessor macro to allow alternative names for attribute accessors (see examples/wow_realm_status.rb) 
+ * Added an alias_accessor macro to allow alternative names for attribute accessors (see examples/wow_realm_status.rb)
  * Removed the need to explicitly include AttributesContainer::Typecaster or to use the enable_typecasting_support macro. The call to typecast now does this for us. See AttributesContainer#typecast and AttributesContainer::Typecaster#typecast
-   
+
 == 0.0.8
  * Added URI extension using the [] method (see examples/delicious.rb)
  * Refactored out Request as the first step to adding Response caching
- 

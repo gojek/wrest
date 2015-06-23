@@ -7,7 +7,7 @@ describe Wrest::CacheProxy do
     @request_uri = 'http://localhost/foo'.to_uri
     @get         = Wrest::Native::Get.new(@request_uri, {}, {}, {:cache_store => @cache})
     @ok_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
-    @get.stub!(:invoke_without_cache_check).and_return(@ok_response)
+    allow(@get).to receive(:invoke_without_cache_check).and_return(@ok_response)
     @cache_proxy = @get.cache_proxy
   end
 
@@ -127,7 +127,7 @@ describe Wrest::CacheProxy do
         # 304 is Not Modified
         it "should use the cached response if the server returns 304" do
           not_modified_response = @ok_response.clone
-          not_modified_response.should_receive(:code).any_number_of_times.and_return('304')
+          not_modified_response.should_receive(:code).at_least(1).times.and_return('304')
           @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
 
           @cache_proxy.should_receive(:send_validation_request_for).and_return(not_modified_response)
@@ -143,7 +143,7 @@ describe Wrest::CacheProxy do
           it "should call update_cache_headers" do
 
             not_modified_response = @ok_response.clone
-            not_modified_response.should_receive(:code).any_number_of_times.and_return('304')
+            not_modified_response.should_receive(:code).at_least(1).times.and_return('304')
             @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
 
             @cache_proxy.should_receive(:send_validation_request_for).and_return(not_modified_response)
@@ -178,10 +178,10 @@ describe Wrest::CacheProxy do
             end
           end
         end
-        
+
         it "should use it if the server returns a new response" do
           new_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
-          new_response.should_receive(:code).any_number_of_times.and_return('200')
+          new_response.should_receive(:code).at_least(1).times.and_return('200')
 
           @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
           @cache_proxy.should_receive(:send_validation_request_for).and_return(new_response)
@@ -191,7 +191,7 @@ describe Wrest::CacheProxy do
 
         it "should also cache it when the server returns a new response" do
           new_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers()))
-          new_response.should_receive(:code).any_number_of_times.and_return('200')
+          new_response.should_receive(:code).at_least(1).times.and_return('200')
 
           @cache.should_receive(:[]).with(@get.hash).and_return(@cached_response)
           @cache_proxy.should_receive(:send_validation_request_for).and_return(new_response)

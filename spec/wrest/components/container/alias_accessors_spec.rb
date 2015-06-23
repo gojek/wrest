@@ -10,7 +10,7 @@ module Wrest::Components
     end
 
     it "should provide a macro to enable aliasing accessors" do
-      lambda{ @Demon.class_eval{ alias_accessors :shiriki => :chambala } }.should_not raise_error(NoMethodError)
+      expect{ @Demon.class_eval{ alias_accessors :shiriki => :chambala } }.to_not raise_error(NoMethodError)
     end
 
     describe 'aliasing' do
@@ -20,29 +20,29 @@ module Wrest::Components
 
       it "should provide an accessor methods when we alias to an attribute" do
         demon = @Demon.new
-        demon.should respond_to(:gender)
-        demon.should respond_to(:gender=)
-        demon.should respond_to(:gender?)
-        demon.should respond_to(:maturity)
-        demon.should respond_to(:maturity=)
-        demon.should respond_to(:maturity?)
+        expect(demon).to respond_to(:gender)
+        expect(demon).to respond_to(:gender=)
+        expect(demon).to respond_to(:gender?)
+        expect(demon).to respond_to(:maturity)
+        expect(demon).to respond_to(:maturity=)
+        expect(demon).to respond_to(:maturity?)
       end
 
       it "should ensure that the aliased getter method delegates to the actual getter" do
         demon = @Demon.new :sex => 'male'
-        demon.gender.should == 'male'
+        expect(demon.gender).to eq('male')
       end
 
       it "should ensure that the aliased setter method delegates to the actual getter" do
         demon = @Demon.new
-        demon.should_receive(:sex=).with('male')
+        expect(demon).to receive(:sex=).with('male')
         demon.gender = 'male'
       end
 
       it "should ensure that the aliased query method delegates to the actual queryier" do
         demon = @Demon.new :age => '1000'
-        demon.gender?.should be_false
-        demon.maturity?.should be_true
+        expect(demon.gender?).to be_falsey
+        demon.maturity?.should be_truthy
       end
     end
   end

@@ -1,7 +1,8 @@
 source "http://rubygems.org"
 
-gem 'hanna'
-gem 'rubyforge'
+gem 'rake', '~> 10.4'
+gem 'rspec-collection_matchers', '~> 1.1'
+gem 'rdoc', '~> 4.2'
 gem 'simplecov', :platforms => :mri_19
 
 group :multipart_support do
@@ -21,10 +22,10 @@ end
 
 group :libxml do
   platforms :ruby do
-    gem 'libxml-ruby', '~> 1' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
+    gem 'libxml-ruby', '~> 2.8.0' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
   end
 end
- 
+
 group :jrexml do
   platforms :jruby do
     gem 'jrexml', '~> 0.5.3'
@@ -36,7 +37,8 @@ group :memcached_support do
 end
 
 group :eventmachine_support do
-  gem 'eventmachine', '~> 0.12.10'
+  gem 'eventmachine', '~> 1.0.7'
 end
+
 
 gemspec

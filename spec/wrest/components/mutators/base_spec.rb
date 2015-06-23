@@ -13,31 +13,31 @@ require "wrest/components/mutators"
 module Wrest::Components
   describe Mutators::Base do
     it "should raise an exception if mutate is invoked without do_mutate being implemented in a subclass" do
-      lambda{ Class.new(Mutators::Base).new.mutate([]) }.should raise_error(Wrest::Exceptions::MethodNotOverridden)
+      expect{ Class.new(Mutators::Base).new.mutate([]) }.to raise_error(Wrest::Exceptions::MethodNotOverridden)
     end
 
     it "should ensure that the next mutator is invoked for a subclass" do
-      next_mutator = mock('Mutator')
+      next_mutator = double('Mutator')
       mutator = Mutators::CamelToSnakeCase.new(next_mutator)
 
-      next_mutator.should_receive(:mutate).with(['a', 1]).and_return([:a, '1'])
+      expect(next_mutator).to receive(:mutate).with(['a', 1]).and_return([:a, '1'])
 
-      mutator.mutate(['a', 1]).should == [:a, '1']
+      expect(mutator.mutate(['a', 1])).to eq([:a, '1'])
     end
 
     it "should know how to chain mutators recursively" do
       mutator = Mutators::XmlSimpleTypeCaster.new(Mutators::CamelToSnakeCase.new)
-      mutator.mutate(
+      expect(mutator.mutate(
       ["Result", [{
         "Publish-Date"=>["1240326000"],
         "News-Source"=>[{"Online" => ["PC via News"], "Unique-Id" => [{"type"=>"integer", "content"=>"1"}]}]
       }]]
-      ).should == ["result", {"publish_date" => "1240326000", "news_source" => {"online"=>"PC via News", "unique_id"=>1}}]
+      )).to eq(["result", {"publish_date" => "1240326000", "news_source" => {"online"=>"PC via News", "unique_id"=>1}}])
     end
-    
+
     it "should register all subclasses in the registry" do
       class SomeMutator < Mutators::Base; end
-      Mutators::REGISTRY[:some_mutator].should == SomeMutator
+      expect(Mutators::REGISTRY[:some_mutator]).to eq(SomeMutator)
     end
   end
 end
