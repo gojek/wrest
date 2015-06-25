@@ -1,58 +1,70 @@
-= Wrest 1.5.1
+[![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
 
-(c) Copyright 2009-2011 {Sidu Ponnappa}[http://blog.sidu.in]. All Rights Reserved.
+# Wrest 1.5.1
 
-{CI Status:}[http://ci.c42.in/projects/wrest] http://ci.c42.in/projects/wrest.png
+(c) Copyright 2009-2011 [Sidu Ponnappa](http://blog.sidu.in). All Rights Reserved.
 
 Wrest is a ruby REST/HTTP client library which
 
 * Allows you to use Net::HTTP or libCurl
-* Allows you to pick your Ruby: use 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2 ({Continuous Integration server}[http://ci.c42.in])
-* Supports RFC 2616 based {caching}[https://github.com/kaiwren/wrest/blob/caching/Caching.markdown]
-* [Alpha] Allows you to go async: use Threads or EventMachine
+* Allows you to pick your Ruby: use 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2 ([Continuous Integration server](http://ci.c42.in))
+* Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
+* **_Alpha_**
+
+      Allows you to go async: use Threads or EventMachine
+
 * Allows you to quickly build object oriented wrappers around any web service
 * Is designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments
 * Provides convenient HTTP wrappers, redirect handling, serialisation, deserialisation and xpath based lookup
 
-To receive notifications whenever new features are added to Wrest, please subscribe to my {twitter feed}[http://twitter.com/ponnappa].
+To receive notifications whenever new features are added to Wrest, please subscribe to my [twitter feed](http://twitter.com/ponnappa).
 
-== Examples
+##Examples
 
 For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/kaiwren/wrest/tree/master/examples
 
-=== Basic Http Calls
+### Basic Http Calls
 
-==== GET
+#### GET
 
 * Basic API calls
 
+    ```
     'http://twitter.com/statuses/public_timeline.json'.to_uri.get.deserialise  # works with json and xml out of the box
 
     'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise   # see lib/wrest/components/translators to add other formats
+    ```
 
 * Timeout support
 
+    ```
     'http://twitter.com/statuses/public_timeline.json'.to_uri.get(:timeout => 5).body
+    ```
 
 * Redirect support
 
+    ```
     'http://google.com'.to_uri(:follow_redirects => false).get
 
     'http://google.com'.to_uri(:follow_redirects_limit => 1).get
+    ```
 
   :follow_redirects_limit defaults to 5 if not specified.
 
 * Deserialise with XPath filtering
 
+    ```
     ActiveSupport::XmlMini.backend = 'REXML'
 
     'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise(
                                                   :xpath => '//user/name/text()'
                                                 )
+    ```
 
 * More complex request with parameters and a custom deserialiser
 
+    ```
     'http://search.yahooapis.com/NewsSearchService/V1/newsSearch'.to_uri.get(
                   :appid  => 'YahooDemo',
                   :output => 'xml',
@@ -62,18 +74,26 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
                 ).deserialise_using(
                   Wrest::Components::Translators::Xml
                 )
+    ```
+
 * Basic HTTP auth and URI extensions using Wrest::Uri#[]
 
+    ```
     base_uri = 'https://api.del.icio.us/v1'.to_uri(:username => 'kaiwren', :password => 'fupupp1es')
     bookmarks = base_uri['/posts/get'].get.deserialise
+    ```
 
-==== POST
+#### POST
 
 * Regular, vanilla Post with a body and headers
 
+    ```
     'http://my.api.com'.to_uri.post('YAML encoded body', 'Content-Type' => 'text/x-yaml')
+    ```
+
 * Form encoded post
 
+    ```
     'https://api.del.icio.us/v1/posts/add'.to_uri(
              :username => 'kaiwren', :password => 'fupupp1es'
           ).post_form(
@@ -82,69 +102,86 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
              :extended => "All posts tagged with 'ruby'",
              :tags => 'ruby hacking'
           )
+    ```
+
 * Multipart posts
 
+    ```
    'http://imgur.com/api/upload.xml'.to_uri.post_multipart(
      :image => UploadIO.new(File.open(file_path), "image/png", file_path),
      :key => imgur_key
     ).deserialise
+    ```
 
 Note: To enable Multipart support, you'll have to explicitly require 'wrest/multipart', which depends on the multipart-post gem.
 
-==== DELETE
+# DELETE
 
 To delete a resource:
 
+```
  'https://api.del.icio.us/v1/posts/delete'.to_uri(
                                               :username => 'kaiwren',
                                               :password => 'fupupp1es'
                                             ).delete(
                                               :url => 'http://c2.com'
                                             )
+```
 
-=== Caching
+### Caching
 
 Wrest supports caching with pluggable back-ends.
 
+```
     Wrest::Caching.default_to_hash!     # Hash should NEVER be used in a production environment. It is unbounded and will keep increasing in size.
     c42 = "http://c42.in".to_uri.get
+```
 
-A Memcached based caching back-end is available in Wrest. You can get instructions on how to install Memcached on your system {here}[http://code.google.com/p/memcached/wiki/NewInstallFromPackage].
+A Memcached based caching back-end is available in Wrest. You can get instructions on how to install Memcached on your system [here](http://code.google.com/p/memcached/wiki/NewInstallFromPackage).
 The Dalli gem is used by Wrest to interface with Memcached. Install dalli using 'gem install dalli'.
 
 Use the following method to enable caching for all requests, and set Memcached as the default back-end.
 
+```
     Wrest::Caching.default_to_memcached!
+```
 
 For fine-grained control over the cache store (or to use multiple cache stores in the same codebase), you can use this API:
 
+```
     r1 = "http://c42.in".to_uri.using_memcached.get
     r2 = "http://c42.in".to_uri.using_hash.get
+```
 
-A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at {Wrest Caching Doc}[https://github.com/kaiwren/wrest/blob/master/Caching.markdown]
+A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at [Wrest Caching Doc](https://github.com/kaiwren/wrest/blob/master/Caching.markdown)
 
 You can create your own back-ends for Wrest caching by implementing the interface implemented in https://github.com/kaiwren/wrest/blob/master/lib/wrest/components/cache_store/memcached.rb
 
 To explicitly disable caching for specific requests:
 
+```
     "http://c42.in".to_uri.disable_cache.get
+```
 
-=== Callbacks
+### Callbacks
 
-==== Uri level callbacks
+#### Uri level callbacks
 
 You can define a set of callbacks that are invoked based on the http codes of the responses to any requests on a given uri.
 
+```
   "http://google.com".to_uri(:callback => {
               200      => lambda {|response| Wrest.logger.info "Ok." },
               400..499 => lambda {|response| Wrest.logger.error "Invalid. #{response.body}"},
               300..302 => lambda {|response| Wrest.logger.debug "Redirected. #{response.message}" }
             }).get
+```
 
-==== Per request callbacks
+#### Per request callbacks
 
 You can also define callbacks that are invoked based on the http code of the response to a particular request.
 
+```
   "http://google.com".to_uri.get do |callback|
     callback.on_ok do |response|
       Wrest.logger.info "Ok."
@@ -158,16 +195,18 @@ You can also define callbacks that are invoked based on the http code of the res
       Wrest.logger.info "Successful."
     end
   end
+```
 
 Please note that Wrest is a synchronous library. All requests are blocking, and will not return till the request is completed and appropriate callbacks executed.
 
-=== Asynchronous requests
+### Asynchronous requests
 
 Asynchronous requests are non-blocking. They do not return a response and the request is executed on a separate thread. The only way to access the response
 while using asynchronous request is through callbacks.
 
 Asynchronous requests support pluggable backends. The default backend used for asynchronous requests is ruby threads.
 
+```
   "http://c42.in".to_uri.get_async do |callback|
     callback.on_ok do |response|
       Wrest.logger.info "Ok."
@@ -175,29 +214,35 @@ Asynchronous requests support pluggable backends. The default backend used for a
   end
 
   sleep 1 # Causes thread created by get_async to execute
+```
 
 You can change the default to eventmachine.
 
+```
   Wrest::AsyncRequest.default_to_em!
+```
 
 You can also override the default on Uri objects.
 
+```
   "http://c42.in".to_uri.using_em.get_async do |callback|
     callback.on_ok do |response|
       Wrest.logger.info "Ok."
     end
   end
+```
 
 Note: The current implementation of asynchronous requests is currently in alpha and should not be used in production.
 
-=== Other useful stuff
+### Other useful stuff
 
-==== Hash container with ActiveResource-like semantics
+#### Hash container with ActiveResource-like semantics
 
 Allows any class to hold an attributes hash, somewhat like ActiveResource. It also supports several extensions to this base fuctionality such as support for typecasting attribute values. See examples/twitter.rb and examples/wow_realm_status.rb for more samples.
 
 Example:
 
+```
  class Demon
    include Wrest::Components::Container
 
@@ -214,75 +259,97 @@ Example:
  kai_wren.chi      # => #<Chi:0x113af8c @count="1024">
  kai_wren.energy   # => #<Chi:0x113af8c @count="1024">
  kai_wren.teacher  # => 'Viss'
+```
 
-==== Opt-out of core extensions
+#### Opt-out of core extensions
 
-Uncomfortable with extending <tt>String</tt> to add <tt>to_uri</tt>? Simply do
+Uncomfortable with extending `String` to add `to_uri`? Simply do
+
+```
  gem "wrest", :require => "wrest_no_ext"
-in your Gemfile. You can now do <tt>Uri.new('http://localhost')</tt> to build Uris.
+```
 
-=== Logging
+in your Gemfile. You can now do `Uri.new('http://localhost')` to build Uris.
+
+### Logging
 
 The Wrest logger can be set and accessed through Wrest.logger and is configured by default to log to STDOUT. If you're using Wrest in a Rails application, you can configure logging by adding a config/initializers/wrest.rb file with the following contents :
-  Wrest.logger = Rails.logger
 
-=== Json Backend
+```
+  Wrest.logger = Rails.logger
+```
+
+### Json Backend
 
 Wrest uses the multi_json gem to manage Json backends, allowing it to play nice with Rails 3.1. To change the backend used, you can do the following:
+
+```
   MultiJson.engine = :json_gem
+```
 
-For more information, look up the {multi_json}[http://github.com/intridea/multi_json] documentation.
+For more information, look up the [multi_json](http://github.com/intridea/multi_json) documentation.
 
-=== Build
+### Build
 
-Standard options are available and can be listed using <tt>rake -T</tt>. Use rake:rcov for coverage and rake:rdoc to generate documentation. The link to the continuous integration build is over at the C42 Engineering {open source}[http://c42.in/open_source] page.
+Standard options are available and can be listed using `rake -T`. Use rake:rcov for coverage and rake:rdoc to generate documentation. The link to the continuous integration build is over at the C42 Engineering [open source](http://c42.in/open_source) page.
 
-== Documentation
+## Documentation
 
 Wrest RDocs can be found at http://wrest.rubyforge.org
 
-== Roadmap
+## Roadmap
 
-Features that are planned, in progress or already implemented are documented in the {CHANGELOG}[http://github.com/kaiwren/wrest/tree/master/CHANGELOG] starting from version 0.0.8.
+Features that are planned, in progress or already implemented are documented in the [CHANGELOG](http://github.com/kaiwren/wrest/tree/master/CHANGELOG) starting from version 0.0.8.
 
-== Installation
+## Installation
 
 The source is available at git://github.com/kaiwren/wrest.git
 
-To install the Wrest gem, do <tt>(sudo) gem install wrest</tt>.
+To install the Wrest gem, do `(sudo) gem install wrest`.
 
 Wrest is currently available as a gem for for Ruby and JRuby.
 
-=== Shell
+### Shell
 
-You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking <tt>wrest</tt> from your prompt if you've installed the gem.
+You can launch the interactive Wrest shell by running bin/wrest if you have the source or invoking `wrest` from your prompt if you've installed the gem.
+
+```
   $ wrest
   >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(:timeout => 5).get.deserialise
+```
 
-=== Testing
+### Testing
 
 Start the Sinatra test server for functional test. The dependencies for the test app are managed separately by a Gemfile under spec/sample_app.
+
+```
   rake -f spec/sample_app/Rakefile  # runs on port 3000
+```
 
 Start a memcached daemon/process on port 11211
+
+```
   /usr/local/bin/memcached
+```
 
 Run the tests in a different terminal:
 
+```
   # Run the normal test suite.
   rake
 
   # Runs the functional test suite.
   rake rspec:functional
+```
 
-== Contributors
+## Contributors
 
-* Sidu Ponnappa : {kaiwren}[http://github.com/kaiwren]
-* Niranjan Paranjape : {achamian}[http://github.com/achamian]
-* Aakash Dharmadhkari : {aakashd}[http://github.com/aakashd]
-* Srushti : {srushti}[http://github.com/srushti]
-* Preethi Ramdev : {preethiramdev}[http://github.com/preethiramdev]
-* Nikhil Vallishayee : {nikhilvallishayee}[http://github.com/nikhilvallishayee]
-* Jacques Crocker : {railsjedi}[http://github.com/railsjedi]
-* Jasim A Basheer: {jasim}[http://github.com/jasim]
-* Arvind Laxminarayan: {ardsrk}[http://github.com/ardsrk]
+* Sidu Ponnappa : [kaiwren](http://github.com/kaiwren)
+* Niranjan Paranjape : [achamian](http://github.com/achamian)
+* Aakash Dharmadhkari : [aakashd](http://github.com/aakashd)
+* Srushti : [srushti](http://github.com/srushti)
+* Preethi Ramdev : [preethiramdev](http://github.com/preethiramdev)
+* Nikhil Vallishayee : [nikhilvallishayee](http://github.com/nikhilvallishayee)
+* Jacques Crocker : [railsjedi](http://github.com/railsjedi)
+* Jasim A Basheer: [jasim](http://github.com/jasim)
+* Arvind Laxminarayan: [ardsrk](http://github.com/ardsrk)
