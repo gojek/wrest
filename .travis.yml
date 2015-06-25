@@ -1,4 +1,4 @@
 language: ruby
 rvm:
   - 2.0.0
-  - jruby-18mode
+  - jruby-1.7.6
