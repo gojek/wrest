@@ -23,9 +23,9 @@ require 'active_support/core_ext/object'
 
 module Wrest
   Root = File.dirname(__FILE__)
-  
+
   $:.unshift Root
-  
+
   def self.logger=(logger)
     @logger = logger
   end

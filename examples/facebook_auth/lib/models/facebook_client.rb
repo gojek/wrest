@@ -1,3 +1,5 @@
+require 'yaml'
+
 class FacebookClient
 
   Config = YAML.load_file(File.expand_path('../../../config/facebook.yml', __FILE__))
@@ -21,11 +23,11 @@ class FacebookClient
     params = Rack::Utils.parse_query(response)
     params['access_token']
   end
-  
+
   def authorized_get(path, access_token)
     base_url[path].get(:access_token => access_token)
   end
-  
+
   def base_url
     Config["facebook_uri"].to_uri
   end
