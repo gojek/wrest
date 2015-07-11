@@ -22,17 +22,17 @@ describe Wrest::Caching do
     end
 
     it "should know how to retrieve a cache entry" do
-      @memcached["abc"].should =="xyz"
+      expect(@memcached["abc"]).to eq("xyz")
     end
 
     it "should know how to update a cache entry" do
       @memcached["abc"] = "123"
-      @memcached["abc"].should == "123"
+      expect(@memcached["abc"]).to eq("123")
     end
 
     it "should know how to delete a cache entry" do
       @memcached.delete("abc").should == "xyz"
-      @memcached["abc"].should be_nil
+      expect(@memcached["abc"]).to eq(nil)
     end
   end
 

@@ -50,7 +50,7 @@ module Wrest
   end
 end
 
-Wrest.logger = ActiveSupport::BufferedLogger.new(STDOUT)
+Wrest.logger = ActiveSupport::Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG
 
 require "wrest/core_ext/string"

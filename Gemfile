@@ -6,7 +6,7 @@ gem 'rdoc', '~> 4.2'
 gem 'simplecov', :platforms => :mri_19
 
 group :multipart_support do
-  gem 'multipart-post', '~> 1'
+  gem 'multipart-post', '~> 2'
 end
 
 group :libcurl_support do
@@ -33,7 +33,7 @@ group :jrexml do
 end
 
 group :memcached_support do
-  gem 'dalli', '~> 1.0.1'
+  gem 'dalli', '~> 2'
 end
 
 group :eventmachine_support do
