@@ -1,13 +1,13 @@
 [![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
 
-# Wrest 1.5.1
+# Wrest 1.5.2
 
-(c) Copyright 2009-2011 [Sidu Ponnappa](http://blog.sidu.in). All Rights Reserved.
+(c) Copyright 2009-2015 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
 Wrest is a ruby REST/HTTP client library which
 
 * Allows you to use Net::HTTP or libCurl
-* Allows you to pick your Ruby: use 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2 ([Continuous Integration server](http://ci.c42.in))
+* Allows you to pick your Ruby: use 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2
 * Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
 * **_Alpha_**
 
