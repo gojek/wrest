@@ -279,6 +279,23 @@ The Wrest logger can be set and accessed through Wrest.logger and is configured 
   Wrest.logger = Rails.logger
 ```
 
+Every request and response is logged at level `debug`.
+
+Here is an sample request log message:
+```
+<- (POST 515036017 732688777) http://localhost:3000/events.json
+```
+
+The request log consists of request type (POST), request hash (515036017), connection hash (732688777), URI (http://localhost:3000/events.json)
+
+Here is a sample response log message:
+```
+-> (POST 515036017 732688777) 200 OK (0 bytes 0.01s)
+```
+The response log consists of request type that generated the response (POST), hash of the request that generated the response (515036017), hash of the connection (732688777), response body length (0 bytes) and time taken (0.01)s.
+
+The request hash and connection hashes are used to track requests and responses when using asynchronous requests and/or connection pooling.
+
 ### Json Backend
 
 Wrest uses the multi_json gem to manage Json backends, allowing it to play nice with Rails 3.1. To change the backend used, you can do the following:
