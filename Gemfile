@@ -26,12 +26,6 @@ group :libxml do
   end
 end
 
-group :jrexml do
-  platforms :jruby do
-    gem 'jrexml', '~> 0.5.3'
-  end
-end
-
 group :memcached_support do
   gem 'dalli', '~> 2'
 end
@@ -39,6 +33,5 @@ end
 group :eventmachine_support do
   gem 'eventmachine', '~> 1.0.7'
 end
-
 
 gemspec

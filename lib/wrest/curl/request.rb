@@ -87,7 +87,7 @@ module Wrest
         @connection ||= Patron::Session.new
         raise ArgumentError, "Empty URL" if http_request.url.empty?
 
-        prefix = "#{http_request.action.to_s.upcase} #{http_request.hash} #{connection.hash}"
+        prefix = "#{http_request.action.to_s.upcase} #{http_request.hash} #{connection.hash} #{Thread.current.object_id}"
 
         Wrest.logger.debug "<- (#{prefix}) #{http_request.url}"
         time = Benchmark.realtime { response =  Wrest::Curl::Response.new(connection.handle_request(http_request))}

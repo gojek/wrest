@@ -26,8 +26,6 @@ Gem::Specification.new do |s|
   s.executables       = ['wrest']
   s.require_path      = 'lib'
 
-  s.add_development_dependency "rubyforge"
-
   # Test dependencies
   s.add_development_dependency "rspec", ["~> 3.3"]
   s.add_development_dependency "sinatra", ["~> 1.0.0"]

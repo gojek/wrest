@@ -88,7 +88,7 @@ module Wrest::Native
       @connection.set_debug_output @detailed_http_logging
       http_request.basic_auth username, password unless username.nil? || password.nil?
 
-      prefix = "#{http_request.method} #{self.hash} #{@connection.hash}"
+      prefix = "#{http_request.method} #{self.hash} #{@connection.hash} #{Thread.current.object_id}"
       
       Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
       time = Benchmark.realtime { response = Wrest::Native::Response.new( do_request ) }

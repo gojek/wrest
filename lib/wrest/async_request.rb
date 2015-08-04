@@ -31,9 +31,20 @@ module Wrest
       self.default_backend = Wrest::AsyncRequest::ThreadBackend.new
     end
 
-    # Returns the default backend
+    # Returns the default backend, which is the ThreadBackend
     def self.default_backend
-      @default_backend
+      @default_backend || default_to_threads!
+    end
+    
+    # Uses Thread#join to wait until all background requests
+    # are completed.
+    #
+    # Use this as the last instruction in a script to prevent it from
+    # exiting before background threads have completed running.
+    #
+    # Needs Wrest.default_backend to be an instance of ThreadBackend.
+    def self.wait_for_thread_pool!
+      default_backend.wait_for_thread_pool!
     end
   end
 end

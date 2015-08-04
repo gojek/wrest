@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
 
-# Wrest 1.5.2
+# Wrest 1.5.3
 
 (c) Copyright 2009-2015 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
@@ -204,7 +204,7 @@ Please note that Wrest is a synchronous library. All requests are blocking, and 
 Asynchronous requests are non-blocking. They do not return a response and the request is executed on a separate thread. The only way to access the response
 while using asynchronous request is through callbacks.
 
-Asynchronous requests support pluggable backends. The default backend used for asynchronous requests is ruby threads.
+Asynchronous requests support pluggable backends. The default backend used for asynchronous requests is ruby threads, which is only reliable when using JRuby.
 
 ```
   "http://c42.in".to_uri.get_async do |callback|
@@ -213,7 +213,8 @@ Asynchronous requests support pluggable backends. The default backend used for a
     end
   end
 
-  sleep 1 # Causes thread created by get_async to execute
+  # Wait until the background threads finish execution before letting the program end.
+  Wrest::AsyncRequest.wait_for_thread_pool!
 ```
 
 You can change the default to eventmachine.
@@ -283,18 +284,18 @@ Every request and response is logged at level `debug`.
 
 Here is an sample request log message:
 ```
-<- (POST 515036017 732688777) http://localhost:3000/events.json
+<- (POST 515036017 732688777 2010) http://localhost:3000/events.json
 ```
 
-The request log consists of request type (POST), request hash (515036017), connection hash (732688777), URI (http://localhost:3000/events.json)
+The request log consists of request type (POST), request hash (515036017), connection hash (732688777), thread id (2010), URI (http://localhost:3000/events.json)
 
 Here is a sample response log message:
 ```
--> (POST 515036017 732688777) 200 OK (0 bytes 0.01s)
+-> (POST 515036017 732688777 2010) 200 OK (0 bytes 0.01s)
 ```
-The response log consists of request type that generated the response (POST), hash of the request that generated the response (515036017), hash of the connection (732688777), response body length (0 bytes) and time taken (0.01)s.
+The response log consists of request type that generated the response (POST), hash of the request that generated the response (515036017), hash of the connection (732688777), thread id (2010), status (200 OK), response body length (0 bytes) and time taken (0.01)s.
 
-The request hash and connection hashes are used to track requests and responses when using asynchronous requests and/or connection pooling.
+The thread id, request hash and connection hashes are used to track requests and their corresponding responses when using asynchronous requests and/or http connection pooling.
 
 ### Json Backend
 

@@ -67,9 +67,9 @@ require "wrest/http_codes"
 require "wrest/callback"
 require "wrest/native"
 
-require "wrest/async_request"
+require "wrest/async_request/thread_pool"
 require "wrest/async_request/thread_backend"
-Wrest::AsyncRequest.default_to_threads!
+require "wrest/async_request"
 
 require "wrest/caching"
 
