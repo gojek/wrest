@@ -61,28 +61,6 @@ RDoc::Task.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-
-namespace :rubyforge do
-
-  desc "Release gem and RDoc documentation to RubyForge"
-  task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
-
-  namespace :release do
-    desc "Publish RDoc to RubyForge."
-    task :docs => [:rdoc] do
-      config = YAML.load(
-      File.read(File.expand_path('~/.rubyforge/user-config.yml'))
-      )
-
-      host = "#{config['username']}@rubyforge.org"
-      remote_dir = "/var/www/gforge-projects/wrest/"
-      local_dir = 'rdoc'
-
-      Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
-    end
-  end
-end
-
 namespace (:benchmark) do
   desc "Create classes to be used in Wrest::Resource vs. ActiveResource"
   task :setup_test_classes do
