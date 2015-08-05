@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
 
-# Wrest 1.5.3
+# Wrest 1.5.4
 
 (c) Copyright 2009-2015 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
@@ -9,10 +9,7 @@ Wrest is a ruby REST/HTTP client library which
 * Allows you to use Net::HTTP or libCurl
 * Allows you to pick your Ruby: use 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2
 * Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
-* **_Alpha_**
-
-      Allows you to go async: use Threads or EventMachine
-
+* Async http calls using Threads (reliable only on JRuby) or EventMachine
 * Allows you to quickly build object oriented wrappers around any web service
 * Is designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments
@@ -31,15 +28,16 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Basic API calls
 
     ```
-    'http://twitter.com/statuses/public_timeline.json'.to_uri.get.deserialise  # works with json and xml out of the box
-
-    'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise   # see lib/wrest/components/translators to add other formats
+    # Works with json and xml out of the box
+    # See lib/wrest/components/translators to add other formats
+    
+    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get.deserialize
     ```
 
 * Timeout support
 
     ```
-    'http://twitter.com/statuses/public_timeline.json'.to_uri.get(:timeout => 5).body
+    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get(:timeout => 5).body
     ```
 
 * Redirect support
@@ -217,10 +215,14 @@ Asynchronous requests support pluggable backends. The default backend used for a
   Wrest::AsyncRequest.wait_for_thread_pool!
 ```
 
-You can change the default to eventmachine.
+You can change the default to eventmachine or to threads.
 
 ```
   Wrest::AsyncRequest.default_to_em!
+```
+or
+```
+  Wrest::AsyncRequest.default_to_threads!
 ```
 
 You can also override the default on Uri objects.
@@ -233,7 +235,16 @@ You can also override the default on Uri objects.
   end
 ```
 
-Note: The current implementation of asynchronous requests is currently in alpha and should not be used in production.
+You can decide which AsyncBackend to use at runtime through to `to_uri`'s options hash.
+
+```
+  "http://c42.in".to_uri(asynchronous_backend: ThreadBackend.new(number_of_threads)).get_async do |callback|
+    callback.on_ok do |response|
+      Wrest.logger.info "Ok."
+    end
+  end
+```
+
 
 ### Other useful stuff
 

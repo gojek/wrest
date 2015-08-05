@@ -27,8 +27,8 @@ module Wrest
     end
 
     # Assign default backend for asynchronous request to using threads. 
-    def self.default_to_threads!
-      self.default_backend = Wrest::AsyncRequest::ThreadBackend.new
+    def self.default_to_threads!(number_of_threads = 5)
+      self.default_backend = Wrest::AsyncRequest::ThreadBackend.new(number_of_threads)
     end
 
     # Returns the default backend, which is the ThreadBackend

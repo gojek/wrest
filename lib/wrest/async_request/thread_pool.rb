@@ -14,12 +14,10 @@ module Wrest
         @threads = []
         @number_of_threads = number_of_threads
         @queue = Queue.new
-        halt_on_sigint
-        halt_on_int
-        initialize_thread_pool
       end
       
       def execute_eventually(request)
+        initialize_thread_pool if @threads.empty?
         @queue.push(request)
         nil
       end
@@ -32,6 +30,8 @@ module Wrest
       
       private
       def initialize_thread_pool
+        halt_on_sigint
+        halt_on_int
         main_thread = Thread.current
         @threads =  @number_of_threads.times.map do |i|
           Thread.new do |thread|
@@ -55,9 +55,11 @@ module Wrest
       end
     
       def halt
-        Wrest.logger.debug "Shutting down ThreadPool..."
-        @threads.each(&:terminate)
-        Wrest.logger.debug "Halted ThreadPool, continuing with shutdown..."
+        unless @threads.empty?
+          Wrest.logger.debug "Wrest: Shutting down ThreadPool..."
+          @threads.each(&:terminate)
+          Wrest.logger.debug "Wrest: Halted ThreadPool, continuing with shutdown."
+        end
         Process.exit
       end
     end
