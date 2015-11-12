@@ -63,13 +63,10 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * More complex request with parameters and a custom deserialiser
 
     ```
-    'http://search.yahooapis.com/NewsSearchService/V1/newsSearch'.to_uri.get(
-                  :appid  => 'YahooDemo',
-                  :output => 'xml',
-                  :query  => 'India',
-                  :results=> '3',
-                  :start  => '1'
-                ).deserialise_using(
+    'api.openweathermap.org/data/2.5/weather'.to_uri.get(
+                  :lat  => 35,
+                  :lon => 139
+                  ).deserialise_using(
                   Wrest::Components::Translators::Xml
                 )
     ```
