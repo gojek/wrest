@@ -29,9 +29,6 @@ unless RUBY_PLATFORM =~ /java/
         end
       end
 
-      after :all do
-        Wrest.use_native!
-      end
     end
   end
 end
