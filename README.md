@@ -19,7 +19,7 @@ To receive notifications whenever new features are added to Wrest, please subscr
 
 ##Examples
 
-For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/kaiwren/wrest/tree/master/examples
+For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/c42/wrest/tree/master/examples
 
 ### Basic Http Calls
 
