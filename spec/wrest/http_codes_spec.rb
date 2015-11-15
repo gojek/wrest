@@ -3,7 +3,6 @@ require "spec_helper"
 module Wrest
   describe HttpCodes do
     http_backends = {"Wrest::Native::Response" => "Net::HTTPResponse"}
-    http_backends["Wrest::Curl::Response"] = "Patron::Response" unless RUBY_PLATFORM =~ /java/
 
     http_backends.each do |klass, double_class|
       {"200" => "OK", "201" => "CREATED", "202" => "ACCEPTED", "204" => "NO CONTENT", "301" => "MOVED PERMANENTLY", "302" => "FOUND", "303" => "SEE OTHER", "304" => "NOT MODIFIED",

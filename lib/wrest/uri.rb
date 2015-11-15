@@ -173,7 +173,6 @@ module Wrest #:nodoc:
 
     # Makes a POST request to this URI. This is a convenience API
     # that creates a Wrest::Native::Post, executes it and returns a Wrest::Native::Response.
-    # Note that sending an empty body will blow up if you're using libcurl.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
     def post(body = '', headers = {}, parameters = {}, &block)
@@ -182,8 +181,6 @@ module Wrest #:nodoc:
 
     # Makes a POST request to this URI. This is a convenience API
     # that creates a Wrest::Native::Post.
-    # Note that sending an empty body will blow up if you're using libcurl.
-    #
     # Remember to escape all parameter strings if necessary, using URI.escape
     #
     # Note: post_async does not return a response and the response should be accessed through callbacks.

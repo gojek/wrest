@@ -42,12 +42,6 @@ module Wrest
   def self.use_native!
     silence_warnings{ Wrest.const_set('Http', Wrest::Native) }
   end
-
-  # Switch Wrest to using libcurl.
-  def self.use_curl!
-    require "wrest/curl"
-    silence_warnings{ Wrest.const_set('Http', Wrest::Curl) }
-  end
 end
 
 Wrest.logger = ActiveSupport::Logger.new(STDOUT)

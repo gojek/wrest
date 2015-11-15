@@ -21,7 +21,7 @@ module Wrest
   # To enable Multipart support, use
   #  require 'wrest/multipart'
   #
-  # Multipart support is currently only available on Net::Http and not when using libcurl.
+  # Multipart support is currently only available on Net::Http
   # It depends on the multipart-post gem being available. To install multipart-post
   #   (sudo) gem install multipart-post
   #
