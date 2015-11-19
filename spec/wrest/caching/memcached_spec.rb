@@ -15,6 +15,7 @@ describe Wrest::Caching do
         Dalli::Client.should_receive(:new).with(nil, {})
         client = Wrest::Caching::Memcached.new
       end
+      
       it "should always default the options to an empty hash" do
         Dalli::Client.should_receive(:new).with(nil, {})
         client = Wrest::Caching::Memcached.new
@@ -35,5 +36,5 @@ describe Wrest::Caching do
       expect(@memcached["abc"]).to eq(nil)
     end
   end
-
 end
+

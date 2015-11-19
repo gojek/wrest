@@ -1,7 +1,7 @@
 begin
   gem 'dalli', '~> 2'
 rescue Gem::LoadError => e
-  Wrest.logger.debug "Dalli ~> 2 not found. Dalli is necessary to use the memcached caching back-end. To install dalli run `(sudo) gem install dalli`."
+  Wrest.logger.debug "Dalli ~> 2 not found. The Dalli gem is necessary to use the memcached caching back-end."
   raise e
 end
 

@@ -13,12 +13,17 @@ module Wrest
     def self.enable_memcached
       require "wrest/caching/memcached"
     end
+    
+    # Loads the Redis caching back-end and the Redis gem 
+    def self.enable_redis
+      require "wrest/caching/redis"
+    end
 
     # Configures Wrest to cache all requests. This will use a Ruby Hash.
-    # WARNING: This should NEVER be used in a real environment. The Hash will keep on growing since Wrest does not limit the size of a cache store.
+    # WARNING: This should NEVER be used in a real environment. The Hash will 
+    # keep growing since Wrest does not limit the size of a cache store.
     #
-    # Use the Memcached caching back-end for production since the Memcached process uses an LRU based cache removal policy
-    # that keeps the number of entries stored within bounds.
+    # Please switch to the memcached or redis back-end for production use.
     def self.default_to_hash!
       self.default_store = Hash.new
     end
@@ -27,6 +32,14 @@ module Wrest
     def self.default_to_memcached!
       self.enable_memcached
       self.default_store = Wrest::Caching::Memcached.new 
+    end
+    
+    # Default Wrest to using redis for caching requests.
+    # 
+    # Options to configuring the redis gem can be passed as arguments.
+    def self.default_to_redis!(redis_options = {})
+      self.enable_redis
+      self.default_store = Wrest::Caching::Redis.new(redis_options)
     end
 
     # Assign the default cache store to be used. Default is none.

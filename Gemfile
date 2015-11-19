@@ -30,6 +30,10 @@ group :memcached_support do
   gem 'dalli', '~> 2'
 end
 
+group :redis_support do
+  gem 'redis', '~> 3'
+end
+
 group :eventmachine_support do
   gem 'eventmachine', '~> 1.0.7'
 end
