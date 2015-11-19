@@ -53,6 +53,19 @@ describe Wrest::Uri::Builders do
     end
   end
 
+  context "using_redis" do
+    before(:all){ Wrest::Caching.enable_redis }
+    it "should return a new uri" do
+      cache_enabled_uri = uri.using_redis
+      expect(uri).to eq(cache_enabled_uri)
+    end
+
+    it "should set redis as cache store in options hash" do
+      cache_enabled_uri = uri.using_redis
+      expect(cache_enabled_uri.instance_variable_get("@options")[:cache_store]).to be_a_kind_of(Wrest::Caching::Redis)
+    end
+  end
+
   context "disable_cache" do
     it "should return a new uri" do
       cache_disabled_uri = uri.disable_cache
