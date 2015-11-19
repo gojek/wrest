@@ -2,7 +2,6 @@ require "spec_helper"
 
 module Wrest
   libraries = [Wrest::Native]
-  libraries << Wrest::Curl unless RUBY_PLATFORM =~ /java/
 
   libraries.each do |library|
     describe "For #{library}" do

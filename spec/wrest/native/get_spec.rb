@@ -36,7 +36,7 @@ describe Wrest::Native::Get do
   context "build an identical request with caching disabled" do
     it "should call Wrest::Get.new to build the new request" do
       expect(Wrest::Native::Get).to receive(:new).with(@get.uri, {}, {}, anything())
-      new_get = @get.build_request_without_cache_store({})
+      @get.build_request_without_cache_store({})
     end
 
     it "should merge the validation headers with the new request's headers" do

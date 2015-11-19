@@ -6,8 +6,6 @@ rescue LoadError
 end
 
 require "wrest"
-require "wrest/curl" unless RUBY_PLATFORM =~ /java/
-
 
 Dir[File.join("#{File.expand_path(File.dirname(__FILE__))}", "support", "*.rb")].map {|f| require f}
 
