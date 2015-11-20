@@ -110,7 +110,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 
 Note: To enable Multipart support, you'll have to explicitly require 'wrest/multipart', which depends on the multipart-post gem.
 
-# DELETE
+#### DELETE
 
 To delete a resource:
 
@@ -125,12 +125,28 @@ To delete a resource:
 
 ### Caching
 
-Wrest supports caching with pluggable back-ends.
+Wrest supports caching with the following pluggable back-ends:
+  - Hash
+  - Memcached
+  - Redis
+
+####Hash
+
+Use the following method to enable caching for all requests, and set Hash as the default cache store.
+Note: Hash should NEVER be used in a production environment. It is unbounded and will keep increasing in size.
 
 ```
-    Wrest::Caching.default_to_hash!     # Hash should NEVER be used in a production environment. It is unbounded and will keep increasing in size.
-    c42 = "http://c42.in".to_uri.get
+    Wrest::Caching.default_to_hash!
+    c42 = 'http://c42.in'.to_uri.get
 ```
+
+To use Hash as a cache store in an explicit request (without setting hash as default), use the following API:
+
+```
+    r1 = "http://c42.in".to_uri.using_hash.get
+```
+
+####Memcached
 
 A Memcached based caching back-end is available in Wrest. You can get instructions on how to install Memcached on your system [here](http://code.google.com/p/memcached/wiki/NewInstallFromPackage).
 The Dalli gem is used by Wrest to interface with Memcached. Install dalli using 'gem install dalli'.
@@ -141,16 +157,34 @@ Use the following method to enable caching for all requests, and set Memcached a
     Wrest::Caching.default_to_memcached!
 ```
 
-For fine-grained control over the cache store (or to use multiple cache stores in the same codebase), you can use this API:
+To use Memcached as a cache store in an explicit request (without setting memcached as default), use the following API:
 
 ```
-    r1 = "http://c42.in".to_uri.using_memcached.get
-    r2 = "http://c42.in".to_uri.using_hash.get
+    Wrest::Caching.enable_memcached
+    r2 = "http://c42.in".to_uri.using_memcached.get
 ```
 
-A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at [Wrest Caching Doc](https://github.com/kaiwren/wrest/blob/master/Caching.markdown)
+####Redis
 
-You can create your own back-ends for Wrest caching by implementing the interface implemented in https://github.com/kaiwren/wrest/blob/master/lib/wrest/components/cache_store/memcached.rb
+Wrest also supports a Redis based caching back-end. Follow the guide [here](http://redis.io/topics/quickstart) to install Redis in your system.
+It uses [redis-rd](https://github.com/redis/redis-rb) to interface with Redis. Install redis-rb using `gem install redis`.
+
+Use the following method to enable caching for all requests, and set Redis as the default back-end.
+
+```
+    Wrest::Caching.default_to_redis!
+```
+
+To use Redis as a cache store in an explicit request (without setting redis as default), use the following API:
+
+```
+    Wrest::Caching.enable_redis
+    r3 = "http://c42.in".to_uri.using_redis.get
+```
+
+A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at [Wrest Caching Doc](https://github.com/c42/wrest/blob/master/Caching.markdown)
+
+You can create your own back-ends for Wrest caching by implementing the interface implemented in https://github.com/c42/wrest/blob/master/lib/wrest/caching/redis.rb
 
 To explicitly disable caching for specific requests:
 
