@@ -6,6 +6,7 @@ rescue Gem::LoadError => e
 end
 
 require 'redis'
+require 'yaml'
 
 module Wrest::Caching
   class Redis
@@ -15,11 +16,14 @@ module Wrest::Caching
     end
 
     def [](key)
-      @redis.get(key)
+      value = @redis.get(key)
+      unmarshalled_value = value.nil? ? nil : YAML::load(value)
+      unmarshalled_value
     end
 
     def []=(key, value)
-      @redis.set(key, value)
+      marshalled_value = YAML::dump(value)
+      @redis.set(key, marshalled_value)
     end
 
     def delete(key)

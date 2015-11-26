@@ -26,6 +26,13 @@ describe Wrest::Caching do
       expect(@redis["abc"]).to eq("xyz")
     end
 
+    it 'should unmarshall the value when retrieved a cache entry' do
+      ok_response = 'http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1000'.to_uri.get
+      @redis['example-123'] = ok_response
+
+      expect(@redis['example-123']).to eq(ok_response)
+    end
+
     it "should know how to update a cache entry" do
       @redis["abc"] = "123"
       expect(@redis["abc"]).to eq("123")
