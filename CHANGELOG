@@ -2,6 +2,9 @@ Features under the section marked 'Current' are completed but pending release as
 
 Features under a numbered section are complete and available in the Wrest gem.
 
+== 2.1.1
+ * Including Redis as a Caching Backend
+
 == 2.0.0
  * Removing support for libcurl
 
