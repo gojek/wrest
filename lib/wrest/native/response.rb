@@ -118,13 +118,18 @@ module Wrest #:nodoc:
       # Returns whether this response is cacheable. 
       def cacheable?
         code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? &&
-            (not max_age.nil? or (expires_not_in_our_past? && expires_not_in_its_past?)) && pragma_nocache_not_set? &&
-            vary_tag_not_set?
+        (not max_age.nil? or (expires_not_in_our_past? && expires_not_in_its_past?)) && pragma_nocache_not_set? &&
+        vary_header_valid?
       end
 
       #:nodoc:
       def code_cacheable?
         !code.nil? && ([200, 203, 300, 301, 302, 304, 307].include?(code.to_i))
+      end
+
+      #:nodoc:
+      def vary_header_valid?
+        headers['vary'] != '*'
       end
 
       #:nodoc:
@@ -150,11 +155,6 @@ module Wrest #:nodoc:
 
       def pragma_nocache_not_set?
         headers['pragma'].nil? || (not headers['pragma'].include? 'no-cache')
-      end
-
-      #:nodoc:
-      def vary_tag_not_set?
-        headers['vary'].nil?
       end
 
       # Returns the Date from the response headers.
