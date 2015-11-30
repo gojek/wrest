@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
 
-# Wrest 2.1.1
+# Wrest 2.1.2
 
 (c) Copyright 2009-2015 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 

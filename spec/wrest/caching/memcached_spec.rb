@@ -6,6 +6,7 @@ Wrest::Caching.enable_memcached
 describe Wrest::Caching do
   context "functional", :functional => true do
     before :each do
+
       @memcached = Wrest::Caching::Memcached.new
       @memcached["abc"]="xyz"
     end

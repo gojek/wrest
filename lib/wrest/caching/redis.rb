@@ -25,7 +25,7 @@ module Wrest::Caching
       marshalled_value = YAML::dump(value)
       @redis.set(key, marshalled_value)
     end
-
+    
     def delete(key)
       value = self[key]
       

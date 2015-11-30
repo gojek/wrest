@@ -16,6 +16,11 @@ module Wrest
       end
     end
 
+    it 'default to redis sets redis as the default cache store' do
+      Caching.default_to_redis!
+      expect(Caching.default_store).to be_an_instance_of(Wrest::Caching::Redis)
+    end
+
     context "default_store=" do
       it "should change the default store to the given cache store" do
         Caching.default_store = Hash.new
