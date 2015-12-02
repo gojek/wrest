@@ -21,16 +21,17 @@ module Wrest::Caching
       unmarshalled_value
     end
 
-    def []=(key, value)
-      marshalled_value = YAML::dump(value)
-      @redis.set(key, marshalled_value)
+    def []=(key, response)
+      marshalled_response = YAML::dump(response)
+      @redis.set(key, marshalled_response)
+      unless response.expired?
+        @redis.expire(key, response.freshness_lifetime)
+      end
     end
     
     def delete(key)
       value = self[key]
-      
       @redis.del(key)
-
       return value
     end
   end

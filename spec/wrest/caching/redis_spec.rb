@@ -7,7 +7,6 @@ describe Wrest::Caching do
   context "functional", :functional => true do
     before :each do
       @redis = Wrest::Caching::Redis.new
-      @redis["abc"]="xyz"
     end
 
     context "initialization defaults" do
@@ -23,7 +22,10 @@ describe Wrest::Caching do
     end
 
     it "should know how to retrieve a cache entry" do
-      expect(@redis["abc"]).to eq("xyz")
+      request = 'http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1000'
+      ok_response = request.to_uri.get
+      @redis[request] = ok_response
+      expect(@redis[request]).to eq(ok_response)
     end
 
     it 'should unmarshall the value when retrieved a cache entry' do
@@ -33,15 +35,22 @@ describe Wrest::Caching do
       expect(@redis['example-123']).to eq(ok_response)
     end
 
-    it "should know how to update a cache entry" do
-      @redis["abc"] = "123"
-      expect(@redis["abc"]).to eq("123")
+    it "should set expiry for the cache entry based on response headers" do
+      uri_string = 'http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/10'
+      ok_response = uri_string.to_uri.get
+      @redis[uri_string] = ok_response
+      expect(@redis.instance_eval('@redis').ttl(uri_string)).to eq(10)
+    end
+    
+    it "should know how to delete a cache entry" do
+      request = 'http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1000'
+      ok_response = request.to_uri.get
+      @redis[request] = ok_response
+      @redis.delete(request).should == ok_response
     end
 
-    it "should know how to delete a cache entry" do
-      @redis.delete("abc").should == "xyz"
-      expect(@redis["abc"]).to eq(nil)
+    it 'should return nil on delete if the key is not present' do
+      expect(@redis.delete('not_present_key')).to eq(nil)
     end
   end
 end
-
