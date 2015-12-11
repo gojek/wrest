@@ -26,3 +26,4 @@ spec_all_rubies.sh
 .rbx
 vendor
 *.gem
+*.rdb
