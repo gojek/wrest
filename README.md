@@ -2,7 +2,7 @@
 
 # Wrest 2.1.2
 
-(c) Copyright 2009-2015 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
+(c) Copyright 2009-2016 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
 Wrest is a ruby REST/HTTP client library which
 
