@@ -187,5 +187,10 @@ module SampleApp
       When the cache entry at the client expires, it will send a GET request with an If-Modified-Since. This URI will always respond to any validation request with a Not-Modified "
     end
 
+    get '/query_based_response' do
+      headers "Expires" => (Time.now + 84600 * 7).httpdate
+      params.to_s
+    end
+
   end
 end

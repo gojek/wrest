@@ -40,7 +40,7 @@ module Wrest
       end
       
       def get
-        cached_response = @cache_store[@get.uri.to_s]
+        cached_response = @cache_store[@get.full_uri_string]
         return get_fresh_response if cached_response.nil?
 
         if cached_response.expired?
@@ -61,12 +61,12 @@ module Wrest
       end
 
       def cache(response)
-        @cache_store[@get.uri.uri_string] = response.clone if response && response.cacheable?
+        @cache_store[@get.full_uri_string] = response.clone if response && response.cacheable?
       end
 
       #:nodoc:
       def get_fresh_response
-        @cache_store.delete @get.hash
+        @cache_store.delete @get.full_uri_string
 
         response = @get.invoke_without_cache_check
 

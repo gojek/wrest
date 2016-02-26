@@ -225,4 +225,31 @@ describe Wrest::CacheProxy do
       @cache_proxy.get
     end
   end
+
+  describe 'redis specific caching', functional: true do
+    before :all do
+      Wrest::Caching.enable_redis
+    end
+
+    before :each do
+      @redis_cache     = Wrest::Caching::Redis.new
+      @request_uri = 'http://localhost:3000/query_based_response'.to_uri
+      query_params_one = {name: 'Example', age: 21}
+      query_params_two = {height: 174, units: 'cm'}
+      @get_one         = Wrest::Native::Get.new(@request_uri, query_params_one, {}, {:cache_store => @redis_cache})
+      @get_two         = Wrest::Native::Get.new(@request_uri, query_params_two, {}, {:cache_store => @redis_cache})
+    end
+
+    after :each do
+      @redis_cache.delete(@get_one)
+      @redis_cache.delete(@get_two)
+    end
+
+    it 'should have different responses for get request with same scheme, authority, paths but different query params, given that response changes with query params' do
+      @cache_proxy_one = Wrest::CacheProxy.new(@get_one, @redis_cache)
+      @cache_proxy_two = Wrest::CacheProxy.new(@get_two, @redis_cache)
+      expect(@cache_proxy_one.get).to_not eq(@cache_proxy_two.get)
+    end
+  end
+
 end
