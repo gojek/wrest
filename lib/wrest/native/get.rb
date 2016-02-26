@@ -17,7 +17,7 @@ module Wrest::Native
 
       cache_store = (options[:cache_store] || Wrest::Caching.default_store) unless options[:disable_cache]
       @cache_proxy = Wrest::CacheProxy::new(self, cache_store)
-      
+
       super(
             wrest_uri,
             Net::HTTP::Get,
@@ -61,6 +61,10 @@ module Wrest::Native
 
       new_request = Wrest::Native::Get.new(uri, parameters, new_headers, new_options)
       new_request
+    end
+
+    def full_uri_string
+      @uri.to_s
     end
 
   end

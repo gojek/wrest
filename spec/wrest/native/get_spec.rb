@@ -33,6 +33,23 @@ describe Wrest::Native::Get do
     end
   end
 
+  it 'should have a uri string with scheme and authority if no path and query params are specified' do
+    get_request = Wrest::Native::Get.new('http://localhost:3000'.to_uri, {}, {}, {})
+    expect(get_request.full_uri_string).to eq('http://localhost:3000')
+  end
+
+  it 'should have a uri string with scheme, username password and authority if no path and query params are specified' do
+    uri = 'http://foo:bar@localhost:3000'.to_uri
+    get_request = Wrest::Native::Get.new(uri, {}, {}, {})
+    expect(get_request.full_uri_string).to eq('http://foo:bar@localhost:3000')
+  end
+
+  it 'should have a uri string with scheme, authority and path if no query params are specified' do
+    uri = 'http://localhost:3000/articles/1/comments'.to_uri
+    get_request = Wrest::Native::Get.new(uri, {}, {}, {})
+    expect(get_request.full_uri_string).to eq('http://localhost:3000/articles/1/comments')
+  end
+
   context "build an identical request with caching disabled" do
     it "should call Wrest::Get.new to build the new request" do
       expect(Wrest::Native::Get).to receive(:new).with(@get.uri, {}, {}, anything())
