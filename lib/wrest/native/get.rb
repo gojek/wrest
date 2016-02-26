@@ -8,6 +8,8 @@
 
 module Wrest::Native
   class Get < Request
+    QUERY_PARAMS_SEPERATOR = '?'
+    EMPTY_QUERY_PARAMS = ''
 
     attr_reader :cache_proxy
 
@@ -64,7 +66,12 @@ module Wrest::Native
     end
 
     def full_uri_string
-      @uri.to_s
+      @uri.to_s + query_params_string
+    end
+
+    private
+    def query_params_string
+      (@parameters.any?) ? QUERY_PARAMS_SEPERATOR + @parameters.to_query : EMPTY_QUERY_PARAMS
     end
 
   end
