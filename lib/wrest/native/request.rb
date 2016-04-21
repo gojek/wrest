@@ -93,6 +93,7 @@ module Wrest::Native
       Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
       time = Benchmark.realtime { response = Wrest::Native::Response.new( do_request ) }
       Wrest.logger.debug "-> (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
+      Wrest.logger.debug "#{response.body}"
 
       execute_callback_if_any(response)
       
