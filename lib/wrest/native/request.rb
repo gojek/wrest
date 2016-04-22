@@ -91,6 +91,7 @@ module Wrest::Native
       prefix = "#{http_request.method} #{self.hash} #{@connection.hash} #{Thread.current.object_id}"
       
       Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
+      Wrest.logger.debug "<- Body: #{@body}"
       time = Benchmark.realtime { response = Wrest::Native::Response.new( do_request ) }
       Wrest.logger.debug "-> (#{prefix}) %d %s (%d bytes %.2fs)" % [response.code, response.message, response.body ? response.body.length : 0, time]
       Wrest.logger.debug "#{response.body}"
