@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
 
-# Wrest 2.1.4
+# Wrest 2.1.8
 
 (c) Copyright 2009-2016 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
@@ -37,15 +37,15 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Timeout support
 
     ```
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get(:timeout => 5).body
+    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get(timeout: 5).body
     ```
 
 * Redirect support
 
     ```
-    'http://google.com'.to_uri(:follow_redirects => false).get
+    'http://google.com'.to_uri(follow_redirects: false).get
 
-    'http://google.com'.to_uri(:follow_redirects_limit => 1).get
+    'http://google.com'.to_uri(follow_redirects_limit: 1).get
     ```
 
   :follow_redirects_limit defaults to 5 if not specified.
@@ -56,7 +56,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     ActiveSupport::XmlMini.backend = 'REXML'
 
     'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise(
-                                                  :xpath => '//user/name/text()'
+                                                  xpath: '//user/name/text()'
                                                 )
     ```
 
@@ -64,8 +64,8 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 
     ```
     'api.openweathermap.org/data/2.5/weather'.to_uri.get(
-                  :lat  => 35,
-                  :lon => 139
+                  lat: 35,
+                  lon: 139
                   ).deserialise_using(
                   Wrest::Components::Translators::Xml
                 )
@@ -74,8 +74,14 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Basic HTTP auth and URI extensions using Wrest::Uri#[]
 
     ```
-    base_uri = 'https://api.del.icio.us/v1'.to_uri(:username => 'kaiwren', :password => 'fupupp1es')
+    base_uri = 'https://api.del.icio.us/v1'.to_uri(username: 'kaiwren', password: 'fupupp1es')
     bookmarks = base_uri['/posts/get'].get.deserialise
+    ```
+
+* Detailed debugging and logging (NOT FOR USE IN PRODUCTION! SEE API DOCS!)
+
+    ```
+    'https://api.github.com/repos/c42/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
     ```
 
 #### POST
@@ -90,12 +96,12 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 
     ```
     'https://api.del.icio.us/v1/posts/add'.to_uri(
-             :username => 'kaiwren', :password => 'fupupp1es'
+             username: 'kaiwren', password: 'fupupp1es'
           ).post_form(
-             :url => 'http://blog.sidu.in/search/label/ruby',
-             :description => 'The Ruby related posts on my blog!',
-             :extended => "All posts tagged with 'ruby'",
-             :tags => 'ruby hacking'
+             url: 'http://blog.sidu.in/search/label/ruby',
+             description: 'The Ruby related posts on my blog!',
+             extended: "All posts tagged with 'ruby'",
+             tags: 'ruby hacking'
           )
     ```
 
@@ -103,8 +109,8 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 
     ```
    'http://imgur.com/api/upload.xml'.to_uri.post_multipart(
-     :image => UploadIO.new(File.open(file_path), "image/png", file_path),
-     :key => imgur_key
+     image: UploadIO.new(File.open(file_path), "image/png", file_path),
+     key: imgur_key
     ).deserialise
     ```
 
@@ -116,12 +122,13 @@ To delete a resource:
 
 ```
  'https://api.del.icio.us/v1/posts/delete'.to_uri(
-                                              :username => 'kaiwren',
-                                              :password => 'fupupp1es'
+                                              username: 'kaiwren',
+                                              password: 'fupupp1es'
                                             ).delete(
-                                              :url => 'http://c2.com'
+                                              url: 'http://c2.com'
                                             )
 ```
+
 
 ### Caching
 
@@ -199,7 +206,7 @@ To explicitly disable caching for specific requests:
 You can define a set of callbacks that are invoked based on the http codes of the responses to any requests on a given uri.
 
 ```
-  "http://google.com".to_uri(:callback => {
+  "http://google.com".to_uri(callback: {
               200      => lambda {|response| Wrest.logger.info "Ok." },
               400..499 => lambda {|response| Wrest.logger.error "Invalid. #{response.body}"},
               300..302 => lambda {|response| Wrest.logger.debug "Redirected. #{response.message}" }
@@ -339,6 +346,13 @@ The response log consists of request type that generated the response (POST), ha
 
 The thread id, request hash and connection hashes are used to track requests and their corresponding responses when using asynchronous requests and/or http connection pooling.
 
+Detailed http debug logging can be turned on like so (DO NOT USE IN PRODUCTION! SEE API DOCS.):
+
+    ```
+    'https://api.github.com/repos/c42/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
+    ```
+
+
 ### Json Backend
 
 Wrest uses the multi_json gem to manage Json backends, allowing it to play nice with Rails 3.1. To change the backend used, you can do the following:
@@ -375,7 +389,7 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 
 ```
   $ wrest
-  >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(:timeout => 5).get.deserialise
+  >> y 'http://twitter.com/statuses/public_timeline.json'.to_uri(timeout: 5).get.deserialise
 ```
 
 ### Testing
