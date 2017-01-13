@@ -1,5 +1,10 @@
 language: ruby
+
 rvm:
   - 2.2.2
   - 2.4.0
   - jruby-1.9.7.0
+  
+os:
+- linux
+- osx
