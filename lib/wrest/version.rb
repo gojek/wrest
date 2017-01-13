@@ -8,5 +8,5 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest
-  VERSION = "2.1.8"
+  VERSION = "2.1.9"
 end

@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["sidu@c42.in"]
   s.homepage    = "http://c42.in/open_source"
   s.summary     = "Wrest is a fluent, object oriented HTTP client library for 2.x.x, JRuby 1.7.6 (and higher), JRuby 9.0.0.0.pre2."
-  s.description = "Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for RFC2616 HTTP caching, multiple HTTP backends and async calls using EventMachine. It runs on CRuby and JRuby."
+  s.description = "Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for RFC2616 HTTP caching, multiple HTTP backends and async calls. It runs on CRuby and JRuby and is in production use at substantial scale."
 
   s.required_rubygems_version = ">= 1.3.0"
   s.rubyforge_project = "wrest"
@@ -33,7 +33,9 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "activesupport", ["~> 4"]
   s.add_runtime_dependency "builder", ["> 2.0"]
-  s.add_runtime_dependency("multi_json", ["~> 1.0"])
+  s.add_runtime_dependency "multi_json", ["~> 1.0"]
+  s.add_runtime_dependency "concurrent-ruby", ["~> 1.0"]
+  s.add_runtime_dependency "json", ["~> 2.0"]
 
   case RUBY_PLATFORM
   when /java/

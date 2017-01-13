@@ -11,56 +11,16 @@ module Wrest
   module AsyncRequest
     class ThreadPool
       def initialize(number_of_threads)
-        @threads = []
-        @number_of_threads = number_of_threads
-        @queue = Queue.new
+        @pool = Concurrent::FixedThreadPool.new(number_of_threads)
       end
       
       def execute_eventually(request)
-        initialize_thread_pool if @threads.empty?
-        @queue.push(request)
+        @pool.post { request.invoke }
         nil
       end
       
       def join_pool_threads!
-        @threads.each do |thread|
-          thread.join if thread.alive?
-        end
-      end
-      
-      private
-      def initialize_thread_pool
-        halt_on_sigint
-        halt_on_int
-        main_thread = Thread.current
-        @threads =  @number_of_threads.times.map do |i|
-          Thread.new do |thread|
-            while request = @queue.pop
-              request.invoke
-            end
-          end
-        end
-      end
-      
-      def halt_on_sigint
-        trap('SIGINT') do
-          halt
-        end
-      end
-    
-      def halt_on_int
-        trap('INT') do
-          halt
-        end
-      end
-    
-      def halt
-        unless @threads.empty?
-          Wrest.logger.debug "Wrest: Shutting down ThreadPool..."
-          @threads.each(&:terminate)
-          Wrest.logger.debug "Wrest: Halted ThreadPool, continuing with shutdown."
-        end
-        Process.exit
+        @pool.wait_for_termination
       end
     end
   end
