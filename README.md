@@ -37,7 +37,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Timeout support
 
     ```
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get(timeout: 5).body
+    'https://api.github.com/repos/c42/wrest/issues'.to_uri(timeout: 5).get.body
     ```
 
 * Redirect support
