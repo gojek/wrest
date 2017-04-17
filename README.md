@@ -17,7 +17,7 @@ Wrest is a ruby REST/HTTP client library which
 
 To receive notifications whenever new features are added to Wrest, please subscribe to my [twitter feed](http://twitter.com/ponnappa).
 
-##Examples
+## Examples
 
 For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/c42/wrest/tree/master/examples
 
@@ -137,7 +137,7 @@ Wrest supports caching with the following pluggable back-ends:
   - Memcached
   - Redis
 
-####Hash
+#### Hash
 
 Use the following method to enable caching for all requests, and set Hash as the default cache store.
 Note: Hash should NEVER be used in a production environment. It is unbounded and will keep increasing in size.
@@ -153,7 +153,7 @@ To use Hash as a cache store in an explicit request (without setting hash as def
     r1 = "http://c42.in".to_uri.using_hash.get
 ```
 
-####Memcached
+#### Memcached
 
 A Memcached based caching back-end is available in Wrest. You can get instructions on how to install Memcached on your system [here](http://code.google.com/p/memcached/wiki/NewInstallFromPackage).
 The Dalli gem is used by Wrest to interface with Memcached. Install dalli using 'gem install dalli'.
@@ -171,7 +171,7 @@ To use Memcached as a cache store in an explicit request (without setting memcac
     r2 = "http://c42.in".to_uri.using_memcached.get
 ```
 
-####Redis
+#### Redis
 
 Wrest also supports a Redis based caching back-end. Follow the guide [here](http://redis.io/topics/quickstart) to install Redis in your system.
 It uses [redis-rd](https://github.com/redis/redis-rb) to interface with Redis. Install redis-rb using `gem install redis`.
