@@ -11,11 +11,12 @@ require "spec_helper"
 
 module Wrest
   describe Wrest::Uri do
-    it "should respond to the four http actions" do
+    it "should respond to the five http actions" do
       uri = Uri.new('http://localhost')
       uri.should respond_to(:get)
       uri.should respond_to(:post)
       uri.should respond_to(:put)
+      uri.should respond_to(:patch)
       uri.should respond_to(:delete)
     end
 
@@ -337,6 +338,21 @@ module Wrest
         http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
         uri.put '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
+      end
+
+      context "PATCH" do
+        it "should know how to patch" do
+          uri = "http://localhost:3000/glassware".to_uri
+
+          http = setup_http
+
+          request = Net::HTTP::Patch.new('/glassware', {'page' => '2', 'per_page' => '5'})
+          Net::HTTP::Patch.should_receive(:new).with('/glassware', {'page' => '2', 'per_page' => '5'}).and_return(request)
+
+          http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
+
+          uri.patch '<ooga>Booga</ooga>', :page => '2', :per_page => '5'
+        end
       end
 
       context "DELETE" do
