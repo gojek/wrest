@@ -6,7 +6,6 @@
 
 Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [GO-JEK](https://twitter.com/GojekTech).
 
-* Allows you to use Net::HTTP
 * Allows you to pick your Ruby: use 2.x.x, JRuby 9.x.x
 * Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
 * Async http calls using Threads (reliable only on JRuby) or EventMachine
