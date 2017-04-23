@@ -4,7 +4,7 @@
 
 (c) Copyright 2009-2016 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
-Wrest is a ruby REST/HTTP client library which
+Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [GO-JEK](https://twitter.com/GojekTech).
 
 * Allows you to use Net::HTTP
 * Allows you to pick your Ruby: use 2.x.x, JRuby 9.x.x
