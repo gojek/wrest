@@ -115,6 +115,11 @@ module Wrest #:nodoc:
     def build_put(body = '', headers = {}, parameters = {}, &block)
       Http::Put.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
     end
+
+    #:nodoc:
+    def build_patch(body = '', headers = {}, parameters = {}, &block)
+      Http::Patch.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
+    end
     
     #:nodoc:
     def build_post(body = '', headers = {}, parameters = {}, &block)
@@ -169,6 +174,24 @@ module Wrest #:nodoc:
     # This implementation of asynchronous put is currently in alpha. Hence, it should not be used in production.
     def put_async(body = '', headers = {}, parameters = {}, &block)
       @asynchronous_backend.execute(build_put(body, headers, parameters, &block))
+    end
+
+    # Make a PATCH request to this URI. This is a convenience API
+    # that creates a Wrest::Native::Patch, executes it and returns a Wrest::Native::Response.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    def patch(body = '', headers = {}, parameters = {}, &block)
+      build_patch(body, headers, parameters, &block).invoke
+    end
+
+    # Make a PATCH request to this URI. This is a convenience API
+    # that creates a Wrest::Native::Patch.
+    #
+    # Remember to escape all parameter strings if necessary, using URI.escape
+    #
+    # Note: patch_async does not return a response and the response should be accessed through callbacks.
+    def patch_async(body = '', headers = {}, parameters = {}, &block)
+      @asynchronous_backend.execute(build_patch(body, headers, parameters, &block))
     end
 
     # Makes a POST request to this URI. This is a convenience API
