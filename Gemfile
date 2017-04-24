@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem 'rake', '~> 10.4'
+gem 'rake', '~> 10'
 gem 'rspec-collection_matchers', '~> 1.1'
 gem 'rdoc', '~> 4.2'
 gem 'simplecov', :platforms => :mri_19
