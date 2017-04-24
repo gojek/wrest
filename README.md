@@ -395,24 +395,31 @@ You can launch the interactive Wrest shell by running bin/wrest if you have the 
 
 Start the Sinatra test server for functional test. The dependencies for the test app are managed separately by a Gemfile under spec/sample_app.
 
-```
-  rake -f spec/sample_app/Rakefile  # runs on port 3000
-```
-
-Start a memcached daemon/process on port 11211
+To start the sample application:
 
 ```
-  /usr/local/bin/memcached
+  cd spec/sample_app
+  bundle install
+  bundle exec rake  # runs sample app on port 3000
+```
+
+Start a memcached daemon/process on port 11211 and redis on 6379 (both default ports)
+
+```
+  brew install memcached
+  brew install redis
+  brew services start memcached
+  brew services start redis
 ```
 
 Run the tests in a different terminal:
 
 ```
   # Run the normal test suite.
-  rake
+  bundle exec rake
 
   # Runs the functional test suite.
-  rake rspec:functional
+  bundle exec rake rspec:functional
 ```
 
 ## Contributors
