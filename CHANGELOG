@@ -1,7 +1,8 @@
 Features under the section marked 'Current' are completed but pending release as a gem. If you need any of these, you'll need to use the latest source from the git repository.
 
 Features under a numbered section are complete and available in the Wrest gem.
-== DEV
+
+== 2.2.0
  * Add support for HTTP PATCH [Aditi Raveesh]
 
 == 2.1.9
