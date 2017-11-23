@@ -36,6 +36,7 @@ module Wrest #:nodoc:
     #                            defaults if there are any clashes. Use this to set cookies or use OAuth2 Authorize
     #                            headers. When extending or cloning a Uri, passing in a new set of default_headers
     #                            will result in the old set being overridden.
+    #   :username, :password  => HTTP authentication. Passing nil for either username or password will skip it.
     # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
       @options = options.clone
