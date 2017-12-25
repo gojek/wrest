@@ -24,7 +24,8 @@ module Wrest
       def self.included(klass) #:nodoc:
         klass.extend Typecaster::ClassMethods
         klass.class_eval{ include Typecaster::InstanceMethods }
-        klass.alias_method_chain  :initialize,  :typecasting
+        klass.send(:alias_method, :initialize_without_typecasting, :initialize)
+        klass.send(:alias_method, :initialize, :initialize_with_typecasting)
       end
 
       module Helpers

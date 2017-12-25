@@ -80,6 +80,8 @@ module Wrest::Native
     # The request hash is followed by a connection hash; requests using the
     # same connection (effectively a keep-alive connection) will have the
     # same connection hash.
+    # 
+    # Passing nil for either username or password will skip HTTP authentication
     #
     # This is followed by the response code, the payload size and the time taken.
     def invoke
