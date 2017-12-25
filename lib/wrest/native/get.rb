@@ -55,7 +55,8 @@ module Wrest::Native
       cache_proxy.get
     end
 
-    alias_method_chain :invoke, :cache_check
+    alias_method :invoke_without_cache_check, :invoke
+    alias_method :invoke, :invoke_with_cache_check
 
     def build_request_without_cache_store(cache_validation_headers)
       new_headers = headers.clone.merge cache_validation_headers
