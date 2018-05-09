@@ -135,8 +135,8 @@ module Wrest #:nodoc:
     end
 
     #:nodoc:
-    def build_delete(parameters = {}, headers = {}, &block)
-      Http::Delete.new(self, parameters, default_headers.merge(headers), block ? @options.merge(:callback_block => block) : @options)
+    def build_delete(body = '', headers = {}, parameters = {}, &block)
+      Http::Delete.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
     end
     
     # Make a GET request to this URI. This is a convenience API
@@ -242,8 +242,8 @@ module Wrest #:nodoc:
     # that creates a Wrest::Native::Delete, executes it and returns a Wrest::Native::Response.
     #
     # Remember to escape all parameter strings if necessary, using URI.escape
-    def delete(parameters = {}, headers = {}, &block)
-      build_delete(parameters, headers, &block).invoke
+    def delete(parameters = {}, headers = {}, body = '', &block)
+      build_delete(body, headers, parameters, &block).invoke
     end
 
     # Makes a DELETE request to this URI. This is a convenience API
@@ -253,8 +253,8 @@ module Wrest #:nodoc:
     #
     # Note: delete_async does not return a response and the response should be accessed through callbacks.
     # This implementation of asynchronous delete is currently in alpha. Hence, it should not be used in production.
-    def delete_async(parameters = {}, headers = {}, &block)
-      @asynchronous_backend.execute(build_delete(parameters, headers, &block))
+    def delete_async(parameters = {}, headers = {}, body = '', &block)
+      @asynchronous_backend.execute(build_delete(body, headers, parameters, &block))
     end
 
     # Makes an OPTIONS request to this URI. This is a convenience API
