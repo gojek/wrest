@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
+[![Build Status](https://travis-ci.org/gojektech/wrest.svg?branch=master)](https://travis-ci.org/gojektech/wrest)
 
 # Wrest 2.2.0
 
