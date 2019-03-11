@@ -175,10 +175,16 @@ describe Wrest::Native::Request do
     end
 
 
-    it "should raise a Wrest exception on timeout" do
+    it "should raise a Wrest exception on read timeout" do
       lambda{
         Wrest::Native::Request.new('http://localhost:3000/two_seconds'.to_uri, Net::HTTP::Get, {}, '', {}, :timeout => 1).invoke
         }.should raise_error(Wrest::Exceptions::Timeout)
+    end
+
+    it "should raise a Wrest exception on open timeout" do
+      lambda{
+        Wrest::Native::Request.new('http://www.example.com:81/'.to_uri, Net::HTTP::Get, {}, '', {}, :open_timeout => 1).invoke
+      }.should raise_error(Wrest::Exceptions::Timeout)
     end
   end
 end

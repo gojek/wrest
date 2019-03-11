@@ -53,6 +53,7 @@ module Wrest::Native
       @follow_redirects_count = (@options[:follow_redirects_count] ||= 0)
       @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
       @timeout = @options[:timeout]
+      @open_timeout = @options[:open_timeout]
       @connection = @options[:connection]
       @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
       @cache_store = @options[:cache_store]
@@ -86,7 +87,7 @@ module Wrest::Native
     # This is followed by the response code, the payload size and the time taken.
     def invoke
       response = nil
-      @connection ||= @uri.create_connection(:timeout => timeout, :verify_mode => verify_mode, :ca_path => ca_path)
+      @connection ||= @uri.create_connection(:timeout => timeout, :open_timeout => @open_timeout, :verify_mode => verify_mode, :ca_path => ca_path)
       @connection.set_debug_output @detailed_http_logging
       http_request.basic_auth username, password unless username.nil? || password.nil?
 
