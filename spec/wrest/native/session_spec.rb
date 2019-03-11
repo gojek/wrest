@@ -21,6 +21,7 @@ module Wrest
       http = double(Net::HTTP)
       Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
       http.should_receive(:read_timeout=).with(60)
+      http.should_receive(:open_timeout=).with(60)
       http.should_receive(:set_debug_output).at_least(1).times
 
       request_one = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive})
@@ -50,6 +51,7 @@ module Wrest
       http = double(Net::HTTP)
       Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
       http.should_receive(:read_timeout=).with(60)
+      http.should_receive(:open_timeout=).with(60)
 
       request_one = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {H::Connection=>T::KeepAlive})
       request_two = Net::HTTP::Get.new('/bottles.xml', {H::Connection=>T::KeepAlive})
