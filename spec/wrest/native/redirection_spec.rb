@@ -36,6 +36,7 @@ describe Wrest::Native::Redirection do
 
     http_connection = double(Net::HTTP)
     allow(http_connection).to receive(:read_timeout=)
+    allow(http_connection).to receive(:open_timeout=)
     allow(http_connection).to receive(:set_debug_output)
     http_connection.should_receive(:request).exactly(5).times.and_return(response)
 
