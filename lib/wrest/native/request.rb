@@ -13,7 +13,7 @@ module Wrest::Native
   # or Wrest::Native::Get etc. instead.
   class Request
     attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
-                :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters,
+                :follow_redirects_limit, :follow_redirects_count, :timeout, :open_timeout, :connection, :parameters,
                 :cache_store, :verify_mode, :options, :ca_path
     # Valid tuples for the options are:
     #   :username => String, defaults to nil
@@ -29,6 +29,8 @@ module Wrest::Native
     #                              until the follow_redirects_limit is hit. You should never set
     #                              this option yourself.
     #   :timeout => The period, in seconds, after which a Timeout::Error is raised
+    #               in the event of a connection failing to read a block of data. Defaulted to 60 by Uri#create_connection.
+    #   :open_timeout => The period, in seconds, after which a Timeout::Error is raised
     #               in the event of a connection failing to open. Defaulted to 60 by Uri#create_connection.
     #   :connection => The HTTP Connection object to use. This is how a keep-alive connection can be
     #                  used for multiple requests.
@@ -87,7 +89,7 @@ module Wrest::Native
     # This is followed by the response code, the payload size and the time taken.
     def invoke
       response = nil
-      @connection ||= @uri.create_connection(:timeout => timeout, :open_timeout => @open_timeout, :verify_mode => verify_mode, :ca_path => ca_path)
+      @connection ||= @uri.create_connection(:timeout => timeout, :open_timeout => open_timeout, :verify_mode => verify_mode, :ca_path => ca_path)
       @connection.set_debug_output @detailed_http_logging
       http_request.basic_auth username, password unless username.nil? || password.nil?
 
