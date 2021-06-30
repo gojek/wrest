@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
+[![Build Status](https://travis-ci.org/gojek/wrest.svg?branch=master)](https://travis-ci.org/gojek/wrest)
 
 # Wrest 2.2.0
 
@@ -18,7 +18,7 @@ To receive notifications whenever new features are added to Wrest, please subscr
 
 ## Examples
 
-For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/c42/wrest/tree/master/examples
+For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/gojek/wrest/tree/master/examples
 
 ### Basic Http Calls
 
@@ -30,13 +30,13 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
     # Works with json and xml out of the box
     # See lib/wrest/components/translators to add other formats
     
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get.deserialize
+    'https://api.github.com/repos/gojek/wrest/issues'.to_uri.get.deserialize
     ```
 
 * Timeout support
 
     ```
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri(timeout: 5).get.body
+    'https://api.github.com/repos/gojek/wrest/issues'.to_uri(timeout: 5).get.body
     ```
 
 * Redirect support
@@ -80,7 +80,7 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Detailed debugging and logging (NOT FOR USE IN PRODUCTION! SEE API DOCS!)
 
     ```
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
+    'https://api.github.com/repos/gojek/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
     ```
 
 #### POST
@@ -188,9 +188,9 @@ To use Redis as a cache store in an explicit request (without setting redis as d
     r3 = "http://c42.in".to_uri.using_redis.get
 ```
 
-A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at [Wrest Caching Doc](https://github.com/c42/wrest/blob/master/Caching.markdown)
+A detailed writeup regarding caching as defined by RFC 2616, and how Wrest implements caching is at [Wrest Caching Doc](https://github.com/gojek/wrest/blob/master/Caching.markdown)
 
-You can create your own back-ends for Wrest caching by implementing the interface implemented in https://github.com/c42/wrest/blob/master/lib/wrest/caching/redis.rb
+You can create your own back-ends for Wrest caching by implementing the interface implemented in https://github.com/gojek/wrest/blob/master/lib/wrest/caching/redis.rb
 
 To explicitly disable caching for specific requests:
 
@@ -348,7 +348,7 @@ The thread id, request hash and connection hashes are used to track requests and
 Detailed http debug logging can be turned on like so (DO NOT USE IN PRODUCTION! SEE API DOCS.):
 
     ```
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
+    'https://api.github.com/repos/gojek/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
     ```
 
 
@@ -372,7 +372,7 @@ Wrest RDocs can be found at http://wrest.rubyforge.org
 
 ## Roadmap
 
-Features that are planned, in progress or already implemented are documented in the [CHANGELOG](http://github.com/kaiwren/wrest/tree/master/CHANGELOG) starting from version 0.0.8.
+Features that are planned, in progress or already implemented are documented in the [CHANGELOG](http://github.com/gojek/wrest/tree/master/CHANGELOG) starting from version 0.0.8.
 
 ## Installation
 
