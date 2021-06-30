@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version     = Wrest::VERSION
   s.authors     = ["Sidu Ponnappa", "Niranjan Paranjape"]
   s.email       = ["ckponnappa@gmail.com"]
-  s.homepage    = "https://github.com/gojek-engineering/wrest"
+  s.homepage    = "https://github.com/gojek/wrest"
   s.summary     = "Wrest is a fluent, object oriented HTTP client library for 2.x.x, JRuby 9.x"
   s.description = "Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for RFC2616 HTTP caching, multiple HTTP backends and async calls. It runs on CRuby and JRuby and is in production use at substantial scale."
 
