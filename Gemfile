@@ -15,7 +15,7 @@ end
 
 group :libxml do
   platforms :ruby do
-    gem 'libxml-ruby', '~> 2.8.0' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
+    gem 'libxml-ruby', '~> 3.2.1' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
   end
 end
 

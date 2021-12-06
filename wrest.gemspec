@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", ["~> 3.3"]
   s.add_development_dependency "sinatra", ["~> 1.0.0"]
 
-  s.add_runtime_dependency "activesupport", ["~> 5"]
+  s.add_runtime_dependency "activesupport", [">= 5"]
   s.add_runtime_dependency "builder", ["> 2.0"]
   s.add_runtime_dependency "multi_json", ["~> 1.0"]
   s.add_runtime_dependency "concurrent-ruby", ["~> 1.0"]
