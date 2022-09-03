@@ -1,6 +1,12 @@
-# Wrest 4.0.0.dev [![Ruby](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml/badge.svg)](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml)
+# Wrest 4.0.0.dev
 
-©️ Copyright 2009-2022 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
+<p align="center"><img src="docs/wrest-logo-320x320.png" width="320"></p>
+<p align="center">
+  <a href="https://github.com/kaiwren/wrest/actions/workflows/ruby.yml">
+    <img src="https://github.com/kaiwren/wrest/actions/workflows/ruby.yml/badge.svg" alt="Ruby" style="max-width: 100%;">
+  </a>
+</p>
+
 
 Wrest is a ruby REST/HTTP client library. It is currently in use at 10x🦄 scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech). 
 
@@ -430,3 +436,5 @@ Run the tests in a different terminal:
 * Jacques Crocker : [railsjedi](http://github.com/railsjedi)
 * Jasim A Basheer: [jasim](http://github.com/jasim)
 * Arvind Laxminarayan: [ardsrk](http://github.com/ardsrk)
+
+©️ Copyright 2009-2022 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
