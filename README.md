@@ -2,6 +2,8 @@
 
 (c) Copyright 2009-2022 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
+[![Ruby](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml/badge.svg)](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml)
+
 Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech).
 
 Wrest is currently undergoing a substantial clean-up to bring it up to speed on Ruby 3.x and JRuby 9.3.x. This will be released shortly as version 4.0. 
