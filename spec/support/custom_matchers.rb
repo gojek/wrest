@@ -1,5 +1,3 @@
-require 'rspec/collection_matchers/have'
-
 RSpec::Matchers.define :have do |expected|
   chain :callbacks_for do |key|
     @key = key
