@@ -1,20 +1,17 @@
-[![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
+# Wrest 4.0.0.dev
 
-# Wrest 2.2.0
+(c) Copyright 2009-2022 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
-(c) Copyright 2009-2016 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
+Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech).
 
-Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [GO-JEK](https://twitter.com/GojekTech).
+Wrest is currently undergoing a substantial clean-up to bring it up to speed on Ruby 3.x and JRuby 9.3.x. This will be released shortly as version 4.0. 
 
-* Allows you to pick your Ruby: use CRuby or JRuby
 * Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
 * Async http calls using Threads (truly useful only on JRuby due to [GIL](https://en.wikipedia.org/wiki/Global_interpreter_lock) limitations on CRuby) or EventMachine
 * Allows you to quickly build object oriented wrappers around any web service
 * Is designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments
 * Provides convenient HTTP wrappers, redirect handling, serialisation, deserialisation and xpath based lookup
-
-To receive notifications whenever new features are added to Wrest, please subscribe to my [twitter feed](http://twitter.com/ponnappa).
 
 ## Examples
 
