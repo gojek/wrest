@@ -1,12 +1,8 @@
-# Wrest 4.0.0.dev
+# Wrest 4.0.0.dev [![Ruby](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml/badge.svg)](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml)
 
 (c) Copyright 2009-2022 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
 
-[![Ruby](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml/badge.svg)](https://github.com/kaiwren/wrest/actions/workflows/ruby.yml)
-
-Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech).
-
-Wrest is currently undergoing a substantial clean-up to bring it up to speed on Ruby 3.x and JRuby 9.3.x. This will be released shortly as version 4.0. 
+Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech). It is currently undergoing a substantial clean-up of syntax and dendencies to bring it up to speed on Ruby 3.x and JRuby 9.3.x. This will be released shortly as version 4.0.0.
 
 * Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
 * Async http calls using Threads (truly useful only on JRuby due to [GIL](https://en.wikipedia.org/wiki/Global_interpreter_lock) limitations on CRuby) or EventMachine
@@ -17,7 +13,7 @@ Wrest is currently undergoing a substantial clean-up to bring it up to speed on 
 
 ## Examples
 
-For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/c42/wrest/tree/master/examples
+For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/kaiwren/wrest/tree/master/examples
 
 ### Basic Http Calls
 
