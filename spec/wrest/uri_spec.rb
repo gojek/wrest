@@ -487,9 +487,9 @@ module Wrest
 
       def setup_connection
         connection = double('Net::HTTP')
-        response_200 = double(Net::HTTPOK, code: '200', message: 'OK', body: '', to_hash: {})
+        response200 = double(Net::HTTPOK, code: '200', message: 'OK', body: '', to_hash: {})
         allow(connection).to receive(:set_debug_output)
-        allow(connection).to receive(:request).and_return(response_200)
+        allow(connection).to receive(:request).and_return(response200)
         connection
       end
 

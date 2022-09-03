@@ -4,7 +4,7 @@ require 'spec_helper'
 
 module Wrest
   describe Callback do
-    let(:response_200) { double(Net::HTTPOK, code: 200, message: 'OK', body: '', to_hash: {}) }
+    let(:response200) { double(Net::HTTPOK, code: 200, message: 'OK', body: '', to_hash: {}) }
 
     context 'new' do
       context 'ensure_values_are_collections' do
@@ -51,7 +51,7 @@ module Wrest
         uri_callback = Callback.new(hash)
         request_callback = Callback.new(block)
         callback = uri_callback.merge(request_callback)
-        callback.execute(response_200)
+        callback.execute(response200)
         on_ok.should be_truthy
         on_another_ok.should be_truthy
       end
@@ -87,7 +87,7 @@ module Wrest
         on_ok = false
         callback = Callback.new({})
         callback.on_ok
-        callback.execute(response_200)
+        callback.execute(response200)
         on_ok.should be_falsey
       end
     end
@@ -126,7 +126,7 @@ module Wrest
         code = 200..206
         callback = Callback.new({})
         callback.on(code) { |_response| on_ok = true }
-        callback.execute(response_200)
+        callback.execute(response200)
         on_ok.should be_truthy
       end
 
@@ -134,8 +134,8 @@ module Wrest
         block_executed = false
         code = 200..206
         callback = Callback.new(code => ->(_response) { block_executed = true })
-        response_301 = double(Net::HTTPOK, code: 301, message: 'moved permanenlty', body: '', to_hash: {})
-        callback.execute(response_301)
+        response301 = double(Net::HTTPOK, code: 301, message: 'moved permanenlty', body: '', to_hash: {})
+        callback.execute(response301)
         block_executed.should be_falsey
       end
     end

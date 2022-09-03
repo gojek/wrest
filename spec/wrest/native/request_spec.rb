@@ -144,24 +144,24 @@ describe Wrest::Native::Request do
   context 'callbacks' do
     it 'runs the appropriate callbacks' do
       cb = double
-      cb.should_receive(:cb_204)
-      cb.should_receive(:cb_200)
+      cb.should_receive(:cb204)
+      cb.should_receive(:cb200)
       cb.should_receive(:cb_range)
 
       response_handler = Wrest::Callback.new({
-                                               200 => ->(_response) { cb.cb_200 },
-                                               204 => ->(_response) { cb.cb_204 },
+                                               200 => ->(_response) { cb.cb200 },
+                                               204 => ->(_response) { cb.cb204 },
                                                500..599 => ->(_response) { cb.cb_range }
                                              })
 
       uri = 'http://localhost/foo'.to_uri
       request = Wrest::Native::Get.new(uri, {}, {}, callback: response_handler)
 
-      response_204 = double(Net::HTTPOK, code: '204', message: 'not OK', body: '', to_hash: {})
-      response_200 = double(Net::HTTPOK, code: '200', message: 'OK', body: '', to_hash: {})
-      response_501 = double(Net::HTTPOK, code: '501', message: 'not implemented', body: '', to_hash: {})
+      response204 = double(Net::HTTPOK, code: '204', message: 'not OK', body: '', to_hash: {})
+      response200 = double(Net::HTTPOK, code: '200', message: 'OK', body: '', to_hash: {})
+      response501 = double(Net::HTTPOK, code: '501', message: 'not implemented', body: '', to_hash: {})
 
-      request.should_receive(:do_request).and_return(response_200, response_501, response_204)
+      request.should_receive(:do_request).and_return(response200, response501, response204)
 
       request.invoke
       request.invoke

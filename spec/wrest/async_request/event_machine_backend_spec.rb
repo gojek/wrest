@@ -13,8 +13,8 @@ module Wrest::AsyncRequest
         request = Wrest::Native::Get.new(uri, {}, {}, callback: Wrest::Callback.new({ 200 => lambda { |_response|
                                                                                                hash['success'] = true
                                                                                              } }))
-        response_200 = double(Net::HTTPOK, code: '200', message: 'OK', body: '', to_hash: {})
-        request.should_receive(:do_request).and_return(response_200)
+        response200 = double(Net::HTTPOK, code: '200', message: 'OK', body: '', to_hash: {})
+        request.should_receive(:do_request).and_return(response200)
 
         async_obj = EventMachineBackend.new
         async_obj.execute(request)
