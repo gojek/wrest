@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 if Helpers.xml_backends.include?('LibXML')
   require 'wrest/xml_mini/libxml'

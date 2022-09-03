@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'spec_helper'
 if RUBY_PLATFORM =~ /java/
   require 'wrest/xml_mini/jdom/xpath_filter'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Wrest
   # A hash with case-insensitive key access.
   #

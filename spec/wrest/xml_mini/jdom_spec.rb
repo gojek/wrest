@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 if RUBY_PLATFORM =~ /java/
   require 'spec_helper'
   require 'wrest/xml_mini/jdom'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Factories
   def build_ordered_hash(tuples)
     ActiveSupport::OrderedHash.new.tap do |hash|

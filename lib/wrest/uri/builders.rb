@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Wrest
   class Uri
     # Contains methods that depend on Uri#clone to build

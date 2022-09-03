@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'wrest/xml_mini/libxml/xpath_filter'
 module ActiveSupport
   module XmlMini_LibXML

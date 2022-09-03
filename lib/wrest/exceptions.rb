@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Wrest
   module Exceptions # :nodoc:
     # Raised when a base method that should be overriden

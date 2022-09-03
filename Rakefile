@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +36,7 @@ namespace :lint do
     matches = rubocop_log.scan(cop_name_pattern).flatten
     counts = matches.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }
     pp counts
+    puts "\n#{counts.keys.length} cops broken!\n"
   end
 
   desc 'Apply basic linting autocorrection for whitespace and style'

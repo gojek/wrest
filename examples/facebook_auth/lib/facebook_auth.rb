@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require File.expand_path('../config/boot', __dir__)
 require File.expand_path('models/facebook_client', __dir__)
 require File.expand_path('models/facebook_user', __dir__)

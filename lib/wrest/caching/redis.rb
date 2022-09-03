@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 begin
   gem 'redis', '~> 3'
 rescue Gem::LoadError => e
