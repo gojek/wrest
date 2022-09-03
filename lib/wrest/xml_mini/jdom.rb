@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'wrest/xml_mini/jdom/xpath_filter'
 module ActiveSupport
   module XmlMini_JDOM

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'wrest/xml_mini/libxml'
 require 'wrest/xml_mini/rexml'
 require 'wrest/xml_mini/nokogiri'

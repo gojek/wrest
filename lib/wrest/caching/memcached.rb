@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 begin
   gem 'dalli', '~> 2'
 rescue Gem::LoadError => e

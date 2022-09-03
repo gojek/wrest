@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'sinatra'
 require 'fileutils'
 require File.expand_path('../config/boot', __dir__)

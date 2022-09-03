@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'wrest/core_ext/string/conversions'
 
 class String # :nodoc:

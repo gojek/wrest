@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 require 'wrest/xml_mini/rexml/xpath_filter'
 module XmlMini

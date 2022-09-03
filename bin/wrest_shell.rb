@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 puts "Ruby #{RUBY_VERSION}, #{RUBY_RELEASE_DATE}, #{RUBY_PLATFORM}"
 
 entry_point = File.expand_path "#{File.dirname(__FILE__)}/../lib/wrest.rb"

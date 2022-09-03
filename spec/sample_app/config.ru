@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 $:.unshift File.dirname(__FILE__) + '/lib/'
 require 'sample_app'
 # use Rack::Static, :urls => ["/images", "/javascript", "/yql"], :root => "public"

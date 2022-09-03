@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec::Matchers.define :have do |expected|
   chain :callbacks_for do |key|
     @key = key

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Wrest::Native::Request
   def invoke
     raise Wrest::Exceptions::RealRequestMadeInTestEnvironmet,

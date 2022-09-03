@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rubygems'
 
 # Set up gems listed in the Gemfile.
