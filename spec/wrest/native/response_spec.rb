@@ -175,9 +175,9 @@ module Wrest
           end
         end
 
-        it "should be cacheable for response with max-age still not expired" do
+        it 'should be cacheable for response with max-age still not expired' do
           cache_control_headers = cacheable_headers.merge('cache-control' => "max-age=#{10 * 30}")
-                                                   .tap { |h| h.delete("expires") }
+                                                   .tap { |h| h.delete('expires') }
           ok_response = build_ok_response('', cache_control_headers)
           response = Native::Response.new(ok_response) # 30mins max-age
           expect(response).to be_cacheable

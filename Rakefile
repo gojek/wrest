@@ -20,30 +20,32 @@ require 'rake/contrib/sshpublisher'
 require 'rdoc/task'
 require 'rubocop/rake_task'
 
-begin
-  require 'metric_fu'
-  MetricFu::Configuration.run do |config|
-  end
-rescue LoadError
-  puts 'metric_fu is not available. Install it with: gem install jscruggs-metric_fu -s http://gems.github.com'
-end
-
 desc 'Default: run spec tests.'
-task default: %w[autocorrect_basic_style_issues rspec:unit rubocop]
+task default: %w[lint:autocorrect_basic_style_issues rspec:unit lint:rubocop]
 
 desc 'Cruise task'
 task cruise: 'rspec:unit'
 
-RuboCop::RakeTask.new
+namespace :lint do
+  RuboCop::RakeTask.new
 
-desc 'Apply basic linting autocorrection for whitespace and style'
-task :autocorrect_basic_style_issues do
-  basic_style_cops = %w[
-    Layout/TrailingWhitespace
-    Layout/SpaceInsideBlockBraces
-    Style/StringLiterals
-  ]
-  sh("bundle exec rubocop -a --only #{basic_style_cops.join(',')}")
+  task :list_broken_cops do
+    rubocop_log = `bundle exec rubocop`
+    cop_name_pattern = /([A-Z][a-zA-Z]+\/[A-Z][a-zA-Z]+):/
+    matches = rubocop_log.scan(cop_name_pattern).flatten
+    counts = matches.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }
+    pp counts
+  end
+
+  desc 'Apply basic linting autocorrection for whitespace and style'
+  task :autocorrect_basic_style_issues do
+    basic_style_cops = %w[
+      Layout/TrailingWhitespace
+      Layout/SpaceInsideBlockBraces
+      Style/StringLiterals
+    ]
+    sh("bundle exec rubocop -a --only #{basic_style_cops.join(',')}")
+  end
 end
 
 namespace :rspec do
