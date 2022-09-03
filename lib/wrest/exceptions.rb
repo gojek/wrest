@@ -1,5 +1,5 @@
 module Wrest
-  module Exceptions #:nodoc:
+  module Exceptions # :nodoc:
     # Raised when a base method that should be overriden
     # is invoked on a subclass that has not implemented it.
     class MethodNotOverridden < StandardError
@@ -26,7 +26,7 @@ module Wrest
     # Raised when a request times out
     class Timeout < StandardError
     end
-    
+
     class UnsupportedHttpVerb < StandardError
     end
 

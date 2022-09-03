@@ -19,6 +19,7 @@ module Wrest::Native
   # need HTTP authentication, you should use a Wrest::Uri.
   class Session
     attr_reader :uri
+
     def initialize(uri)
       @uri = Wrest::Uri.new(uri)
       @default_headers = { Wrest::Native::StandardHeaders::Connection => Wrest::Native::StandardTokens::KeepAlive }
@@ -31,25 +32,29 @@ module Wrest::Native
     end
 
     def get(path = '', parameters = {}, headers = {})
-      maybe_destroy_connection @uri[path, {:connection => self.connection}].get(parameters, headers.merge(@default_headers))
+      maybe_destroy_connection @uri[path, { connection: connection }].get(parameters,
+                                                                          headers.merge(@default_headers))
     end
 
     def post(path = '', body = '', headers = {}, params = {})
-      maybe_destroy_connection @uri[path, {:connection => self.connection}].post(body, headers.merge(@default_headers), params)
+      maybe_destroy_connection @uri[path, { connection: connection }].post(body, headers.merge(@default_headers),
+                                                                           params)
     end
-    
+
     def put(path = '', body = '', headers = {}, params = {})
-      maybe_destroy_connection @uri[path, {:connection => self.connection}].put(body, headers.merge(@default_headers), params)
+      maybe_destroy_connection @uri[path, { connection: connection }].put(body, headers.merge(@default_headers),
+                                                                          params)
     end
 
     def delete(path = '', parameters = {}, headers = {})
-      maybe_destroy_connection @uri[path, {:connection => self.connection}].delete(parameters, headers.merge(@default_headers))
+      maybe_destroy_connection @uri[path, { connection: connection }].delete(parameters,
+                                                                             headers.merge(@default_headers))
     end
-    
+
     def maybe_destroy_connection(response)
       if response.connection_closed?
         Wrest.logger.warn "Connection #{@connection.hash} has been closed by the server"
-        @connection = nil 
+        @connection = nil
       end
       response
     end

@@ -21,13 +21,13 @@ module Wrest
 
         case in_value
         when Hash
-          if in_value['nil'] == 'true'
-            out_value = nil
-          elsif in_value.key?('type')
-            out_value = ActiveSupport::XmlMini::PARSING[in_value['type']].call(in_value['content'])
-          else
-            out_value = in_value.mutate_using(self)
-          end
+          out_value = if in_value['nil'] == 'true'
+                        nil
+                      elsif in_value.key?('type')
+                        ActiveSupport::XmlMini::PARSING[in_value['type']].call(in_value['content'])
+                      else
+                        in_value.mutate_using(self)
+                      end
         end
 
         [out_key, out_value]

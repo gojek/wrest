@@ -1,0 +1,14 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+  
+AllCops:
+  NewCops: enable
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Exclude:
+    - spec/**/*_spec.rb
+

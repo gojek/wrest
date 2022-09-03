@@ -10,7 +10,7 @@
 begin
   gem 'eventmachine'
 rescue Gem::LoadError => e
-  Wrest.logger.debug "Eventmachine ~> 0.12.10 not found. Wrest uses Eventmachine to perform evented asynchronous requests"
+  Wrest.logger.debug 'Eventmachine ~> 0.12.10 not found. Wrest uses Eventmachine to perform evented asynchronous requests'
   raise e
 end
 

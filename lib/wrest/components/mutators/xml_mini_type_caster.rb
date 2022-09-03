@@ -7,7 +7,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-
 module Wrest
   module Components
     # This mutator undertands how do type casting
@@ -31,7 +30,7 @@ module Wrest
             out_value = in_value.mutate_using(self)
           end
         when Array
-          out_value = in_value.collect{|hash| hash.mutate_using(self)}
+          out_value = in_value.collect { |hash| hash.mutate_using(self) }
         else
           out_value = in_value
         end

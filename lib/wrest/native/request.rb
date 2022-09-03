@@ -15,6 +15,7 @@ module Wrest::Native
     attr_reader :http_request, :uri, :body, :headers, :username, :password, :follow_redirects,
                 :follow_redirects_limit, :follow_redirects_count, :timeout, :connection, :parameters,
                 :cache_store, :verify_mode, :options, :ca_path
+
     # Valid tuples for the options are:
     #   :username => String, defaults to nil
     #   :password => String, defaults to nil
@@ -54,7 +55,7 @@ module Wrest::Native
       @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
       @timeout = @options[:timeout]
       @connection = @options[:connection]
-      @http_request = self.build_request(http_request_klass, @uri, @parameters, @headers)
+      @http_request = build_request(http_request_klass, @uri, @parameters, @headers)
       @cache_store = @options[:cache_store]
       @verify_mode = @options[:verify_mode]
       @ca_path = @options[:ca_path]
@@ -80,44 +81,46 @@ module Wrest::Native
     # The request hash is followed by a connection hash; requests using the
     # same connection (effectively a keep-alive connection) will have the
     # same connection hash.
-    # 
+    #
     # Passing nil for either username or password will skip HTTP authentication
     #
     # This is followed by the response code, the payload size and the time taken.
     def invoke
       response = nil
-      @connection ||= @uri.create_connection(:timeout => timeout, :verify_mode => verify_mode, :ca_path => ca_path)
+      @connection ||= @uri.create_connection(timeout: timeout, verify_mode: verify_mode, ca_path: ca_path)
       @connection.set_debug_output @detailed_http_logging
       http_request.basic_auth username, password unless username.nil? || password.nil?
 
-      prefix = "#{http_request.method} #{self.hash} #{@connection.hash} #{Thread.current.object_id}"
+      prefix = "#{http_request.method} #{hash} #{@connection.hash} #{Thread.current.object_id}"
 
       Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
       Wrest.logger.debug "<- Body: #{@body}"
-      time = Benchmark.realtime { response = Wrest::Native::Response.new( do_request ) }
+      time = Benchmark.realtime { response = Wrest::Native::Response.new(do_request) }
 
       execute_callback_if_any(response)
 
       @follow_redirects ? response.follow(@options) : response
     rescue Timeout::Error => e
-      raise Wrest::Exceptions::Timeout.new(e)
+      raise Wrest::Exceptions::Timeout, e
     end
 
-    #:nodoc:
+    # :nodoc:
     def build_request(request_klass, uri, parameters, headers)
-      if(!uri.query.empty?)
-        request_klass.new(parameters.empty? ? "#{uri.uri_path}?#{uri.query}" : "#{uri.uri_path}?#{uri.query}&#{parameters.to_query}", headers)
-      else
+      if uri.query.empty?
         request_klass.new(parameters.empty? ? "#{uri.uri_path}" : "#{uri.uri_path}?#{parameters.to_query}", headers)
+      else
+        request_klass.new(
+          parameters.empty? ? "#{uri.uri_path}?#{uri.query}" : "#{uri.uri_path}?#{uri.query}&#{parameters.to_query}", headers
+        )
       end
     end
 
-    #:nodoc:
+    # :nodoc:
     def do_request
       @connection.request(@http_request, @body)
     end
 
-    #:nodoc:
+    # :nodoc:
     def execute_callback_if_any(actual_response)
       @callback.execute(actual_response)
     end

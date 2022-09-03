@@ -13,12 +13,12 @@ module Wrest
       def initialize(number_of_threads)
         @pool = Concurrent::FixedThreadPool.new(number_of_threads)
       end
-      
+
       def execute_eventually(request)
         @pool.post { request.invoke }
         nil
       end
-      
+
       def join_pool_threads!
         @pool.wait_for_termination
       end

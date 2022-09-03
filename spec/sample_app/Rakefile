@@ -1,8 +1,8 @@
 require 'bundler'
 
-desc "start a development server"
+desc 'start a development server'
 task :server do
   system "rackup -E development -p 3000 #{File.dirname(__FILE__)}/config.ru"
 end
 
-task :default => :server
+task default: :server

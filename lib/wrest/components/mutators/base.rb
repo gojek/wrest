@@ -22,7 +22,10 @@ module Wrest
       #
       # See Mutators#chain for more information.
       def self.inherited(subklass)
-        Wrest::Components::Mutators::REGISTRY[subklass.name.demodulize.underscore.to_sym] = subklass unless subklass.name.blank?
+        unless subklass.name.blank?
+          Wrest::Components::Mutators::REGISTRY[subklass.name.demodulize.underscore.to_sym] =
+            subklass
+        end
       end
 
       def initialize(next_mutator = nil)
@@ -48,7 +51,8 @@ module Wrest
       end
 
       protected
-      def do_mutate(tuple)
+
+      def do_mutate(_tuple)
         raise Wrest::Exceptions::MethodNotOverridden
       end
     end

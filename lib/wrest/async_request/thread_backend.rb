@@ -13,14 +13,15 @@ module Wrest
     # Only recommended for production use on JRuby.
     class ThreadBackend
       attr_reader :thread_pool
+
       def initialize(number_of_threads = 5)
         @thread_pool = ThreadPool.new(number_of_threads)
       end
-      
+
       def execute(request)
         @thread_pool.execute_eventually(request)
       end
-      
+
       # Uses Thread#join to wait until all
       # background requests are completed.
       def wait_for_thread_pool!

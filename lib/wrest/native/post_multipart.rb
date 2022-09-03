@@ -20,7 +20,7 @@ module Wrest::Native
         options
       )
     end
-    
+
     def build_request(request_klass, uri, parameters, headers)
       request_klass.new(uri.full_path, parameters, headers)
     end

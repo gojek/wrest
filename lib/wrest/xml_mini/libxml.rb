@@ -4,5 +4,3 @@ module ActiveSupport
     XmlMini_LibXML.extend(::XmlMini::LibXML::XPathFilter)
   end
 end
-
-

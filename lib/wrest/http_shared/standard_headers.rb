@@ -18,5 +18,3 @@ module Wrest
     end
   end
 end
-
-

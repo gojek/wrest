@@ -7,17 +7,17 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require "spec_helper"
-require "wrest/components/mutators"
+require 'spec_helper'
+require 'wrest/components/mutators'
 
 module Wrest::Components
   describe Mutators::CamelToSnakeCase do
-    before(:each) do
+    before do
       @mutator = Mutators::CamelToSnakeCase.new
     end
 
-    it "should underscore the key in a tuple" do
-      expect(@mutator.mutate(["universe-id", "1"])).to eq(["universe_id", "1"])
+    it 'underscores the key in a tuple' do
+      expect(@mutator.mutate(%w[universe-id 1])).to eq(%w[universe_id 1])
     end
   end
 end

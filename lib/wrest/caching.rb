@@ -9,42 +9,42 @@
 
 module Wrest
   module Caching
-    # Loads the Memcached caching back-end and the Dalli gem 
+    # Loads the Memcached caching back-end and the Dalli gem
     def self.enable_memcached
-      require "wrest/caching/memcached"
+      require 'wrest/caching/memcached'
     end
-    
-    # Loads the Redis caching back-end and the Redis gem 
+
+    # Loads the Redis caching back-end and the Redis gem
     def self.enable_redis
-      require "wrest/caching/redis"
+      require 'wrest/caching/redis'
     end
 
     # Configures Wrest to cache all requests. This will use a Ruby Hash.
-    # WARNING: This should NEVER be used in a real environment. The Hash will 
+    # WARNING: This should NEVER be used in a real environment. The Hash will
     # keep growing since Wrest does not limit the size of a cache store.
     #
     # Please switch to the memcached or redis back-end for production use.
     def self.default_to_hash!
-      self.default_store = Hash.new
+      self.default_store = ({})
     end
 
-    # Default Wrest to using memcached for caching requests. 
+    # Default Wrest to using memcached for caching requests.
     def self.default_to_memcached!
-      self.enable_memcached
-      self.default_store = Wrest::Caching::Memcached.new 
+      enable_memcached
+      self.default_store = Wrest::Caching::Memcached.new
     end
-    
+
     # Default Wrest to using redis for caching requests.
-    # 
+    #
     # Options to configuring the redis gem can be passed as arguments.
     def self.default_to_redis!(redis_options = {})
-      self.enable_redis
+      enable_redis
       self.default_store = Wrest::Caching::Redis.new(redis_options)
     end
 
     # Assign the default cache store to be used. Default is none.
     def self.default_store=(store)
-      @default_store = store 
+      @default_store = store
     end
 
     # Returns the default store for caching, if any is set.

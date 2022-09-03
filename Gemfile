@@ -1,13 +1,11 @@
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
 gem 'rake', '~> 10'
-gem 'rspec-collection_matchers', '~> 1.1'
 gem 'rdoc', '~> 4.2'
-gem 'simplecov', :platforms => :mri_19
+gem 'rspec-collection_matchers', '~> 1.1'
+gem 'simplecov', platforms: :mri_19
 
-if RUBY_VERSION.start_with?('3.')
-  gem 'rexml'
-end
+gem 'rexml' if RUBY_VERSION.start_with?('3.')
 
 group :multipart_support do
   gem 'multipart-post', '~> 2'

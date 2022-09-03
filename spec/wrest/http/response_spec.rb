@@ -1,4 +1,4 @@
-require "spec_helper"
+require 'spec_helper'
 
 module Wrest
   libraries = [Wrest::Native]
@@ -7,9 +7,9 @@ module Wrest
     describe "For #{library}" do
       describe 'Response' do
         describe 'Headers' do
-          it "should know how to retrieve content type irrespective of the casing" do
+          it 'knows how to retrieve content type irrespective of the casing' do
             http_response = double('Response')
-            allow(http_response).to receive(:headers).and_return({'Content-type' => 'application/xml'})
+            allow(http_response).to receive(:headers).and_return({ 'Content-type' => 'application/xml' })
             allow(http_response).to receive(:code).and_return('200')
             allow(http_response).to receive(:content_type).and_return('application/xml')
 

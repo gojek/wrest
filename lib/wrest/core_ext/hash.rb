@@ -1,5 +1,5 @@
-require "wrest/core_ext/hash/conversions"
+require 'wrest/core_ext/hash/conversions'
 
-class Hash #:nodoc:
+class Hash # :nodoc:
   include Wrest::CoreExt::Hash::Conversions
 end

@@ -5,17 +5,17 @@ rescue LoadError
   puts 'Simplecov is not available, no coverage report will be generated'
 end
 
-require "wrest"
+require 'wrest'
 
-Dir[File.join("#{File.expand_path(File.dirname(__FILE__))}", "support", "*.rb")].map {|f| require f}
+Dir[File.join("#{__dir__}", 'support', '*.rb')].map { |f| require f }
 
 Wrest.logger = Logger.new(File.open("#{Wrest::Root}/../log/test.log", 'a'))
 
 RSpec.configure do |config|
   config.include(Factories)
-  if ENV["wrest_functional_spec"] == "true"
-    config.filter_run :functional => true
+  if ENV['wrest_functional_spec'] == 'true'
+    config.filter_run functional: true
   else
-    config.filter_run_excluding :functional => true
+    config.filter_run_excluding functional: true
   end
 end

@@ -7,12 +7,12 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require "spec_helper"
+require 'spec_helper'
 
 module Wrest::Components
   describe Translators do
-    it "should know how to raise an exception if the mime type doesn't exist" do
-      expect{ Translators.lookup('weird/unknown') }.to raise_error(Wrest::Exceptions::UnsupportedContentType)
+    it "knows how to raise an exception if the mime type doesn't exist" do
+      expect { Translators.lookup('weird/unknown') }.to raise_error(Wrest::Exceptions::UnsupportedContentType)
     end
   end
 end

@@ -1,1 +1,1 @@
-require "wrest/test/request_patches"
+require 'wrest/test/request_patches'

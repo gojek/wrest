@@ -11,8 +11,8 @@ module Wrest::Native
   class Options < Request
     def initialize(wrest_uri, options = {})
       super(
-            wrest_uri, 
-            Net::HTTP::Options, 
+            wrest_uri,
+            Net::HTTP::Options,
             {},
             nil,
             {},

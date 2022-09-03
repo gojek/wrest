@@ -11,7 +11,7 @@ module Wrest
     module Txt
       extend self
 
-      def deserialise(response,options={})
+      def deserialise(response, _options = {})
         response.body
       end
 
@@ -19,10 +19,10 @@ module Wrest
         deserialise(response, options)
       end
 
-      def serialise(hash, options = {})
+      def serialise(hash, _options = {})
         hash.inspect
       end
-      
+
       def serialize(hash, options = {})
         serialise(hash, options)
       end

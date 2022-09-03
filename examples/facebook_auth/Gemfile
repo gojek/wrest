@@ -1,12 +1,12 @@
 # A sample Gemfile
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
-gem 'sinatra', '= 1.0'
 gem 'i18n', '= 0.4.1'
-gem 'wrest', :path => "../../"
 gem 'rake'
+gem 'sinatra', '= 1.0'
+gem 'wrest', path: '../../'
 
 group :test do
-  gem "rspec", "~> 3.0.0"
-  gem "rack-test", "0.5.4", :require => "rack/test"
+  gem 'rack-test', '0.5.4', require: 'rack/test'
+  gem 'rspec', '~> 3.0.0'
 end

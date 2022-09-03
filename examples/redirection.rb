@@ -7,21 +7,21 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require File.expand_path(File.dirname(__FILE__) + "/../lib/wrest")
+require File.expand_path(File.dirname(__FILE__) + '/../lib/wrest')
 require 'pp'
 
 Wrest.logger = Logger.new(STDOUT)
-Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
+Wrest.logger.level = Logger::DEBUG # Set this to Logger::INFO or higher to disable request logging
 
 # google.com redirects to www.google.com so this is live test for redirection
 pp 'http://google.com'.to_uri.get.body
 
-puts '', '*'*70, ''
+puts '', '*' * 70, ''
 
 # Do a get with auto follow redirects turned off
-pp 'http://google.com'.to_uri(:follow_redirects => false).get.body
+pp 'http://google.com'.to_uri(follow_redirects: false).get.body
 
-puts '', '*'*70, ''
+puts '', '*' * 70, ''
 
 # Do a get with auto follow redirects limited, causing an exception.
-'http://google.com'.to_uri(:follow_redirects_limit => 1).get.body
+'http://google.com'.to_uri(follow_redirects_limit: 1).get.body

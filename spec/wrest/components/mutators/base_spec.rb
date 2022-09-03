@@ -7,16 +7,16 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require "spec_helper"
-require "wrest/components/mutators"
+require 'spec_helper'
+require 'wrest/components/mutators'
 
 module Wrest::Components
   describe Mutators::Base do
-    it "should raise an exception if mutate is invoked without do_mutate being implemented in a subclass" do
-      expect{ Class.new(Mutators::Base).new.mutate([]) }.to raise_error(Wrest::Exceptions::MethodNotOverridden)
+    it 'raises an exception if mutate is invoked without do_mutate being implemented in a subclass' do
+      expect { Class.new(Mutators::Base).new.mutate([]) }.to raise_error(Wrest::Exceptions::MethodNotOverridden)
     end
 
-    it "should ensure that the next mutator is invoked for a subclass" do
+    it 'ensures that the next mutator is invoked for a subclass' do
       next_mutator = double('Mutator')
       mutator = Mutators::CamelToSnakeCase.new(next_mutator)
 
@@ -25,17 +25,20 @@ module Wrest::Components
       expect(mutator.mutate(['a', 1])).to eq([:a, '1'])
     end
 
-    it "should know how to chain mutators recursively" do
+    it 'knows how to chain mutators recursively' do
       mutator = Mutators::XmlSimpleTypeCaster.new(Mutators::CamelToSnakeCase.new)
       expect(mutator.mutate(
-      ["Result", [{
-        "Publish-Date"=>["1240326000"],
-        "News-Source"=>[{"Online" => ["PC via News"], "Unique-Id" => [{"type"=>"integer", "content"=>"1"}]}]
-      }]]
-      )).to eq(["result", {"publish_date" => "1240326000", "news_source" => {"online"=>"PC via News", "unique_id"=>1}}])
+               ['Result', [{
+                 'Publish-Date' => ['1240326000'],
+                 'News-Source' => [{ 'Online' => ['PC via News'],
+                                     'Unique-Id' => [{ 'type' => 'integer', 'content' => '1' }] }]
+               }]]
+             )).to eq(['result',
+                       { 'publish_date' => '1240326000',
+                         'news_source' => { 'online' => 'PC via News', 'unique_id' => 1 } }])
     end
 
-    it "should register all subclasses in the registry" do
+    it 'registers all subclasses in the registry' do
       class SomeMutator < Mutators::Base; end
       expect(Mutators::REGISTRY[:some_mutator]).to eq(SomeMutator)
     end

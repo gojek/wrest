@@ -1,5 +1,4 @@
 module Wrest
-
   class CacheProxy
     class << self
       def new(get, cache_store)
@@ -15,20 +14,21 @@ module Wrest
       def initialize(get)
         @get = get
       end
+
       def get
         @get.invoke_without_cache_check
       end
     end
 
     class DefaultCacheProxy
-      HOP_BY_HOP_HEADERS = ["connection",
-                           "keep-alive",
-                           "proxy-authenticate",
-                           "proxy-authorization",
-                           "te",
-                           "trailers",
-                           "transfer-encoding",
-                           "upgrade"]
+      HOP_BY_HOP_HEADERS = %w[connection
+                              keep-alive
+                              proxy-authenticate
+                              proxy-authorization
+                              te
+                              trailers
+                              transfer-encoding
+                              upgrade]
 
       def initialize(get, cache_store)
         @get         = get
@@ -36,9 +36,9 @@ module Wrest
       end
 
       def log_cached_response
-          Wrest.logger.debug "<*> (GET #{@get.hash}) #{@get.uri.protocol}://#{@get.uri.host}:#{@get.uri.port}#{@get.http_request.path}"
+        Wrest.logger.debug "<*> (GET #{@get.hash}) #{@get.uri.protocol}://#{@get.uri.host}:#{@get.uri.port}#{@get.http_request.path}"
       end
-      
+
       def get
         cached_response = @cache_store[@get.full_uri_string]
         return get_fresh_response if cached_response.nil?
@@ -57,14 +57,16 @@ module Wrest
 
       def update_cache_headers_for(cached_response, new_response)
         # RFC 2616 13.5.3 (Combining Headers)
-        cached_response.headers.merge!(new_response.headers.select {|key, value| not (HOP_BY_HOP_HEADERS.include? key.downcase)})
+        cached_response.headers.merge!(new_response.headers.select do |key, _value|
+                                         !(HOP_BY_HOP_HEADERS.include? key.downcase)
+                                       end)
       end
 
       def cache(response)
         @cache_store[@get.full_uri_string] = response.clone if response && response.cacheable?
       end
 
-      #:nodoc:
+      # :nodoc:
       def get_fresh_response
         @cache_store.delete @get.full_uri_string
 
@@ -75,10 +77,10 @@ module Wrest
         response
       end
 
-      #:nodoc:
+      # :nodoc:
       def get_validated_response_for(cached_response)
         new_response = send_validation_request_for(cached_response)
-        if new_response.code == "304"
+        if new_response.code == '304'
           update_cache_headers_for(cached_response, new_response)
           log_cached_response
           cached_response
@@ -88,16 +90,16 @@ module Wrest
         end
       end
 
-      #:nodoc:
+      # :nodoc:
       # Send a cache-validation request to the server. This would be the actual Get request with extra cache-validation headers.
       # If a 304 (Not Modified) is received, Wrest would use the cached_response itself. Otherwise the new response is cached and used.
       def send_validation_request_for(cached_response)
         last_modified            = cached_response.last_modified
-        etag                     = cached_response.headers["etag"]
+        etag                     = cached_response.headers['etag']
 
         cache_validation_headers = {}
-        cache_validation_headers["if-modified-since"] = last_modified unless last_modified.nil?
-        cache_validation_headers["if-none-match"] = etag unless etag.nil?
+        cache_validation_headers['if-modified-since'] = last_modified unless last_modified.nil?
+        cache_validation_headers['if-none-match'] = etag unless etag.nil?
 
         new_request = @get.build_request_without_cache_store(cache_validation_headers)
 

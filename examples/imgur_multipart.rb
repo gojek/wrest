@@ -8,17 +8,19 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'pp'
-require File.expand_path(File.dirname(__FILE__) + "/../lib/wrest")
+require File.expand_path(File.dirname(__FILE__) + '/../lib/wrest')
 
 # See http://code.google.com/p/imgur-api
 imgur_key = 'f6561f62e13422bb25a1e738e9927d3b' # use your own key, this one is fake
 file_path = 'VoA10.png'
 
 # Using the eminently sensible Base64 encoded imgur file upload API
-pp 'http://imgur.com/api/upload.xml'.to_uri.post_form(:image => [IO.read(file_path)].pack('m'), :key => imgur_key).deserialise
+pp 'http://imgur.com/api/upload.xml'.to_uri.post_form(image: [IO.read(file_path)].pack('m'),
+                                                      key: imgur_key).deserialise
 
 # If an API requires multipart posts - like the Facebook API - you can do that too
 require 'wrest/multipart'
 File.open(file_path) do |file|
-  pp 'http://imgur.com/api/upload.xml'.to_uri.post_multipart(:image => UploadIO.new(file, "image/png", file_path), :key => imgur_key).deserialise
+  pp 'http://imgur.com/api/upload.xml'.to_uri.post_multipart(image: UploadIO.new(file, 'image/png', file_path),
+                                                             key: imgur_key).deserialise
 end

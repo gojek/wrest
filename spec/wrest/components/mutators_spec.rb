@@ -7,12 +7,12 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require "spec_helper"
-require "wrest/components/mutators"
+require 'spec_helper'
+require 'wrest/components/mutators'
 
 module Wrest::Components
   describe Mutators do
-    it "should know how to chain mutators without having to namespace them all" do
+    it 'knows how to chain mutators without having to namespace them all' do
       mutator = Mutators.chain(:xml_mini_type_caster, :xml_simple_type_caster, :camel_to_snake_case)
       expect(mutator.class).to eq(Mutators::XmlMiniTypeCaster)
       expect(mutator.next_mutator.class).to eq(Mutators::XmlSimpleTypeCaster)

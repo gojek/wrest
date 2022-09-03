@@ -10,24 +10,24 @@
 module Wrest
   module Components::Container
     module AliasAccessors
-      def self.included(klass) #:nodoc:
+      def self.included(klass) # :nodoc:
         klass.extend AliasAccessors::ClassMethods
       end
 
-      def self.build_aliased_attribute_getter(attribute_name, alias_name) #:nodoc:
+      def self.build_aliased_attribute_getter(attribute_name, alias_name) # :nodoc:
         "def #{alias_name};#{attribute_name};end;"
       end
 
-      def self.build_aliased_attribute_setter(attribute_name, alias_name) #:nodoc:
+      def self.build_aliased_attribute_setter(attribute_name, alias_name) # :nodoc:
         "def #{alias_name}=(value);self.#{attribute_name}=value;end;"
       end
 
-      def self.build_aliased_attribute_queryer(attribute_name, alias_name) #:nodoc:
+      def self.build_aliased_attribute_queryer(attribute_name, alias_name) # :nodoc:
         "def #{alias_name}?;self.#{attribute_name}?;end;"
       end
-      
+
       module ClassMethods
-        # Creates an alias set of getter, setter and query methods for 
+        # Creates an alias set of getter, setter and query methods for
         # attributes that aren't quite the way you'd like them to be; this
         # is especially useful when you have no control over the source web
         # sevice/resource.
@@ -48,15 +48,15 @@ module Wrest
         # to user.a, user.a= and user.a? respectively.
         #
         # See examples/wow_realm_status.rb for a working example.
-        # 
+        #
         # WARNING: If you try to create an alias with the same name as the attribute,
         # and then use it, you _will_ cause an infinite loop.
         def alias_accessors(alias_map)
           alias_map.each do |attribute_name, alias_name|
-            self.class_eval(
-            AliasAccessors.build_aliased_attribute_getter(attribute_name, alias_name) +
-            AliasAccessors.build_aliased_attribute_setter(attribute_name, alias_name) +
-            AliasAccessors.build_aliased_attribute_queryer(attribute_name, alias_name)
+            class_eval(
+              AliasAccessors.build_aliased_attribute_getter(attribute_name, alias_name) +
+              AliasAccessors.build_aliased_attribute_setter(attribute_name, alias_name) +
+              AliasAccessors.build_aliased_attribute_queryer(attribute_name, alias_name)
             )
           end
         end

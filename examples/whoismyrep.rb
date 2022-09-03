@@ -1,7 +1,7 @@
-require File.expand_path(File.dirname(__FILE__) + "/../lib/wrest")
+require File.expand_path(File.dirname(__FILE__) + '/../lib/wrest')
 
 class Representative
-  BASE_URI =  'http://whoismyrepresentative.com/'
+  BASE_URI = 'http://whoismyrepresentative.com/'
 
   def self.find_by_zipcode(zipcode)
     uri = (BASE_URI + 'getall_mems.php?').to_uri
@@ -17,9 +17,8 @@ class Representative
     uri = (BASE_URI + 'getall_reps_bystate.php?').to_uri
     uri.get(state: state).deserialize
   end
-
 end
 
-puts Representative.find_by_zipcode(31023)
+puts Representative.find_by_zipcode(31_023)
 puts Representative.find_by_name('smith')
 puts Representative.find_by_state('FL')

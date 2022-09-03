@@ -1,5 +1,5 @@
-require "wrest/core_ext/string/conversions"
+require 'wrest/core_ext/string/conversions'
 
-class String #:nodoc:
+class String # :nodoc:
   include Wrest::CoreExt::String::Conversions unless Wrest.const_defined?('NoStringExtensions')
 end

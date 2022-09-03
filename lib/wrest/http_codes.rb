@@ -10,73 +10,72 @@
 module Wrest
   # Contains convenience methods to check HTTP response codes
   module HttpCodes
-
     def ok?
-      self.code.to_i == 200
+      code.to_i == 200
     end
 
     def created?
-      self.code.to_i == 201
+      code.to_i == 201
     end
-    
+
     def accepted?
-      self.code.to_i == 202
+      code.to_i == 202
     end
 
     def no_content?
-      self.code.to_i == 204
+      code.to_i == 204
     end
 
     def moved_permanently?
-      self.code.to_i == 301
+      code.to_i == 301
     end
 
     def found?
-      self.code.to_i == 302
+      code.to_i == 302
     end
 
     def see_other?
-      self.code.to_i == 303
+      code.to_i == 303
     end
 
     def not_modified?
-      self.code.to_i == 304
+      code.to_i == 304
     end
 
     def temporary_redirect?
-      self.code.to_i == 307
+      code.to_i == 307
     end
 
     def bad_request?
-      self.code.to_i == 400
+      code.to_i == 400
     end
 
     def unauthorized?
-      self.code.to_i == 401
+      code.to_i == 401
     end
 
     def forbidden?
-      self.code.to_i == 403
+      code.to_i == 403
     end
 
     def not_found?
-      self.code.to_i == 404
+      code.to_i == 404
     end
 
     def method_not_allowed?
-      self.code.to_i == 405
+      code.to_i == 405
     end
 
     def not_acceptable?
-      self.code.to_i == 406
+      code.to_i == 406
     end
 
     def unprocessable_entity?
-      self.code.to_i == 422
+      code.to_i == 422
     end
 
     def internal_server_error?
-      self.code.to_i == 500
+      code.to_i == 500
     end
   end
 end

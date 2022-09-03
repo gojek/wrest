@@ -21,9 +21,9 @@ module Wrest
     # and we'd like to have these cast to an integer and a date
     # respectively, rather than have to deal with them as strings.
     module Typecaster
-      def self.included(klass) #:nodoc:
+      def self.included(klass) # :nodoc:
         klass.extend Typecaster::ClassMethods
-        klass.class_eval{ include Typecaster::InstanceMethods }
+        klass.class_eval { include Typecaster::InstanceMethods }
         klass.send(:alias_method, :initialize_without_typecasting, :initialize)
         klass.send(:alias_method, :initialize, :initialize_with_typecasting)
       end
@@ -103,7 +103,7 @@ module Wrest
           @typecast_map = @typecast_map ? @typecast_map.merge(cast_map.symbolize_keys) : cast_map.symbolize_keys
         end
 
-        def typecast_map #:nodoc:
+        def typecast_map # :nodoc:
           if defined?(@typecast_map)
             @typecast_map
           elsif superclass != Object && superclass.respond_to?(:typecast_map)
@@ -119,7 +119,10 @@ module Wrest
           initialize_without_typecasting(attributes)
           self.class.typecast_map.each do |key, typecaster|
             value = @attributes[key]
-            @attributes[key] = typecaster.call(value) if (value.is_a?(String) || value.is_a?(Hash) || value.is_a?(Array))
+            if value.is_a?(String) || value.is_a?(Hash) || value.is_a?(Array)
+              @attributes[key] =
+                typecaster.call(value)
+            end
           end
         end
       end

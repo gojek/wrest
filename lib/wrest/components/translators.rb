@@ -7,7 +7,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-
 module Wrest
   module Components
     # Contains strategies/lambdas which know how to deserialise
@@ -17,13 +16,13 @@ module Wrest
       # the content type
       def self.lookup(content_type)
         translator = CONTENT_TYPES[content_type]
-        translator || (raise Wrest::Exceptions::UnsupportedContentType.new("Unsupported content type #{content_type}"))
+        translator || (raise Wrest::Exceptions::UnsupportedContentType, "Unsupported content type #{content_type}")
       end
     end
   end
 end
 
-require "wrest/components/translators/txt"
-require "wrest/components/translators/xml"
-require "wrest/components/translators/json"
-require "wrest/components/translators/content_types"
+require 'wrest/components/translators/txt'
+require 'wrest/components/translators/xml'
+require 'wrest/components/translators/json'
+require 'wrest/components/translators/content_types'

@@ -11,11 +11,11 @@ module Wrest
     module Xml
       extend self
 
-      def deserialise(response,options={})
-        if(!options[:xpath].nil?)
-          ActiveSupport::XmlMini.filter(response.body,options[:xpath])
-        else
+      def deserialise(response, options = {})
+        if options[:xpath].nil?
           Hash.from_xml(response.body)
+        else
+          ActiveSupport::XmlMini.filter(response.body, options[:xpath])
         end
       end
 
@@ -26,7 +26,7 @@ module Wrest
       def serialise(hash, options = {})
         hash.to_xml(options)
       end
-      
+
       def serialize(hash, options = {})
         serialise(hash, options)
       end

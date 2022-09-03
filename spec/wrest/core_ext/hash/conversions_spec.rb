@@ -7,16 +7,16 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require "spec_helper"
+require 'spec_helper'
 
 describe Hash, 'conversions' do
-  it "should know how to build a mutated hash given a hash mutator" do
+  it 'knows how to build a mutated hash given a hash mutator' do
     class StringToSymbolMutator < Wrest::Components::Mutators::Base
       def mutate(pair)
         [pair.first.to_sym, pair.last]
       end
     end
-    
-    expect({'ooga' => 'booga'}.mutate_using(StringToSymbolMutator.new)).to eq({:ooga => 'booga'})
+
+    expect({ 'ooga' => 'booga' }.mutate_using(StringToSymbolMutator.new)).to eq({ ooga: 'booga' })
   end
 end

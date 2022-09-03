@@ -12,11 +12,10 @@ module Wrest
   end
 end
 
-require "wrest/components/container/typecaster"
-require "wrest/components/container/alias_accessors"
+require 'wrest/components/container/typecaster'
+require 'wrest/components/container/alias_accessors'
 
 module Wrest::Components
-
   # Adds behaviour allowing a class to
   # contain attributes and providing support
   # for dynamic getters, setters and query methods.
@@ -25,7 +24,7 @@ module Wrest::Components
   # <tt>respond_to?</tt> however will respond as though
   # they are all already present.
   # This means that two different instances of the same
-  # Container could well have different attribute 
+  # Container could well have different attribute
   # getters/setters/query methods.
   #
   # Note that the first call to a particular getter/setter/query
@@ -56,24 +55,24 @@ module Wrest::Components
   #  coin.id    # => 5
   #  coin.owner # => 'Kai Wren'
   module Container
-    def self.included(klass) #:nodoc:
+    def self.included(klass) # :nodoc:
       klass.extend Container::ClassMethods
       klass.extend Container::Typecaster::Helpers
-      klass.class_eval do 
+      klass.class_eval do
         include Container::InstanceMethods
         include Container::AliasAccessors
-      end  
+      end
     end
 
-    def self.build_attribute_getter(attribute_name) #:nodoc:
+    def self.build_attribute_getter(attribute_name) # :nodoc:
       "def #{attribute_name};@attributes[:#{attribute_name}];end;"
     end
 
-    def self.build_attribute_setter(attribute_name) #:nodoc:
+    def self.build_attribute_setter(attribute_name) # :nodoc:
       "def #{attribute_name}=(value);@attributes[:#{attribute_name}] = value;end;"
     end
 
-    def self.build_attribute_queryer(attribute_name) #:nodoc:
+    def self.build_attribute_queryer(attribute_name) # :nodoc:
       "def #{attribute_name}?;not @attributes[:#{attribute_name}].nil?;end;"
     end
 
@@ -87,27 +86,27 @@ module Wrest::Components
       # attributes are known beforehand.
       def always_has(*attribute_names)
         attribute_names.each do |attribute_name|
-          self.class_eval(
-          Container.build_attribute_getter(attribute_name) +
-          Container.build_attribute_setter(attribute_name) +
-          Container.build_attribute_queryer(attribute_name)
+          class_eval(
+            Container.build_attribute_getter(attribute_name) +
+            Container.build_attribute_setter(attribute_name) +
+            Container.build_attribute_queryer(attribute_name)
           )
         end
       end
-      
-      # This is a convenience macro which includes 
+
+      # This is a convenience macro which includes
       # Wrest::Components::Container::Typecaster into
-      # the class (effectively overwriting this method) before delegating to 
+      # the class (effectively overwriting this method) before delegating to
       # the actual typecast method that is a part of that module.
       # This saves us the effort of explicitly doing the include. Easy to use API is king.
       #
       # Remember that using typecast carries a performance penalty.
       # See Wrest::Components::Container::Typecaster for the actual docs.
       def typecast(cast_map)
-        self.class_eval{ include Wrest::Components::Container::Typecaster }
-        self.typecast cast_map
+        class_eval { include Wrest::Components::Container::Typecaster }
+        typecast cast_map
       end
-      
+
       # This is the name of the class in snake-case, with any parent
       # module names removed.
       #
@@ -116,7 +115,7 @@ module Wrest::Components
       #
       # This method can be overidden should you need a different name.
       def element_name
-        @element_name ||= ActiveSupport::Inflector.demodulize(self.name).underscore.underscore
+        @element_name ||= ActiveSupport::Inflector.demodulize(name).underscore.underscore
       end
     end
 
@@ -129,14 +128,14 @@ module Wrest::Components
       def initialize(attributes = {})
         @attributes = HashWithIndifferentAccess.new(attributes)
       end
-      
+
       # A translator is a anything that knows how to serialise a
       # Hash. It must needs have a method named 'serialise' that
-      # accepts a hash and configuration options, and returns the serialised 
+      # accepts a hash and configuration options, and returns the serialised
       # result (leaving the hash unchanged, of course).
       #
       # Examples for JSON and XML can be found under Wrest::Components::Translators.
-      # These serialised output of these translators will work out of the box for Rails 
+      # These serialised output of these translators will work out of the box for Rails
       # applications; you may need to roll your own for anything else.
       #
       # Note: When serilising to XML, if you want the name of the class as the name of the root node
@@ -144,11 +143,11 @@ module Wrest::Components
       def serialise_using(translator, options = {})
         translator.serialise(@attributes, options)
       end
-      
+
       def to_xml(options = {})
-        serialise_using(Wrest::Components::Translators::Xml, {:root => self.class.element_name}.merge(options))
+        serialise_using(Wrest::Components::Translators::Xml, { root: self.class.element_name }.merge(options))
       end
-      
+
       def [](key)
         @attributes[key.to_sym]
       end
@@ -158,7 +157,12 @@ module Wrest::Components
       end
 
       def respond_to?(method_name, include_private = false)
-        super(method_name, include_private) ? true : @attributes.include?(method_name.to_s.gsub(/(\?$)|(=$)/, '').to_sym)
+        if super(method_name, include_private)
+          true
+        else
+          @attributes.include?(method_name.to_s.gsub(/(\?$)|(=$)/,
+                                                     '').to_sym)
+        end
       end
 
       # Creates getter, setter and query methods for
@@ -169,11 +173,11 @@ module Wrest::Components
         if @attributes.include?(attribute_name.to_sym) || method_name.last == '=' || method_name.last == '?'
           case method_name.last
           when '='
-            self.instance_eval Container.build_attribute_setter(attribute_name)
+            instance_eval Container.build_attribute_setter(attribute_name)
           when '?'
-            self.instance_eval Container.build_attribute_queryer(attribute_name)
+            instance_eval Container.build_attribute_queryer(attribute_name)
           else
-            self.instance_eval Container.build_attribute_getter(attribute_name)
+            instance_eval Container.build_attribute_getter(attribute_name)
           end
           send(method_sym, *arguments)
         else
