@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.require_path      = 'lib'
 
   # Test dependencies
-  s.add_development_dependency "rspec", ["~> 3.3"]
+  s.add_development_dependency "rspec", ["~> 3.11"]
   s.add_development_dependency "sinatra", ["~> 1.0.0"]
 
   s.add_runtime_dependency "activesupport", ["~> 5"]

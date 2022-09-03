@@ -14,12 +14,12 @@ module Wrest::Components::Translators
     end
 
     it "has #deserialize delegate to #deserialise" do
-      expect(Txt).to receive(:deserialise).with(http_response, :option => :something)
+      expect(Txt).to receive(:deserialise).with(http_response, hash_including(:option => :something))
       Txt.deserialize(http_response, :option => :something)
     end
 
     it "has #serialize delegate to #serialise" do
-      expect(Txt).to receive(:serialise).with({ :hash => :foo }, :option => :something)
+      expect(Txt).to receive(:serialise).with({ :hash => :foo }, hash_including(:option => :something))
       Txt.serialize({:hash => :foo}, :option => :something)
     end
   end

@@ -5,6 +5,10 @@ gem 'rspec-collection_matchers', '~> 1.1'
 gem 'rdoc', '~> 4.2'
 gem 'simplecov', :platforms => :mri_19
 
+if RUBY_VERSION.start_with?('3.')
+  gem 'rexml'
+end
+
 group :multipart_support do
   gem 'multipart-post', '~> 2'
 end
@@ -15,7 +19,7 @@ end
 
 group :libxml do
   platforms :ruby do
-    gem 'libxml-ruby', '~> 2.8.0' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
+    gem 'libxml-ruby', '~> 3.2.3' unless Object.const_defined?('RUBY_ENGINE') && RUBY_ENGINE =~ /rbx/
   end
 end
 

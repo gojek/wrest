@@ -320,7 +320,7 @@ module Wrest
 
         request = Net::HTTP::Post.new('/glassware', {'page' => '2', 'per_page' => '5'})
         Net::HTTP::Post.should_receive(:new).with('/glassware',
-        'page' => '2', 'per_page' => '5', H::ContentType=>T::FormEncoded
+                                                  hash_including('page' => '2', 'per_page' => '5', H::ContentType=>T::FormEncoded)
         ).and_return(request)
 
         http.should_receive(:request).with(request, "foo=bar&ooga=booga").and_return(build_ok_response)

@@ -45,12 +45,12 @@ module Wrest::Components::Translators
     end
 
     it "has #deserialize delegate to #deserialise" do
-      expect(Json).to receive(:deserialise).with(http_response, :option => :something)
+      expect(Json).to receive(:deserialise).with(http_response, hash_including(:option => :something))
       Json.deserialize(http_response, :option => :something)
     end
 
     it "has #serialize delegate to #serialise" do
-      expect(Json).to receive(:serialise).with({ :hash => :foo }, :option => :something)
+      expect(Json).to receive(:serialise).with({ :hash => :foo }, hash_including(:option => :something))
       Json.serialize({:hash => :foo}, :option => :something)
     end
   end

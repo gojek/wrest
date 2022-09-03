@@ -16,6 +16,7 @@ describe Wrest::CacheProxy do
       Wrest::CacheProxy::NullCacheProxy.should_receive(:new)
       Wrest::CacheProxy::new(@get, nil)
     end
+
     it "should create a Default cache proxy class if cache store is available" do
       Wrest::CacheProxy::DefaultCacheProxy.should_receive(:new)
       Wrest::CacheProxy::new(@get, {})
@@ -89,13 +90,12 @@ describe Wrest::CacheProxy do
         end
 
         it "should build a new identical Get with an If-Not-Modified if the cache has a Last-Modified" do
-          @ok_response.should_receive(:expired?).and_return(true)
-          @ok_response.can_be_validated?.should == true
+          expect(@ok_response).to receive(:expired?).and_return(true)
+          expect(@ok_response.can_be_validated?).to eq(true)
 
-          @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@ok_response)
-
-          @get.should_receive(:build_request_without_cache_store).with("if-modified-since" => @ok_response.headers["last-modified"]).and_return(@direct_get)
-          @direct_get.should_receive(:invoke).and_return(@ok_response)
+          expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@ok_response)
+          expect(@get).to receive(:build_request_without_cache_store).with(hash_including("if-modified-since" => @ok_response.headers["last-modified"])).and_return(@direct_get)
+          expect(@direct_get).to receive(:invoke).and_return(@ok_response)
 
           @cache_proxy.get
         end
@@ -111,7 +111,7 @@ describe Wrest::CacheProxy do
 
           @cache.should_receive(:[]).with(@get.uri.to_s).and_return(response_with_etag)
 
-          @get.should_receive(:build_request_without_cache_store).with("if-none-match" => "123").and_return(@direct_get)
+          @get.should_receive(:build_request_without_cache_store).with(hash_including("if-none-match" => "123")).and_return(@direct_get)
           @direct_get.should_receive(:invoke).and_return(response_with_etag)
 
           @cache_proxy.get
