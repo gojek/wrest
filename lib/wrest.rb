@@ -27,7 +27,7 @@ require 'active_support/core_ext/object'
 module Wrest
   Root = File.dirname(__FILE__)
 
-  $:.unshift Root
+  $LOAD_PATH.unshift Root
 
   def self.logger=(logger)
     @logger = logger
@@ -47,7 +47,7 @@ module Wrest
   end
 end
 
-Wrest.logger = ActiveSupport::Logger.new(STDOUT)
+Wrest.logger = ActiveSupport::Logger.new($stdout)
 Wrest.logger.level = Logger::DEBUG
 
 require 'wrest/core_ext/string'

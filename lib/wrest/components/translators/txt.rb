@@ -12,7 +12,7 @@ module Wrest
   module Components
     module Translators
       module Txt
-        extend self
+        module_function
 
         def deserialise(response, _options = {})
           response.body

@@ -12,7 +12,7 @@ module Wrest
   module Components
     module Translators
       module Xml
-        extend self
+        module_function
 
         def deserialise(response, options = {})
           if options[:xpath].nil?

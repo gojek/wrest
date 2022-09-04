@@ -151,9 +151,9 @@ module Wrest
           end
 
           it 'defines attribute query methods at the class level' do
-            expect(@kai_wren.trainer?).to be_falsey
+            expect(@kai_wren).not_to be_trainer
             @kai_wren.instance_variable_get('@attributes')[:trainer] = 'Viss'
-            expect(@kai_wren.trainer?).to be_truthy
+            expect(@kai_wren).to be_trainer
           end
         end
       end

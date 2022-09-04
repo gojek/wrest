@@ -18,7 +18,7 @@ imgur_key = 'f6561f62e13422bb25a1e738e9927d3b' # use your own key, this one is f
 file_path = 'VoA10.png'
 
 # Using the eminently sensible Base64 encoded imgur file upload API
-pp 'http://imgur.com/api/upload.xml'.to_uri.post_form(image: [IO.read(file_path)].pack('m'),
+pp 'http://imgur.com/api/upload.xml'.to_uri.post_form(image: [File.read(file_path)].pack('m'),
                                                       key: imgur_key).deserialise
 
 # If an API requires multipart posts - like the Facebook API - you can do that too

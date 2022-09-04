@@ -16,7 +16,7 @@ module Wrest
   module Components
     describe Mutators::XmlMiniTypeCaster do
       before do
-        @mutator = Mutators::XmlMiniTypeCaster.new
+        @mutator = described_class.new
       end
 
       # {"lead-bottle"=>{"name"=>{"__content__"=>"Wooz"}, "universe-id"=>{"type"=>"integer", "nil"=>"true"}, "id"=>{"__content__"=>"1", "type"=>"integer"}}}

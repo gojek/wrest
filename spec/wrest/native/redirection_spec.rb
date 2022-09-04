@@ -19,7 +19,7 @@ describe Wrest::Native::Redirection do
     Wrest::Native::Get.should_receive(:new).with(redirect_uri, {}, {},
                                                  { username: nil, password: nil }).and_return(after_redirect_request)
 
-    response = Wrest::Native::Redirection.new(double_net_http_response)
+    response = described_class.new(double_net_http_response)
     response.follow(follow_redirects_count: 0, follow_redirects_limit: 5).should == final_double_response
   end
 

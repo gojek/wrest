@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe FacebookClient do
-  let(:client) { FacebookClient.new }
+  let(:client) { described_class.new }
 
   it 'creates a facebook authorization url given redirect url and parameters' do
     url = client.authorization_uri('http://redirect_uri', scope: 'email')

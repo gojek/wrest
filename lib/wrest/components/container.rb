@@ -83,7 +83,7 @@ module Wrest
 
       module ClassMethods
         # This macro explicitly creates getter, setter and query methods on
-        # an Container, overriding any exisiting methods with the same names.
+        # an Container, overriding any existing methods with the same names.
         # This can be used when attribute names clash with existing method names;
         # an example would be Rails REST resources which frequently make use
         # an attribute named <tt>id</tt> which clashes with Object#id. Also,

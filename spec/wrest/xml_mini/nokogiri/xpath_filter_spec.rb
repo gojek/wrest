@@ -8,7 +8,7 @@ module XmlMini
     describe XPathFilter do
       before do
         @testObj = Object.new
-        @testObj.extend(XPathFilter)
+        @testObj.extend(described_class)
       end
 
       it 'filters using the given xpath and return an array of matching nodes found' do

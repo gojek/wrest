@@ -44,7 +44,7 @@ module Wrest
 
         it 'ensures that the aliased query method delegates to the actual queryier' do
           demon = @Demon.new age: '1000'
-          expect(demon.gender?).to be_falsey
+          expect(demon).not_to be_gender
           demon.maturity?.should be_truthy
         end
       end

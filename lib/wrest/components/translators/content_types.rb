@@ -19,7 +19,7 @@ module Wrest
         'application/json' => Wrest::Components::Translators::Json,
         'text/javascript' => Wrest::Components::Translators::Json,
         'text/plain' => Wrest::Components::Translators::Txt
-      }
+      }.freeze
     end
   end
 end

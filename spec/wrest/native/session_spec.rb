@@ -7,12 +7,12 @@ module Wrest
     describe 'Construction' do
       it 'accepts a string uri and convert it to a Wrest::Uri' do
         uri = 'http://localhost:3000'
-        Native::Session.new(uri).uri.should == uri.to_uri
+        described_class.new(uri).uri.should == uri.to_uri
       end
 
       it 'accepts a Wrest::Uri' do
         uri = 'http://localhost:3000'
-        Native::Session.new(uri.to_uri).uri.should == uri.to_uri
+        described_class.new(uri.to_uri).uri.should == uri.to_uri
       end
     end
 
@@ -41,7 +41,7 @@ module Wrest
       http.should_receive(:request).with(request_one, nil).and_return(ok_response)
       http.should_receive(:request).with(request_two, nil).and_return(ok_response)
 
-      Native::Session.new(uri) do |session|
+      described_class.new(uri) do |session|
         session.get('/glassware', build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]))
         session.get '/bottles.xml'
       end
@@ -77,7 +77,7 @@ module Wrest
       http.should_receive(:request).with(request_two, nil).and_return(ok_response_with_connection_close)
       http.should_receive(:set_debug_output).twice
 
-      Native::Session.new(uri) do |session|
+      described_class.new(uri) do |session|
         session.get('/glassware', build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]))
         session.instance_variable_get('@connection').should == http
         session.get '/bottles.xml'

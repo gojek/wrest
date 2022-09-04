@@ -14,12 +14,13 @@ module Wrest
     attr_reader :callback_hash
 
     def initialize(callable)
-      if callable.is_a?(Hash)
+      case callable
+      when Hash
         @callback_hash = Callback.ensure_values_are_collections(callable)
-      elsif callable.is_a?(Proc)
+      when Proc
         @callback_hash = {}
         callable.call(self)
-      elsif callable.is_a?(Callback)
+      when Callback
         @callback_hash = callable.callback_hash.dup
       end
     end

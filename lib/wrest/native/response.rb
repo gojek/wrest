@@ -62,11 +62,11 @@ module Wrest # :nodoc:
       def ==(other)
         return true if equal?(other)
         return false unless other.class == self.class
-        return true if code == other.code and
-                       headers == other.headers and
-                       http_version == other.http_version and
-                       message == other.message and
-                       body == other.body
+        return true if (code == other.code) &&
+                       (headers == other.headers) &&
+                       (http_version == other.http_version) &&
+                       (message == other.message) &&
+                       (body == other.body)
 
         false
       end
@@ -97,8 +97,8 @@ module Wrest # :nodoc:
       def headers
         return @headers if @headers
 
-        nethttp_headers_with_string_values = @http_response.to_hash.each_with_object({}) do |(old_key, old_value), new_headers|
-          new_headers[old_key] = old_value.is_a?(Array) ? old_value.join(',') : old_value
+        nethttp_headers_with_string_values = @http_response.to_hash.transform_values do |old_value|
+          old_value.is_a?(Array) ? old_value.join(',') : old_value
         end
 
         @headers = Wrest::HashWithCaseInsensitiveAccess.new(nethttp_headers_with_string_values)

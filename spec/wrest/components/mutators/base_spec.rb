@@ -16,7 +16,7 @@ module Wrest
   module Components
     describe Mutators::Base do
       it 'raises an exception if mutate is invoked without do_mutate being implemented in a subclass' do
-        expect { Class.new(Mutators::Base).new.mutate([]) }.to raise_error(Wrest::Exceptions::MethodNotOverridden)
+        expect { Class.new(described_class).new.mutate([]) }.to raise_error(Wrest::Exceptions::MethodNotOverridden)
       end
 
       it 'ensures that the next mutator is invoked for a subclass' do

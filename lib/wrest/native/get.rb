@@ -39,11 +39,11 @@ module Wrest
       def ==(other)
         return true if equal?(other)
         return false unless other.class == self.class
-        return true if uri == other.uri and
-                       parameters == other.parameters and
-                       username == other.username and
-                       password == other.password and
-                       verify_mode == other.verify_mode
+        return true if (uri == other.uri) &&
+                       (parameters == other.parameters) &&
+                       (username == other.username) &&
+                       (password == other.password) &&
+                       (verify_mode == other.verify_mode)
 
         false
       end

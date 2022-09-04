@@ -8,7 +8,7 @@ describe Wrest::Native::Get do
     @cache = {}
     @request_uri = 'http://localhost/foo'.to_uri
 
-    @get = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache })
+    @get = described_class.new(@request_uri, {}, {}, { cache_store: @cache })
   end
 
   context 'hashing and equality' do
@@ -23,46 +23,46 @@ describe Wrest::Native::Get do
 
     it 'is equal to a similar get but with different options' do
       # Use a different cache store, but it should not be considered when checking equality.
-      @another_get_with_same_properties = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache.clone })
+      @another_get_with_same_properties = described_class.new(@request_uri, {}, {}, { cache_store: @cache.clone })
 
       expect(@get).to eq(@another_get_with_same_properties)
       expect(@get.hash).to eq(@another_get_with_same_properties.hash)
     end
 
     it 'is not equal to a get with different parameters even with same url' do
-      @another_get_with_extra_parameter = Wrest::Native::Get.new(@request_uri, { a_parameter: 10 }, {},
-                                                                 { cache_store: @cache })
+      @another_get_with_extra_parameter = described_class.new(@request_uri, { a_parameter: 10 }, {},
+                                                              { cache_store: @cache })
       expect(@get).not_to eq(@another_get_with_extra_parameter)
       expect(@get.hash).not_to eq(@another_get_with_extra_parameter.hash)
     end
   end
 
   it 'has a uri string with scheme and authority if no path and query params are specified' do
-    get_request = Wrest::Native::Get.new('http://localhost:3000'.to_uri, {}, {}, {})
+    get_request = described_class.new('http://localhost:3000'.to_uri, {}, {}, {})
     expect(get_request.full_uri_string).to eq('http://localhost:3000')
   end
 
   it 'has a uri string with scheme, username password and authority if no path and query params are specified' do
     uri = 'http://foo:bar@localhost:3000'.to_uri
-    get_request = Wrest::Native::Get.new(uri, {}, {}, {})
+    get_request = described_class.new(uri, {}, {}, {})
     expect(get_request.full_uri_string).to eq('http://foo:bar@localhost:3000')
   end
 
   it 'has a uri string with scheme, authority and path if no query params are specified' do
     uri = 'http://localhost:3000/articles/1/comments'.to_uri
-    get_request = Wrest::Native::Get.new(uri, {}, {}, {})
+    get_request = described_class.new(uri, {}, {}, {})
     expect(get_request.full_uri_string).to eq('http://localhost:3000/articles/1/comments')
   end
 
   it 'has a uri string with scheme, authority, path and query params when all are specified' do
     uri = 'http://localhost:3000/articles/1/comments'.to_uri
-    get_request = Wrest::Native::Get.new(uri, { title: 'this', author: 'that' }, {}, {})
+    get_request = described_class.new(uri, { title: 'this', author: 'that' }, {}, {})
     expect(get_request.full_uri_string).to eq('http://localhost:3000/articles/1/comments?author=that&title=this')
   end
 
   context 'build an identical request with caching disabled' do
     it 'calls Wrest::Get.new to build the new request' do
-      expect(Wrest::Native::Get).to receive(:new).with(@get.uri, {}, {}, anything)
+      expect(described_class).to receive(:new).with(@get.uri, {}, {}, anything)
       @get.build_request_without_cache_store({})
     end
 
@@ -87,18 +87,18 @@ describe Wrest::Native::Get do
 
     it 'initializes CacheProxy' do
       expect(Wrest::CacheProxy).to receive(:new)
-      @get = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache })
+      @get = described_class.new(@request_uri, {}, {}, { cache_store: @cache })
     end
 
     it 'calls the CacheProxy with nil cache store if disable_cache is passed' do
       expect(Wrest::CacheProxy).to receive(:new).with(anything, nil)
 
       Wrest::Caching.default_to_hash!
-      @get = Wrest::Native::Get.new(@request_uri, {}, {}, { disable_cache: true })
+      @get = described_class.new(@request_uri, {}, {}, { disable_cache: true })
     end
 
     it 'routes all requests through cache proxy' do
-      @get = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache })
+      @get = described_class.new(@request_uri, {}, {}, { cache_store: @cache })
       expect(@get.cache_proxy).to receive(:get)
       @get.invoke
     end

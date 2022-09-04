@@ -9,7 +9,7 @@ end
 
 require 'wrest'
 
-Dir[File.join("#{__dir__}", 'support', '*.rb')].map { |f| require f }
+Dir[File.join(__dir__, 'support', '*.rb')].map { |f| require f }
 
 Wrest.logger = Logger.new(File.open("#{Wrest::Root}/../log/test.log", 'a'))
 

@@ -15,7 +15,7 @@ module Wrest
   module Components
     describe Translators do
       it "knows how to raise an exception if the mime type doesn't exist" do
-        expect { Translators.lookup('weird/unknown') }.to raise_error(Wrest::Exceptions::UnsupportedContentType)
+        expect { described_class.lookup('weird/unknown') }.to raise_error(Wrest::Exceptions::UnsupportedContentType)
       end
     end
   end

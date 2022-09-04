@@ -13,7 +13,7 @@ gem 'wrest'
 require 'pp'
 require 'wrest'
 
-Wrest.logger = Logger.new(STDOUT)
+Wrest.logger = Logger.new($stdout)
 Wrest.logger.level = Logger::DEBUG # Set this to Logger::INFO or higher to disable request logging
 
 # This example shows a more object oriented approach

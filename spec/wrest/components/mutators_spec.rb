@@ -16,7 +16,7 @@ module Wrest
   module Components
     describe Mutators do
       it 'knows how to chain mutators without having to namespace them all' do
-        mutator = Mutators.chain(:xml_mini_type_caster, :xml_simple_type_caster, :camel_to_snake_case)
+        mutator = described_class.chain(:xml_mini_type_caster, :xml_simple_type_caster, :camel_to_snake_case)
         expect(mutator.class).to eq(Mutators::XmlMiniTypeCaster)
         expect(mutator.next_mutator.class).to eq(Mutators::XmlSimpleTypeCaster)
         expect(mutator.next_mutator.next_mutator.class).to eq(Mutators::CamelToSnakeCase)

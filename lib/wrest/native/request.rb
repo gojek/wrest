@@ -110,7 +110,7 @@ module Wrest
       # :nodoc:
       def build_request(request_klass, uri, parameters, headers)
         if uri.query.empty?
-          request_klass.new(parameters.empty? ? "#{uri.uri_path}" : "#{uri.uri_path}?#{parameters.to_query}", headers)
+          request_klass.new(parameters.empty? ? uri.uri_path.to_s : "#{uri.uri_path}?#{parameters.to_query}", headers)
         else
           request_klass.new(
             parameters.empty? ? "#{uri.uri_path}?#{uri.query}" : "#{uri.uri_path}?#{uri.query}&#{parameters.to_query}", headers

@@ -14,7 +14,7 @@ require 'spec_helper'
 module Wrest
   describe Wrest::Uri do
     it 'responds to the five http actions' do
-      uri = Uri.new('http://localhost')
+      uri = described_class.new('http://localhost')
       uri.should respond_to(:get)
       uri.should respond_to(:post)
       uri.should respond_to(:put)
@@ -23,11 +23,11 @@ module Wrest
     end
 
     it 'handles URIs' do
-      Uri.new('https://localhost:3000').should == Uri.new(URI.parse('https://localhost:3000'))
+      described_class.new('https://localhost:3000').should == described_class.new(URI.parse('https://localhost:3000'))
     end
 
     it 'knows when it is https' do
-      Uri.new('https://localhost:3000').should be_https
+      described_class.new('https://localhost:3000').should be_https
     end
 
     context 'UriTemplate' do
@@ -48,46 +48,46 @@ module Wrest
     end
 
     it 'knows when it is not https' do
-      Uri.new('http://localhost:3000').should_not be_https
+      described_class.new('http://localhost:3000').should_not be_https
     end
 
     context 'extension' do
       it 'knows how to build a new uri from an existing one by appending a path' do
-        Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+        described_class.new('http://localhost:3000')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
       end
 
       it 'does not lose bits of the path along the way' do
-        Uri.new('http://localhost:3000/ooga')['/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+        described_class.new('http://localhost:3000/ooga')['/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
       end
 
       it 'handles / positions with wisdom' do
-        Uri.new('http://localhost:3000/')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
-        Uri.new('http://localhost:3000')['/ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
-        Uri.new('http://localhost:3000/')['ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
-        Uri.new('http://localhost:3000')['ooga/booga'].should == Uri.new('http://localhost:3000/ooga/booga')
+        described_class.new('http://localhost:3000/')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        described_class.new('http://localhost:3000')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        described_class.new('http://localhost:3000/')['ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        described_class.new('http://localhost:3000')['ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
       end
     end
 
     it 'knows its full path' do
-      Uri.new('http://localhost:3000/ooga').full_path.should == '/ooga'
-      Uri.new('http://localhost:3000/ooga?foo=meh&bar=1').full_path.should == '/ooga?foo=meh&bar=1'
+      described_class.new('http://localhost:3000/ooga').full_path.should == '/ooga'
+      described_class.new('http://localhost:3000/ooga?foo=meh&bar=1').full_path.should == '/ooga?foo=meh&bar=1'
     end
 
     it 'knows its host' do
-      Uri.new('http://localhost:3000/ooga').host.should == 'localhost'
+      described_class.new('http://localhost:3000/ooga').host.should == 'localhost'
     end
 
     it 'knows its port' do
-      Uri.new('http://localhost:3000/ooga').port.should == 3000
-      Uri.new('http://localhost/ooga').port.should == 80
+      described_class.new('http://localhost:3000/ooga').port.should == 3000
+      described_class.new('http://localhost/ooga').port.should == 80
     end
 
     it 'includes the username and password while building a new uri if no options are provided' do
-      Uri.new(
+      described_class.new(
         'http://localhost:3000',
         username: 'foo',
         password: 'bar'
-      )['/ooga/booga'].should == Uri.new(
+      )['/ooga/booga'].should == described_class.new(
         'http://localhost:3000/ooga/booga',
         username: 'foo',
         password: 'bar'
@@ -95,7 +95,7 @@ module Wrest
     end
 
     it 'uses the username and password provided while building a new uri if present' do
-      uri = Uri.new('http://localhost:3000', username: 'foo', password: 'bar')
+      uri = described_class.new('http://localhost:3000', username: 'foo', password: 'bar')
       uri.username.should == 'foo'
       uri.password.should == 'bar'
 
@@ -105,55 +105,55 @@ module Wrest
     end
 
     it 'knows how to produce its uri as a string' do
-      Uri.new('http://localhost:3000').uri_string.should == 'http://localhost:3000'
-      Uri.new('http://localhost:3000').to_s.should == 'http://localhost:3000'
-      Uri.new('http://localhost:3000', username: 'foo', password: 'bar').to_s.should == 'http://localhost:3000'
-      Uri.new('http://foo:bar@localhost:3000').to_s.should == 'http://foo:bar@localhost:3000'
+      described_class.new('http://localhost:3000').uri_string.should == 'http://localhost:3000'
+      described_class.new('http://localhost:3000').to_s.should == 'http://localhost:3000'
+      described_class.new('http://localhost:3000', username: 'foo', password: 'bar').to_s.should == 'http://localhost:3000'
+      described_class.new('http://foo:bar@localhost:3000').to_s.should == 'http://foo:bar@localhost:3000'
     end
 
     describe 'Equals' do
       it 'understands equality' do
-        Uri.new('https://localhost:3000/ooga').should_not.nil?
-        Uri.new('https://localhost:3000/ooga').should_not == 'https://localhost:3000/ooga'
-        Uri.new('https://localhost:3000/ooga').should_not == Uri.new('https://localhost:3000/booga')
+        described_class.new('https://localhost:3000/ooga').should_not.nil?
+        described_class.new('https://localhost:3000/ooga').should_not == 'https://localhost:3000/ooga'
+        described_class.new('https://localhost:3000/ooga').should_not == described_class.new('https://localhost:3000/booga')
 
-        Uri.new('https://ooga:booga@localhost:3000/ooga').should_not == Uri.new('https://foo:bar@localhost:3000/booga')
-        Uri.new('http://ooga:booga@localhost:3000/ooga').should_not == Uri.new('http://foo:bar@localhost:3000/booga')
-        Uri.new('http://localhost:3000/ooga').should_not == Uri.new('http://foo:bar@localhost:3000/booga')
+        described_class.new('https://ooga:booga@localhost:3000/ooga').should_not == described_class.new('https://foo:bar@localhost:3000/booga')
+        described_class.new('http://ooga:booga@localhost:3000/ooga').should_not == described_class.new('http://foo:bar@localhost:3000/booga')
+        described_class.new('http://localhost:3000/ooga').should_not == described_class.new('http://foo:bar@localhost:3000/booga')
 
-        Uri.new('http://localhost:3000?owner=kai&type=bottle').should_not == Uri.new('http://localhost:3000/')
-        Uri.new('http://localhost:3000?owner=kai&type=bottle').should_not == Uri.new('http://localhost:3000?')
-        Uri.new('http://localhost:3000?owner=kai&type=bottle').should_not == Uri.new('http://localhost:3000?type=bottle&owner=kai')
+        described_class.new('http://localhost:3000?owner=kai&type=bottle').should_not == described_class.new('http://localhost:3000/')
+        described_class.new('http://localhost:3000?owner=kai&type=bottle').should_not == described_class.new('http://localhost:3000?')
+        described_class.new('http://localhost:3000?owner=kai&type=bottle').should_not == described_class.new('http://localhost:3000?type=bottle&owner=kai')
 
-        Uri.new('https://localhost:3000').should_not == Uri.new('https://localhost:3500')
-        Uri.new('https://localhost:3000').should_not == Uri.new('http://localhost:3000')
-        Uri.new('http://localhost:3000', username: 'ooga', password: 'booga').should_not == Uri.new('http://ooga:booga@localhost:3000')
+        described_class.new('https://localhost:3000').should_not == described_class.new('https://localhost:3500')
+        described_class.new('https://localhost:3000').should_not == described_class.new('http://localhost:3000')
+        described_class.new('http://localhost:3000', username: 'ooga', password: 'booga').should_not == described_class.new('http://ooga:booga@localhost:3000')
 
-        Uri.new('http://localhost:3000').should == Uri.new('http://localhost:3000')
-        Uri.new('http://localhost:3000', username: 'ooga',
-                                         password: 'booga').should == Uri.new('http://localhost:3000',
-                                                                              username: 'ooga', password: 'booga')
-        Uri.new('http://ooga:booga@localhost:3000').should == Uri.new('http://ooga:booga@localhost:3000')
+        described_class.new('http://localhost:3000').should == described_class.new('http://localhost:3000')
+        described_class.new('http://localhost:3000', username: 'ooga',
+                                                     password: 'booga').should == described_class.new('http://localhost:3000',
+                                                                                                      username: 'ooga', password: 'booga')
+        described_class.new('http://ooga:booga@localhost:3000').should == described_class.new('http://ooga:booga@localhost:3000')
       end
 
       it 'has the same hash code if it is the same uri' do
-        Uri.new('https://localhost:3000').hash.should == Uri.new('https://localhost:3000').hash
-        Uri.new('http://ooga:booga@localhost:3000').hash.should == Uri.new('http://ooga:booga@localhost:3000').hash
-        Uri.new('http://localhost:3000', username: 'ooga',
-                                         password: 'booga').hash.should == Uri.new('http://localhost:3000',
-                                                                                   username: 'ooga', password: 'booga').hash
+        described_class.new('https://localhost:3000').hash.should == described_class.new('https://localhost:3000').hash
+        described_class.new('http://ooga:booga@localhost:3000').hash.should == described_class.new('http://ooga:booga@localhost:3000').hash
+        described_class.new('http://localhost:3000', username: 'ooga',
+                                                     password: 'booga').hash.should == described_class.new('http://localhost:3000',
+                                                                                                           username: 'ooga', password: 'booga').hash
 
-        Uri.new('https://localhost:3001').hash.should_not == Uri.new('https://localhost:3000').hash
-        Uri.new('https://ooga:booga@localhost:3000').hash.should_not == Uri.new('https://localhost:3000').hash
-        Uri.new('https://localhost:3000', username: 'ooga', password: 'booga').hash.should_not == Uri.new('https://localhost:3000').hash
-        Uri.new('https://localhost:3000', username: 'ooga',
-                                          password: 'booga').hash.should_not == Uri.new('http://localhost:3000',
-                                                                                        username: 'foo', password: 'bar').hash
+        described_class.new('https://localhost:3001').hash.should_not == described_class.new('https://localhost:3000').hash
+        described_class.new('https://ooga:booga@localhost:3000').hash.should_not == described_class.new('https://localhost:3000').hash
+        described_class.new('https://localhost:3000', username: 'ooga', password: 'booga').hash.should_not == described_class.new('https://localhost:3000').hash
+        described_class.new('https://localhost:3000', username: 'ooga',
+                                                      password: 'booga').hash.should_not == described_class.new('http://localhost:3000',
+                                                                                                                username: 'foo', password: 'bar').hash
       end
     end
 
     describe 'Cloning' do
-      let(:original) { Uri.new('http://localhost:3000/ooga', default_headers: { H::ContentType => T::FormEncoded }) }
+      let(:original) { described_class.new('http://localhost:3000/ooga', default_headers: { H::ContentType => T::FormEncoded }) }
       let(:clone) { original.clone }
 
       it 'is equal to its clone' do
@@ -495,7 +495,7 @@ module Wrest
 
       http_methods = %w[get delete post_multipart put_multipart]
       http_methods.each do |http_method|
-        context "#{http_method}" do
+        context http_method.to_s do
           before(:all) { require 'wrest/multipart' }
 
           it 'calls the given block with a Callback object' do
@@ -559,7 +559,7 @@ module Wrest
       end
 
       %w[put post].each do |http_method|
-        context "#{http_method}" do
+        context http_method.to_s do
           context 'Native API' do
             it 'yields callback object if a block is given for Uri::get' do
               connection = setup_connection
@@ -629,7 +629,7 @@ module Wrest
           allow(uri).to receive(:create_connection).and_return(connection)
           callback_called = false
           uri.post_form do |callback|
-            expect(callback.is_a?(Callback)).to be_truthy
+            expect(callback).to be_a(Callback)
             callback_called = true
           end
           expect(callback_called).to be_truthy
@@ -699,7 +699,7 @@ module Wrest
           'post' => '',
           'put' => ''
         }.each do |verb, blank_first_param_value|
-          context "#{verb.upcase}" do
+          context verb.upcase.to_s do
             it 'sets the default headers if there are no request headers' do
               uri.send("build_#{verb}").headers.should eq(oauth_header)
             end
@@ -751,7 +751,7 @@ module Wrest
 
         asynchronous_backends = { 'threads' => 'default_to_threads!', 'eventmachine' => 'default_to_em!' }
         asynchronous_backends.each do |backend_type, backend_method|
-          context "#{backend_type}" do
+          context backend_type.to_s do
             before do
               Wrest::AsyncRequest.send(backend_method.to_sym)
             end

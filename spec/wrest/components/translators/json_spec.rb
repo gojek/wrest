@@ -30,7 +30,7 @@ module Wrest
           result = { 'commands' => [{ 'title' => 'New', 'action' => 'CreateDoc' },
                                     { 'title' => 'Open', 'action' => 'OpenDoc' }, { 'title' => 'Close', 'action' => 'CloseDoc' }],
                      'menu' => 'File' }
-          Json.deserialise(http_response).should eq(result)
+          described_class.deserialise(http_response).should eq(result)
         end
 
         it 'knows how to convert json to a hashmap' do
@@ -46,18 +46,18 @@ module Wrest
                            },
                            { 'title' => 'Close', 'action' => 'CloseDoc' }]
           }
-          expect(Json.serialise(hash)).to include('"menu":"File"')
-          expect(Json.serialise(hash)).to include('"commands":[{"title":"New","action":"CreateDoc"},{"title":"Open","action":"OpenDoc"},{"title":"Close","action":"CloseDoc"}]')
+          expect(described_class.serialise(hash)).to include('"menu":"File"')
+          expect(described_class.serialise(hash)).to include('"commands":[{"title":"New","action":"CreateDoc"},{"title":"Open","action":"OpenDoc"},{"title":"Close","action":"CloseDoc"}]')
         end
 
         it 'has #deserialize delegate to #deserialise' do
-          expect(Json).to receive(:deserialise).with(http_response, hash_including(option: :something))
-          Json.deserialize(http_response, option: :something)
+          expect(described_class).to receive(:deserialise).with(http_response, hash_including(option: :something))
+          described_class.deserialize(http_response, option: :something)
         end
 
         it 'has #serialize delegate to #serialise' do
-          expect(Json).to receive(:serialise).with({ hash: :foo }, hash_including(option: :something))
-          Json.serialize({ hash: :foo }, option: :something)
+          expect(described_class).to receive(:serialise).with({ hash: :foo }, hash_including(option: :something))
+          described_class.serialize({ hash: :foo }, option: :something)
         end
       end
     end

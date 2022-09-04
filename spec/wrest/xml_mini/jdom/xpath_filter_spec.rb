@@ -8,7 +8,7 @@ if RUBY_PLATFORM =~ /java/
       describe XPathFilter do
         before do
           @testObj = Object.new
-          @testObj.extend(XPathFilter)
+          @testObj.extend(described_class)
         end
 
         it 'throws a not implented exception when filter command is invoked and ActiveSupport_XmlMini backend is JDOM' do

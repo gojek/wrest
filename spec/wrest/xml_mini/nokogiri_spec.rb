@@ -6,7 +6,7 @@ require 'nokogiri'
 module ActiveSupport
   describe XmlMini_Nokogiri, 'filter' do
     it 'filters using the given xpath and return the matching node found as an array' do
-      res_arr = XmlMini_Nokogiri.filter(
+      res_arr = described_class.filter(
         '<Person><Personal><Name><FirstName>ooga</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>', '//Name'
       )
       result = ''

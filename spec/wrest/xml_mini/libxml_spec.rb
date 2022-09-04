@@ -7,7 +7,7 @@ if Helpers.xml_backends.include?('LibXML')
   module ActiveSupport
     describe XmlMini_LibXML, 'filter' do
       it 'filters using the given xpath and return the matching node found as an array' do
-        res_arr = XmlMini_LibXML.filter(
+        res_arr = described_class.filter(
           '<Person><Personal><Name><FirstName>ooga</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>', '//Name'
         )
         result = ''

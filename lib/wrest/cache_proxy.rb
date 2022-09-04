@@ -30,7 +30,7 @@ module Wrest
                               te
                               trailers
                               transfer-encoding
-                              upgrade]
+                              upgrade].freeze
 
       def initialize(get, cache_store)
         @get         = get
@@ -59,13 +59,13 @@ module Wrest
 
       def update_cache_headers_for(cached_response, new_response)
         # RFC 2616 13.5.3 (Combining Headers)
-        cached_response.headers.merge!(new_response.headers.select do |key, _value|
-                                         !(HOP_BY_HOP_HEADERS.include? key.downcase)
+        cached_response.headers.merge!(new_response.headers.reject do |key, _value|
+                                         (HOP_BY_HOP_HEADERS.include? key.downcase)
                                        end)
       end
 
       def cache(response)
-        @cache_store[@get.full_uri_string] = response.clone if response && response.cacheable?
+        @cache_store[@get.full_uri_string] = response.clone if response&.cacheable?
       end
 
       # :nodoc:

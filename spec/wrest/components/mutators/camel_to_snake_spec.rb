@@ -16,7 +16,7 @@ module Wrest
   module Components
     describe Mutators::CamelToSnakeCase do
       before do
-        @mutator = Mutators::CamelToSnakeCase.new
+        @mutator = described_class.new
       end
 
       it 'underscores the key in a tuple' do

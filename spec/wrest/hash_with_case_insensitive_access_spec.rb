@@ -5,7 +5,7 @@ require 'spec_helper'
 module Wrest
   describe HashWithCaseInsensitiveAccess do
     before do
-      @hash = Wrest::HashWithCaseInsensitiveAccess.new 'FOO' => 'bar', 'baz' => 'bee', 22 => 2002, :xyz => 'pqr'
+      @hash = described_class.new 'FOO' => 'bar', 'baz' => 'bee', 22 => 2002, :xyz => 'pqr'
     end
 
     it 'has values accessible irrespective of case' do

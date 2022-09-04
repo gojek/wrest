@@ -16,12 +16,12 @@ describe Wrest::CacheProxy do
   context 'Factory' do
     it 'creates a Null cache proxy if cache store is nil' do
       Wrest::CacheProxy::NullCacheProxy.should_receive(:new)
-      Wrest::CacheProxy.new(@get, nil)
+      described_class.new(@get, nil)
     end
 
     it 'creates a Default cache proxy class if cache store is available' do
       Wrest::CacheProxy::DefaultCacheProxy.should_receive(:new)
-      Wrest::CacheProxy.new(@get, {})
+      described_class.new(@get, {})
     end
   end
 
@@ -258,8 +258,8 @@ describe Wrest::CacheProxy do
     end
 
     it 'has different responses for get request with same scheme, authority, paths but different query params, given that response changes with query params' do
-      @cache_proxy_one = Wrest::CacheProxy.new(@get_one, @redis_cache)
-      @cache_proxy_two = Wrest::CacheProxy.new(@get_two, @redis_cache)
+      @cache_proxy_one = described_class.new(@get_one, @redis_cache)
+      @cache_proxy_two = described_class.new(@get_two, @redis_cache)
       expect(@cache_proxy_one.get).not_to eq(@cache_proxy_two.get)
     end
   end

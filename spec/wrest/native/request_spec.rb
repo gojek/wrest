@@ -13,7 +13,7 @@ require 'spec_helper'
 
 describe Wrest::Native::Request do
   it 'converts all symbols in header keys to strings' do
-    expect(Wrest::Native::Request.new(
+    expect(described_class.new(
       'http://localhost/foo'.to_uri, Net::HTTP::Get, {},
       nil, 'Content-Type' => 'application/xml', :per_page => '10'
     ).headers).to eq({
@@ -174,7 +174,7 @@ describe Wrest::Native::Request do
       expected_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<lead-bottle>\n  <id type=\"integer\">1</id>\n  " \
                       "<name>Wooz</name>\n  <universe-id type=\"integer\" nil=\"true\"></universe-id>\n</lead-bottle>\n"
 
-      request = Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get)
+      request = described_class.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get)
 
       expect(request.invoke.body).to eq(expected_body)
     end
@@ -191,8 +191,8 @@ describe Wrest::Native::Request do
 
     it 'raises a Wrest exception on timeout' do
       lambda {
-        Wrest::Native::Request.new('http://localhost:3000/two_seconds'.to_uri, Net::HTTP::Get, {}, '', {},
-                                   timeout: 1).invoke
+        described_class.new('http://localhost:3000/two_seconds'.to_uri, Net::HTTP::Get, {}, '', {},
+                            timeout: 1).invoke
       }.should raise_error(Wrest::Exceptions::Timeout)
     end
   end
