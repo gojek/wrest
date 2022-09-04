@@ -4,36 +4,33 @@ require 'spec_helper'
 require 'rspec'
 
 describe Wrest::Native::Get do
-  before do
-    @cache = {}
-    @request_uri = 'http://localhost/foo'.to_uri
-
-    @get = described_class.new(@request_uri, {}, {}, { cache_store: @cache })
-  end
+  let(:cache) { {} }
+  let(:request_uri) { 'http://localhost/foo'.to_uri }
+  let(:get_request) { described_class.new(request_uri, {}, {}, { cache_store: cache }) }
 
   context 'hashing and equality' do
     it 'is equal to itself' do
-      expect(@get).to eq(@get)
+      expect(get_request).to eq(get_request)
     end
 
     it 'is equal to its clone' do
-      expect(@get).to eq(@get.clone)
-      expect(@get.hash).to eq(@get.clone.hash)
+      expect(get_request).to eq(get_request.clone)
+      expect(get_request.hash).to eq(get_request.clone.hash)
     end
 
     it 'is equal to a similar get but with different options' do
       # Use a different cache store, but it should not be considered when checking equality.
-      @another_get_with_same_properties = described_class.new(@request_uri, {}, {}, { cache_store: @cache.clone })
+      another_get_with_same_properties = described_class.new(request_uri, {}, {}, { cache_store: cache.clone })
 
-      expect(@get).to eq(@another_get_with_same_properties)
-      expect(@get.hash).to eq(@another_get_with_same_properties.hash)
+      expect(get_request).to eq(another_get_with_same_properties)
+      expect(get_request.hash).to eq(another_get_with_same_properties.hash)
     end
 
     it 'is not equal to a get with different parameters even with same url' do
-      @another_get_with_extra_parameter = described_class.new(@request_uri, { a_parameter: 10 }, {},
-                                                              { cache_store: @cache })
-      expect(@get).not_to eq(@another_get_with_extra_parameter)
-      expect(@get.hash).not_to eq(@another_get_with_extra_parameter.hash)
+      another_get_with_extra_parameter = described_class.new(request_uri, { a_parameter: 10 }, {},
+                                                             { cache_store: cache })
+      expect(get_request).not_to eq(another_get_with_extra_parameter)
+      expect(get_request.hash).not_to eq(another_get_with_extra_parameter.hash)
     end
   end
 
@@ -62,21 +59,21 @@ describe Wrest::Native::Get do
 
   context 'build an identical request with caching disabled' do
     it 'calls Wrest::Get.new to build the new request' do
-      expect(described_class).to receive(:new).with(@get.uri, {}, {}, anything)
-      @get.build_request_without_cache_store({})
+      expect(described_class).to receive(:new).with(get_request.uri, {}, {}, anything)
+      get_request.build_request_without_cache_store({})
     end
 
     it "merges the validation headers with the new request's headers" do
-      new_get = @get.build_request_without_cache_store(foo: 'bar')
+      new_get = get_request.build_request_without_cache_store(foo: 'bar')
       expect(new_get.headers['foo']).to eq('bar')
     end
 
     it 'returns a similar get request with disable_cache and without cache store' do
-      new_get = @get.build_request_without_cache_store({})
+      new_get = get_request.build_request_without_cache_store({})
 
-      expect(new_get.parameters).to eq(@get.parameters)
-      expect(new_get.uri).to eq(@get.uri)
-      expect(new_get.options).to eq(@get.options.merge(disable_cache: true).except(:cache_store))
+      expect(new_get.parameters).to eq(get_request.parameters)
+      expect(new_get.uri).to eq(get_request.uri)
+      expect(new_get.options).to eq(get_request.options.merge(disable_cache: true).except(:cache_store))
     end
   end
 
@@ -87,73 +84,71 @@ describe Wrest::Native::Get do
 
     it 'initializes CacheProxy' do
       expect(Wrest::CacheProxy).to receive(:new)
-      @get = described_class.new(@request_uri, {}, {}, { cache_store: @cache })
+      get_request = described_class.new(request_uri, {}, {}, { cache_store: cache })
     end
 
     it 'calls the CacheProxy with nil cache store if disable_cache is passed' do
       expect(Wrest::CacheProxy).to receive(:new).with(anything, nil)
 
       Wrest::Caching.default_to_hash!
-      @get = described_class.new(@request_uri, {}, {}, { disable_cache: true })
+      get_request = described_class.new(request_uri, {}, {}, { disable_cache: true })
     end
 
     it 'routes all requests through cache proxy' do
-      @get = described_class.new(@request_uri, {}, {}, { cache_store: @cache })
-      expect(@get.cache_proxy).to receive(:get)
-      @get.invoke
+      get_request = described_class.new(request_uri, {}, {}, { cache_store: cache })
+      expect(get_request.cache_proxy).to receive(:get)
+      get_request.invoke
     end
   end
 
   context 'functional', functional: true do
-    before do
-      @cache_store = {}
-      @l = 'http://localhost:3000'.to_uri(cache_store: @cache_store)
-    end
+    let(:cache_store) { {} }
+    let(:url) { 'http://localhost:3000'.to_uri(cache_store: cache_store) }
 
     describe 'cacheable responses' do
       it 'does not cache any non-cacheable response' do
-        @l['non_cacheable/nothing_explicitly_defined'].get
-        @l['non_cacheable/non_cacheable_statuscode'].get
-        @l['non_cacheable/no_store'].get
-        @l['non_cacheable/no_cache'].get
-        @l['non_cacheable/with_etag'].get
+        url['non_cacheable/nothing_explicitly_defined'].get
+        url['non_cacheable/non_cacheable_statuscode'].get
+        url['non_cacheable/no_store'].get
+        url['non_cacheable/no_cache'].get
+        url['non_cacheable/with_etag'].get
 
-        expect(@cache_store).to be_empty
+        expect(cache_store).to be_empty
       end
 
       it 'caches cacheable but cant_be_validated response' do
         # The server returns a different body for the same url on every call. So if the copy is cached by the client,
         # they should be equal.
 
-        expect(@l['cacheable/cant_be_validated/with_expires/300'].get).to eq(@l['cacheable/cant_be_validated/with_expires/300'].get)
-        expect(@l['cacheable/cant_be_validated/with_max_age/300'].get).to eq(@l['cacheable/cant_be_validated/with_max_age/300'].get)
-        expect(@l['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get).to eq(@l['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get)
+        expect(url['cacheable/cant_be_validated/with_expires/300'].get).to eq(url['cacheable/cant_be_validated/with_expires/300'].get)
+        expect(url['cacheable/cant_be_validated/with_max_age/300'].get).to eq(url['cacheable/cant_be_validated/with_max_age/300'].get)
+        expect(url['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get).to eq(url['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get)
 
-        expect(@l['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get).not_to eq(@l['cacheable/cant_be_validated/with_max_age/300'].get)
+        expect(url['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get).not_to eq(url['cacheable/cant_be_validated/with_max_age/300'].get)
       end
 
       it 'gives the cached response itself when it has not expired' do
-        initial_response = @l['cacheable/cant_be_validated/with_expires/1'].get
-        next_response = @l['cacheable/cant_be_validated/with_expires/1'].get
+        initial_response = url['cacheable/cant_be_validated/with_expires/1'].get
+        next_response = url['cacheable/cant_be_validated/with_expires/1'].get
 
         expect(next_response.body.split.first).to eq(initial_response.body.split.first)
       end
 
       it 'gives a new response after it has expired (for a non-validatable cache entry)' do
-        initial_response = @l['cacheable/cant_be_validated/with_expires/1'].get
+        initial_response = url['cacheable/cant_be_validated/with_expires/1'].get
         sleep 1
-        next_response = @l['cacheable/cant_be_validated/with_expires/1'].get
+        next_response = url['cacheable/cant_be_validated/with_expires/1'].get
 
         expect(next_response.body.split.first).not_to eq(initial_response.body.split.first)
       end
 
       context 'validatable cache entry' do
         it 'gives the cached response itself if server gives a 304 (not modified)' do
-          first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
-          first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
+          first_response_with_last_modified = url['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
+          first_response_with_etag = url['/cacheable/can_be_validated/with_etag/always_304/1'].get
           sleep 2
-          second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
-          second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
+          second_response_with_last_modified = url['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
+          second_response_with_etag = url['/cacheable/can_be_validated/with_etag/always_304/1'].get
 
           expect(first_response_with_last_modified.body.split.first).to eq(second_response_with_last_modified.body.split.first)
           expect(first_response_with_etag.body.split.first).to eq(second_response_with_etag.body.split.first)
@@ -187,11 +182,11 @@ describe Wrest::Native::Get do
         end
 
         it 'gives the new response if server sends a new one' do
-          first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
-          first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
+          first_response_with_last_modified = url['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
+          first_response_with_etag = url['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
           sleep 1
-          second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
-          second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
+          second_response_with_last_modified = url['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
+          second_response_with_etag = url['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
 
           expect(first_response_with_last_modified.body.split.first).not_to eq(second_response_with_last_modified.body.split.first)
           expect(first_response_with_etag.body.split.first).not_to eq(second_response_with_etag.body.split.first)

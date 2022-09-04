@@ -16,7 +16,7 @@ describe Wrest::Caching do
       end
 
       it 'passes through options received to redis' do
-        expect(Redis).to receive(:new).with(host: '10.0.1.1', port: 6380, db: 15)
+        expect(Redis).to receive(:new).with(hash_including(host: '10.0.1.1', port: 6380, db: 15))
         client = Wrest::Caching::Redis.new(host: '10.0.1.1', port: 6380, db: 15)
       end
     end

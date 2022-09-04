@@ -35,3 +35,7 @@ RSpec/ExampleLength:
 
 RSpec/MultipleExpectations:
   Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Exclude:
+    - spec/wrest/cache_proxy_spec.rb
