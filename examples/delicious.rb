@@ -9,8 +9,9 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require File.expand_path(File.dirname(__FILE__) + '/../lib/wrest')
+gem 'wrest'
 require 'pp'
+require 'wrest'
 
 Wrest.logger = Logger.new(STDOUT)
 Wrest.logger.level = Logger::DEBUG # Set this to Logger::INFO or higher to disable request logging
@@ -47,7 +48,7 @@ end
 
 account = Delicious.new username: 'kaiwren', password: 'fupupp1es'
 
-puts ('*' * 20) + 'Creating bookmark tagged Rails' + ('*' * 20)
+puts "#{'*' * 20}Creating bookmark tagged Rails#{'*' * 20}"
 
 pp account.bookmark(
   url: 'http://blog.sidu.in/search/label/ruby',
@@ -56,18 +57,18 @@ pp account.bookmark(
   tags: 'ruby hacking'
 ).deserialise
 
-puts ('*' * 20) + 'Listing bookmarks tagged Rails on a certain date' + ('*' * 20)
+puts "#{'*' * 20}Listing bookmarks tagged Rails on a certain date#{'*' * 20}"
 
 pp account.bookmarks(tag: 'rails', dt: '20090712').deserialise
 
-puts ('*' * 20) + 'Listing recent bookmarks' + ('*' * 20)
+puts "#{'*' * 20}Listing recent bookmarks#{'*' * 20}"
 
 pp(account.recent(tag: 'ruby').deserialise['posts']['post'].collect { |bookmark| bookmark['href'] })
 
-puts ('*' * 20) + 'Deleting the bookmark we just created' + ('*' * 20)
+puts "#{'*' * 20}Deleting the bookmark we just created#{'*' * 20}"
 
 pp account.delete(url: 'http://blog.sidu.in/search/label/ruby').deserialise
 
-puts ('*' * 20) + 'Listing recent bookmarks' + ('*' * 20)
+puts "#{'*' * 20}Listing recent bookmarks#{'*' * 20}"
 
 pp(account.recent(tag: 'ruby').deserialise['posts']['post'].collect { |bookmark| bookmark['href'] })

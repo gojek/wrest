@@ -15,7 +15,7 @@ module Wrest
         '500' => 'INTERNAL SERVER ERROR' }.each do |status, status_message|
         it "knows if the response code is HTTP #{status_message} for #{klass} object" do
           code = status
-          method = (status_message.split.join('_').downcase + '?').to_sym
+          method = "#{status_message.split.join('_').downcase}?".to_sym
           net_response = double(double_class)
           allow(net_response).to receive(:code).and_return(code)
           allow(net_response).to receive(:headers).and_return({})
@@ -25,7 +25,7 @@ module Wrest
 
         it "knows if the response code is not HTTP #{status_message} for #{klass} object" do
           code = (status.to_i + 1).to_s
-          method = (status_message.split.join('_').downcase + '?').to_sym
+          method = "#{status_message.split.join('_').downcase}?".to_sym
           net_response = double(double_class)
           allow(net_response).to receive(:code).and_return(code)
           allow(net_response).to receive(:headers).and_return({})

@@ -9,8 +9,9 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
+gem 'wrest'
 require 'pp'
-require File.expand_path(File.dirname(__FILE__) + '/../lib/wrest')
+require 'wrest'
 
 # See http://code.google.com/p/imgur-api
 imgur_key = 'f6561f62e13422bb25a1e738e9927d3b' # use your own key, this one is fake
