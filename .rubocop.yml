@@ -19,6 +19,10 @@ Lint/ConstantDefinitionInBlock:
   Exclude:
     - spec/wrest/components/mutators/base_spec.rb
 
+Lint/EmptyBlock:
+  Exclude:
+    - spec/wrest/callback_spec.rb
+
 Naming/VariableNumber:
   Exclude:
     - Gemfile

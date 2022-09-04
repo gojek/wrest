@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class Server < Sinatra::Application
-  get '/authenticate' do
-  end
+  get '/authenticate'
 
-  get '/authenticated' do
-  end
+  get '/authenticated'
 end
