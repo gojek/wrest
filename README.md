@@ -4,6 +4,7 @@
 <p align="center">
   <a href="https://github.com/kaiwren/wrest/actions/workflows/ruby.yml">
     <img src="https://github.com/kaiwren/wrest/actions/workflows/ruby.yml/badge.svg" alt="Ruby" style="max-width: 100%;">
+    <img src="https://github.com/kaiwren/wrest/actions/workflows/jruby.yml/badge.svg" alt="JRuby" style="max-width: 100%;">
   </a>
 </p>
 
