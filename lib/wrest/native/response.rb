@@ -212,7 +212,7 @@ module Wrest # :nodoc:
 
       # :nodoc:
       def recalculate_cache_control_headers
-        headers['cache-control'].split(',').collect { |cc| cc.strip }
+        headers['cache-control'].split(',').collect(&:strip)
       rescue StandardError
         []
       end
