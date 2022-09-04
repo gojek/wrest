@@ -62,6 +62,13 @@ namespace :rspec do
     Rake::Task['rspec:spec_runner'].invoke
   end
 
+  desc 'Launch the sample_rails_app running at 3000 in test environment needed for the functional tests'
+  task :server do
+    sample_app_path = File.join(__dir__, 'spec', 'sample_app')
+    sh("cd #{sample_app_path}; bundle install")
+    sh("bundle exec rackup -E development -p 3000 #{File.join(sample_app_path, 'config.ru')}")
+  end
+
   desc 'Run all live functional specs - requires sample_rails_app running at 3000 in test environment'
   task :functional do
     ENV['wrest_functional_spec'] = 'true'

@@ -4,6 +4,7 @@
 source 'http://rubygems.org'
 
 gem 'json_pure'
+gem 'rack'
 gem 'rake'
 gem 'sinatra'
 gem 'webrick'

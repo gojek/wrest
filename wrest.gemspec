@@ -35,7 +35,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop', ['~> 1.35.0']
   s.add_development_dependency 'rubocop-rake'
   s.add_development_dependency 'rubocop-rspec'
-  s.add_development_dependency 'sinatra', ['~> 1.0.0']
+  s.add_development_dependency 'sinatra', ['~> 2.0.0']
+  s.add_development_dependency 'webrick'
 
   s.add_runtime_dependency 'activesupport', ['~> 5']
   s.add_runtime_dependency 'builder', ['> 2.0']
