@@ -15,24 +15,26 @@ module Wrest
     # using the type data embedded in a hash
     # created by deserialising an xml using
     # xml-simple
-    class Mutators::XmlSimpleTypeCaster < Mutators::Base
-      def do_mutate(tuple)
-        out_key = tuple.first
-        in_value = tuple.last[0]
-        out_value = in_value
+    module Mutators
+      class XmlSimpleTypeCaster < Mutators::Base
+        def do_mutate(tuple)
+          out_key = tuple.first
+          in_value = tuple.last[0]
+          out_value = in_value
 
-        case in_value
-        when Hash
-          out_value = if in_value['nil'] == 'true'
-                        nil
-                      elsif in_value.key?('type')
-                        ActiveSupport::XmlMini::PARSING[in_value['type']].call(in_value['content'])
-                      else
-                        in_value.mutate_using(self)
-                      end
+          case in_value
+          when Hash
+            out_value = if in_value['nil'] == 'true'
+                          nil
+                        elsif in_value.key?('type')
+                          ActiveSupport::XmlMini::PARSING[in_value['type']].call(in_value['content'])
+                        else
+                          in_value.mutate_using(self)
+                        end
+          end
+
+          [out_key, out_value]
         end
-
-        [out_key, out_value]
       end
     end
   end

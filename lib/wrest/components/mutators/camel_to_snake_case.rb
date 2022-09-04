@@ -15,9 +15,11 @@ module Wrest
     #
     # Example:
     #  Mutators::CamelToSnakeCase.new.mutate(['Spirit-Sword', 'true'])  # => ['spirit_sword', 'true']**
-    class Mutators::CamelToSnakeCase < Mutators::Base
-      def do_mutate(tuple)
-        [tuple.first.underscore, tuple.last]
+    module Mutators
+      class CamelToSnakeCase < Mutators::Base
+        def do_mutate(tuple)
+          [tuple.first.underscore, tuple.last]
+        end
       end
     end
   end

@@ -12,42 +12,44 @@
 require 'spec_helper'
 require 'wrest/components/mutators'
 
-module Wrest::Components
-  describe Mutators::XmlSimpleTypeCaster do
-    before do
-      @mutator = Mutators::XmlSimpleTypeCaster.new
-    end
+module Wrest
+  module Components
+    describe Mutators::XmlSimpleTypeCaster do
+      before do
+        @mutator = Mutators::XmlSimpleTypeCaster.new
+      end
 
-    # {"lead-bottle"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]}
+      # {"lead-bottle"=>[{"name"=>["Wooz"], "universe-id"=>[{"type"=>"integer", "nil"=>"true"}], "id"=>[{"type"=>"integer", "content"=>"1"}]}]}
 
-    it 'typecasts a nil value in a tuple' do
-      expect(@mutator.mutate(
-               ['universe-id', [{ 'type' => 'integer', 'nil' => 'true' }]]
-             )).to eq(['universe-id', nil])
-    end
+      it 'typecasts a nil value in a tuple' do
+        expect(@mutator.mutate(
+                 ['universe-id', [{ 'type' => 'integer', 'nil' => 'true' }]]
+               )).to eq(['universe-id', nil])
+      end
 
-    it 'leaves a string value in a tuple unchanged' do
-      expect(@mutator.mutate(
-               ['name', ['Wooz']]
-             )).to eq(%w[name Wooz])
-    end
+      it 'leaves a string value in a tuple unchanged' do
+        expect(@mutator.mutate(
+                 ['name', ['Wooz']]
+               )).to eq(%w[name Wooz])
+      end
 
-    it 'casts an integer value in a tuple' do
-      expect(@mutator.mutate(
-               ['id', [{ 'type' => 'integer', 'content' => '1' }]]
-             )).to eq(['id', 1])
-    end
+      it 'casts an integer value in a tuple' do
+        expect(@mutator.mutate(
+                 ['id', [{ 'type' => 'integer', 'content' => '1' }]]
+               )).to eq(['id', 1])
+      end
 
-    it 'steps into a value if it is a hash' do
-      expect(@mutator.mutate(
-               ['Result', [{
-                 'PublishDate' => ['1240326000'],
-                 'NewsSource' => [{ 'Online' => ['PC via News'],
-                                    'UniqueId' => [{ 'type' => 'integer', 'content' => '1' }] }]
-               }]]
-             )).to eq(['Result',
-                       { 'PublishDate' => '1240326000',
-                         'NewsSource' => { 'Online' => 'PC via News', 'UniqueId' => 1 } }])
+      it 'steps into a value if it is a hash' do
+        expect(@mutator.mutate(
+                 ['Result', [{
+                   'PublishDate' => ['1240326000'],
+                   'NewsSource' => [{ 'Online' => ['PC via News'],
+                                      'UniqueId' => [{ 'type' => 'integer', 'content' => '1' }] }]
+                 }]]
+               )).to eq(['Result',
+                         { 'PublishDate' => '1240326000',
+                           'NewsSource' => { 'Online' => 'PC via News', 'UniqueId' => 1 } }])
+      end
     end
   end
 end

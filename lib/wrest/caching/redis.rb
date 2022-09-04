@@ -10,27 +10,29 @@ end
 require 'redis'
 require 'yaml'
 
-module Wrest::Caching
-  class Redis
-    def initialize(redis_options = {})
-      @redis = ::Redis.new(redis_options)
-    end
+module Wrest
+  module Caching
+    class Redis
+      def initialize(redis_options = {})
+        @redis = ::Redis.new(redis_options)
+      end
 
-    def [](key)
-      value = @redis.get(key)
-      value.nil? ? nil : YAML.load(value)
-    end
+      def [](key)
+        value = @redis.get(key)
+        value.nil? ? nil : YAML.load(value)
+      end
 
-    def []=(key, response)
-      marshalled_response = YAML.dump(response)
-      @redis.set(key, marshalled_response)
-      @redis.expire(key, response.freshness_lifetime) unless response.expired?
-    end
+      def []=(key, response)
+        marshalled_response = YAML.dump(response)
+        @redis.set(key, marshalled_response)
+        @redis.expire(key, response.freshness_lifetime) unless response.expired?
+      end
 
-    def delete(key)
-      value = self[key]
-      @redis.del(key)
-      value
+      def delete(key)
+        value = self[key]
+        @redis.del(key)
+        value
+      end
     end
   end
 end

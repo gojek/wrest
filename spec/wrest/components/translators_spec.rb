@@ -11,10 +11,12 @@
 
 require 'spec_helper'
 
-module Wrest::Components
-  describe Translators do
-    it "knows how to raise an exception if the mime type doesn't exist" do
-      expect { Translators.lookup('weird/unknown') }.to raise_error(Wrest::Exceptions::UnsupportedContentType)
+module Wrest
+  module Components
+    describe Translators do
+      it "knows how to raise an exception if the mime type doesn't exist" do
+        expect { Translators.lookup('weird/unknown') }.to raise_error(Wrest::Exceptions::UnsupportedContentType)
+      end
     end
   end
 end

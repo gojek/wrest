@@ -9,28 +9,30 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 module Wrest
-  module Components::Translators
-    module Xml
-      extend self
+  module Components
+    module Translators
+      module Xml
+        extend self
 
-      def deserialise(response, options = {})
-        if options[:xpath].nil?
-          Hash.from_xml(response.body)
-        else
-          ActiveSupport::XmlMini.filter(response.body, options[:xpath])
+        def deserialise(response, options = {})
+          if options[:xpath].nil?
+            Hash.from_xml(response.body)
+          else
+            ActiveSupport::XmlMini.filter(response.body, options[:xpath])
+          end
         end
-      end
 
-      def deserialize(response, options = {})
-        deserialise(response, options)
-      end
+        def deserialize(response, options = {})
+          deserialise(response, options)
+        end
 
-      def serialise(hash, options = {})
-        hash.to_xml(options)
-      end
+        def serialise(hash, options = {})
+          hash.to_xml(options)
+        end
 
-      def serialize(hash, options = {})
-        serialise(hash, options)
+        def serialize(hash, options = {})
+          serialise(hash, options)
+        end
       end
     end
   end

@@ -10,14 +10,16 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 module Wrest
-  module Components::Translators
-    # Maps content types to deserialisers
-    CONTENT_TYPES = {
-      'application/xml' => Wrest::Components::Translators::Xml,
-      'text/xml' => Wrest::Components::Translators::Xml,
-      'application/json' => Wrest::Components::Translators::Json,
-      'text/javascript' => Wrest::Components::Translators::Json,
-      'text/plain' => Wrest::Components::Translators::Txt
-    }
+  module Components
+    module Translators
+      # Maps content types to deserialisers
+      CONTENT_TYPES = {
+        'application/xml' => Wrest::Components::Translators::Xml,
+        'text/xml' => Wrest::Components::Translators::Xml,
+        'application/json' => Wrest::Components::Translators::Json,
+        'text/javascript' => Wrest::Components::Translators::Json,
+        'text/plain' => Wrest::Components::Translators::Txt
+      }
+    end
   end
 end

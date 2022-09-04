@@ -12,14 +12,16 @@
 require 'spec_helper'
 require 'wrest/components/mutators'
 
-module Wrest::Components
-  describe Mutators::CamelToSnakeCase do
-    before do
-      @mutator = Mutators::CamelToSnakeCase.new
-    end
+module Wrest
+  module Components
+    describe Mutators::CamelToSnakeCase do
+      before do
+        @mutator = Mutators::CamelToSnakeCase.new
+      end
 
-    it 'underscores the key in a tuple' do
-      expect(@mutator.mutate(%w[universe-id 1])).to eq(%w[universe_id 1])
+      it 'underscores the key in a tuple' do
+        expect(@mutator.mutate(%w[universe-id 1])).to eq(%w[universe_id 1])
+      end
     end
   end
 end

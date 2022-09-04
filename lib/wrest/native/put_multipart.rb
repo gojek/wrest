@@ -10,25 +10,27 @@
 # See the License for the specific language governing permissions and limitations under the License.
 require 'net/http/post/multipart'
 
-module Wrest::Native
-  class PutMultipart < Request
-    def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
-      super(
-        wrest_uri,
-        Net::HTTP::Put::Multipart,
-        parameters,
-        nil,
-        headers,
-        options
-      )
-    end
+module Wrest
+  module Native
+    class PutMultipart < Request
+      def initialize(wrest_uri, parameters = {}, headers = {}, options = {})
+        super(
+          wrest_uri,
+          Net::HTTP::Put::Multipart,
+          parameters,
+          nil,
+          headers,
+          options
+        )
+      end
 
-    def build_request(request_klass, uri, parameters, headers)
-      request_klass.new(uri.full_path, parameters, headers)
-    end
+      def build_request(request_klass, uri, parameters, headers)
+        request_klass.new(uri.full_path, parameters, headers)
+      end
 
-    def do_request
-      @connection.request(@http_request)
+      def do_request
+        @connection.request(@http_request)
+      end
     end
   end
 end

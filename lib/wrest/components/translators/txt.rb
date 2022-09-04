@@ -9,24 +9,26 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 module Wrest
-  module Components::Translators
-    module Txt
-      extend self
+  module Components
+    module Translators
+      module Txt
+        extend self
 
-      def deserialise(response, _options = {})
-        response.body
-      end
+        def deserialise(response, _options = {})
+          response.body
+        end
 
-      def deserialize(response, options = {})
-        deserialise(response, options)
-      end
+        def deserialize(response, options = {})
+          deserialise(response, options)
+        end
 
-      def serialise(hash, _options = {})
-        hash.inspect
-      end
+        def serialise(hash, _options = {})
+          hash.inspect
+        end
 
-      def serialize(hash, options = {})
-        serialise(hash, options)
+        def serialize(hash, options = {})
+          serialise(hash, options)
+        end
       end
     end
   end

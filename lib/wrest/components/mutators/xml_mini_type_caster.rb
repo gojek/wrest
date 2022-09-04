@@ -15,29 +15,31 @@ module Wrest
     # using the type data embedded in a hash
     # created by deserialising an xml using
     # ActiveSupport::XmlMini
-    class Mutators::XmlMiniTypeCaster < Mutators::Base
-      def do_mutate(tuple)
-        out_key, in_value = tuple
+    module Mutators
+      class XmlMiniTypeCaster < Mutators::Base
+        def do_mutate(tuple)
+          out_key, in_value = tuple
 
-        case in_value
-        when Hash
-          if in_value['nil'] == 'true'
-            out_value = nil
-          elsif in_value.key?('type')
-            caster = ActiveSupport::XmlMini::PARSING[in_value['type']]
-            out_value = caster ? caster.call(in_value['__content__']) : in_value
-          elsif in_value.key?('__content__')
-            out_value = in_value['__content__']
+          case in_value
+          when Hash
+            if in_value['nil'] == 'true'
+              out_value = nil
+            elsif in_value.key?('type')
+              caster = ActiveSupport::XmlMini::PARSING[in_value['type']]
+              out_value = caster ? caster.call(in_value['__content__']) : in_value
+            elsif in_value.key?('__content__')
+              out_value = in_value['__content__']
+            else
+              out_value = in_value.mutate_using(self)
+            end
+          when Array
+            out_value = in_value.collect { |hash| hash.mutate_using(self) }
           else
-            out_value = in_value.mutate_using(self)
+            out_value = in_value
           end
-        when Array
-          out_value = in_value.collect { |hash| hash.mutate_using(self) }
-        else
-          out_value = in_value
-        end
 
-        [out_key, out_value]
+          [out_key, out_value]
+        end
       end
     end
   end
