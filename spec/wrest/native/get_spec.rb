@@ -175,13 +175,13 @@ describe Wrest::Native::Get do
 
           # Cache expired. Wrest would send an If-Not-Modified, server will send 304 (Not Modified) with a header-that-changes-everytime
           second_response_with_last_modified = uri.get
-          second_response_with_last_modified.body.should == first_response_with_last_modified.body
-          second_response_with_last_modified['header-that-changes-everytime'].to_i.should > 0
+          expect(second_response_with_last_modified.body).to eq(first_response_with_last_modified.body)
+          expect(second_response_with_last_modified['header-that-changes-everytime'].to_i).to be > 0
           expect(second_response_with_last_modified.headers['Header-that-was-in-the-first-response']).to eq('42')
 
           a_new_get_request_to_same_resource = uri.get
           expect(a_new_get_request_to_same_resource.body).to eq(first_response_with_last_modified.body)
-          a_new_get_request_to_same_resource['header-that-changes-everytime'].to_i.should > 0
+          expect(a_new_get_request_to_same_resource['header-that-changes-everytime'].to_i).to be > 0
           expect(a_new_get_request_to_same_resource['header-that-changes-everytime']).not_to eq(second_response_with_last_modified['header-that-changes-everytime'])
           expect(a_new_get_request_to_same_resource.headers['Header-that-was-in-the-first-response']).to eq('42')
         end

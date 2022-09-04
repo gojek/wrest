@@ -91,9 +91,9 @@ describe Wrest::Native::Request do
   end
 
   it "defaults the 'follow_redirects' option to false for a Post, Put or Delete" do
-    Wrest::Native::Post.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_truthy
-    Wrest::Native::Put.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_truthy
-    Wrest::Native::Delete.new('http://localhost/foo'.to_uri).follow_redirects.should_not be_truthy
+    expect(Wrest::Native::Post.new('http://localhost/foo'.to_uri).follow_redirects).not_to be_truthy
+    expect(Wrest::Native::Put.new('http://localhost/foo'.to_uri).follow_redirects).not_to be_truthy
+    expect(Wrest::Native::Delete.new('http://localhost/foo'.to_uri).follow_redirects).not_to be_truthy
   end
 
   context 'SSL options' do
@@ -112,7 +112,7 @@ describe Wrest::Native::Request do
       request = setup_request_expectations(Wrest::Native::Get.new(uri, {}, {}))
 
       request.invoke
-      request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_PEER
+      expect(request.connection.verify_mode).to eq(OpenSSL::SSL::VERIFY_PEER)
     end
 
     it 'has verification mode for https set to VERIFY_NONE when passed as an option' do
@@ -120,14 +120,14 @@ describe Wrest::Native::Request do
                                                                   verify_mode: OpenSSL::SSL::VERIFY_NONE))
 
       request.invoke
-      request.connection.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
+      expect(request.connection.verify_mode).to eq(OpenSSL::SSL::VERIFY_NONE)
     end
 
     it 'has the certificate authority path set when the ca_path option is passed' do
       request = setup_request_expectations(Wrest::Native::Get.new(uri, {}, {}, ca_path: '/etc/ssl/certs'))
 
       request.invoke
-      request.connection.ca_path.should == '/etc/ssl/certs'
+      expect(request.connection.ca_path).to eq('/etc/ssl/certs')
     end
   end
 
@@ -137,16 +137,16 @@ describe Wrest::Native::Request do
     expect(post).to receive(:do_request).and_return(double(Net::HTTPOK, code: '200', message: 'OK', body: '',
                                                                         to_hash: {}))
 
-    cache.should_not_receive(:[])
+    expect(cache).not_to receive(:[])
     post.invoke
   end
 
   context 'callbacks' do
     it 'runs the appropriate callbacks' do
       cb = double
-      cb.should_receive(:cb204)
-      cb.should_receive(:cb200)
-      cb.should_receive(:cb_range)
+      expect(cb).to receive(:cb204)
+      expect(cb).to receive(:cb200)
+      expect(cb).to receive(:cb_range)
 
       response_handler = Wrest::Callback.new({
                                                200 => ->(_response) { cb.cb200 },
@@ -161,7 +161,7 @@ describe Wrest::Native::Request do
       response200 = double(Net::HTTPOK, code: '200', message: 'OK', body: '', to_hash: {})
       response501 = double(Net::HTTPOK, code: '501', message: 'not implemented', body: '', to_hash: {})
 
-      request.should_receive(:do_request).and_return(response200, response501, response204)
+      expect(request).to receive(:do_request).and_return(response200, response501, response204)
 
       request.invoke
       request.invoke
@@ -181,8 +181,8 @@ describe Wrest::Native::Request do
 
     it 'correctlies use the detailed_http_logging option' do
       logger = double(Logger)
-      logger.should_receive(:<<).at_least(:once).with(/opening connection to/)
-      logger.should_receive(:<<).at_least(1).times
+      expect(logger).to receive(:<<).at_least(:once).with(/opening connection to/)
+      expect(logger).to receive(:<<).at_least(:once)
 
       uri = 'http://localhost:3000/glassware'.to_uri detailed_http_logging: logger
 
@@ -190,10 +190,10 @@ describe Wrest::Native::Request do
     end
 
     it 'raises a Wrest exception on timeout' do
-      lambda {
+      expect do
         described_class.new('http://localhost:3000/two_seconds'.to_uri, Net::HTTP::Get, {}, '', {},
                             timeout: 1).invoke
-      }.should raise_error(Wrest::Exceptions::Timeout)
+      end.to raise_error(Wrest::Exceptions::Timeout)
     end
   end
 end

@@ -19,7 +19,7 @@ module Wrest
 
       def [](key)
         value = @redis.get(key)
-        value.nil? ? nil : YAML.safe_load(value)
+        value.nil? ? nil : YAML.unsafe_load(value)
       end
 
       def []=(key, response)

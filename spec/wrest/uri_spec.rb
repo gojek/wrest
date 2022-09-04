@@ -15,140 +15,140 @@ module Wrest
   describe Wrest::Uri do
     it 'responds to the five http actions' do
       uri = described_class.new('http://localhost')
-      uri.should respond_to(:get)
-      uri.should respond_to(:post)
-      uri.should respond_to(:put)
-      uri.should respond_to(:patch)
-      uri.should respond_to(:delete)
+      expect(uri).to respond_to(:get)
+      expect(uri).to respond_to(:post)
+      expect(uri).to respond_to(:put)
+      expect(uri).to respond_to(:patch)
+      expect(uri).to respond_to(:delete)
     end
 
     it 'handles URIs' do
-      described_class.new('https://localhost:3000').should == described_class.new(URI.parse('https://localhost:3000'))
+      expect(described_class.new('https://localhost:3000')).to eq(described_class.new(URI.parse('https://localhost:3000')))
     end
 
     it 'knows when it is https' do
-      described_class.new('https://localhost:3000').should be_https
+      expect(described_class.new('https://localhost:3000')).to be_https
     end
 
     context 'UriTemplate' do
       it 'is able to create a UriTemplate given a uri' do
-        'http://localhost:3000'.to_uri.to_template('/user/:name').should == UriTemplate.new('http://localhost:3000/user/:name')
+        expect('http://localhost:3000'.to_uri.to_template('/user/:name')).to eq(UriTemplate.new('http://localhost:3000/user/:name'))
       end
 
       it 'passes options to the uriTemplate being built' do
-        'http://localhost:3000'.to_uri(name: 'abc').to_template('/user/:name').to_uri.should == 'http://localhost:3000/user/abc'.to_uri
+        expect('http://localhost:3000'.to_uri(name: 'abc').to_template('/user/:name').to_uri).to eq('http://localhost:3000/user/abc'.to_uri)
       end
 
       it 'handles / positions with wisdom while creating UriTemplate from a given Uri' do
-        'http://localhost:3000/'.to_uri.to_template('/user/:name').should == UriTemplate.new('http://localhost:3000/user/:name')
-        'http://localhost:3000'.to_uri.to_template('/user/:name').should == UriTemplate.new('http://localhost:3000/user/:name')
-        'http://localhost:3000/'.to_uri.to_template('user/:name').should == UriTemplate.new('http://localhost:3000/user/:name')
-        'http://localhost:3000'.to_uri.to_template('user/:name').should == UriTemplate.new('http://localhost:3000/user/:name')
+        expect('http://localhost:3000/'.to_uri.to_template('/user/:name')).to eq(UriTemplate.new('http://localhost:3000/user/:name'))
+        expect('http://localhost:3000'.to_uri.to_template('/user/:name')).to eq(UriTemplate.new('http://localhost:3000/user/:name'))
+        expect('http://localhost:3000/'.to_uri.to_template('user/:name')).to eq(UriTemplate.new('http://localhost:3000/user/:name'))
+        expect('http://localhost:3000'.to_uri.to_template('user/:name')).to eq(UriTemplate.new('http://localhost:3000/user/:name'))
       end
     end
 
     it 'knows when it is not https' do
-      described_class.new('http://localhost:3000').should_not be_https
+      expect(described_class.new('http://localhost:3000')).not_to be_https
     end
 
     context 'extension' do
       it 'knows how to build a new uri from an existing one by appending a path' do
-        described_class.new('http://localhost:3000')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        expect(described_class.new('http://localhost:3000')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
       end
 
       it 'does not lose bits of the path along the way' do
-        described_class.new('http://localhost:3000/ooga')['/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        expect(described_class.new('http://localhost:3000/ooga')['/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
       end
 
       it 'handles / positions with wisdom' do
-        described_class.new('http://localhost:3000/')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
-        described_class.new('http://localhost:3000')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
-        described_class.new('http://localhost:3000/')['ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
-        described_class.new('http://localhost:3000')['ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        expect(described_class.new('http://localhost:3000/')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
+        expect(described_class.new('http://localhost:3000')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
+        expect(described_class.new('http://localhost:3000/')['ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
+        expect(described_class.new('http://localhost:3000')['ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
       end
     end
 
     it 'knows its full path' do
-      described_class.new('http://localhost:3000/ooga').full_path.should == '/ooga'
-      described_class.new('http://localhost:3000/ooga?foo=meh&bar=1').full_path.should == '/ooga?foo=meh&bar=1'
+      expect(described_class.new('http://localhost:3000/ooga').full_path).to eq('/ooga')
+      expect(described_class.new('http://localhost:3000/ooga?foo=meh&bar=1').full_path).to eq('/ooga?foo=meh&bar=1')
     end
 
     it 'knows its host' do
-      described_class.new('http://localhost:3000/ooga').host.should == 'localhost'
+      expect(described_class.new('http://localhost:3000/ooga').host).to eq('localhost')
     end
 
     it 'knows its port' do
-      described_class.new('http://localhost:3000/ooga').port.should == 3000
-      described_class.new('http://localhost/ooga').port.should == 80
+      expect(described_class.new('http://localhost:3000/ooga').port).to eq(3000)
+      expect(described_class.new('http://localhost/ooga').port).to eq(80)
     end
 
     it 'includes the username and password while building a new uri if no options are provided' do
-      described_class.new(
+      expect(described_class.new(
         'http://localhost:3000',
         username: 'foo',
         password: 'bar'
-      )['/ooga/booga'].should == described_class.new(
-        'http://localhost:3000/ooga/booga',
-        username: 'foo',
-        password: 'bar'
-      )
+      )['/ooga/booga']).to eq(described_class.new(
+                                'http://localhost:3000/ooga/booga',
+                                username: 'foo',
+                                password: 'bar'
+                              ))
     end
 
     it 'uses the username and password provided while building a new uri if present' do
       uri = described_class.new('http://localhost:3000', username: 'foo', password: 'bar')
-      uri.username.should == 'foo'
-      uri.password.should == 'bar'
+      expect(uri.username).to eq('foo')
+      expect(uri.password).to eq('bar')
 
       extended_uri = uri['/ooga/booga', { username: 'meh', password: 'baz' }]
-      extended_uri.username.should == 'meh'
-      extended_uri.password.should == 'baz'
+      expect(extended_uri.username).to eq('meh')
+      expect(extended_uri.password).to eq('baz')
     end
 
     it 'knows how to produce its uri as a string' do
-      described_class.new('http://localhost:3000').uri_string.should == 'http://localhost:3000'
-      described_class.new('http://localhost:3000').to_s.should == 'http://localhost:3000'
-      described_class.new('http://localhost:3000', username: 'foo', password: 'bar').to_s.should == 'http://localhost:3000'
-      described_class.new('http://foo:bar@localhost:3000').to_s.should == 'http://foo:bar@localhost:3000'
+      expect(described_class.new('http://localhost:3000').uri_string).to eq('http://localhost:3000')
+      expect(described_class.new('http://localhost:3000').to_s).to eq('http://localhost:3000')
+      expect(described_class.new('http://localhost:3000', username: 'foo', password: 'bar').to_s).to eq('http://localhost:3000')
+      expect(described_class.new('http://foo:bar@localhost:3000').to_s).to eq('http://foo:bar@localhost:3000')
     end
 
     describe 'Equals' do
       it 'understands equality' do
-        described_class.new('https://localhost:3000/ooga').should_not.nil?
-        described_class.new('https://localhost:3000/ooga').should_not == 'https://localhost:3000/ooga'
-        described_class.new('https://localhost:3000/ooga').should_not == described_class.new('https://localhost:3000/booga')
+        expect(described_class.new('https://localhost:3000/ooga')).not_to be_nil
+        expect(described_class.new('https://localhost:3000/ooga')).not_to eq('https://localhost:3000/ooga')
+        expect(described_class.new('https://localhost:3000/ooga')).not_to eq(described_class.new('https://localhost:3000/booga'))
 
-        described_class.new('https://ooga:booga@localhost:3000/ooga').should_not == described_class.new('https://foo:bar@localhost:3000/booga')
-        described_class.new('http://ooga:booga@localhost:3000/ooga').should_not == described_class.new('http://foo:bar@localhost:3000/booga')
-        described_class.new('http://localhost:3000/ooga').should_not == described_class.new('http://foo:bar@localhost:3000/booga')
+        expect(described_class.new('https://ooga:booga@localhost:3000/ooga')).not_to eq(described_class.new('https://foo:bar@localhost:3000/booga'))
+        expect(described_class.new('http://ooga:booga@localhost:3000/ooga')).not_to eq(described_class.new('http://foo:bar@localhost:3000/booga'))
+        expect(described_class.new('http://localhost:3000/ooga')).not_to eq(described_class.new('http://foo:bar@localhost:3000/booga'))
 
-        described_class.new('http://localhost:3000?owner=kai&type=bottle').should_not == described_class.new('http://localhost:3000/')
-        described_class.new('http://localhost:3000?owner=kai&type=bottle').should_not == described_class.new('http://localhost:3000?')
-        described_class.new('http://localhost:3000?owner=kai&type=bottle').should_not == described_class.new('http://localhost:3000?type=bottle&owner=kai')
+        expect(described_class.new('http://localhost:3000?owner=kai&type=bottle')).not_to eq(described_class.new('http://localhost:3000/'))
+        expect(described_class.new('http://localhost:3000?owner=kai&type=bottle')).not_to eq(described_class.new('http://localhost:3000?'))
+        expect(described_class.new('http://localhost:3000?owner=kai&type=bottle')).not_to eq(described_class.new('http://localhost:3000?type=bottle&owner=kai'))
 
-        described_class.new('https://localhost:3000').should_not == described_class.new('https://localhost:3500')
-        described_class.new('https://localhost:3000').should_not == described_class.new('http://localhost:3000')
-        described_class.new('http://localhost:3000', username: 'ooga', password: 'booga').should_not == described_class.new('http://ooga:booga@localhost:3000')
+        expect(described_class.new('https://localhost:3000')).not_to eq(described_class.new('https://localhost:3500'))
+        expect(described_class.new('https://localhost:3000')).not_to eq(described_class.new('http://localhost:3000'))
+        expect(described_class.new('http://localhost:3000', username: 'ooga', password: 'booga')).not_to eq(described_class.new('http://ooga:booga@localhost:3000'))
 
-        described_class.new('http://localhost:3000').should == described_class.new('http://localhost:3000')
-        described_class.new('http://localhost:3000', username: 'ooga',
-                                                     password: 'booga').should == described_class.new('http://localhost:3000',
-                                                                                                      username: 'ooga', password: 'booga')
-        described_class.new('http://ooga:booga@localhost:3000').should == described_class.new('http://ooga:booga@localhost:3000')
+        expect(described_class.new('http://localhost:3000')).to eq(described_class.new('http://localhost:3000'))
+        expect(described_class.new('http://localhost:3000', username: 'ooga',
+                                                            password: 'booga')).to eq(described_class.new('http://localhost:3000',
+                                                                                                          username: 'ooga', password: 'booga'))
+        expect(described_class.new('http://ooga:booga@localhost:3000')).to eq(described_class.new('http://ooga:booga@localhost:3000'))
       end
 
       it 'has the same hash code if it is the same uri' do
-        described_class.new('https://localhost:3000').hash.should == described_class.new('https://localhost:3000').hash
-        described_class.new('http://ooga:booga@localhost:3000').hash.should == described_class.new('http://ooga:booga@localhost:3000').hash
-        described_class.new('http://localhost:3000', username: 'ooga',
-                                                     password: 'booga').hash.should == described_class.new('http://localhost:3000',
-                                                                                                           username: 'ooga', password: 'booga').hash
+        expect(described_class.new('https://localhost:3000').hash).to eq(described_class.new('https://localhost:3000').hash)
+        expect(described_class.new('http://ooga:booga@localhost:3000').hash).to eq(described_class.new('http://ooga:booga@localhost:3000').hash)
+        expect(described_class.new('http://localhost:3000', username: 'ooga',
+                                                            password: 'booga').hash).to eq(described_class.new('http://localhost:3000',
+                                                                                                               username: 'ooga', password: 'booga').hash)
 
-        described_class.new('https://localhost:3001').hash.should_not == described_class.new('https://localhost:3000').hash
-        described_class.new('https://ooga:booga@localhost:3000').hash.should_not == described_class.new('https://localhost:3000').hash
-        described_class.new('https://localhost:3000', username: 'ooga', password: 'booga').hash.should_not == described_class.new('https://localhost:3000').hash
-        described_class.new('https://localhost:3000', username: 'ooga',
-                                                      password: 'booga').hash.should_not == described_class.new('http://localhost:3000',
-                                                                                                                username: 'foo', password: 'bar').hash
+        expect(described_class.new('https://localhost:3001').hash).not_to eq(described_class.new('https://localhost:3000').hash)
+        expect(described_class.new('https://ooga:booga@localhost:3000').hash).not_to eq(described_class.new('https://localhost:3000').hash)
+        expect(described_class.new('https://localhost:3000', username: 'ooga', password: 'booga').hash).not_to eq(described_class.new('https://localhost:3000').hash)
+        expect(described_class.new('https://localhost:3000', username: 'ooga',
+                                                             password: 'booga').hash).not_to eq(described_class.new('http://localhost:3000',
+                                                                                                                    username: 'foo', password: 'bar').hash)
       end
     end
 
@@ -157,31 +157,31 @@ module Wrest
       let(:clone) { original.clone }
 
       it 'is equal to its clone' do
-        original.should eq(clone)
+        expect(original).to eq(clone)
       end
 
       it 'is not the same object as the clone' do
-        original.should_not be_equal(clone)
+        expect(original).not_to be_equal(clone)
       end
 
       it 'allows options to be changed when building the clone' do
         clone = original.clone(username: 'kaiwren', password: 'bottle')
-        original.should_not == clone
-        clone.username.should == 'kaiwren'
-        clone.password.should == 'bottle'
-        original.username.should be_nil
+        expect(original).not_to eq(clone)
+        expect(clone.username).to eq('kaiwren')
+        expect(clone.password).to eq('bottle')
+        expect(original.username).to be_nil
       end
 
       context 'default headers' do
         it 'merges the default headers' do
-          original.clone(default_headers: { H::Connection => T::KeepAlive }).default_headers.should eq(
+          expect(original.clone(default_headers: { H::Connection => T::KeepAlive }).default_headers).to eq(
             H::Connection => T::KeepAlive,
             H::ContentType => T::FormEncoded
           )
         end
 
         it 'ensures incoming defaults have priority' do
-          original.clone(default_headers: { H::ContentType => T::ApplicationXml }).default_headers.should eq(
+          expect(original.clone(default_headers: { H::ContentType => T::ApplicationXml }).default_headers).to eq(
             H::ContentType => T::ApplicationXml
           )
         end
@@ -191,9 +191,9 @@ module Wrest
     describe 'HTTP actions' do
       def setup_http
         http = double(Net::HTTP)
-        Net::HTTP.should_receive(:new).with('localhost', 3000).and_return(http)
-        http.should_receive(:read_timeout=).with(60)
-        http.should_receive(:set_debug_output).with(nil)
+        expect(Net::HTTP).to receive(:new).with('localhost', 3000).and_return(http)
+        expect(http).to receive(:read_timeout=).with(60)
+        expect(http).to receive(:set_debug_output).with(nil)
         http
       end
 
@@ -204,9 +204,9 @@ module Wrest
           http = setup_http
 
           request = Net::HTTP::Get.new('/glassware', {})
-          Net::HTTP::Get.should_receive(:new).with('/glassware', {}).and_return(request)
+          expect(Net::HTTP::Get).to receive(:new).with('/glassware', {}).and_return(request)
 
-          http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+          expect(http).to receive(:request).with(request, nil).and_return(build_ok_response)
 
           uri.get
         end
@@ -218,10 +218,10 @@ module Wrest
             http = setup_http
 
             request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
-            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle',
-                                                     { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Get).to receive(:new).with('/glassware?owner=Kai&type=bottle',
+                                                         { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response)
 
             uri.get(build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]), page: '2', per_page: '5')
           end
@@ -232,10 +232,10 @@ module Wrest
             http = setup_http
 
             request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
-            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle',
-                                                     { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Get).to receive(:new).with('/glassware?owner=Kai&type=bottle',
+                                                         { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response)
 
             uri.get({}, page: '2', per_page: '5')
           end
@@ -249,10 +249,10 @@ module Wrest
                                                     { username: 'ooga', password: 'bar' }).and_return(request)
 
             http_request = double(Net::HTTP::Get, method: 'GET', hash: {})
-            http_request.should_receive(:basic_auth).with('ooga', 'bar')
-            request.should_receive(:http_request).at_least(1).times.and_return(http_request)
-            request.should_receive(:do_request).and_return(double(Net::HTTPOK, code: '200', message: 'OK',
-                                                                               body: '', to_hash: {}))
+            expect(http_request).to receive(:basic_auth).with('ooga', 'bar')
+            expect(request).to receive(:http_request).at_least(:once).and_return(http_request)
+            expect(request).to receive(:do_request).and_return(double(Net::HTTPOK, code: '200', message: 'OK',
+                                                                                   body: '', to_hash: {}))
             uri.get
           end
 
@@ -262,10 +262,10 @@ module Wrest
             http = setup_http
 
             request = Net::HTTP::Get.new('/glassware', { 'page' => '2', 'per_page' => '5' })
-            Net::HTTP::Get.should_receive(:new).with('/glassware',
-                                                     { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Get).to receive(:new).with('/glassware',
+                                                         { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response)
 
             uri.get({}, page: '2', per_page: '5')
           end
@@ -277,10 +277,10 @@ module Wrest
 
             request = Net::HTTP::Get.new('/glassware?owner=kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
 
-            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle',
-                                                     { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Get).to receive(:new).with('/glassware?owner=Kai&type=bottle',
+                                                         { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response)
 
             uri.get(build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]), page: '2', per_page: '5')
           end
@@ -293,10 +293,10 @@ module Wrest
             request = Net::HTTP::Get.new('/glassware?owner=kai&type=bottle&param1=one&param2=two',
                                          { 'page' => '2', 'per_page' => '5' })
 
-            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two',
-                                                     { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Get).to receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two',
+                                                         { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response)
 
             uri.get(build_ordered_hash([[:param1, 'one'], [:param2, 'two']]), page: '2', per_page: '5')
           end
@@ -307,9 +307,9 @@ module Wrest
             http = setup_http
 
             request = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', {})
-            Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle', {}).and_return(request)
+            expect(Net::HTTP::Get).to receive(:new).with('/glassware?owner=Kai&type=bottle', {}).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response)
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response)
 
             uri.get(build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]))
           end
@@ -322,10 +322,10 @@ module Wrest
         http = setup_http
 
         request = Net::HTTP::Post.new('/glassware', { 'page' => '2', 'per_page' => '5' })
-        Net::HTTP::Post.should_receive(:new).with('/glassware',
-                                                  { 'page' => '2', 'per_page' => '5' }).and_return(request)
+        expect(Net::HTTP::Post).to receive(:new).with('/glassware',
+                                                      { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-        http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
+        expect(http).to receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
         uri.post '<ooga>Booga</ooga>', page: '2', per_page: '5'
       end
@@ -336,11 +336,11 @@ module Wrest
         http = setup_http
 
         request = Net::HTTP::Post.new('/glassware', { 'page' => '2', 'per_page' => '5' })
-        Net::HTTP::Post.should_receive(:new).with('/glassware',
-                                                  hash_including('page' => '2', 'per_page' => '5',
-                                                                 H::ContentType => T::FormEncoded)).and_return(request)
+        expect(Net::HTTP::Post).to receive(:new).with('/glassware',
+                                                      hash_including('page' => '2', 'per_page' => '5',
+                                                                     H::ContentType => T::FormEncoded)).and_return(request)
 
-        http.should_receive(:request).with(request, 'foo=bar&ooga=booga').and_return(build_ok_response)
+        expect(http).to receive(:request).with(request, 'foo=bar&ooga=booga').and_return(build_ok_response)
         uri.post_form(build_ordered_hash([[:foo, 'bar'], [:ooga, 'booga']]), page: '2', per_page: '5')
       end
 
@@ -350,9 +350,9 @@ module Wrest
         http = setup_http
 
         request = Net::HTTP::Put.new('/glassware', { 'page' => '2', 'per_page' => '5' })
-        Net::HTTP::Put.should_receive(:new).with('/glassware', { 'page' => '2', 'per_page' => '5' }).and_return(request)
+        expect(Net::HTTP::Put).to receive(:new).with('/glassware', { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-        http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
+        expect(http).to receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
         uri.put '<ooga>Booga</ooga>', page: '2', per_page: '5'
       end
@@ -364,10 +364,10 @@ module Wrest
           http = setup_http
 
           request = Net::HTTP::Patch.new('/glassware', { 'page' => '2', 'per_page' => '5' })
-          Net::HTTP::Patch.should_receive(:new).with('/glassware',
-                                                     { 'page' => '2', 'per_page' => '5' }).and_return(request)
+          expect(Net::HTTP::Patch).to receive(:new).with('/glassware',
+                                                         { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-          http.should_receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
+          expect(http).to receive(:request).with(request, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
           uri.patch '<ooga>Booga</ooga>', page: '2', per_page: '5'
         end
@@ -380,10 +380,10 @@ module Wrest
           http = setup_http
 
           request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
-          Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle',
-                                                      { 'page' => '2', 'per_page' => '5' }).and_return(request)
+          expect(Net::HTTP::Delete).to receive(:new).with('/glassware?owner=Kai&type=bottle',
+                                                          { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-          http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+          expect(http).to receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
           uri.delete(build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]), page: '2', per_page: '5')
         end
@@ -395,10 +395,10 @@ module Wrest
             http = setup_http
 
             request = Net::HTTP::Delete.new('/glassware?owner=Kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
-            Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle',
-                                                        { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Delete).to receive(:new).with('/glassware?owner=Kai&type=bottle',
+                                                            { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
             uri.delete({}, page: '2', per_page: '5')
           end
@@ -409,10 +409,10 @@ module Wrest
             http = setup_http
 
             request = Net::HTTP::Delete.new('/glassware', { 'page' => '2', 'per_page' => '5' })
-            Net::HTTP::Delete.should_receive(:new).with('/glassware',
-                                                        { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Delete).to receive(:new).with('/glassware',
+                                                            { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
             uri.delete({}, page: '2', per_page: '5')
           end
@@ -424,10 +424,10 @@ module Wrest
 
             request = Net::HTTP::Delete.new('/glassware?owner=kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
 
-            Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=Kai&type=bottle',
-                                                        { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Delete).to receive(:new).with('/glassware?owner=Kai&type=bottle',
+                                                            { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
             uri.delete(build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]), page: '2', per_page: '5')
           end
@@ -439,10 +439,10 @@ module Wrest
 
             request = Net::HTTP::Delete.new('/glassware?owner=kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
 
-            Net::HTTP::Delete.should_receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two',
-                                                        { 'page' => '2', 'per_page' => '5' }).and_return(request)
+            expect(Net::HTTP::Delete).to receive(:new).with('/glassware?owner=kai&type=bottle&param1=one&param2=two',
+                                                            { 'page' => '2', 'per_page' => '5' }).and_return(request)
 
-            http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+            expect(http).to receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
             uri.delete(build_ordered_hash([[:param1, 'one'], [:param2, 'two']]), page: '2', per_page: '5')
           end
@@ -455,9 +455,9 @@ module Wrest
         http = setup_http
 
         request = Net::HTTP::Options.new('/glassware')
-        Net::HTTP::Options.should_receive(:new).with('/glassware', {}).and_return(request)
+        expect(Net::HTTP::Options).to receive(:new).with('/glassware', {}).and_return(request)
 
-        http.should_receive(:request).with(request, nil).and_return(build_ok_response(nil))
+        expect(http).to receive(:request).with(request, nil).and_return(build_ok_response(nil))
 
         uri.options
       end
@@ -466,20 +466,20 @@ module Wrest
         uri = 'http://localhost:3000/glassware'.to_uri
 
         http = double(Net::HTTP)
-        Net::HTTP.should_receive(:new).with('localhost', 3000).at_least(1).times.and_return(http)
-        http.should_receive(:read_timeout=).at_least(1).times.with(60)
-        http.should_receive(:set_debug_output).at_least(1).times
+        expect(Net::HTTP).to receive(:new).with('localhost', 3000).at_least(:once).and_return(http)
+        expect(http).to receive(:read_timeout=).at_least(:once).with(60)
+        expect(http).to receive(:set_debug_output).at_least(:once)
 
         request_get = Net::HTTP::Get.new('/glassware?owner=Kai&type=bottle', { 'page' => '2', 'per_page' => '5' })
-        Net::HTTP::Get.should_receive(:new).with('/glassware?owner=Kai&type=bottle',
-                                                 { 'page' => '2', 'per_page' => '5' }).and_return(request_get)
+        expect(Net::HTTP::Get).to receive(:new).with('/glassware?owner=Kai&type=bottle',
+                                                     { 'page' => '2', 'per_page' => '5' }).and_return(request_get)
 
         request_post = Net::HTTP::Post.new('/glassware', { 'page' => '2', 'per_page' => '5' })
-        Net::HTTP::Post.should_receive(:new).with('/glassware',
-                                                  { 'page' => '2', 'per_page' => '5' }).and_return(request_post)
+        expect(Net::HTTP::Post).to receive(:new).with('/glassware',
+                                                      { 'page' => '2', 'per_page' => '5' }).and_return(request_post)
 
-        http.should_receive(:request).with(request_get, nil).and_return(build_ok_response)
-        http.should_receive(:request).with(request_post, '<ooga>Booga</ooga>').and_return(build_ok_response)
+        expect(http).to receive(:request).with(request_get, nil).and_return(build_ok_response)
+        expect(http).to receive(:request).with(request_post, '<ooga>Booga</ooga>').and_return(build_ok_response)
 
         uri.get(build_ordered_hash([[:owner, 'Kai'], [:type, 'bottle']]), page: '2', per_page: '5')
         uri.post '<ooga>Booga</ooga>', page: '2', per_page: '5'
@@ -504,10 +504,10 @@ module Wrest
             allow(uri).to receive(:create_connection).and_return(connection)
             callback_called = false
             uri.send(http_method.to_sym) do |callback|
-              callback.should be_an_instance_of(Callback)
+              expect(callback).to be_an_instance_of(Callback)
               callback_called = true
             end
-            callback_called.should be_truthy
+            expect(callback_called).to be_truthy
           end
 
           it 'executes the request callback after receiving a successful response' do
@@ -518,16 +518,16 @@ module Wrest
             uri.send(http_method.to_sym) do |callback|
               callback.on_ok { |_response| on_ok = true }
             end
-            on_ok.should be_truthy
+            expect(on_ok).to be_truthy
           end
 
           it 'executes the uri callback after receiving a successful response' do
             connection = setup_connection
             on_ok = false
             uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
-            uri.stub(:create_connection).and_return(connection)
+            allow(uri).to receive(:create_connection).and_return(connection)
             uri.send(http_method.to_sym)
-            on_ok.should be_truthy
+            expect(on_ok).to be_truthy
           end
 
           it 'executes the uri callback after receiving a successful response on sub path' do
@@ -535,9 +535,9 @@ module Wrest
             on_ok = false
             base_uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
             uri = base_uri['glassware']
-            uri.stub(:create_connection).and_return(connection)
+            allow(uri).to receive(:create_connection).and_return(connection)
             uri.send(http_method.to_sym)
-            on_ok.should be_truthy
+            expect(on_ok).to be_truthy
           end
 
           it 'executes both callbacks after the successful response is received' do
@@ -545,15 +545,15 @@ module Wrest
             on_ok = false
             another_ok = false
             uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
-            uri.stub(:create_connection).and_return(connection)
+            allow(uri).to receive(:create_connection).and_return(connection)
             block = lambda do |callback|
               callback.on_ok { |_response| another_ok = true }
             end
             uri.send(http_method.to_sym) do |callback|
               callback.on_ok { |_response| another_ok = true }
             end
-            on_ok.should be_truthy
-            another_ok.should be_truthy
+            expect(on_ok).to be_truthy
+            expect(another_ok).to be_truthy
           end
         end
       end
@@ -567,10 +567,10 @@ module Wrest
               allow(uri).to receive(:create_connection).and_return(connection)
               callback_called = false
               uri.send(http_method.to_sym) do |callback|
-                callback.is_a?(Callback).should be_truthy
+                expect(callback.is_a?(Callback)).to be_truthy
                 callback_called = true
               end
-              callback_called.should be_truthy
+              expect(callback_called).to be_truthy
             end
 
             it 'executes the request callback after receiving a successful response' do
@@ -581,16 +581,16 @@ module Wrest
               uri.send(http_method.to_sym) do |callback|
                 callback.on_ok { |_response| on_ok = true }
               end
-              on_ok.should be_truthy
+              expect(on_ok).to be_truthy
             end
 
             it 'executes the uri callback after receiving a successful response' do
               connection = setup_connection
               on_ok = false
               uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
-              uri.stub(:create_connection).and_return(connection)
+              allow(uri).to receive(:create_connection).and_return(connection)
               uri.send(http_method.to_sym)
-              on_ok.should be_truthy
+              expect(on_ok).to be_truthy
             end
 
             it 'executes the uri callback after receiving a successful response on subpath' do
@@ -598,9 +598,9 @@ module Wrest
               on_ok = false
               base_uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
               uri = base_uri['glassware']
-              uri.stub(:create_connection).and_return(connection)
+              allow(uri).to receive(:create_connection).and_return(connection)
               uri.send(http_method.to_sym)
-              on_ok.should be_truthy
+              expect(on_ok).to be_truthy
             end
 
             it 'executes both callbacks after the successful response is received' do
@@ -608,15 +608,15 @@ module Wrest
               on_ok = false
               another_ok = false
               uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
-              uri.stub(:create_connection).and_return(connection)
+              allow(uri).to receive(:create_connection).and_return(connection)
               block = lambda do |callback|
                 callback.on_ok { |_response| another_ok = true }
               end
               uri.send(http_method.to_sym) do |callback|
                 callback.on_ok { |_response| another_ok = true }
               end
-              on_ok.should be_truthy
-              another_ok.should be_truthy
+              expect(on_ok).to be_truthy
+              expect(another_ok).to be_truthy
             end
           end
         end
@@ -651,7 +651,7 @@ module Wrest
           connection = setup_connection
           on_ok = false
           uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
-          uri.stub(:create_connection).and_return(connection)
+          allow(uri).to receive(:create_connection).and_return(connection)
           uri.post_form
           expect(on_ok).to be_truthy
         end
@@ -661,7 +661,7 @@ module Wrest
           on_ok = false
           base_uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
           uri = base_uri['glassware']
-          uri.stub(:create_connection).and_return(connection)
+          allow(uri).to receive(:create_connection).and_return(connection)
           uri.post_form
           expect(on_ok).to be_truthy
         end
@@ -671,7 +671,7 @@ module Wrest
           on_ok = false
           another_ok = false
           uri = 'http://localhost:3000/'.to_uri(callback: { 200 => ->(_response) { on_ok = true } })
-          uri.stub(:create_connection).and_return(connection)
+          allow(uri).to receive(:create_connection).and_return(connection)
           block = lambda do |callback|
             callback.on_ok { |_response| another_ok = true }
           end
@@ -690,7 +690,7 @@ module Wrest
         let(:uri) { 'http://ooga.com'.to_uri(default_headers: oauth_header) }
 
         it 'lets incoming default_headers take precedence when the Uri is extended' do
-          uri['/foo', { default_headers: content_type_header }].default_headers.should eq(content_type_header)
+          expect(uri['/foo', { default_headers: content_type_header }].default_headers).to eq(content_type_header)
         end
 
         {
@@ -701,35 +701,35 @@ module Wrest
         }.each do |verb, blank_first_param_value|
           context verb.upcase.to_s do
             it 'sets the default headers if there are no request headers' do
-              uri.send("build_#{verb}").headers.should eq(oauth_header)
+              expect(uri.send("build_#{verb}").headers).to eq(oauth_header)
             end
 
             it 'merges the default headers into the request headers' do
-              uri.send("build_#{verb}", blank_first_param_value,
-                       content_type_header).headers.should eq(oauth_header.merge(content_type_header))
+              expect(uri.send("build_#{verb}", blank_first_param_value,
+                              content_type_header).headers).to eq(oauth_header.merge(content_type_header))
             end
 
             it 'lets the incoming headers take precedent over the defaults' do
-              uri.send("build_#{verb}", blank_first_param_value,
-                       alternative_oauth_header).headers.should eq(alternative_oauth_header)
+              expect(uri.send("build_#{verb}", blank_first_param_value,
+                              alternative_oauth_header).headers).to eq(alternative_oauth_header)
             end
           end
         end
 
         context 'POST (form-encoded)' do
           it 'sets the default headers if there are no request headers' do
-            uri.build_post_form.headers.should eq(oauth_header.merge(Wrest::H::ContentType => Wrest::T::FormEncoded))
+            expect(uri.build_post_form.headers).to eq(oauth_header.merge(Wrest::H::ContentType => Wrest::T::FormEncoded))
           end
 
           it 'merges the default headers into the request headers' do
-            uri.build_post_form({}, content_type_header).headers.should eq(
+            expect(uri.build_post_form({}, content_type_header).headers).to eq(
               oauth_header.merge(content_type_header).merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
             )
           end
 
           it 'lets the incoming headers take precedent over the defaults' do
-            uri.build_post_form({},
-                                alternative_oauth_header).headers.should eq(alternative_oauth_header.merge(Wrest::H::ContentType => Wrest::T::FormEncoded))
+            expect(uri.build_post_form({},
+                                       alternative_oauth_header).headers).to eq(alternative_oauth_header.merge(Wrest::H::ContentType => Wrest::T::FormEncoded))
           end
         end
       end
@@ -745,7 +745,7 @@ module Wrest
             uri.get_async
 
             sleep 0.1
-            hash.key?('success').should be_truthy
+            expect(hash.key?('success')).to be_truthy
           end
         end
 
@@ -764,7 +764,7 @@ module Wrest
                 uri.get_async
 
                 sleep 0.1
-                hash.key?('success').should be_truthy
+                expect(hash.key?('success')).to be_truthy
               end
             end
 
@@ -776,7 +776,7 @@ module Wrest
                 uri.put_async
 
                 sleep 0.1
-                hash.key?('success').should be_truthy
+                expect(hash.key?('success')).to be_truthy
               end
             end
 
@@ -788,7 +788,7 @@ module Wrest
                 uri.post_async
 
                 sleep 0.1
-                hash.key?('success').should be_truthy
+                expect(hash.key?('success')).to be_truthy
               end
             end
 
@@ -800,7 +800,7 @@ module Wrest
                 uri.delete_async
 
                 sleep 0.1
-                hash.key?('success').should be_truthy
+                expect(hash.key?('success')).to be_truthy
               end
             end
 
@@ -812,7 +812,7 @@ module Wrest
                 uri.post_form_async
 
                 sleep 0.1
-                hash.key?('success').should be_truthy
+                expect(hash.key?('success')).to be_truthy
               end
             end
 
@@ -828,7 +828,7 @@ module Wrest
                                                                                                                      } })
 
                 sleep 0.1
-                hash.key?('success').should be_truthy
+                expect(hash.key?('success')).to be_truthy
               end
             end
 
@@ -844,7 +844,7 @@ module Wrest
                                                                                                                     } })
 
                 sleep 0.1
-                hash.key?('success').should be_truthy
+                expect(hash.key?('success')).to be_truthy
               end
             end
           end

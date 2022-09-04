@@ -8,11 +8,13 @@ describe FacebookClient do
   it 'creates a facebook authorization url given redirect url and parameters' do
     url = client.authorization_uri('http://redirect_uri', scope: 'email')
     base, query_params = url.split('?')
-    base.should == 'https://graph.facebook.com/oauth/authorize'
+    expect(base).to eq('https://graph.facebook.com/oauth/authorize')
+
     params = Rack::Utils.parse_query(query_params)
-    params['scope'].should == 'email'
-    params['redirect_uri'].should == 'http://redirect_uri'
-    params['client_id'].should_not be_nil
+
+    expect(params['scope']).to eq('email')
+    expect(params['redirect_uri']).to eq('http://redirect_uri')
+    expect(params['client_id']).not_to be_nil
   end
 
   it 'exchanges authentication code for the access token' do

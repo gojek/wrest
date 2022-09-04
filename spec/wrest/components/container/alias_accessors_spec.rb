@@ -13,7 +13,7 @@ module Wrest
       end
 
       it 'provides a macro to enable aliasing accessors' do
-        expect { @Demon.class_eval { alias_accessors shiriki: :chambala } }.not_to raise_error(NoMethodError)
+        expect { @Demon.class_eval { alias_accessors shiriki: :chambala } }.not_to raise_error
       end
 
       describe 'aliasing' do
@@ -45,7 +45,7 @@ module Wrest
         it 'ensures that the aliased query method delegates to the actual queryier' do
           demon = @Demon.new age: '1000'
           expect(demon).not_to be_gender
-          demon.maturity?.should be_truthy
+          expect(demon.maturity?).to be_truthy
         end
       end
     end

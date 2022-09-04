@@ -19,9 +19,9 @@ module Wrest
           ).deserialise
         end
 
-        File.open(File.expand_path(__FILE__)) { |file| response['file'].should == file.readlines.join }
+        File.open(File.expand_path(__FILE__)) { |file| expect(response['file']).to eq(file.readlines.join) }
 
-        response['headers'].should include('whacky_headers' => 'Foo-Stuff')
+        expect(response['headers']).to include('whacky_headers' => 'Foo-Stuff')
       end
 
       it 'knows how to put files using multipart' do
@@ -30,7 +30,7 @@ module Wrest
           response = 'http://localhost:3000/uploads/1'.to_uri.put_multipart('file' => UploadIO.new(file, 'text/plain',
                                                                                                    File.expand_path(__FILE__)))
         end
-        File.open(File.expand_path(__FILE__)) { |file| response.body.should == file.readlines.join }
+        File.open(File.expand_path(__FILE__)) { |file| expect(response.body).to eq(file.readlines.join) }
       end
     end
   end

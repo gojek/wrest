@@ -12,7 +12,7 @@ if Helpers.xml_backends.include?('LibXML')
         )
         result = ''
         res_arr.each { |e| result += e.to_s.gsub(/\n+/, '').gsub(/\s/, '') }
-        result.should == '<Name><FirstName>ooga</FirstName></Name><Name>Bangalore</Name>'
+        expect(result).to eq('<Name><FirstName>ooga</FirstName></Name><Name>Bangalore</Name>')
       end
     end
   end

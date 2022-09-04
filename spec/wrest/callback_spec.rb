@@ -52,8 +52,8 @@ module Wrest
         request_callback = described_class.new(block)
         callback = uri_callback.merge(request_callback)
         callback.execute(response200)
-        on_ok.should be_truthy
-        on_another_ok.should be_truthy
+        expect(on_ok).to be_truthy
+        expect(on_another_ok).to be_truthy
       end
     end
 
@@ -88,7 +88,7 @@ module Wrest
         callback = described_class.new({})
         callback.on_ok
         callback.execute(response200)
-        on_ok.should be_falsey
+        expect(on_ok).to be_falsey
       end
     end
 

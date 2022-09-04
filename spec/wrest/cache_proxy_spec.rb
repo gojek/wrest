@@ -15,12 +15,12 @@ describe Wrest::CacheProxy do
 
   context 'Factory' do
     it 'creates a Null cache proxy if cache store is nil' do
-      Wrest::CacheProxy::NullCacheProxy.should_receive(:new)
+      expect(Wrest::CacheProxy::NullCacheProxy).to receive(:new)
       described_class.new(@get, nil)
     end
 
     it 'creates a Default cache proxy class if cache store is available' do
-      Wrest::CacheProxy::DefaultCacheProxy.should_receive(:new)
+      expect(Wrest::CacheProxy::DefaultCacheProxy).to receive(:new)
       described_class.new(@get, {})
     end
   end
@@ -28,7 +28,7 @@ describe Wrest::CacheProxy do
   context 'null caching' do
     it 'alwayses call invoke without cache check' do
       @get = Wrest::Native::Get.new(@request_uri, {}, {}, {})
-      @get.should_receive(:invoke_without_cache_check)
+      expect(@get).to receive(:invoke_without_cache_check)
 
       cache_proxy = Wrest::CacheProxy::NullCacheProxy.new(@get)
       cache_proxy.get
@@ -37,31 +37,31 @@ describe Wrest::CacheProxy do
 
   context 'default caching' do
     it 'checks if response already exists in cache when making a request' do
-      @cache.should_receive(:[]).with(@get.uri.to_s)
+      expect(@cache).to receive(:[]).with(@get.uri.to_s)
       @cache_proxy.get
     end
 
     it 'gives a new response if it is not in the cache' do
-      @cache.should_receive(:[]).with(@get.uri.to_s).and_return(nil)
-      @cache_proxy.get.should == @ok_response
+      expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(nil)
+      expect(@cache_proxy.get).to eq(@ok_response)
     end
 
     it 'caches the response after invoke makes a fresh request' do
-      @cache.should_receive(:[]).with(@get.uri.to_s).and_return(nil)
-      @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
-      @cache_proxy.should_receive(:cache).with(@ok_response)
+      expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(nil)
+      expect(@get).to receive(:invoke_without_cache_check).and_return(@ok_response)
+      expect(@cache_proxy).to receive(:cache).with(@ok_response)
       @cache_proxy.get
     end
 
     it 'does not call invoke_without_cache_check if response exists in cache' do
-      @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@ok_response)
-      @get.should_not_receive(:invoke_without_cache_check)
+      expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@ok_response)
+      expect(@get).not_to receive(:invoke_without_cache_check)
       @cache_proxy.get
     end
 
     it 'checks whether the cache entry has expired' do
-      @cache.should_receive(:[]).and_return(@ok_response)
-      @ok_response.should_receive(:expired?)
+      expect(@cache).to receive(:[]).and_return(@ok_response)
+      expect(@ok_response).to receive(:expired?)
       @cache_proxy.get
     end
 
@@ -70,17 +70,17 @@ describe Wrest::CacheProxy do
                                                                              h['random'] = 123
                                                                            end))
 
-      @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
-      @cached_response.should_receive(:expired?).and_return(false)
+      expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
+      expect(@cached_response).to receive(:expired?).and_return(false)
 
-      @cache_proxy.get.should == @cached_response
+      expect(@cache_proxy.get).to eq(@cached_response)
     end
 
     it 'checks whether an expired cache entry can be validated' do
-      @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@ok_response)
+      expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@ok_response)
 
-      @ok_response.should_receive(:expired?).and_return(true)
-      @ok_response.should_receive(:can_be_validated?)
+      expect(@ok_response).to receive(:expired?).and_return(true)
+      expect(@ok_response).to receive(:can_be_validated?)
 
       @cache_proxy.get
     end
@@ -110,13 +110,13 @@ describe Wrest::CacheProxy do
             h['etag'] = '123'
           end))
 
-          response_with_etag.should_receive(:expired?).and_return(true)
-          response_with_etag.can_be_validated?.should == true
+          expect(response_with_etag).to receive(:expired?).and_return(true)
+          expect(response_with_etag.can_be_validated?).to be(true)
 
-          @cache.should_receive(:[]).with(@get.uri.to_s).and_return(response_with_etag)
+          expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(response_with_etag)
 
-          @get.should_receive(:build_request_without_cache_store).with(hash_including('if-none-match' => '123')).and_return(@direct_get)
-          @direct_get.should_receive(:invoke).and_return(response_with_etag)
+          expect(@get).to receive(:build_request_without_cache_store).with(hash_including('if-none-match' => '123')).and_return(@direct_get)
+          expect(@direct_get).to receive(:invoke).and_return(response_with_etag)
 
           @cache_proxy.get
         end
@@ -134,13 +134,13 @@ describe Wrest::CacheProxy do
         # 304 is Not Modified
         it 'uses the cached response if the server returns 304' do
           not_modified_response = @ok_response.clone
-          not_modified_response.should_receive(:code).at_least(1).times.and_return('304')
-          @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
+          expect(not_modified_response).to receive(:code).at_least(:once).and_return('304')
+          expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
 
-          @cache_proxy.should_receive(:send_validation_request_for).and_return(not_modified_response)
+          expect(@cache_proxy).to receive(:send_validation_request_for).and_return(not_modified_response)
 
           # only check the body, can't compare the entire object - the headers from 304 would be merged with the cached response's headers.
-          @cache_proxy.get.body.should == @cached_response.body
+          expect(@cache_proxy.get.body).to eq(@cached_response.body)
         end
 
         context 'update headers of a cached response with headers from a 304' do
@@ -148,11 +148,11 @@ describe Wrest::CacheProxy do
 
           it 'calls update_cache_headers' do
             not_modified_response = @ok_response.clone
-            not_modified_response.should_receive(:code).at_least(1).times.and_return('304')
-            @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
+            expect(not_modified_response).to receive(:code).at_least(:once).and_return('304')
+            expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
 
-            @cache_proxy.should_receive(:send_validation_request_for).and_return(not_modified_response)
-            @cache_proxy.should_receive(:update_cache_headers_for).with(@cached_response, not_modified_response)
+            expect(@cache_proxy).to receive(:send_validation_request_for).and_return(not_modified_response)
+            expect(@cache_proxy).to receive(:update_cache_headers_for).with(@cached_response, not_modified_response)
 
             @cache_proxy.get
           end
@@ -169,11 +169,11 @@ describe Wrest::CacheProxy do
                                                                                                               h['expires'] = tomorrow
                                                                                                             end))
 
-              cached_response['expires'].should == one_day_back
+              expect(cached_response['expires']).to eq(one_day_back)
 
               @cache_proxy.update_cache_headers_for(cached_response, not_modified_response)
 
-              cached_response['expires'].should == tomorrow
+              expect(cached_response['expires']).to eq(tomorrow)
             end
 
             it 'does not update Hop-By-Hop headers' do
@@ -184,32 +184,32 @@ describe Wrest::CacheProxy do
                                                                                                               h['trailers'] = 'bar'
                                                                                                             end))
 
-              cached_response['trailers'].should == 'foo'
+              expect(cached_response['trailers']).to eq('foo')
               @cache_proxy.update_cache_headers_for(cached_response, not_modified_response)
-              cached_response['trailers'].should == 'foo'
+              expect(cached_response['trailers']).to eq('foo')
             end
           end
         end
 
         it 'uses it if the server returns a new response' do
           new_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers))
-          new_response.should_receive(:code).at_least(1).times.and_return('200')
+          expect(new_response).to receive(:code).at_least(:once).and_return('200')
 
-          @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
-          @cache_proxy.should_receive(:send_validation_request_for).and_return(new_response)
+          expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
+          expect(@cache_proxy).to receive(:send_validation_request_for).and_return(new_response)
 
-          @cache_proxy.get.should == new_response
+          expect(@cache_proxy.get).to eq(new_response)
         end
 
         it 'alsoes cache it when the server returns a new response' do
           new_response = Wrest::Native::Response.new(build_ok_response('', cacheable_headers))
-          new_response.should_receive(:code).at_least(1).times.and_return('200')
+          expect(new_response).to receive(:code).at_least(:once).and_return('200')
 
-          @cache.should_receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
-          @cache_proxy.should_receive(:send_validation_request_for).and_return(new_response)
-          @cache.should_receive(:[]=).once
+          expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(@cached_response)
+          expect(@cache_proxy).to receive(:send_validation_request_for).and_return(new_response)
+          expect(@cache).to receive(:[]=).once
 
-          @cache_proxy.get.should == new_response
+          expect(@cache_proxy.get).to eq(new_response)
         end
       end
     end
@@ -217,23 +217,23 @@ describe Wrest::CacheProxy do
 
   context 'conditions governing caching' do
     it 'tries to cache a response if was not already cached' do
-      @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
-      @cache_proxy.should_receive(:cache).with(@ok_response)
+      expect(@get).to receive(:invoke_without_cache_check).and_return(@ok_response)
+      expect(@cache_proxy).to receive(:cache).with(@ok_response)
       @cache_proxy.get
     end
 
     it 'checks whether a response is cacheable when trying to cache a response' do
-      @cache.should_receive(:[]).with(@get.uri.to_s).and_return(nil)
-      @get.should_receive(:invoke_without_cache_check).and_return(@ok_response)
-      @ok_response.should_receive(:cacheable?).and_return(false)
+      expect(@cache).to receive(:[]).with(@get.uri.to_s).and_return(nil)
+      expect(@get).to receive(:invoke_without_cache_check).and_return(@ok_response)
+      expect(@ok_response).to receive(:cacheable?).and_return(false)
       @cache_proxy.get
     end
 
     it 'stores response in cache if response is cacheable' do
       response = @ok_response
-      response.cacheable?.should == true
-      @get.should_receive(:invoke_without_cache_check).and_return(response)
-      @cache.should_receive(:[]=).with(@get.uri.to_s, response)
+      expect(response.cacheable?).to be(true)
+      expect(@get).to receive(:invoke_without_cache_check).and_return(response)
+      expect(@cache).to receive(:[]=).with(@get.uri.to_s, response)
       @cache_proxy.get
     end
   end

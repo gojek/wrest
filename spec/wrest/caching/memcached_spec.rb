@@ -14,12 +14,12 @@ describe Wrest::Caching do
 
     context 'initialization defaults' do
       it 'alwayses default the list of server urls to nil' do
-        Dalli::Client.should_receive(:new).with(nil, {})
+        expect(Dalli::Client).to receive(:new).with(nil, {})
         client = Wrest::Caching::Memcached.new
       end
 
       it 'alwayses default the options to an empty hash' do
-        Dalli::Client.should_receive(:new).with(nil, {})
+        expect(Dalli::Client).to receive(:new).with(nil, {})
         client = Wrest::Caching::Memcached.new
       end
     end
@@ -34,7 +34,7 @@ describe Wrest::Caching do
     end
 
     it 'knows how to delete a cache entry' do
-      @memcached.delete('abc').should == 'xyz'
+      expect(@memcached.delete('abc')).to eq('xyz')
       expect(@memcached['abc']).to be_nil
     end
   end

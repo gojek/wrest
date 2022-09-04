@@ -35,7 +35,7 @@ RSpec::Matchers.define :have do |expected|
     pass
   end
 
-  failure_message_for_should do |_actual|
+  failure_message do |_actual|
     @failure_message
   end
 end

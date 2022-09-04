@@ -12,7 +12,7 @@ if RUBY_PLATFORM =~ /java/
         end
 
         it 'throws a not implented exception when filter command is invoked and ActiveSupport_XmlMini backend is JDOM' do
-          -> { @testObj.filter('<xmlbody/>', 'xpath') }.should raise_error(NotImplementedError)
+          expect { @testObj.filter('<xmlbody/>', 'xpath') }.to raise_error(NotImplementedError)
         end
       end
     end

@@ -46,7 +46,7 @@ describe Wrest::Caching do
       request = 'http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1000'
       ok_response = request.to_uri.get
       redis[request] = ok_response
-      redis.delete(request).should == ok_response
+      expect(redis.delete(request)).to eq(ok_response)
     end
 
     it 'returns nil on delete if the key is not present' do

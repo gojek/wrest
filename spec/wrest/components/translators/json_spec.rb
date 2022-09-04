@@ -9,7 +9,7 @@ module Wrest
         let(:http_response) { double('Http Reponse') }
 
         it 'knows how to convert json to a hashmap' do
-          http_response.should_receive(:body).and_return("{
+          expect(http_response).to receive(:body).and_return("{
       \"menu\": \"File\",
       \"commands\": [
       {
@@ -31,7 +31,7 @@ module Wrest
                                     { 'title' => 'Open', 'action' => 'OpenDoc' },
                                     { 'title' => 'Close', 'action' => 'CloseDoc' }],
                      'menu' => 'File' }
-          described_class.deserialise(http_response).should eq(result)
+          expect(described_class.deserialise(http_response)).to eq(result)
         end
 
         it 'knows how to convert json to a hashmap' do

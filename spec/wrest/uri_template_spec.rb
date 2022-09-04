@@ -17,14 +17,14 @@ module Wrest
       url_pattern = 'http://localhost:3000/:resource/:id.:format'
       template = described_class.new(url_pattern)
       url_pattern.gsub!(':', '!')
-      template.uri_pattern.should == 'http://localhost:3000/:resource/:id.:format'
+      expect(template.uri_pattern).to eq('http://localhost:3000/:resource/:id.:format')
     end
 
     it 'knows how to build a Wrest::Uri from the pattern given a set of replacement options' do
       template = described_class.new('http://localhost:3000/:resource/:id.:format')
-      template.to_uri(
-        resource: 'shen_coins', id: 5, format: :json
-      ).should == 'http://localhost:3000/shen_coins/5.json'.to_uri
+      expect(template.to_uri(
+               resource: 'shen_coins', id: 5, format: :json
+             )).to eq('http://localhost:3000/shen_coins/5.json'.to_uri)
     end
 
     it 'ensures uri built out of template receives options' do
@@ -34,46 +34,46 @@ module Wrest
                                        resource: 'portal',
                                        id: '1'
                                      })
-      template.to_uri.should == 'http://kaiwren:fupuppies@coathangers.com/portal/1'.to_uri
+      expect(template.to_uri).to eq('http://kaiwren:fupuppies@coathangers.com/portal/1'.to_uri)
     end
 
     it 'alsoes handle username and password' do
       template = described_class.new('http://:user::password@coathangers.com/:resource/:id')
-      template.to_uri(
-        user: 'kaiwren',
-        password: 'fupuppies',
-        resource: 'portal',
-        id: '1'
-      ).should == 'http://kaiwren:fupuppies@coathangers.com/portal/1'.to_uri
+      expect(template.to_uri(
+               user: 'kaiwren',
+               password: 'fupuppies',
+               resource: 'portal',
+               id: '1'
+             )).to eq('http://kaiwren:fupuppies@coathangers.com/portal/1'.to_uri)
     end
 
     describe 'equals' do
       it 'has the same uri_pattern' do
-        described_class.new('http://localhost:3000/:resource/:id.:format').should_not == described_class.new('http://localhost:3000/:id/:resource.:format')
-        described_class.new('http://localhost:3000/:resource/:id.:format').should ==  described_class.new('http://localhost:3000/:resource/:id.:format')
+        expect(described_class.new('http://localhost:3000/:resource/:id.:format')).not_to eq(described_class.new('http://localhost:3000/:id/:resource.:format'))
+        expect(described_class.new('http://localhost:3000/:resource/:id.:format')).to eq(described_class.new('http://localhost:3000/:resource/:id.:format'))
       end
     end
 
     context 'extension' do
       it 'knows how to build a new UriTemplate from an existing one by appending a path' do
-        described_class.new('http://localhost:3000')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        expect(described_class.new('http://localhost:3000')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
       end
 
       it 'knows how to extend a UriTemplate that already has a path' do
-        described_class.new('http://localhost:3000/1')['/ooga/booga'].should == described_class.new('http://localhost:3000/1/ooga/booga')
-        described_class.new('http://localhost:3000/1')['ooga/booga'].should == described_class.new('http://localhost:3000/1/ooga/booga')
-        described_class.new('http://localhost:3000/1/')['/ooga/booga'].should == described_class.new('http://localhost:3000/1/ooga/booga')
+        expect(described_class.new('http://localhost:3000/1')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/1/ooga/booga'))
+        expect(described_class.new('http://localhost:3000/1')['ooga/booga']).to eq(described_class.new('http://localhost:3000/1/ooga/booga'))
+        expect(described_class.new('http://localhost:3000/1/')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/1/ooga/booga'))
 
-        described_class.new('http://localhost:3000/1')[':ooga/booga'].should == described_class.new('http://localhost:3000/1/:ooga/booga')
-        described_class.new('http://localhost:3000/1')[':ooga/booga'].should == described_class.new('http://localhost:3000/1/:ooga/booga')
-        described_class.new('http://localhost:3000/1/')[':ooga/booga'].should == described_class.new('http://localhost:3000/1/:ooga/booga')
+        expect(described_class.new('http://localhost:3000/1')[':ooga/booga']).to eq(described_class.new('http://localhost:3000/1/:ooga/booga'))
+        expect(described_class.new('http://localhost:3000/1')[':ooga/booga']).to eq(described_class.new('http://localhost:3000/1/:ooga/booga'))
+        expect(described_class.new('http://localhost:3000/1/')[':ooga/booga']).to eq(described_class.new('http://localhost:3000/1/:ooga/booga'))
       end
 
       it 'handles / positions with wisdom' do
-        described_class.new('http://localhost:3000/')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
-        described_class.new('http://localhost:3000')['/ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
-        described_class.new('http://localhost:3000/')['ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
-        described_class.new('http://localhost:3000')['ooga/booga'].should == described_class.new('http://localhost:3000/ooga/booga')
+        expect(described_class.new('http://localhost:3000/')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
+        expect(described_class.new('http://localhost:3000')['/ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
+        expect(described_class.new('http://localhost:3000/')['ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
+        expect(described_class.new('http://localhost:3000')['ooga/booga']).to eq(described_class.new('http://localhost:3000/ooga/booga'))
       end
     end
   end

@@ -16,7 +16,7 @@ module Wrest
             allow(http_response).to receive(:content_type).and_return('application/xml')
 
             response = library::Response.new(http_response)
-            response.content_type.should == 'application/xml'
+            expect(response.content_type).to eq('application/xml')
           end
         end
       end
