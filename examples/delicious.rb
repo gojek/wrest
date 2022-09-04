@@ -62,7 +62,7 @@ pp account.bookmarks(tag: 'rails', dt: '20090712').deserialise
 
 puts ('*' * 20) + 'Listing recent bookmarks' + ('*' * 20)
 
-pp account.recent(tag: 'ruby').deserialise['posts']['post'].collect { |bookmark| bookmark['href'] }
+pp(account.recent(tag: 'ruby').deserialise['posts']['post'].collect { |bookmark| bookmark['href'] })
 
 puts ('*' * 20) + 'Deleting the bookmark we just created' + ('*' * 20)
 
@@ -70,4 +70,4 @@ pp account.delete(url: 'http://blog.sidu.in/search/label/ruby').deserialise
 
 puts ('*' * 20) + 'Listing recent bookmarks' + ('*' * 20)
 
-pp account.recent(tag: 'ruby').deserialise['posts']['post'].collect { |bookmark| bookmark['href'] }
+pp(account.recent(tag: 'ruby').deserialise['posts']['post'].collect { |bookmark| bookmark['href'] })

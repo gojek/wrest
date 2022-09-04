@@ -31,6 +31,7 @@ task cruise: 'rspec:unit'
 namespace :lint do
   RuboCop::RakeTask.new
 
+  desc 'List all the broken cops with individual error counts and the total'
   task :list_broken_cops do
     rubocop_log = `bundle exec rubocop`
     cop_name_pattern = %r{([A-Z][a-zA-Z]+/[A-Z][a-zA-Z]+):}
