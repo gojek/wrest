@@ -1,34 +1,34 @@
 # frozen_string_literal: true
 
 lib = File.expand_path('lib', __dir__)
-$:.unshift lib unless $:.include?(lib)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
 require 'wrest/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'wrest'
-  s.version     = Wrest::VERSION
-  s.authors     = ['Sidu Ponnappa', 'Niranjan Paranjape']
-  s.email       = ['ckponnappa@gmail.com']
-  s.homepage    = 'https://github.com/gojek-engineering/wrest'
-  s.summary     = 'Wrest is a fluent, object oriented HTTP client library for 2.x.x, JRuby 9.x'
-  s.description = 'Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for ' +
-                  'RFC2616 HTTP caching, multiple HTTP backends and async calls. It runs on CRuby and JRuby and is in production ' +
-                  'use at substantial scale.'
+  s.name = 'wrest'
+  s.version = Wrest::VERSION
+  s.authors = ['Sidu Ponnappa', 'Niranjan Paranjape']
+  s.email = ['ckponnappa@gmail.com']
+  s.homepage = 'https://github.com/gojek-engineering/wrest'
+  s.summary = 'Wrest is a fluent, object oriented HTTP client library for 2.x.x, JRuby 9.x'
+  s.description = 'Wrest is a fluent, easy-to-use, object oriented Ruby HTTP/REST client library with support for ' \
+                  'RFC2616 HTTP caching, multiple HTTP backends and async calls. It runs on CRuby and JRuby and is ' \
+                  'in production use at substantial scale.'
 
-  s.required_rubygems_version = '>= 1.3.0'
-  s.rubyforge_project = 'wrest'
+  s.required_rubygems_version = '>= 3.0.0'
+  s.required_ruby_version = '>= 2.6.0'
 
   s.requirements << "To use Memcached as caching back-end, install the 'dalli' gem."
   s.requirements << "To use Redis as caching back-end, install the 'redis' gem."
   s.requirements << "To use multipart post, install the 'multipart-post' gem."
   s.requirements << "To use eventmachine as a parallel backend, install the 'eventmachine' gem."
 
-  s.files             = Dir.glob('{bin/**/*,lib/**/*.rb}') + %w[README.md CHANGELOG LICENCE]
-  s.extra_rdoc_files  = ['README.md']
-  s.rdoc_options      = ['--charset=UTF-8']
-  s.executables       = ['wrest']
-  s.require_path      = 'lib'
+  s.files = Dir.glob('{bin/**/*,lib/**/*.rb}') + %w[README.md CHANGELOG LICENCE]
+  s.extra_rdoc_files = ['README.md']
+  s.rdoc_options = ['--charset=UTF-8']
+  s.executables = ['wrest']
+  s.require_path = 'lib'
 
   # Test dependencies
   s.add_development_dependency 'rspec', ['~> 3.11']
