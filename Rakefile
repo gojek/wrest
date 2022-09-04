@@ -25,7 +25,9 @@ desc 'Default: run spec tests.'
 task default: %w[lint:autocorrect_basic_style_issues rspec:unit lint:rubocop]
 
 desc 'Cruise task'
-task cruise: 'rspec:unit'
+RSpec::Core::RakeTask.new(:cruise) do |t|
+  t.rspec_opts = '--format documentation'
+end
 
 namespace :lint do
   RuboCop::RakeTask.new
@@ -81,17 +83,13 @@ RDoc::Task.new do |rdoc|
 end
 
 namespace(:benchmark) do
-  desc 'Create classes to be used in Wrest::Resource vs. ActiveResource'
+  desc 'Create class to be used in the benchmarks'
   task :setup_test_classes do
-    require 'active_resource'
-    require 'lib/wrest'
+    require 'wrest'
 
-    class Ooga < Wrest::Resource::Base
-    end
-
-    class Booga < ActiveResource::Base
-      self.site = ''
-    end
+    klass = Class.new
+    klass.send(:include, Wrest::Components::Container)
+    self.class.send(:const_set, :Ooga, klass)
   end
 
   desc 'Benchmark when objects are created each time before getting data; i.e there are few queries per instantiation'
@@ -99,23 +97,13 @@ namespace(:benchmark) do
     n = 10_000
     puts "Running #{n} times per report"
     Benchmark.bmbm(10) do |rpt|
-      rpt.report('Wrest::Resource') do
+      rpt.report('Wrest::Component') do
         n.times do
           ooga = Ooga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
           ooga.profession
           ooga.profession?
           ooga.enhanced_by
           ooga.enhanced_by?
-        end
-      end
-
-      rpt.report('ActiveResource') do
-        n.times do
-          booga = Booga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
-          booga.profession
-          booga.profession?
-          booga.enhanced_by
-          booga.enhanced_by?
         end
       end
     end
@@ -127,7 +115,7 @@ namespace(:benchmark) do
     puts "Running #{n} times per report"
 
     Benchmark.bmbm(10) do |rpt|
-      rpt.report('Wrest::Resource') do
+      rpt.report('Wrest::Component::Container') do
         ooga = Ooga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
 
         n.times do
@@ -135,17 +123,6 @@ namespace(:benchmark) do
           ooga.profession?
           ooga.enhanced_by
           ooga.enhanced_by?
-        end
-      end
-
-      rpt.report('ActiveResource') do
-        booga = Booga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
-
-        n.times do
-          booga.profession
-          booga.profession?
-          booga.enhanced_by
-          booga.enhanced_by?
         end
       end
     end
@@ -157,23 +134,13 @@ namespace(:benchmark) do
     puts "Running #{n} times per report"
 
     Benchmark.bmbm(10) do |rpt|
-      rpt.report('Wrest::Resource') do
+      rpt.report('Wrest::Component::Container') do
         ooga = Ooga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
 
         n.times do
           ooga.respond_to?(:profession)
           ooga.respond_to?(:profession?)
           ooga.respond_to?(:profession=)
-        end
-      end
-
-      rpt.report('ActiveResource') do
-        booga = Booga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
-
-        n.times do
-          booga.respond_to?(:profession)
-          booga.respond_to?(:profession?)
-          booga.respond_to?(:profession=)
         end
       end
     end
@@ -185,7 +152,7 @@ namespace(:benchmark) do
     puts "Running #{n} times per report"
 
     Benchmark.bmbm(10) do |rpt|
-      rpt.report('Wrest::Resource') do
+      rpt.report('Wrest::Component::Container') do
         ooga = Ooga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
         ooga.profession
         ooga.profession?
@@ -195,19 +162,6 @@ namespace(:benchmark) do
           ooga.respond_to?(:profession)
           ooga.respond_to?(:profession?)
           ooga.respond_to?(:profession=)
-        end
-      end
-
-      rpt.report('ActiveResource') do
-        booga = Booga.new(id: 5, profession: 'Natural Magician', enhanced_by: 'Kai Wren')
-        booga.profession
-        booga.profession?
-        booga.profession = ''
-
-        n.times do
-          booga.respond_to?(:profession)
-          booga.respond_to?(:profession?)
-          booga.respond_to?(:profession=)
         end
       end
     end

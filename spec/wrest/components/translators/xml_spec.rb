@@ -15,17 +15,21 @@ module Wrest
         end
 
         it 'knows how to convert a hashmap to xml' do
-          expect(described_class.serialise({ 'ooga' => { 'age' => '12' } })).to eq("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <ooga>\n    <age>12</age>\n  </ooga>\n</hash>\n")
+          expected_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <ooga>\n    <age>12</age>\n  </ooga>\n</hash>\n"
+
+          expect(described_class.serialise({ 'ooga' => { 'age' => '12' } })).to eq(expected_xml)
         end
 
         it 'calls filter only if xpath is specified' do
           expect(http_response).to receive(:body)
           expect(ActiveSupport::XmlMini).to receive(:filter)
+
           described_class.deserialise(http_response, { xpath: '//age' })
         end
 
         it 'does not call filter if xpath is not specified' do
-          fake_body = '<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>'
+          fake_body = '<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address>' \
+                      '<Name>Bangalore</Name></Address></Person>'
           expect(http_response).to receive(:body).and_return(fake_body)
           expect(described_class).not_to receive(:filter)
 
@@ -36,7 +40,8 @@ module Wrest
           it 'is able to pull out desired elements from an xml response based on xpath and return an array of matching nodes' do
             ActiveSupport::XmlMini.backend = e
 
-            fake_body = '<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>'
+            fake_body = '<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address>' \
+                        '<Name>Bangalore</Name></Address></Person>'
             expect(http_response).to receive(:body).and_return(fake_body)
 
             res_arr = described_class.deserialise(http_response, { xpath: '//Name' })

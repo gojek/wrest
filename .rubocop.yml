@@ -15,6 +15,10 @@ Metrics/AbcSize:
 Layout/LineLength:
   Max: 180
 
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - spec/wrest/components/mutators/base_spec.rb
+
 Naming/VariableNumber:
   Exclude:
     - Gemfile

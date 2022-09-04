@@ -28,7 +28,8 @@ module Wrest
       }")
 
           result = { 'commands' => [{ 'title' => 'New', 'action' => 'CreateDoc' },
-                                    { 'title' => 'Open', 'action' => 'OpenDoc' }, { 'title' => 'Close', 'action' => 'CloseDoc' }],
+                                    { 'title' => 'Open', 'action' => 'OpenDoc' },
+                                    { 'title' => 'Close', 'action' => 'CloseDoc' }],
                      'menu' => 'File' }
           described_class.deserialise(http_response).should eq(result)
         end
@@ -47,7 +48,8 @@ module Wrest
                            { 'title' => 'Close', 'action' => 'CloseDoc' }]
           }
           expect(described_class.serialise(hash)).to include('"menu":"File"')
-          expect(described_class.serialise(hash)).to include('"commands":[{"title":"New","action":"CreateDoc"},{"title":"Open","action":"OpenDoc"},{"title":"Close","action":"CloseDoc"}]')
+          expect(described_class.serialise(hash)).to include('"commands":[{"title":"New","action":"CreateDoc"},' \
+                                                             '{"title":"Open","action":"OpenDoc"},{"title":"Close","action":"CloseDoc"}]')
         end
 
         it 'has #deserialize delegate to #deserialise' do

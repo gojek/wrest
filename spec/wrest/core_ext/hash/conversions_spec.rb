@@ -10,15 +10,17 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'spec_helper'
+require 'wrest/components/mutators'
 
 describe Hash, 'conversions' do
   it 'knows how to build a mutated hash given a hash mutator' do
-    class StringToSymbolMutator < Wrest::Components::Mutators::Base
+    string_to_symbol_mutator_klass = Class.new(Wrest::Components::Mutators::Base)
+    string_to_symbol_mutator_klass.class_eval do
       def mutate(pair)
         [pair.first.to_sym, pair.last]
       end
     end
 
-    expect({ 'ooga' => 'booga' }.mutate_using(StringToSymbolMutator.new)).to eq({ ooga: 'booga' })
+    expect({ 'ooga' => 'booga' }.mutate_using(string_to_symbol_mutator_klass.new)).to eq({ ooga: 'booga' })
   end
 end

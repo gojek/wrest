@@ -14,12 +14,27 @@ require 'spec_helper'
 module Wrest
   module Components
     describe Container do
-      class HumanBeing
-        include Wrest::Components::Container
-        always_has :id
+      let(:human_being_klass) do
+        Class.new.tap do |klass|
+          klass.class_eval do
+            include Wrest::Components::Container
+            always_has :id
+          end
+        end
       end
 
-      class WaterMagician < HumanBeing
+      let(:water_magician_klass) do
+        Class.new(human_being_klass)
+      end
+
+      before do
+        Wrest::Components.const_set(:HumanBeing, human_being_klass)
+        Wrest::Components.const_set(:WaterMagician, water_magician_klass)
+      end
+
+      after do
+        Wrest::Components.send(:remove_const, :HumanBeing)
+        Wrest::Components.send(:remove_const, :WaterMagician)
       end
 
       it 'allows instantiation with no attributes' do

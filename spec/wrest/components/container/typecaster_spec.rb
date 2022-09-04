@@ -27,14 +27,13 @@ module Wrest
         end
 
         it 'hash should not typecast' do
-          class TestUser
-            include Wrest::Components::Container
-          end
+          test_user_klass = Class.new
+          test_user_klass.send(:include, Wrest::Components::Container)
 
-          @Demon.class_eval { typecast user: ->(user) { TestUser.new(user) } }
+          @Demon.class_eval { typecast user: ->(user) { test_user_klass.new(user) } }
 
           kai_wren = @Demon.new('user' => { 'foo' => 'bar' })
-          expect(kai_wren.user.class).to eq(TestUser)
+          expect(kai_wren.user.class).to eq(test_user_klass)
           expect(kai_wren.user.foo).to eq('bar')
         end
 
