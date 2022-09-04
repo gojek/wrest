@@ -108,7 +108,7 @@ module Wrest
       response.deserialise.should == { 'commands' => [{ 'title' => 'New',
                                                         'action' => 'CreateDoc' },
                                                       { 'title' => 'Open', 'action' => 'OpenDoc' }, { 'title' => 'Close',
-                                                                                                        'action' => 'CloseDoc' }], 'menu' => 'File' }
+                                                                                                      'action' => 'CloseDoc' }], 'menu' => 'File' }
     end
 
     it 'simplies return itself when asked to follow (null object behaviour - see MovedPermanently for more context)' do
@@ -177,7 +177,7 @@ module Wrest
           end
         end
 
-        it 'should be cacheable for response with max-age still not expired' do
+        it 'is cacheable for response with max-age still not expired' do
           cache_control_headers = cacheable_headers.merge('cache-control' => "max-age=#{10 * 30}")
                                                    .tap { |h| h.delete('expires') }
           ok_response = build_ok_response('', cache_control_headers)
@@ -399,8 +399,8 @@ module Wrest
 
           it 'says a response with ETag can be cache-validated' do
             response = Wrest::Native::Response.new(build_ok_response('', @headers.tap do |h|
-  h.delete 'last-modified'
- h['etag'] = ['123']
+                                                                           h.delete 'last-modified'
+                                                                           h['etag'] = ['123']
                                                                          end))
             response.can_be_validated?.should == true
           end

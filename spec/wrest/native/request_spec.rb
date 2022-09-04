@@ -171,8 +171,12 @@ describe Wrest::Native::Request do
 
   context 'functional', functional: true do
     it 'has a empty string for a body' do
-      Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri,
-                                 Net::HTTP::Get).invoke.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<lead-bottle>\n  <id type=\"integer\">1</id>\n  <name>Wooz</name>\n  <universe-id type=\"integer\" nil=\"true\"></universe-id>\n</lead-bottle>\n"
+      expected_body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<lead-bottle>\n  <id type=\"integer\">1</id>\n  " \
+                      "<name>Wooz</name>\n  <universe-id type=\"integer\" nil=\"true\"></universe-id>\n</lead-bottle>\n"
+
+      request = Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get)
+
+      expect(request.invoke.body).to eq(expected_body)
     end
 
     it 'correctlies use the detailed_http_logging option' do

@@ -5,10 +5,10 @@ require 'rspec'
 
 describe Wrest::Native::Get do
   before do
-    @cache       = {}
+    @cache = {}
     @request_uri = 'http://localhost/foo'.to_uri
 
-    @get         = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache })
+    @get = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache })
   end
 
   context 'hashing and equality' do
@@ -22,7 +22,8 @@ describe Wrest::Native::Get do
     end
 
     it 'is equal to a similar get but with different options' do
-      @another_get_with_same_properties = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache.clone }) # Use a different cache store, but it should not be considered when checking equality.
+      # Use a different cache store, but it should not be considered when checking equality.
+      @another_get_with_same_properties = Wrest::Native::Get.new(@request_uri, {}, {}, { cache_store: @cache.clone })
 
       expect(@get).to eq(@another_get_with_same_properties)
       expect(@get.hash).to eq(@another_get_with_same_properties.hash)
@@ -106,7 +107,7 @@ describe Wrest::Native::Get do
   context 'functional', functional: true do
     before do
       @cache_store = {}
-      @l           = 'http://localhost:3000'.to_uri(cache_store: @cache_store)
+      @l = 'http://localhost:3000'.to_uri(cache_store: @cache_store)
     end
 
     describe 'cacheable responses' do
@@ -133,7 +134,7 @@ describe Wrest::Native::Get do
 
       it 'gives the cached response itself when it has not expired' do
         initial_response = @l['cacheable/cant_be_validated/with_expires/1'].get
-        next_response    = @l['cacheable/cant_be_validated/with_expires/1'].get
+        next_response = @l['cacheable/cant_be_validated/with_expires/1'].get
 
         expect(next_response.body.split.first).to eq(initial_response.body.split.first)
       end
@@ -149,10 +150,10 @@ describe Wrest::Native::Get do
       context 'validatable cache entry' do
         it 'gives the cached response itself if server gives a 304 (not modified)' do
           first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
-          first_response_with_etag          = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
+          first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
           sleep 2
           second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_304/1'].get
-          second_response_with_etag          = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
+          second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_304/1'].get
 
           expect(first_response_with_last_modified.body.split.first).to eq(second_response_with_last_modified.body.split.first)
           expect(first_response_with_etag.body.split.first).to eq(second_response_with_etag.body.split.first)
@@ -172,7 +173,8 @@ describe Wrest::Native::Get do
 
           sleep 1
 
-          second_response_with_last_modified = uri.get # Cache expired. Wrest would send an If-Not-Modified, server will send 304 (Not Modified) with a header-that-changes-everytime
+          # Cache expired. Wrest would send an If-Not-Modified, server will send 304 (Not Modified) with a header-that-changes-everytime
+          second_response_with_last_modified = uri.get
           second_response_with_last_modified.body.should == first_response_with_last_modified.body
           second_response_with_last_modified['header-that-changes-everytime'].to_i.should > 0
           expect(second_response_with_last_modified.headers['Header-that-was-in-the-first-response']).to eq('42')
@@ -186,10 +188,10 @@ describe Wrest::Native::Get do
 
         it 'gives the new response if server sends a new one' do
           first_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
-          first_response_with_etag          = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
+          first_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
           sleep 1
           second_response_with_last_modified = @l['/cacheable/can_be_validated/with_last_modified/always_give_fresh_response/1'].get
-          second_response_with_etag          = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
+          second_response_with_etag = @l['/cacheable/can_be_validated/with_etag/always_give_fresh_response/1'].get
 
           expect(first_response_with_last_modified.body.split.first).not_to eq(second_response_with_last_modified.body.split.first)
           expect(first_response_with_etag.body.split.first).not_to eq(second_response_with_etag.body.split.first)

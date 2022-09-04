@@ -33,10 +33,12 @@ namespace :lint do
 
   task :list_broken_cops do
     rubocop_log = `bundle exec rubocop`
-    cop_name_pattern = /([A-Z][a-zA-Z]+\/[A-Z][a-zA-Z]+):/
+    cop_name_pattern = %r{([A-Z][a-zA-Z]+/[A-Z][a-zA-Z]+):}
     matches = rubocop_log.scan(cop_name_pattern).flatten
-    counts = matches.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }
-    pp counts
+    counts = matches.each_with_object(Hash.new(0)) do |e, h|
+      h[e] += 1
+    end
+    counts.keys.sort.each { |k| puts "#{k}: #{counts[k]}" }
     puts "\n#{counts.keys.length} cops broken!\n"
   end
 

@@ -823,8 +823,8 @@ module Wrest
                                                                                 } })
                 file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
                 file = File.open(file_name)
-                uri.post_multipart_async('file' => UploadIO.new(file, 'text/plain', file_name), :calback => { 200 => lambda {
- |_response| hash['success'] = true
+                uri.post_multipart_async('file' => UploadIO.new(file, 'text/plain', file_name), :calback => { 200 => lambda { |_response|
+                                                                                                                       hash['success'] = true
                                                                                                                      } })
 
                 sleep 0.1
@@ -839,8 +839,8 @@ module Wrest
                                                                                   } })
                 file_name = File.expand_path("#{Wrest::Root}/../Rakefile")
                 file = File.open(file_name)
-                uri.put_multipart_async('file' => UploadIO.new(file, 'text/plain', file_name), :calback => { 200 => lambda {
- |_response| hash['success'] = true
+                uri.put_multipart_async('file' => UploadIO.new(file, 'text/plain', file_name), :calback => { 200 => lambda { |_response|
+                                                                                                                      hash['success'] = true
                                                                                                                     } })
 
                 sleep 0.1

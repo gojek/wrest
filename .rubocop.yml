@@ -12,6 +12,9 @@ Metrics/AbcSize:
   Exclude:
     - spec/**/*_spec.rb
 
+Layout/LineLength:
+  Max: 180
+
 Naming/VariableNumber:
   Exclude:
     - Gemfile

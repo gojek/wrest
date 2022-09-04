@@ -29,9 +29,7 @@ module Wrest # :nodoc:
         target = self['location']
         redirect_request_options = redirect_request_options.clone
 
-        if (redirect_request_options[:follow_redirects_count] += 1) > redirect_request_options[:follow_redirects_limit]
-          raise Wrest::Exceptions::AutoRedirectLimitExceeded
-        end
+        raise Wrest::Exceptions::AutoRedirectLimitExceeded if (redirect_request_options[:follow_redirects_count] += 1) > redirect_request_options[:follow_redirects_limit]
 
         Wrest.logger.debug "-| Redirecting to #{target}"
         Wrest::Uri.new(target, redirect_request_options).get

@@ -23,7 +23,8 @@ module Wrest::Components::Translators
     end
 
     it 'does not call filter if xpath is not specified' do
-      expect(http_response).to receive(:body).and_return('<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>')
+      fake_body = '<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>'
+      expect(http_response).to receive(:body).and_return(fake_body)
       expect(Xml).not_to receive(:filter)
 
       Xml.deserialise(http_response)
@@ -33,7 +34,8 @@ module Wrest::Components::Translators
       it 'is able to pull out desired elements from an xml response based on xpath and return an array of matching nodes' do
         ActiveSupport::XmlMini.backend = e
 
-        expect(http_response).to receive(:body).and_return('<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>')
+        fake_body = '<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>'
+        expect(http_response).to receive(:body).and_return(fake_body)
 
         res_arr = Xml.deserialise(http_response, { xpath: '//Name' })
         result = ''

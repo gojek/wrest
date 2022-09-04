@@ -7,9 +7,12 @@ module Wrest
     http_backends = { 'Wrest::Native::Response' => 'Net::HTTPResponse' }
 
     http_backends.each do |klass, double_class|
-      { '200' => 'OK', '201' => 'CREATED', '202' => 'ACCEPTED', '204' => 'NO CONTENT', '301' => 'MOVED PERMANENTLY', '302' => 'FOUND', '303' => 'SEE OTHER', '304' => 'NOT MODIFIED',
-        '307' => 'TEMPORARY REDIRECT', '400' => 'BAD REQUEST', '401' => 'UNAUTHORIZED', '403' => 'FORBIDDEN', '404' => 'NOT FOUND', '405' => 'METHOD_NOT_ALLOWED',
-        '406' => 'NOT_ACCEPTABLE', '422' => 'UNPROCESSABLE ENTITY', '500' => 'INTERNAL SERVER ERROR' }.each do |status, status_message|
+      { '200' => 'OK', '201' => 'CREATED', '202' => 'ACCEPTED', '204' => 'NO CONTENT',
+        '301' => 'MOVED PERMANENTLY', '302' => 'FOUND', '303' => 'SEE OTHER', '304' => 'NOT MODIFIED',
+        '307' => 'TEMPORARY REDIRECT', '400' => 'BAD REQUEST', '401' => 'UNAUTHORIZED',
+        '403' => 'FORBIDDEN', '404' => 'NOT FOUND', '405' => 'METHOD_NOT_ALLOWED',
+        '406' => 'NOT_ACCEPTABLE', '422' => 'UNPROCESSABLE ENTITY',
+        '500' => 'INTERNAL SERVER ERROR' }.each do |status, status_message|
         it "knows if the response code is HTTP #{status_message} for #{klass} object" do
           code = status
           method = (status_message.split.join('_').downcase + '?').to_sym
