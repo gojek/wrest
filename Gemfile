@@ -2,8 +2,8 @@
 
 source 'http://rubygems.org'
 
-gem 'rake', '~> 10'
-gem 'rdoc', '~> 4.2'
+gem 'rake', '~> 13.0'
+gem 'rdoc', '~> 6.4'
 gem 'rspec-collection_matchers', '~> 1.1'
 gem 'simplecov', platforms: :mri_19
 
