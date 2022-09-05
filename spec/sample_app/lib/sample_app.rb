@@ -4,8 +4,6 @@ require 'sinatra'
 require 'fileutils'
 require File.expand_path('../config/boot', __dir__)
 
-current_path = File.dirname(__FILE__)
-
 module SampleApp
   class Application < Sinatra::Application
     helpers do

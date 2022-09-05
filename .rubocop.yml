@@ -23,6 +23,10 @@ Lint/EmptyBlock:
   Exclude:
     - spec/wrest/callback_spec.rb
 
+Lint/UselessAssignment:
+  Exclude:
+    - spec/**/*_spec.rb
+
 Naming/VariableNumber:
   Exclude:
     - Gemfile

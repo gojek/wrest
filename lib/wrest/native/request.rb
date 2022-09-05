@@ -97,8 +97,9 @@ module Wrest
         prefix = "#{http_request.method} #{hash} #{@connection.hash} #{Thread.current.object_id}"
 
         Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
-        Wrest.logger.debug "<- Body: #{@body}"
+        Wrest.logger.debug "<- (#{prefix}) Body: #{@body}"
         time = Benchmark.realtime { response = Wrest::Native::Response.new(do_request) }
+        Wrest.logger.debug "<- (#{prefix}) Time: #{time}"
 
         execute_callback_if_any(response)
 
