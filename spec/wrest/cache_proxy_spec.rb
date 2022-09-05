@@ -99,7 +99,9 @@ describe Wrest::CacheProxy do
           expect(ok_response.can_be_validated?).to be(true)
 
           expect(cache).to receive(:[]).with(get_request.uri.to_s).and_return(ok_response)
-          expect(get_request).to receive(:build_request_without_cache_store).with(hash_including('if-modified-since' => ok_response.headers['last-modified'])).and_return(direct_get)
+          expect(get_request).to receive(:build_request_without_cache_store)
+            .with(hash_including('if-modified-since' => ok_response.headers['last-modified']))
+            .and_return(direct_get)
           expect(direct_get).to receive(:invoke).and_return(ok_response)
 
           cache_proxy.get
@@ -116,7 +118,9 @@ describe Wrest::CacheProxy do
 
           expect(cache).to receive(:[]).with(get_request.uri.to_s).and_return(response_with_etag)
 
-          expect(get_request).to receive(:build_request_without_cache_store).with(hash_including('if-none-match' => '123')).and_return(direct_get)
+          expect(get_request).to receive(:build_request_without_cache_store)
+            .with(hash_including('if-none-match' => '123'))
+            .and_return(direct_get)
           expect(direct_get).to receive(:invoke).and_return(response_with_etag)
 
           cache_proxy.get

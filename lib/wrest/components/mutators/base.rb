@@ -25,6 +25,7 @@ module Wrest
         #
         # See Mutators#chain for more information.
         def self.inherited(subklass)
+          super
           unless subklass.name.blank?
             Wrest::Components::Mutators::REGISTRY[subklass.name.demodulize.underscore.to_sym] =
               subklass
