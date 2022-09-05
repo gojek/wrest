@@ -7,12 +7,12 @@ if RUBY_PLATFORM =~ /java/
     module JDOM
       describe XPathFilter do
         before do
-          @testObj = Object.new
-          @testObj.extend(described_class)
+          @test_obj = Object.new
+          @test_obj.extend(described_class)
         end
 
         it 'throws a not implented exception when filter command is invoked and ActiveSupport_XmlMini backend is JDOM' do
-          expect { @testObj.filter('<xmlbody/>', 'xpath') }.to raise_error(NotImplementedError)
+          expect { @test_obj.filter('<xmlbody/>', 'xpath') }.to raise_error(NotImplementedError)
         end
       end
     end

@@ -48,18 +48,18 @@ module Wrest
 
         it 'knows how to serialise itself given any of the Wrest::Components::Translators' do
           result = HumanBeing.new(age: '70', name: 'Li Piao').serialise_using(Wrest::Components::Translators::Json)
-          expectedPermutationOne = '{"age":"70","name":"Li Piao"}'
-          expectedPermutationTwo = '{"name":"Li Piao","age":"70"}'
+          expected_permutation_one = '{"age":"70","name":"Li Piao"}'
+          expected_permutation_two = '{"name":"Li Piao","age":"70"}'
 
-          expect((result == expectedPermutationOne || result == expectedPermutationTwo)).to be_truthy
+          expect((result == expected_permutation_one || result == expected_permutation_two)).to be_truthy
         end
 
         it 'has a to_xml helper that ensures that the name of the class is the root of the serilised form' do
           result = HumanBeing.new(age: '70', name: 'Li Piao').to_xml
-          expectedPermutationOne = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <age>70</age>\n  <name>Li Piao</name>\n</human-being>\n"
-          expectedPermutationTwo = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <name>Li Piao</name>\n  <age>70</age>\n</human-being>\n"
+          expected_permutation_one = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <age>70</age>\n  <name>Li Piao</name>\n</human-being>\n"
+          expected_permutation_two = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <name>Li Piao</name>\n  <age>70</age>\n</human-being>\n"
 
-          expect((result == expectedPermutationOne || result == expectedPermutationTwo)).to be_truthy
+          expect((result == expected_permutation_one || result == expected_permutation_two)).to be_truthy
         end
 
         describe 'subclasses' do
@@ -71,42 +71,40 @@ module Wrest
       end
 
       describe 'typecasting' do
-        before do
-          @Demon = Class.new
+        let(:demon_klass) { Class.new }
 
-          @Demon.class_eval do
+        before do
+          demon_klass.class_eval do
             include Wrest::Components::Container
           end
         end
 
         it 'delegates to Container::Typecaster#typecast to actually do the typecasting' do
-          @Demon.class_eval do
+          demon_klass.class_eval do
             typecast foo: ->(value) { value.to_i }
           end
-          expect(@Demon.new(foo: '1').foo).to eq(1)
+          expect(demon_klass.new(foo: '1').foo).to eq(1)
         end
 
         it 'provides helpers for common typecasts' do
-          @Demon.class_eval do
+          demon_klass.class_eval do
             typecast foo: as_integer
           end
-          expect(@Demon.new(foo: '1').foo).to eq(1)
+          expect(demon_klass.new(foo: '1').foo).to eq(1)
         end
       end
 
       describe 'always_has' do
         describe 'method creation' do
-          before do
-            @Demon = Class.new
-          end
+          let(:demon_klass) { Class.new }
 
           # Methods are string in 1.8 and symbols in 1.9. We'll use to_sym to
           # allow us to build on both.
           it 'defines attribute getters at the class level' do
-            kai_wren = @Demon.new
+            kai_wren = demon_klass.new
             expect(kai_wren.methods.map(&:to_sym)).not_to include(:trainer)
 
-            @Demon.class_eval do
+            demon_klass.class_eval do
               include Wrest::Components::Container
               always_has :trainer
             end
@@ -115,10 +113,10 @@ module Wrest
           end
 
           it 'defines attribute setters at the class level' do
-            kai_wren = @Demon.new
+            kai_wren = demon_klass.new
             expect(kai_wren.methods.map(&:to_sym)).not_to include(:trainer=)
 
-            @Demon.class_eval do
+            demon_klass.class_eval do
               include Wrest::Components::Container
               always_has :trainer
             end
@@ -127,10 +125,10 @@ module Wrest
           end
 
           it 'defines attribute query methods at the class level' do
-            kai_wren = @Demon.new
+            kai_wren = demon_klass.new
             expect(kai_wren.methods.map(&:to_sym)).not_to include(:trainer?)
 
-            @Demon.class_eval do
+            demon_klass.class_eval do
               include Wrest::Components::Container
               always_has :trainer
             end
@@ -139,9 +137,11 @@ module Wrest
         end
 
         describe 'method functionality' do
+          let(:demon_klass) { Class.new }
+          let(:kai_wren) { demon_klass.new }
+
           before do
-            @Demon = Class.new
-            @Demon.class_eval do
+            demon_klass.class_eval do
               include Wrest::Components::Container
               always_has :trainer
 
@@ -152,92 +152,89 @@ module Wrest
                 raise NoMethodError.new("Method #{method_name} was invoked, but doesn't exist", method_name)
               end
             end
-            @kai_wren = @Demon.new
           end
 
           it 'defines attribute getters at the class level' do
-            @kai_wren.instance_variable_get('@attributes')[:trainer] = 'Viss'
-            expect(@kai_wren.trainer).to eq('Viss')
+            kai_wren.instance_variable_get('@attributes')[:trainer] = 'Viss'
+            expect(kai_wren.trainer).to eq('Viss')
           end
 
           it 'defines attribute setters at the class level' do
-            @kai_wren.trainer = 'Viss'
-            expect(@kai_wren.instance_variable_get('@attributes')[:trainer]).to eq('Viss')
+            kai_wren.trainer = 'Viss'
+            expect(kai_wren.instance_variable_get('@attributes')[:trainer]).to eq('Viss')
           end
 
           it 'defines attribute query methods at the class level' do
-            expect(@kai_wren).not_to be_trainer
-            @kai_wren.instance_variable_get('@attributes')[:trainer] = 'Viss'
-            expect(@kai_wren).to be_trainer
+            expect(kai_wren).not_to be_trainer
+            kai_wren.instance_variable_get('@attributes')[:trainer] = 'Viss'
+            expect(kai_wren).to be_trainer
           end
         end
       end
 
       describe 'provides an attributes interface which' do
-        before do
-          @li_piao = HumanBeing.new(:id => 5, :profession => 'Natural Magician', 'enhanced_by' => 'Kai Wren')
-        end
+        let(:li_piao) { HumanBeing.new(id: 5, profession: 'Natural Magician', 'enhanced_by' => 'Kai Wren') }
 
         context 'access key format' do
           it 'provides a generic key based setter that understands symbols' do
-            @li_piao[:enhanced_by] = 'Viss'
-            expect(@li_piao.instance_variable_get('@attributes')['enhanced_by']).to eq('Viss')
+            li_piao[:enhanced_by] = 'Viss'
+            expect(li_piao.instance_variable_get('@attributes')['enhanced_by']).to eq('Viss')
           end
 
           it 'provides a generic key based setter that understands strings' do
-            @li_piao['enhanced_by'] = 'Viss'
-            expect(@li_piao.instance_variable_get('@attributes')['enhanced_by']).to eq('Viss')
+            li_piao['enhanced_by'] = 'Viss'
+            expect(li_piao.instance_variable_get('@attributes')['enhanced_by']).to eq('Viss')
           end
 
           it 'provides a generic key based getter that understands symbols' do
-            expect(@li_piao[:profession]).to eq('Natural Magician')
+            expect(li_piao[:profession]).to eq('Natural Magician')
           end
 
           it 'provides a generic key based getter that understands strings' do
-            expect(@li_piao['profession']).to eq('Natural Magician')
+            expect(li_piao['profession']).to eq('Natural Magician')
           end
         end
 
         it "fails when getter methods for attributes that don't exist are invoked" do
-          expect { @li_piao.ooga }.to raise_error(NoMethodError)
+          expect { li_piao.ooga }.to raise_error(NoMethodError)
         end
 
         it 'provides getter methods for attributes' do
-          expect(@li_piao.profession).to eq('Natural Magician')
-          expect(@li_piao.enhanced_by).to eq('Kai Wren')
+          expect(li_piao.profession).to eq('Natural Magician')
+          expect(li_piao.enhanced_by).to eq('Kai Wren')
         end
 
         it 'responds to getter methods for attributes' do
-          expect(@li_piao).to respond_to(:profession)
-          expect(@li_piao).to respond_to(:enhanced_by)
+          expect(li_piao).to respond_to(:profession)
+          expect(li_piao).to respond_to(:enhanced_by)
         end
 
         it "does not respond to getter methods for attributes that don't exist" do
-          expect(@li_piao).not_to respond_to(:gods)
+          expect(li_piao).not_to respond_to(:gods)
         end
 
         it "creates a setter method when one is invoked for attributes that don't exist" do
-          @li_piao.niece = 'Li Plum'
-          expect(@li_piao.instance_variable_get('@attributes')[:niece]).to eq('Li Plum')
-          expect(@li_piao.niece).to eq('Li Plum')
+          li_piao.niece = 'Li Plum'
+          expect(li_piao.instance_variable_get('@attributes')[:niece]).to eq('Li Plum')
+          expect(li_piao.niece).to eq('Li Plum')
         end
 
         it 'provides setter methods for attributes' do
-          @li_piao.enhanced_by = 'He of the Towers of Light'
-          expect(@li_piao.instance_variable_get('@attributes')[:enhanced_by]).to eq('He of the Towers of Light')
+          li_piao.enhanced_by = 'He of the Towers of Light'
+          expect(li_piao.instance_variable_get('@attributes')[:enhanced_by]).to eq('He of the Towers of Light')
         end
 
         it 'responds to setter methods for attributes' do
-          expect(@li_piao).to respond_to(:profession=)
-          expect(@li_piao).to respond_to(:enhanced_by=)
+          expect(li_piao).to respond_to(:profession=)
+          expect(li_piao).to respond_to(:enhanced_by=)
         end
 
         it "does not respond to setter methods for attributes that don't exist" do
-          expect(@li_piao).not_to respond_to(:god=)
+          expect(li_piao).not_to respond_to(:god=)
         end
 
         it "returns false when query methods for attributes that don't exist are invoked" do
-          expect(@li_piao.ooga?).to be_falsey
+          expect(li_piao.ooga?).to be_falsey
         end
 
         it 'provides query methods for attributes' do
@@ -248,18 +245,18 @@ module Wrest
         end
 
         it 'responds to query methods for attributes' do
-          expect(@li_piao).to respond_to(:profession?)
-          expect(@li_piao).to respond_to(:enhanced_by?)
+          expect(li_piao).to respond_to(:profession?)
+          expect(li_piao).to respond_to(:enhanced_by?)
         end
 
         it "does not respond to query methods for attributes that don't exist" do
-          expect(@li_piao).not_to respond_to(:theronic?)
+          expect(li_piao).not_to respond_to(:theronic?)
         end
 
         it 'overrides methods which already exist on the container' do
-          expect(@li_piao.id).to eq(5)
-          @li_piao.id = 6
-          expect(@li_piao.id).to eq(6)
+          expect(li_piao.id).to eq(5)
+          li_piao.id = 6
+          expect(li_piao.id).to eq(6)
         end
 
         it 'provides getter and query methods to instance which has corresponding attribute' do
@@ -267,10 +264,10 @@ module Wrest
           expect(zotoh_zhaan.species).to eq('Delvian')
           expect(zotoh_zhaan.species?).to be_truthy
           zotoh_zhaan.species = 'Human'
-          expect { @li_piao.species }.to raise_error(NoMethodError)
-          expect(@li_piao.species?).to be_falsey
-          expect(@li_piao).not_to respond_to(:species=)
-          expect(@li_piao.methods.grep(/:species=/)).to be_empty
+          expect { li_piao.species }.to raise_error(NoMethodError)
+          expect(li_piao.species?).to be_falsey
+          expect(li_piao).not_to respond_to(:species=)
+          expect(li_piao.methods.grep(/:species=/)).to be_empty
         end
       end
     end

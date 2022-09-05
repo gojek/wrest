@@ -6,12 +6,12 @@ module XmlMini
   module Rexml
     describe XPathFilter do
       before do
-        @testObj = Object.new
-        @testObj.extend(described_class)
+        @test_obj = Object.new
+        @test_obj.extend(described_class)
       end
 
       it 'filters using the given xpath and return an array of matching nodes found' do
-        res_arr = @testObj.filter(
+        res_arr = @test_obj.filter(
           '<Person><Personal><Name><FirstName>ooga</FirstName></Name></Personal><Address><Name>Bangalore</Name></Address></Person>', '//Name'
         )
         result = ''
