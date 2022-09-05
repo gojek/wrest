@@ -27,6 +27,9 @@ Lint/UselessAssignment:
   Exclude:
     - spec/**/*_spec.rb
 
+Naming/ConstantName:
+  Enabled: false
+
 Naming/VariableNumber:
   Exclude:
     - Gemfile
