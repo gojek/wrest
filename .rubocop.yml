@@ -8,6 +8,12 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
+Metrics/MethodLength:
+  CountAsOne: ['array', 'heredoc', 'hash']
+  Exclude:
+    - spec/**/*_spec.rb
+    - spec/support/*.rb
+
 Metrics/AbcSize:
   Exclude:
     - spec/**/*_spec.rb
@@ -38,6 +44,7 @@ RSpec/ContextWording:
   Enabled: false
 
 RSpec/ExampleLength:
+  CountAsOne: ['array', 'hash', 'heredoc']
   Enabled: false
 
 RSpec/MultipleExpectations:

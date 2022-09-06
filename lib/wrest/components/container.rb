@@ -176,17 +176,23 @@ module Wrest
           method_name = method_sym.to_s
           attribute_name = method_name.gsub(/(\?$)|(=$)/, '')
           if @attributes.include?(attribute_name.to_sym) || method_name.last == '=' || method_name.last == '?'
-            case method_name.last
-            when '='
-              instance_eval Container.build_attribute_setter(attribute_name)
-            when '?'
-              instance_eval Container.build_attribute_queryer(attribute_name)
-            else
-              instance_eval Container.build_attribute_getter(attribute_name)
-            end
+            generate_methods!(attribute_name, method_name)
             send(method_sym, *arguments)
           else
             super(method_sym, *arguments)
+          end
+        end
+
+        private
+
+        def generate_methods!(attribute_name, method_name)
+          case method_name.last
+          when '='
+            instance_eval Container.build_attribute_setter(attribute_name)
+          when '?'
+            instance_eval Container.build_attribute_queryer(attribute_name)
+          else
+            instance_eval Container.build_attribute_getter(attribute_name)
           end
         end
       end

@@ -46,25 +46,15 @@ module Wrest
       #   :verify_mode => The verification mode to be used for Net::HTTP https connections. Defaults to OpenSSL::SSL::VERIFY_PEER
       #   :ca_path => The path to the certificates
       def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
-        @uri = wrest_uri
-        @headers = headers.stringify_keys
-        @parameters = parameters
-        @body = body
-        @options = options.clone
-        @username = @options[:username]
-        @password = @options[:password]
+        setup_request_state!(body, headers, parameters, wrest_uri)
+        setup_options_state!(options)
+        @detailed_http_logging = options[:detailed_http_logging]
         @follow_redirects = (@options[:follow_redirects] ||= false)
         @follow_redirects_count = (@options[:follow_redirects_count] ||= 0)
         @follow_redirects_limit = (@options[:follow_redirects_limit] ||= 5)
-        @timeout = @options[:timeout]
-        @connection = @options[:connection]
-        @http_request = build_request(http_request_klass, @uri, @parameters, @headers)
-        @cache_store = @options[:cache_store]
-        @verify_mode = @options[:verify_mode]
-        @ca_path = @options[:ca_path]
-        @detailed_http_logging = options[:detailed_http_logging]
         @callback = @options[:callback] || Wrest::Callback.new({})
         @callback = @callback.merge(Wrest::Callback.new(@options[:callback_block] || {}))
+        @http_request = build_request(http_request_klass, @uri, @parameters, @headers)
       end
 
       # Makes a request, runs the appropriate callback if any and
@@ -92,14 +82,9 @@ module Wrest
         response = nil
         @connection ||= @uri.create_connection(timeout: timeout, verify_mode: verify_mode, ca_path: ca_path)
         @connection.set_debug_output @detailed_http_logging
-        http_request.basic_auth username, password unless username.nil? || password.nil?
+        http_request.basic_auth(username, password) unless username.nil? || password.nil?
 
-        prefix = "#{http_request.method} #{hash} #{@connection.hash} #{Thread.current.object_id}"
-
-        Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
-        Wrest.logger.debug "<- (#{prefix}) Body: #{@body}"
-        time = Benchmark.realtime { response = Wrest::Native::Response.new(do_request) }
-        Wrest.logger.debug "<- (#{prefix}) Time: #{time}"
+        response = execute_request(response)
 
         execute_callback_if_any(response)
 
@@ -127,6 +112,36 @@ module Wrest
       # :nodoc:
       def execute_callback_if_any(actual_response)
         @callback.execute(actual_response)
+      end
+
+      private
+
+      def execute_request(response)
+        prefix = "#{http_request.method} #{hash} #{@connection.hash} #{Thread.current.object_id}"
+
+        Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
+        Wrest.logger.debug "<- (#{prefix}) Body: #{@body}"
+        time = Benchmark.realtime { response = Wrest::Native::Response.new(do_request) }
+        Wrest.logger.debug "<- (#{prefix}) Time: #{time}"
+        response
+      end
+
+      def setup_request_state!(body, headers, parameters, wrest_uri)
+        @uri = wrest_uri
+        @headers = headers.stringify_keys
+        @parameters = parameters
+        @body = body
+      end
+
+      def setup_options_state!(options)
+        @options = options.clone
+        @username = @options[:username]
+        @password = @options[:password]
+        @timeout = @options[:timeout]
+        @connection = @options[:connection]
+        @cache_store = @options[:cache_store]
+        @verify_mode = @options[:verify_mode]
+        @ca_path = @options[:ca_path]
       end
     end
   end

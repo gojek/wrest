@@ -43,14 +43,10 @@ module Wrest
 
       def get
         cached_response = @cache_store[@get.full_uri_string]
-        return get_fresh_response if cached_response.nil?
+        return fresh_get_response if cached_response.nil?
 
         if cached_response.expired?
-          if cached_response.can_be_validated?
-            get_validated_response_for(cached_response)
-          else
-            get_fresh_response
-          end
+          expired_cached_response(cached_response)
         else
           log_cached_response
           cached_response
@@ -69,7 +65,7 @@ module Wrest
       end
 
       # :nodoc:
-      def get_fresh_response
+      def fresh_get_response
         @cache_store.delete @get.full_uri_string
 
         response = @get.invoke_without_cache_check
@@ -106,6 +102,17 @@ module Wrest
         new_request = @get.build_request_without_cache_store(cache_validation_headers)
 
         new_request.invoke
+      end
+
+      private
+
+      # :nodoc:
+      def expired_cached_response(cached_response)
+        if cached_response.can_be_validated?
+          get_validated_response_for(cached_response)
+        else
+          fresh_get_response
+        end
       end
     end
   end

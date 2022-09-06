@@ -42,17 +42,8 @@ module Wrest # :nodoc:
     # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
       @options = options.clone
-      @uri_string = uri_string.to_s
-      @uri = URI.parse(@uri_string)
-      uri_scheme = URI.split(@uri_string)
-      @uri_path = uri_scheme[-4].split('?').first || ''
-      @uri_path = (@uri_path.empty? ? '/' : @uri_path)
-      @query = uri_scheme[-2] || ''
-      @username = (@options[:username] ||= @uri.user)
-      @password = (@options[:password] ||= @uri.password)
-      @asynchronous_backend = @options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend
-      @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
-      @default_headers = @options[:default_headers] || {}
+      setup_uri_state!(uri_string)
+      setup_request_config!
     end
 
     # Builds a Wrest::UriTemplate by extending the current URI
@@ -298,5 +289,24 @@ module Wrest # :nodoc:
 
     include Http::ConnectionFactory
     include Uri::Builders
+
+    private
+
+    def setup_request_config!
+      @username = (@options[:username] ||= @uri.user)
+      @password = (@options[:password] ||= @uri.password)
+      @asynchronous_backend = @options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend
+      @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
+      @default_headers = @options[:default_headers] || {}
+    end
+
+    def setup_uri_state!(uri_string)
+      @uri_string = uri_string.to_s
+      @uri = URI.parse(@uri_string)
+      uri_scheme = URI.split(@uri_string)
+      @uri_path = uri_scheme[-4].split('?').first || ''
+      @uri_path = (@uri_path.empty? ? '/' : @uri_path)
+      @query = uri_scheme[-2] || ''
+    end
   end
 end

@@ -23,14 +23,7 @@ module Wrest
         cache_store = (options[:cache_store] || Wrest::Caching.default_store) unless options[:disable_cache]
         @cache_proxy = Wrest::CacheProxy.new(self, cache_store)
 
-        super(
-              wrest_uri,
-              Net::HTTP::Get,
-              parameters,
-              nil,
-              headers,
-              options
-            )
+        super(wrest_uri, Net::HTTP::Get, parameters, nil, headers, options)
       end
 
       # Checks equality between two Wrest::Native::Get objects.
