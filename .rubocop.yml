@@ -47,7 +47,16 @@ RSpec/ExampleLength:
   CountAsOne: ['array', 'hash', 'heredoc']
   Enabled: false
 
+RSpec/MessageSpies:
+  Enabled: false
+
 RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/StubbedMock:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
   Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
