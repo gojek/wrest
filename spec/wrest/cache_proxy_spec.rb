@@ -244,7 +244,7 @@ describe Wrest::CacheProxy do
   end
 
   describe 'redis specific caching', functional: true do
-    before :all do
+    before(:all) do
       Wrest::Caching.enable_redis
     end
 

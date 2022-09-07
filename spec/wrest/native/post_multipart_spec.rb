@@ -7,7 +7,7 @@ require 'wrest/multipart'
 module Wrest
   describe Native::PostMultipart do
     context 'functional', functional: true do
-      before :all do
+      before(:all) do
         Wrest.use_native!
       end
 

@@ -40,6 +40,9 @@ Naming/VariableNumber:
   Exclude:
     - Gemfile
 
+RSpec/BeforeAfterAll:
+  Enabled: false
+
 RSpec/ContextWording:
   Enabled: false
 
@@ -53,12 +56,12 @@ RSpec/MessageSpies:
 RSpec/MultipleExpectations:
   Enabled: false
 
+RSpec/MultipleMemoizedHelpers:
+  Exclude:
+    - spec/wrest/cache_proxy_spec.rb
+
 RSpec/StubbedMock:
   Enabled: false
 
 RSpec/VerifiedDoubles:
   Enabled: false
-
-RSpec/MultipleMemoizedHelpers:
-  Exclude:
-    - spec/wrest/cache_proxy_spec.rb
