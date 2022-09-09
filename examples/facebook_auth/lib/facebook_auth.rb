@@ -38,7 +38,7 @@ module FacebookAuth
       end
 
       def app_base_url
-        @base_url ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
+        @app_base_url ||= "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}"
       end
 
       def facebook_post_authentication_url

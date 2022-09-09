@@ -37,9 +37,13 @@ Lint/UselessAssignment:
 Naming/ConstantName:
   Enabled: false
 
+Naming/MemoizedInstanceVariableName:
+  Exclude:
+    - lib/wrest/native/response.rb
+
 Naming/VariableNumber:
   Exclude:
-    - Gemfile
+  - Gemfile
 
 RSpec/BeforeAfterAll:
   Enabled: false

@@ -33,13 +33,13 @@ module Wrest
         private
 
         def process_hash_value(in_value)
-          out_value = if in_value['nil'] == 'true'
-                        nil
-                      elsif in_value.key?('type')
-                        ActiveSupport::XmlMini::PARSING[in_value['type']].call(in_value['content'])
-                      else
-                        in_value.mutate_using(self)
-                      end
+          if in_value['nil'] == 'true'
+            nil
+          elsif in_value.key?('type')
+            ActiveSupport::XmlMini::PARSING[in_value['type']].call(in_value['content'])
+          else
+            in_value.mutate_using(self)
+          end
         end
       end
     end
