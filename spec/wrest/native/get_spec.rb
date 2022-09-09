@@ -10,7 +10,7 @@ describe Wrest::Native::Get do
 
   context 'hashing and equality' do
     it 'is equal to itself' do
-      expect(get_request).to eq(get_request)
+      expect(get_request).to eq(get_request) # rubocop:disable RSpec/IdenticalEqualityAssertion
     end
 
     it 'is equal to its clone' do
@@ -119,11 +119,11 @@ describe Wrest::Native::Get do
       it 'caches cacheable but cant_be_validated response' do
         # The server returns a different body for the same url on every call. So if the copy is cached by the client,
         # they should be equal.
-
+        # rubocop:disable RSpec/IdenticalEqualityAssertion
         expect(url['cacheable/cant_be_validated/with_expires/300'].get).to eq(url['cacheable/cant_be_validated/with_expires/300'].get)
         expect(url['cacheable/cant_be_validated/with_max_age/300'].get).to eq(url['cacheable/cant_be_validated/with_max_age/300'].get)
         expect(url['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get).to eq(url['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get)
-
+        # rubocop:enable RSpec/IdenticalEqualityAssertion
         expect(url['cacheable/cant_be_validated/with_both_max_age_and_expires/300'].get).not_to eq(url['cacheable/cant_be_validated/with_max_age/300'].get)
       end
 

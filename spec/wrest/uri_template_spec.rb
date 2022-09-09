@@ -50,7 +50,9 @@ module Wrest
     describe 'equals' do
       it 'has the same uri_pattern' do
         expect(described_class.new('http://localhost:3000/:resource/:id.:format')).not_to eq(described_class.new('http://localhost:3000/:id/:resource.:format'))
+        # rubocop:disable RSpec/IdenticalEqualityAssertion
         expect(described_class.new('http://localhost:3000/:resource/:id.:format')).to eq(described_class.new('http://localhost:3000/:resource/:id.:format'))
+        # rubocop:enable RSpec/IdenticalEqualityAssertion
       end
     end
 
