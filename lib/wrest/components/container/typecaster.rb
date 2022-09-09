@@ -32,7 +32,7 @@ module Wrest
         end
 
         module Helpers
-          def as_base64Binary
+          def as_base64_binary
             ActiveSupport::XmlMini::PARSING['base64Binary']
           end
 

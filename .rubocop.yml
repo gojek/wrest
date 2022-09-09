@@ -9,6 +9,11 @@ AllCops:
 Style/Documentation:
   Enabled: false
 
+Metrics/BlockLength:
+  CountAsOne: ['array', 'heredoc', 'hash']
+  Exclude:
+    - Rakefile
+
 Metrics/MethodLength:
   CountAsOne: ['array', 'heredoc', 'hash']
   Exclude:
