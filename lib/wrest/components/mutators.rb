@@ -17,7 +17,9 @@ module Wrest
     module Mutators
       # All sublasses of Mutators::Base are automatically
       # registered here by underscored, symbolised class name.
-      REGISTRY = {}
+      def self.registry
+        @registry ||= {}
+      end
 
       # Makes referencing and chaining mutators easy.
       #
@@ -27,8 +29,8 @@ module Wrest
       #  Wrest::Components::Mutators::XmlMiniTypeCaster.new(Wrest::Components::Mutators::CamelToSnakeCase.new)
       def self.chain(*mutator_keys)
         mutator_key = mutator_keys.pop
-        mutator_keys.reverse.inject(REGISTRY[mutator_key].new) do |next_instance, next_key|
-          REGISTRY[next_key].new(next_instance)
+        mutator_keys.reverse.inject(registry[mutator_key].new) do |next_instance, next_key|
+          registry[next_key].new(next_instance)
         end
       end
     end

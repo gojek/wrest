@@ -43,7 +43,7 @@ module Wrest
 
       it 'registers all subclasses in the registry' do
         class SomeMutator < Mutators::Base; end
-        expect(Mutators::REGISTRY[:some_mutator]).to eq(SomeMutator)
+        expect(Mutators.registry[:some_mutator]).to eq(SomeMutator)
       end
     end
   end
