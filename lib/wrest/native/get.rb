@@ -44,7 +44,7 @@ module Wrest
       # Returns a hash value for this Wrest::Native::Get object.
       # Objects that returns true when compared using the == operator would return the same hash value also.
       def hash
-        uri.hash + parameters.hash + username.hash + password.hash + verify_mode.hash + 20_110_106
+        [uri, parameters, username, password, verify_mode].hash
       end
 
       # :nodoc:

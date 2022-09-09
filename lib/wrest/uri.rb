@@ -91,7 +91,7 @@ module Wrest # :nodoc:
     end
 
     def hash
-      @uri.hash + @username.hash + @password.hash + 20_090_423
+      [@uri, @username, @password].hash
     end
 
     # This produces exactly the same string as the Wrest::Uri was constructed with.

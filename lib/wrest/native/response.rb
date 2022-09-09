@@ -73,7 +73,7 @@ module Wrest # :nodoc:
 
       # Return the hash of a Wrest::Native::Response object.
       def hash
-        code.hash + message.hash + headers.hash + http_version.hash + body.hash
+        [code, message, headers, http_version, body].hash
       end
 
       def deserialise(options = {})
