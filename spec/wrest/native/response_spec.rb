@@ -116,7 +116,7 @@ module Wrest
       allow(http_response).to receive(:code).and_return('422')
 
       response = described_class.new(http_response)
-      expect(response.follow.equal?(response)).to be_truthy
+      expect(response.follow).to be_equal(response)
     end
 
     describe 'Keep-Alive' do

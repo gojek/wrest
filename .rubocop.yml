@@ -1,7 +1,7 @@
 require:
   - rubocop-rake
   - rubocop-rspec
-  
+
 AllCops:
   NewCops: enable
   TargetRubyVersion: 2.6
@@ -10,12 +10,12 @@ Style/Documentation:
   Enabled: false
 
 Metrics/BlockLength:
-  CountAsOne: ['array', 'heredoc', 'hash']
+  CountAsOne: [ 'array', 'heredoc', 'hash' ]
   Exclude:
     - Rakefile
 
 Metrics/MethodLength:
-  CountAsOne: ['array', 'heredoc', 'hash']
+  CountAsOne: [ 'array', 'heredoc', 'hash' ]
   Exclude:
     - spec/**/*_spec.rb
     - spec/support/*.rb
@@ -48,7 +48,7 @@ Naming/MemoizedInstanceVariableName:
 
 Naming/VariableNumber:
   Exclude:
-  - Gemfile
+    - Gemfile
 
 RSpec/BeforeAfterAll:
   Enabled: false
@@ -57,7 +57,7 @@ RSpec/ContextWording:
   Enabled: false
 
 RSpec/ExampleLength:
-  CountAsOne: ['array', 'hash', 'heredoc']
+  CountAsOne: [ 'array', 'hash', 'heredoc' ]
   Enabled: false
 
 RSpec/MessageSpies:
@@ -69,6 +69,11 @@ RSpec/MultipleExpectations:
 RSpec/MultipleMemoizedHelpers:
   Exclude:
     - spec/wrest/cache_proxy_spec.rb
+
+RSpec/PredicateMatcher:
+  Exclude:
+    - spec/wrest/components/container_spec.rb
+    - spec/wrest/components/container/alias_accessors_spec.rb
 
 RSpec/StubbedMock:
   Enabled: false

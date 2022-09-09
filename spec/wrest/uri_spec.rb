@@ -567,7 +567,7 @@ module Wrest
               allow(uri).to receive(:create_connection).and_return(connection)
               callback_called = false
               uri.send(http_method.to_sym) do |callback|
-                expect(callback.is_a?(Callback)).to be_truthy
+                expect(callback).to be_a(Callback)
                 callback_called = true
               end
               expect(callback_called).to be_truthy
@@ -745,7 +745,7 @@ module Wrest
             uri.get_async
 
             sleep 0.1
-            expect(hash.key?('success')).to be_truthy
+            expect(hash).to be_key('success')
           end
         end
 
@@ -764,7 +764,7 @@ module Wrest
                 uri.get_async
 
                 sleep 0.1
-                expect(hash.key?('success')).to be_truthy
+                expect(hash).to be_key('success')
               end
             end
 
@@ -776,7 +776,7 @@ module Wrest
                 uri.put_async
 
                 sleep 0.1
-                expect(hash.key?('success')).to be_truthy
+                expect(hash).to be_key('success')
               end
             end
 
@@ -788,7 +788,7 @@ module Wrest
                 uri.post_async
 
                 sleep 0.1
-                expect(hash.key?('success')).to be_truthy
+                expect(hash).to be_key('success')
               end
             end
 
@@ -800,7 +800,7 @@ module Wrest
                 uri.delete_async
 
                 sleep 0.1
-                expect(hash.key?('success')).to be_truthy
+                expect(hash).to be_key('success')
               end
             end
 
@@ -812,7 +812,7 @@ module Wrest
                 uri.post_form_async
 
                 sleep 0.1
-                expect(hash.key?('success')).to be_truthy
+                expect(hash).to be_key('success')
               end
             end
 
@@ -828,7 +828,7 @@ module Wrest
                                                                                                                      } })
 
                 sleep 0.1
-                expect(hash.key?('success')).to be_truthy
+                expect(hash).to be_key('success')
               end
             end
 
@@ -844,7 +844,7 @@ module Wrest
                                                                                                                     } })
 
                 sleep 0.1
-                expect(hash.key?('success')).to be_truthy
+                expect(hash).to be_key('success')
               end
             end
           end
