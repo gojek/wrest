@@ -7,6 +7,7 @@ AllCops:
   TargetRubyVersion: 2.6
   Exclude:
     - lib/ext/**/*
+    - vendor/**/*
 
 Layout/LineLength:
   Max: 180
