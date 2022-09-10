@@ -8,8 +8,20 @@ AllCops:
   Exclude:
     - lib/ext/**/*
 
-Style/Documentation:
-  Enabled: false
+Layout/LineLength:
+  Max: 180
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - spec/wrest/components/mutators/base_spec.rb
+
+Lint/EmptyBlock:
+  Exclude:
+    - spec/wrest/callback_spec.rb
+
+Lint/UselessAssignment:
+  Exclude:
+    - spec/**/*_spec.rb
 
 Metrics/BlockLength:
   CountAsOne: [ 'array', 'heredoc', 'hash' ]
@@ -23,21 +35,6 @@ Metrics/MethodLength:
     - spec/support/*.rb
 
 Metrics/AbcSize:
-  Exclude:
-    - spec/**/*_spec.rb
-
-Layout/LineLength:
-  Max: 180
-
-Lint/ConstantDefinitionInBlock:
-  Exclude:
-    - spec/wrest/components/mutators/base_spec.rb
-
-Lint/EmptyBlock:
-  Exclude:
-    - spec/wrest/callback_spec.rb
-
-Lint/UselessAssignment:
   Exclude:
     - spec/**/*_spec.rb
 
@@ -85,3 +82,11 @@ RSpec/StubbedMock:
 
 RSpec/VerifiedDoubles:
   Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashLikeCase:
+  Exclude:
+    - examples/facebook_auth/facebook_auth.rb
+    - examples/wow_realm_status.rb

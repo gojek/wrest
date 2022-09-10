@@ -27,10 +27,10 @@ module FacebookAuth
 
     helpers do
       def require_facebook_authentication(return_to)
-        unless facebook_user.authenticated?
-          session[:return_to] = return_to
-          redirect '/facebook_authenticate'
-        end
+        return unless facebook_user.authenticated?
+
+        session[:return_to] = return_to
+        redirect '/facebook_authenticate'
       end
 
       def facebook_user

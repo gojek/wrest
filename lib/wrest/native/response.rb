@@ -198,9 +198,9 @@ module Wrest # :nodoc:
         rescue StandardError
           current_time
         end
-        age_value              = headers['age'].to_i || 0
+        age_value = headers['age'].to_i || 0
 
-        apparent_age           = current_time - date_value
+        apparent_age = current_time - date_value
 
         [apparent_age, age_value].max
       end
@@ -227,7 +227,7 @@ module Wrest # :nodoc:
         return max_age if max_age
 
         response_date = DateTime.parse(headers['date']).to_i
-        expires_date  = DateTime.parse(headers['expires']).to_i
+        expires_date = DateTime.parse(headers['expires']).to_i
 
         (expires_date - response_date)
       end
@@ -254,13 +254,13 @@ module Wrest # :nodoc:
       # helper function. Used to parse date fields.
       # this function is used and tested by the expires and response_date methods
       def parse_datefield(hash, key)
-        if hash[key]
-          # Can't trust external input. Do not crash even if invalid dates are passed.
-          begin
-            DateTime.parse(hash[key].to_s)
-          rescue ArgumentError
-            nil
-          end
+        return unless hash[key]
+
+        # Can't trust external input. Do not crash even if invalid dates are passed.
+        begin
+          DateTime.parse(hash[key].to_s)
+        rescue ArgumentError
+          nil
         end
       end
     end
