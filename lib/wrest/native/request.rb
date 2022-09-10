@@ -45,7 +45,7 @@ module Wrest
       #                             *WARNING* : detailed_http_logging causes a serious security hole. Never use it in production code.
       #   :verify_mode => The verification mode to be used for Net::HTTP https connections. Defaults to OpenSSL::SSL::VERIFY_PEER
       #   :ca_path => The path to the certificates
-      def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {})
+      def initialize(wrest_uri, http_request_klass, parameters = {}, body = nil, headers = {}, options = {}) # rubocop:disable Metrics/ParameterLists
         setup_request_state!(body, headers, parameters, wrest_uri)
         setup_options_state!(options)
         @detailed_http_logging = options[:detailed_http_logging]

@@ -38,6 +38,9 @@ Metrics/AbcSize:
   Exclude:
     - spec/**/*_spec.rb
 
+Metrics/ParameterLists:
+  MaxOptionalParameters: 4
+
 Naming/ClassAndModuleCamelCase:
   Exclude:
     - lib/wrest/xml_mini/*.rb
