@@ -37,6 +37,13 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Exclude:
     - spec/**/*_spec.rb
+    - spec/support/factories.rb
+
+Metrics/ClassLength:
+  Exclude:
+    - lib/wrest/uri.rb
+    - lib/wrest/native/response.rb
+    - spec/sample_app/lib/sample_app.rb
 
 Metrics/ParameterLists:
   MaxOptionalParameters: 4

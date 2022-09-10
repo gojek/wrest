@@ -62,11 +62,7 @@ module Wrest # :nodoc:
       def ==(other)
         return true if equal?(other)
         return false unless other.class == self.class
-        return true if (code == other.code) &&
-                       (headers == other.headers) &&
-                       (http_version == other.http_version) &&
-                       (message == other.message) &&
-                       (body == other.body)
+        return true if these_fields_are_equal(other)
 
         false
       end
@@ -119,7 +115,7 @@ module Wrest # :nodoc:
 
       # Returns whether this response is cacheable.
       def cacheable?
-        code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set? &&
+        cache_configs_set? &&
           (!max_age.nil? or (expires_not_in_our_past? && expires_not_in_its_past?)) && pragma_nocache_not_set? &&
           vary_header_valid?
       end
@@ -262,6 +258,20 @@ module Wrest # :nodoc:
         rescue ArgumentError
           nil
         end
+      end
+
+      private
+
+      def cache_configs_set?
+        code_cacheable? && no_cache_flag_not_set? && no_store_flag_not_set?
+      end
+
+      def these_fields_are_equal(other)
+        (code == other.code) &&
+          (headers == other.headers) &&
+          (http_version == other.http_version) &&
+          (message == other.message) &&
+          (body == other.body)
       end
     end
   end

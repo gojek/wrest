@@ -13,6 +13,7 @@ module SampleApp
         end
       end
     end
+
     get '/multiple_response_headers' do
       response.set_cookie('foo', { value: 'bar', path: '/', expires: Time.now })
       response.set_cookie('baz', { value: 'woot', path: '/', expires: Time.now })

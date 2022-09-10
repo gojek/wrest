@@ -22,11 +22,16 @@ require 'rdoc/task'
 require 'rubocop/rake_task'
 
 desc 'Default: run spec tests.'
-task default: %w[lint:autocorrect_basic_style_issues rspec:unit lint:rubocop]
+task default: %w[lint:autocorrect_basic_style_issues rspec:unit rspec:functional lint:rubocop]
 
-desc 'Cruise task'
-RSpec::Core::RakeTask.new(:cruise) do |t|
-  t.rspec_opts = '--format documentation'
+namespace :ci do
+  desc 'Run all CI task'
+  task all: %w[ci:specs lint:rubocop]
+
+  desc 'Run all unit specs'
+  RSpec::Core::RakeTask.new(:specs) do |t|
+    t.rspec_opts = '--format documentation'
+  end
 end
 
 namespace :lint do

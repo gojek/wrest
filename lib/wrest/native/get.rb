@@ -32,11 +32,7 @@ module Wrest
       def ==(other)
         return true if equal?(other)
         return false unless other.class == self.class
-        return true if (uri == other.uri) &&
-                       (parameters == other.parameters) &&
-                       (username == other.username) &&
-                       (password == other.password) &&
-                       (verify_mode == other.verify_mode)
+        return true if these_fields_are_equal(other)
 
         false
       end
@@ -70,6 +66,14 @@ module Wrest
       end
 
       private
+
+      def these_fields_are_equal(other)
+        (uri == other.uri) &&
+          (parameters == other.parameters) &&
+          (username == other.username) &&
+          (password == other.password) &&
+          (verify_mode == other.verify_mode)
+      end
 
       def query_params_string
         @parameters.any? ? QUERY_PARAMS_SEPERATOR + @parameters.to_query : EMPTY_QUERY_PARAMS

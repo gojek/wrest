@@ -80,9 +80,7 @@ module Wrest
       # This is followed by the response code, the payload size and the time taken.
       def invoke
         response = nil
-        @connection ||= @uri.create_connection(timeout: timeout, verify_mode: verify_mode, ca_path: ca_path)
-        @connection.set_debug_output @detailed_http_logging
-        http_request.basic_auth(username, password) unless username.nil? || password.nil?
+        setup_connection!
 
         response = execute_request(response)
 
@@ -116,14 +114,29 @@ module Wrest
 
       private
 
+      def setup_connection!
+        @connection ||= @uri.create_connection(timeout: timeout, verify_mode: verify_mode, ca_path: ca_path)
+        @connection.set_debug_output @detailed_http_logging
+        http_request.basic_auth(username, password) unless username.nil? || password.nil?
+      end
+
       def execute_request(response)
         prefix = "#{http_request.method} #{hash} #{@connection.hash} #{Thread.current.object_id}"
 
+        log_before_request(prefix)
+        time = Benchmark.realtime { response = Wrest::Native::Response.new(do_request) }
+        log_after_request(prefix, time)
+
+        response
+      end
+
+      def log_after_request(prefix, time)
+        Wrest.logger.debug "<- (#{prefix}) Time: #{time}"
+      end
+
+      def log_before_request(prefix)
         Wrest.logger.debug "<- (#{prefix}) #{@uri.protocol}://#{@uri.host}:#{@uri.port}#{@http_request.path}"
         Wrest.logger.debug "<- (#{prefix}) Body: #{@body}"
-        time = Benchmark.realtime { response = Wrest::Native::Response.new(do_request) }
-        Wrest.logger.debug "<- (#{prefix}) Time: #{time}"
-        response
       end
 
       def setup_request_state!(body, headers, parameters, wrest_uri)
