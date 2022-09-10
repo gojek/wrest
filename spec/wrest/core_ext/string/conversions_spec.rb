@@ -11,7 +11,7 @@
 
 require 'spec_helper'
 
-describe String, 'conversions' do
+RSpec.describe Wrest::CoreExt::String::Conversions do
   describe 'to_uri' do
     it 'knows how to convert a string to a Wrest::Uri' do
       expect('http://localhost:3000'.to_uri).to eq(Wrest::Uri.new('http://localhost:3000'))

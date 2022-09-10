@@ -199,203 +199,206 @@ namespace(:benchmark) do
 
   desc 'Benchmark xml deserialisation'
   task deserialise_xml: :setup_test_classes do |_t|
-    n = 100
-    puts "Deserialising using #{ActiveSupport::XmlMini.backend}"
+    serialised_data =
+      <<~EOXML
+        <?xml version="1.0" encoding="UTF-8"?>
+            <business-units type="array">
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
+                <department>FooMeh</department>
+                <id type="integer">1</id>
+                <client-number>0001</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>1</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
+                    <id type="integer">1</id>
+                    <client-id type="integer">1</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
+                    <client-number>0001</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T18:35:22Z</created-at>
+                <department>BoogaBooga</department>
+                <id type="integer">32479</id>
+                <client-number>0002</client-number>
+                <updated-at type="datetime">2008-08-27T18:35:37Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>0</account-number>
+                    <created-at type="datetime">2008-08-27T18:36:07Z</created-at>
+                    <id type="integer">32479</id>
+                    <client-id type="integer">32479</client-id>
+                    <updated-at type="datetime">2008-08-27T18:36:12Z</updated-at>
+                    <client-number>0002</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
+                <department>Engineering</department>
+                <id type="integer">2</id>
+                <client-number>000101</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>101</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
+                    <id type="integer">2</id>
+                    <client-id type="integer">2</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
+                    <client-number>000101</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                <department></department>
+                <id type="integer">3</id>
+                <client-number>0001000</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>31974</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                    <id type="integer">3</id>
+                    <client-id type="integer">3</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                    <client-number>0001000</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                <department></department>
+                <id type="integer">4</id>
+                <client-number>0001001</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>656064</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                    <id type="integer">4</id>
+                    <client-id type="integer">4</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                    <client-number>0001001</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                <department></department>
+                <id type="integer">5</id>
+                <client-number>0001002</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>619842</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                    <id type="integer">5</id>
+                    <client-id type="integer">5</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                    <client-number>0001002</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                <department></department>
+                <id type="integer">6</id>
+                <client-number>0001003</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>694370</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                    <id type="integer">6</id>
+                    <client-id type="integer">6</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                    <client-number>0001003</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                <department></department>
+                <id type="integer">7</id>
+                <client-number>0001004</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>29284</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                    <id type="integer">7</id>
+                    <client-id type="integer">7</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                    <client-number>0001004</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                <department></department>
+                <id type="integer">8</id>
+                <client-number>0001005</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>21285</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                    <id type="integer">8</id>
+                    <client-id type="integer">8</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                    <client-number>0001005</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+              <business-unit>
+                <company>OogaInc</company>
+                <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                <department></department>
+                <id type="integer">9</id>
+                <client-number>0001006</client-number>
+                <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                <accounts type="array">
+                  <account>
+                    <account-number>638772</account-number>
+                    <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
+                    <id type="integer">9</id>
+                    <client-id type="integer">9</client-id>
+                    <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
+                    <client-number>0001006</client-number>
+                  </account>
+                </accounts>
+              </business-unit>
+            </business-units>
+      EOXML
 
-    Benchmark.bmbm(10) do |rpt|
-      rpt.report('Hash.from_xml') do
-        n.times do
-          Hash.from_xml(serialised_data)
+    n = 1000
+    backends = %w[REXML Nokogiri]
+    backends << (RUBY_PLATFORM =~ /java/ ? 'JDOM' : 'LibXML')
+
+    Benchmark.bmbm(1) do |rpt|
+      backends.each do |bkend|
+        ActiveSupport::XmlMini.backend = bkend
+        rpt.report("Hash.from_xml #{ActiveSupport::XmlMini.backend}") do
+          n.times do
+            Hash.from_xml(serialised_data)
+          end
         end
       end
     end
-  end
-
-  def serialised_data
-    <<~EOXML
-      <?xml version="1.0" encoding="UTF-8"?>
-          <business-units type="array">
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
-              <department>FooMeh</department>
-              <id type="integer">1</id>
-              <client-number>0001</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>1</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
-                  <id type="integer">1</id>
-                  <client-id type="integer">1</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
-                  <client-number>0001</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T18:35:22Z</created-at>
-              <department>BoogaBooga</department>
-              <id type="integer">32479</id>
-              <client-number>0002</client-number>
-              <updated-at type="datetime">2008-08-27T18:35:37Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>0</account-number>
-                  <created-at type="datetime">2008-08-27T18:36:07Z</created-at>
-                  <id type="integer">32479</id>
-                  <client-id type="integer">32479</client-id>
-                  <updated-at type="datetime">2008-08-27T18:36:12Z</updated-at>
-                  <client-number>0002</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
-              <department>Engineering</department>
-              <id type="integer">2</id>
-              <client-number>000101</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>101</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:33Z</created-at>
-                  <id type="integer">2</id>
-                  <client-id type="integer">2</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:33Z</updated-at>
-                  <client-number>000101</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-              <department></department>
-              <id type="integer">3</id>
-              <client-number>0001000</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>31974</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-                  <id type="integer">3</id>
-                  <client-id type="integer">3</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-                  <client-number>0001000</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-              <department></department>
-              <id type="integer">4</id>
-              <client-number>0001001</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>656064</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-                  <id type="integer">4</id>
-                  <client-id type="integer">4</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-                  <client-number>0001001</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-              <department></department>
-              <id type="integer">5</id>
-              <client-number>0001002</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>619842</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-                  <id type="integer">5</id>
-                  <client-id type="integer">5</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-                  <client-number>0001002</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-              <department></department>
-              <id type="integer">6</id>
-              <client-number>0001003</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>694370</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-                  <id type="integer">6</id>
-                  <client-id type="integer">6</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-                  <client-number>0001003</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-              <department></department>
-              <id type="integer">7</id>
-              <client-number>0001004</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>29284</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-                  <id type="integer">7</id>
-                  <client-id type="integer">7</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-                  <client-number>0001004</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-              <department></department>
-              <id type="integer">8</id>
-              <client-number>0001005</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>21285</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-                  <id type="integer">8</id>
-                  <client-id type="integer">8</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-                  <client-number>0001005</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-            <business-unit>
-              <company>OogaInc</company>
-              <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-              <department></department>
-              <id type="integer">9</id>
-              <client-number>0001006</client-number>
-              <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-              <accounts type="array">
-                <account>
-                  <account-number>638772</account-number>
-                  <created-at type="datetime">2008-08-27T16:21:34Z</created-at>
-                  <id type="integer">9</id>
-                  <client-id type="integer">9</client-id>
-                  <updated-at type="datetime">2008-08-27T16:21:34Z</updated-at>
-                  <client-number>0001006</client-number>
-                </account>
-              </accounts>
-            </business-unit>
-          </business-units>
-    EOXML
   end
 end

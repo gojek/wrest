@@ -12,7 +12,7 @@
 require 'spec_helper'
 require 'wrest/components/mutators'
 
-describe Hash, 'conversions' do
+RSpec.describe Wrest::CoreExt::Hash::Conversions do
   it 'knows how to build a mutated hash given a hash mutator' do
     string_to_symbol_mutator_klass = Class.new(Wrest::Components::Mutators::Base)
     string_to_symbol_mutator_klass.class_eval do
