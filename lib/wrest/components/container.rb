@@ -161,8 +161,8 @@ module Wrest
           @attributes[key.to_sym] = value
         end
 
-        def respond_to?(method_name, include_private = false)
-          if super(method_name, include_private)
+        def respond_to_missing?(method_name, *)
+          if super.respond_to?(method_name)
             true
           else
             @attributes.include?(method_name.to_s.gsub(/(\?$)|(=$)/,

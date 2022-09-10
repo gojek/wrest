@@ -150,6 +150,10 @@ RSpec.describe Wrest::Components::Container do
             # by overriding method_missing
             raise NoMethodError.new("Method #{method_name} was invoked, but doesn't exist", method_name)
           end
+
+          def respond_to_missing?(_method_name, *)
+            false
+          end
         end
       end
 
@@ -205,7 +209,11 @@ RSpec.describe Wrest::Components::Container do
 
     it 'responds to getter methods for attributes' do
       expect(li_piao).to respond_to(:profession)
+      expect(li_piao).to respond_to(:profession?)
+      expect(li_piao).to respond_to(:profession=)
       expect(li_piao).to respond_to(:enhanced_by)
+      expect(li_piao).to respond_to(:enhanced_by?)
+      expect(li_piao).to respond_to(:enhanced_by=)
     end
 
     it "does not respond to getter methods for attributes that don't exist" do
