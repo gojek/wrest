@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.join('active_support', 'xml_mini', 'jdom')
+require File.join('ext', 'active_support', 'xml_mini', 'jdom')
 require File.join('wrest', 'xml_mini', 'jdom', 'xpath_filter')
 
 module ActiveSupport
