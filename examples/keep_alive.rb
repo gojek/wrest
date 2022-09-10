@@ -15,7 +15,6 @@ require 'wrest'
 
 Wrest.logger = Logger.new($stdout)
 Wrest.logger.level = Logger::DEBUG # Set this to Logger::INFO or higher to disable request logging
-include Wrest
 
 # This is a basic example demonstrating using keep-alive connections.
 # Observe the requests logs - they will look something like this:
@@ -24,7 +23,7 @@ include Wrest
 # The second number after the GET is a hash identifying the connection used.
 # You will notice that all requests have the same hash therefore use the same connection.
 
-Http::Session.new('http://github.com/api/v1/json') do |s|
+Wrest::Http::Session.new('http://github.com/api/v1/json') do |s|
   puts "Response Connection Header - a response token of 'Keep-Alive' indicates that the server has created a keep-alive connection"
   puts
   puts s.get('/kaiwren')['Connection']

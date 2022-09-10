@@ -15,10 +15,8 @@ require 'wrest'
 Wrest.logger = Logger.new($stdout)
 Wrest.logger.level = Logger::DEBUG  # Set this to Logger::INFO or higher to disable request logging
 
-include Wrest
-
 class Realm
-  include Components::Container
+  include Wrest::Components::Container
 
   typecast t: lambda { |type|
                 case type
