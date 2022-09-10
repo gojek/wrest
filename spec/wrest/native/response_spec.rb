@@ -248,9 +248,7 @@ RSpec.describe Wrest::Native::Response do
     end
 
     describe 'page validity and expiry' do
-      before do
-        @headers = cacheable_headers
-      end
+      let(:headers) { cacheable_headers }
 
       it 'returns correct values for code_cacheable?' do
         http_response = build_ok_response('', cacheable_headers)
@@ -314,18 +312,18 @@ RSpec.describe Wrest::Native::Response do
       end
 
       it 'returns correct values for current_age' do
-        @headers['date'] = (Time.now - (10 * 60)).httpdate
-        response = described_class.new(build_ok_response('', @headers))
+        headers['date'] = (Time.now - (10 * 60)).httpdate
+        response = described_class.new(build_ok_response('', headers))
         expect((response.current_age - (10 * 60)).abs.to_i).to eq(0)
 
-        @headers['age'] = (100 * 60).to_s # 100 minutes : Age is larger than Time.now-Expires
-        response = described_class.new(build_ok_response('', @headers))
+        headers['age'] = (100 * 60).to_s # 100 minutes : Age is larger than Time.now-Expires
+        response = described_class.new(build_ok_response('', headers))
         expect((response.current_age - (100 * 60)).abs.to_i).to eq(0)
       end
 
       context 'freshness lifetime' do
         it 'caches the calculated freshness_lifetime' do
-          response = described_class.new(build_ok_response('', @headers))
+          response = described_class.new(build_ok_response('', headers))
 
           expect(response).to receive(:recalculate_freshness_lifetime).once.and_return(100)
 
@@ -334,70 +332,70 @@ RSpec.describe Wrest::Native::Response do
         end
 
         it 'calculates freshness_lifetime for response with an Expiry header' do
-          response = described_class.new(build_ok_response('', @headers))
+          response = described_class.new(build_ok_response('', headers))
           expect(response.recalculate_freshness_lifetime).to eq(30 * 60)
         end
 
         it 'calculates freshness_lifetime for response with a Cache-Control: max-age header' do
-          @headers['cache-control'] = 'max-age=600'
-          response = described_class.new(build_ok_response('', @headers))
+          headers['cache-control'] = 'max-age=600'
+          response = described_class.new(build_ok_response('', headers))
           expect(response.recalculate_freshness_lifetime).to eq(600) # max-age takes priority over Expires
         end
       end
 
       it 'correctlies say whether a response has its Expires in its past' do
-        @headers['expires'] = (Time.now - (5 * 60)).httpdate
-        response = described_class.new(build_ok_response('', @headers))
+        headers['expires'] = (Time.now - (5 * 60)).httpdate
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expires_not_in_its_past?).to be(false)
 
-        @headers['expires'] = (Time.now + (5 * 60)).httpdate
-        response = described_class.new(build_ok_response('', @headers))
+        headers['expires'] = (Time.now + (5 * 60)).httpdate
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expires_not_in_its_past?).to be(true)
       end
 
       it 'correctlies say whether a response has its Expires in our past' do
-        @headers['expires'] = (Time.now - (24 * 60 * 60)).httpdate
-        response = described_class.new(build_ok_response('', @headers))
+        headers['expires'] = (Time.now - (24 * 60 * 60)).httpdate
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expires_not_in_our_past?).to be(false)
 
-        @headers['expires'] = (Time.now + (24 * 60 * 60)).httpdate
-        response = described_class.new(build_ok_response('', @headers))
+        headers['expires'] = (Time.now + (24 * 60 * 60)).httpdate
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expires_not_in_our_past?).to be(true)
       end
 
       it 'says not expired for requests with Expires in the future' do
-        response = described_class.new(build_ok_response('', @headers))
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expired?).to be(false)
       end
 
       it 'says expired for requests with Expires in the past' do
         time_in_past = (Time.now - (10 * 60)).httpdate
-        @headers['expires'] = time_in_past
-        response = described_class.new(build_ok_response('', @headers))
+        headers['expires'] = time_in_past
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expired?).to be(true)
       end
 
       it 'says expired for requests that have lived past its max-age' do
-        @headers.delete 'Expires'
-        @headers['cache-control'] = 'max-age=0'
-        response = described_class.new(build_ok_response('', @headers))
+        headers.delete 'Expires'
+        headers['cache-control'] = 'max-age=0'
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expired?).to be(true)
       end
 
       it "says not expired for requests that haven't reached max-age" do
-        @headers['cache-control'] = 'max-age=60000'
-        response = described_class.new(build_ok_response('', @headers))
+        headers['cache-control'] = 'max-age=60000'
+        response = described_class.new(build_ok_response('', headers))
         expect(response.expired?).to be(false)
       end
 
       describe 'when can a response be validated by sending If-Not-Modified or If-None-Match' do
         it 'says a response with Last-Modified can be cache-validated' do
-          response = described_class.new(build_ok_response('', @headers))
-          expect(response.can_be_validated?).to be(true) # by default @headers has Last-Modified.
+          response = described_class.new(build_ok_response('', headers))
+          expect(response.can_be_validated?).to be(true) # by default headers has Last-Modified.
         end
 
         it 'says a response with ETag can be cache-validated' do
-          response = described_class.new(build_ok_response('', @headers.tap do |h|
+          response = described_class.new(build_ok_response('', headers.tap do |h|
             h.delete 'last-modified'
             h['etag'] = ['123']
           end))
@@ -405,7 +403,7 @@ RSpec.describe Wrest::Native::Response do
         end
 
         it 'says a response with neither Last-Modified nor ETag cannot be cache-validated' do
-          response = described_class.new(build_ok_response('', @headers.tap { |h| h.delete 'last-modified' }))
+          response = described_class.new(build_ok_response('', headers.tap { |h| h.delete 'last-modified' }))
           expect(response.can_be_validated?).to be(false)
         end
       end
@@ -426,20 +424,18 @@ RSpec.describe Wrest::Native::Response do
   end
 
   context 'functional', functional: true do
-    before do
-      @response = Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke
-    end
+    let(:response) { Wrest::Native::Request.new('http://localhost:3000/lead_bottles/1.xml'.to_uri, Net::HTTP::Get).invoke }
 
     it 'is a Http::Response' do
-      expect(@response.class).to eq(described_class)
+      expect(response.class).to eq(described_class)
     end
 
     it 'provides access to its headers in a case-insensitive manner via []' do
-      expect(@response.headers['content-type']).to eq('application/xml; charset=utf-8')
-      expect(@response.headers['Content-Type']).to eq('application/xml; charset=utf-8')
+      expect(response.headers['content-type']).to eq('application/xml; charset=utf-8')
+      expect(response.headers['Content-Type']).to eq('application/xml; charset=utf-8')
 
-      expect(@response['Content-Type']).to eq('application/xml; charset=utf-8')
-      expect(@response['content-type']).to eq('application/xml; charset=utf-8')
+      expect(response['Content-Type']).to eq('application/xml; charset=utf-8')
+      expect(response['content-type']).to eq('application/xml; charset=utf-8')
     end
   end
 end
