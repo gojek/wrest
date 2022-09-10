@@ -72,6 +72,9 @@ RSpec/MultipleMemoizedHelpers:
   Exclude:
     - spec/wrest/cache_proxy_spec.rb
 
+RSpec/NestedGroups:
+  Max: 6
+
 RSpec/PredicateMatcher:
   Exclude:
     - spec/wrest/components/container_spec.rb

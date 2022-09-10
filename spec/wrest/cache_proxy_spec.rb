@@ -162,7 +162,7 @@ describe Wrest::CacheProxy do
             cache_proxy.get
           end
 
-          context 'update_cache_headers' do
+          context 'update cache headers' do
             it 'updates End-To-End headers' do
               one_day_back = (Time.now - (60 * 60 * 24)).httpdate
               tomorrow = (Time.now + (60 * 60 * 24)).httpdate
