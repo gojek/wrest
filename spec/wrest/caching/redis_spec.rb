@@ -1,23 +1,22 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'rspec'
 
 Wrest::Caching.enable_redis
 
-describe Wrest::Caching do
+RSpec.describe Wrest::Caching::Redis do
   context 'functional', functional: true do
-    let(:redis) { Wrest::Caching::Redis.new }
+    let(:redis) { described_class.new }
 
     context 'initialization defaults' do
       it 'alwayses default the options to an empty hash' do
         expect(Redis).to receive(:new).with({})
-        client = Wrest::Caching::Redis.new
+        client = described_class.new
       end
 
       it 'passes through options received to redis' do
         expect(Redis).to receive(:new).with(hash_including(host: '10.0.1.1', port: 6380, db: 15))
-        client = Wrest::Caching::Redis.new(host: '10.0.1.1', port: 6380, db: 15)
+        client = described_class.new(host: '10.0.1.1', port: 6380, db: 15)
       end
     end
 

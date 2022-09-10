@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'rspec'
 
 Wrest::Caching.enable_memcached
 
-describe Wrest::Caching do
+RSpec.describe Wrest::Caching::Memcached do
   context 'functional', functional: true do
-    let(:memcached) { Wrest::Caching::Memcached.new }
+    let(:memcached) { described_class.new }
 
     before do
       memcached['abc'] = 'xyz'
@@ -16,12 +15,12 @@ describe Wrest::Caching do
     context 'initialization defaults' do
       it 'alwayses default the list of server urls to nil' do
         expect(Dalli::Client).to receive(:new).with(nil, {})
-        Wrest::Caching::Memcached.new
+        described_class.new
       end
 
       it 'alwayses default the options to an empty hash' do
         expect(Dalli::Client).to receive(:new).with(nil, {})
-        client = Wrest::Caching::Memcached.new
+        client = described_class.new
       end
     end
 

@@ -34,7 +34,7 @@ module Wrest
           expect(described_class.deserialise(http_response)).to eq(result)
         end
 
-        it 'knows how to convert json to a hashmap' do
+        it 'knows how to convert a hashmap to json' do
           hash = {
             'menu' => 'File',
             'commands' => [{

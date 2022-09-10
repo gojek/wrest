@@ -157,7 +157,7 @@ describe Wrest::Native::Get do
         it 'updates the headers of an existing cache entry when the server sends a 304' do
           # RFC 2616
           # If a cache uses a received 304 response to update a cache entry, the cache MUST update the entry to reflect any new field values given in the response.
-
+          Wrest::Caching.enable_memcached
           uri = 'http://localhost:3000/cacheable/can_be_validated/with_last_modified/always_304/1'.to_uri(cache_store: Wrest::Caching::Memcached.new(
             nil, namespace: "wrest#{rand 1000}"
           ))

@@ -42,7 +42,7 @@ module Wrest
       end
 
       it 'registers all subclasses in the registry' do
-        class SomeMutator < Mutators::Base; end
+        class SomeMutator < Mutators::Base; end # rubocop:disable RSpec/LeakyConstantDeclaration
         expect(Mutators.registry[:some_mutator]).to eq(SomeMutator)
       end
     end
