@@ -22,7 +22,8 @@ require 'rdoc/task'
 require 'rubocop/rake_task'
 
 desc 'Default: run spec tests.'
-task default: %w[lint:autocorrect_basic_style_issues rspec:unit rspec:functional lint:rubocop]
+task default: %w[lint:autocorrect_basic_style_issues rspec:unit rspec:functional
+                 lint:rubocop]
 
 namespace :ci do
   desc 'Run all CI task'
