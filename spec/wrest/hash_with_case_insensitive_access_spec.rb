@@ -3,9 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Wrest::HashWithCaseInsensitiveAccess do
-
   let(:hash) { described_class.new 'FOO' => 'bar', 'baz' => 'bee', 22 => 2002, :xyz => 'pqr' }
-
 
   it 'has values accessible irrespective of case' do
     expect(hash['foo']).to eq('bar')
