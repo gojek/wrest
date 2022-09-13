@@ -16,8 +16,20 @@
   </a>
 </p>
 
-
 Wrest is a ruby REST/HTTP client library. It is currently in use at 10x🦄 scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech). 
+
+```ruby
+$ gem install wrest
+$ wrest # interactive shell
+Ruby 3.1.2, 2022-04-12, arm64-darwin21
+Loading Wrest 4.0.0
+>> 'https://api2.binance.com/api/v3/ticker/24hr'.to_uri.get.deserialize
+```
+
+In your project Gemfile:
+```ruby
+gem 'wrest', '~> 4.0.0'
+```
 
 * Quick tool to wrangle APIs to powerful library to build complex production grade systems, Wrest does it all
 * Clean, object-oriented API with URLs as first class entities
