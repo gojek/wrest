@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
                   'in production use at substantial scale.'
 
   s.required_rubygems_version = '>= 3.0.0'
-  s.required_ruby_version = '>= 2.6.0'
+  s.required_ruby_version = '>= 2.7.0'
 
   s.requirements << "To use Memcached as caching back-end, install the 'dalli' gem."
   s.requirements << "To use Redis as caching back-end, install the 'redis' gem."
