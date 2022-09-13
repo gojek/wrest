@@ -1,4 +1,4 @@
-# Wrest 4.0.0.dev
+# Wrest 4.0.0
 
 <p align="center"><img src="docs/wrest-logo-320x320.png" width="320"></p>
 <p align="center">
