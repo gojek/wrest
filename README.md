@@ -11,6 +11,9 @@
   <a href="https://github.com/kaiwren/wrest/actions/workflows/jruby.yml">
     <img src="https://github.com/kaiwren/wrest/actions/workflows/jruby.yml/badge.svg" alt="JRuby" style="max-width: 100%;">
   </a>
+  <a href="https://codeclimate.com/github/kaiwren/wrest/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/dc0366a60000561951ab/maintainability" />
+  </a>
 </p>
 
 
