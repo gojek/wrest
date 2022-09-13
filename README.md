@@ -39,10 +39,10 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Basic API calls
 
     ```
-    # Works with json and xml out of the box
+    # Works with json and xml out of the box to give you a hash
     # See lib/wrest/components/translators to add other formats
     
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get.deserialize
+    'https://api.github.com/repos/rails/rails/issues'.to_uri.get.deserialize
     ```
 
 * Timeout support
