@@ -20,6 +20,10 @@ Lint/EmptyBlock:
   Exclude:
     - spec/wrest/callback_spec.rb
 
+Lint/ToEnumArguments:
+  Exclude:
+    - lib/wrest/hash_with_indifferent_access.rb
+
 Lint/UselessAssignment:
   Exclude:
     - spec/**/*_spec.rb
@@ -29,14 +33,9 @@ Metrics/BlockLength:
   Exclude:
     - Rakefile
 
-Metrics/MethodLength:
-  CountAsOne: [ 'array', 'heredoc', 'hash' ]
-  Exclude:
-    - spec/**/*_spec.rb
-    - spec/support/*.rb
-
 Metrics/AbcSize:
   Exclude:
+    - lib/wrest/components/translators/xml/conversions.rb
     - spec/**/*_spec.rb
     - spec/support/factories.rb
 
@@ -44,10 +43,27 @@ Metrics/ClassLength:
   Exclude:
     - lib/wrest/uri.rb
     - lib/wrest/native/response.rb
+    - lib/wrest/hash_with_indifferent_access.rb
     - spec/sample_app/lib/sample_app.rb
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - lib/wrest/components/translators/xml/conversions.rb
+
+Metrics/MethodLength:
+  CountAsOne: [ 'array', 'heredoc', 'hash' ]
+  Exclude:
+    - lib/wrest/hash_with_indifferent_access.rb
+    - lib/wrest/components/translators/xml/conversions.rb
+    - spec/**/*_spec.rb
+    - spec/support/*.rb
 
 Metrics/ParameterLists:
   MaxOptionalParameters: 4
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - lib/wrest/components/translators/xml/conversions.rb
 
 Naming/ClassAndModuleCamelCase:
   Exclude:

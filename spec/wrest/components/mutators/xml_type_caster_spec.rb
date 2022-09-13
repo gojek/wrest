@@ -14,7 +14,7 @@ require 'wrest/components/mutators'
 
 module Wrest
   module Components
-    describe Mutators::XmlMiniTypeCaster do
+    describe Mutators::XmlTypeCaster do
       before do
         @mutator = described_class.new
       end

@@ -10,7 +10,6 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'spec_helper'
-require 'wrest/components/mutators'
 
 module Wrest
   module Components
@@ -29,16 +28,20 @@ module Wrest
       end
 
       it 'knows how to chain mutators recursively' do
-        mutator = Mutators::XmlSimpleTypeCaster.new(Mutators::CamelToSnakeCase.new)
-        expect(mutator.mutate(
-                 ['Result', [{
-                   'Publish-Date' => ['1240326000'],
-                   'News-Source' => [{ 'Online' => ['PC via News'],
-                                       'Unique-Id' => [{ 'type' => 'integer', 'content' => '1' }] }]
-                 }]]
-               )).to eq(['result',
-                         { 'publish_date' => '1240326000',
-                           'news_source' => { 'online' => 'PC via News', 'unique_id' => 1 } }])
+        mutator = Mutators::XmlTypeCaster.new(Mutators::CamelToSnakeCase.new)
+        expect({ 'Result' => {
+          'Publish-Date' => '1240326000',
+          'News-Source' => {
+            'Online' => 'PC via News',
+            'Unique-Id' => { 'type' => 'integer', '__content__' => '1' }
+          }
+        } }.mutate_using(mutator)).to eq('result' => {
+                                           'publish_date' => '1240326000',
+                                           'news_source' => {
+                                             'online' => 'PC via News',
+                                             'unique_id' => 1
+                                           }
+                                         })
       end
 
       it 'registers all subclasses in the registry' do

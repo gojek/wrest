@@ -11,20 +11,22 @@ module Wrest
         it 'knows how to convert xml to a hashmap' do
           expect(http_response).to receive(:body).and_return('<ooga><age>12</age></ooga>')
 
-          expect(described_class.deserialise(http_response)).to eq({ 'ooga' => { 'age' => '12' } })
+          expect(described_class.deserialise(http_response)).to eq({ 'ooga' => { 'age' => { '__content__' => '12' } } })
         end
 
         it 'knows how to convert a hashmap to xml' do
-          expected_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  <ooga>\n    <age>12</age>\n  </ooga>\n</hash>\n"
+          expected_xml = "<?xml version=\"1.0\"?>\n<ooga>\n  <age>12</age>\n</ooga>\n"
 
           expect(described_class.serialise({ 'ooga' => { 'age' => '12' } })).to eq(expected_xml)
         end
 
-        it 'calls filter only if xpath is specified' do
-          expect(http_response).to receive(:body)
-          expect(ActiveSupport::XmlMini).to receive(:filter)
+        it 'calls search only if xpath is specified' do
+          xml_body = '<Person></Person>'
+          xpath_term = '//age'
+          expect(http_response).to receive(:body).and_return(xml_body)
+          expect(described_class).to receive(:search).with(kind_of(StringIO), xpath_term)
 
-          described_class.deserialise(http_response, { xpath: '//age' })
+          described_class.deserialise(http_response, { xpath: xpath_term })
         end
 
         it 'does not call filter if xpath is not specified' do
@@ -36,10 +38,8 @@ module Wrest
           described_class.deserialise(http_response)
         end
 
-        Helpers.xml_backends.each do |e|
+        Helpers.xml_backends.each do |_e|
           it 'is able to pull out desired elements from an xml response based on xpath and return an array of matching nodes' do
-            ActiveSupport::XmlMini.backend = e
-
             fake_body = '<Person><Personal><Name><FirstName>Nikhil</FirstName></Name></Personal><Address>' \
                         '<Name>Bangalore</Name></Address></Person>'
             expect(http_response).to receive(:body).and_return(fake_body)

@@ -76,7 +76,7 @@ module Wrest
       end
 
       def query_params_string
-        @parameters.any? ? QUERY_PARAMS_SEPERATOR + @parameters.to_query : EMPTY_QUERY_PARAMS
+        @parameters.any? ? QUERY_PARAMS_SEPERATOR + Utils.hash_to_param(@parameters) : EMPTY_QUERY_PARAMS
       end
     end
   end

@@ -17,7 +17,7 @@
 Wrest is a ruby REST/HTTP client library. It is currently in use at 10x🦄 scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech). 
 
 * Quick tool to wrangle APIs to powerful library to build complex production grade systems, Wrest does it all
-* Clean, object oriented API with URLs as first class entities
+* Clean, object-oriented API with URLs as first class entities
 * Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
 * Async http calls using Threads (truly useful only on JRuby due to [GIL](https://en.wikipedia.org/wiki/Global_interpreter_lock) limitations on CRuby) or EventMachine
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments
@@ -61,8 +61,6 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Deserialise with XPath filtering
 
     ```
-    ActiveSupport::XmlMini.backend = 'REXML'
-
     'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise(
                                                   xpath: '//user/name/text()'
                                                 )
@@ -359,17 +357,6 @@ Detailed http debug logging can be turned on like so (DO NOT USE IN PRODUCTION! 
     ```
     'https://api.github.com/repos/c42/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
     ```
-
-
-### Json Backend
-
-Wrest uses the multi_json gem to manage Json backends, allowing it to play nice with Rails 3.1. To change the backend used, you can do the following:
-
-```
-  MultiJson.engine = :json_gem
-```
-
-For more information, look up the [multi_json](http://github.com/intridea/multi_json) documentation.
 
 ### Build
 

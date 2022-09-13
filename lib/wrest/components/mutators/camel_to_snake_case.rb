@@ -18,7 +18,7 @@ module Wrest
     module Mutators
       class CamelToSnakeCase < Mutators::Base
         def do_mutate(tuple)
-          [tuple.first.underscore, tuple.last]
+          [Utils.string_underscore(tuple.first), tuple.last]
         end
       end
     end

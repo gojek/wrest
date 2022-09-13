@@ -392,17 +392,11 @@ namespace(:benchmark) do
             </business-units>
       EOXML
 
-    n = 1000
-    backends = %w[REXML Nokogiri]
-    backends << (RUBY_PLATFORM =~ /java/ ? 'JDOM' : 'LibXML')
-
+    n = 1_000
     Benchmark.bmbm(1) do |rpt|
-      backends.each do |bkend|
-        ActiveSupport::XmlMini.backend = bkend
-        rpt.report("Hash.from_xml #{ActiveSupport::XmlMini.backend}") do
-          n.times do
-            Hash.from_xml(serialised_data)
-          end
+      rpt.report('Wrest deserialise to hash using Nokogiri') do
+        n.times do
+          Wrest::Components::Translators::Xml.parse(serialised_data)
         end
       end
     end

@@ -24,9 +24,9 @@ module Wrest
       # Makes referencing and chaining mutators easy.
       #
       # Example:
-      #  Mutators.chain(:xml_mini_type_caster, :camel_to_snake_case)
+      #  Mutators.chain(:xml_type_caster, :camel_to_snake_case)
       # is equivalent to
-      #  Wrest::Components::Mutators::XmlMiniTypeCaster.new(Wrest::Components::Mutators::CamelToSnakeCase.new)
+      #  Wrest::Components::Mutators::XmlTypeCaster.new(Wrest::Components::Mutators::CamelToSnakeCase.new)
       def self.chain(*mutator_keys)
         mutator_key = mutator_keys.pop
         mutator_keys.reverse.inject(registry[mutator_key].new) do |next_instance, next_key|
@@ -38,6 +38,5 @@ module Wrest
 end
 require 'wrest/core_ext/hash'
 require 'wrest/components/mutators/base'
-require 'wrest/components/mutators/xml_simple_type_caster'
-require 'wrest/components/mutators/xml_mini_type_caster'
+require 'wrest/components/mutators/xml_type_caster'
 require 'wrest/components/mutators/camel_to_snake_case'

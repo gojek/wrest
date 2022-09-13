@@ -120,7 +120,7 @@ module Wrest
         #
         # This method can be overidden should you need a different name.
         def element_name
-          @element_name ||= ActiveSupport::Inflector.demodulize(name).underscore.underscore
+          @element_name ||= Utils.string_underscore(Utils.string_demodulize(name))
         end
       end
 
@@ -146,7 +146,10 @@ module Wrest
         # Note: When serilising to XML, if you want the name of the class as the name of the root node
         # then you should use the Container#to_xml helper.
         def serialise_using(translator, options = {})
-          translator.serialise(@attributes, options)
+          payload = {
+            self.class.element_name => @attributes.dup
+          }
+          translator.serialise(payload, options)
         end
 
         def to_xml(options = {})
@@ -175,7 +178,7 @@ module Wrest
         def method_missing(method_sym, *arguments)
           method_name = method_sym.to_s
           attribute_name = method_name.gsub(/(\?$)|(=$)/, '')
-          if @attributes.include?(attribute_name.to_sym) || method_name.last == '=' || method_name.last == '?'
+          if @attributes.include?(attribute_name.to_sym) || method_name[-1] == '=' || method_name[-1] == '?'
             generate_methods!(attribute_name, method_name)
             send(method_sym, *arguments)
           else
@@ -186,7 +189,7 @@ module Wrest
         private
 
         def generate_methods!(attribute_name, method_name)
-          case method_name.last
+          case method_name[-1]
           when '='
             instance_eval Container.build_attribute_setter(attribute_name)
           when '?'

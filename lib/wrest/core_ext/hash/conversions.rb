@@ -33,7 +33,7 @@ module Wrest
         #                           :query  => 'India',
         #                           :results=> '3',
         #                           :start  => '1'
-        #                         ).deserialise.mutate_using(XmlSimpleTypeCaster.new)
+        #                         ).deserialise.mutate_using(XmlTypeCaster.new)
         def mutate_using(mutator)
           mutated_hash = {}
           each { |tuple| mutated_hash.store(*mutator.mutate(tuple)) }

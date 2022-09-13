@@ -24,7 +24,49 @@ module Wrest
       # and we'd like to have these cast to an integer and a date
       # respectively, rather than have to deal with them as strings.
       module Typecaster
-        def self.included(klass) # :nodoc:
+        PARSING = {
+          'symbol' => proc { |symbol| symbol.to_s.to_sym },
+          'date' => proc { |date| ::Date.parse(date) },
+          'datetime' => proc { |time|
+            begin
+              Time.xmlschema(time).utc
+            rescue StandardError
+              ::DateTime.parse(time).utc
+            end
+          },
+          'integer' => proc { |integer| integer.to_i },
+          'float' => proc { |float| float.to_f },
+          'decimal' => proc do |number|
+            if number.is_a?(String)
+              number.to_d
+            else
+              BigDecimal(number)
+            end
+          end,
+          'boolean' => proc { |boolean| %w[1 true].include?(boolean.to_s.strip) },
+          'string' => proc { |string| string.to_s },
+          'yaml' => proc { |yaml|
+            begin
+              YAML.safe_load(yaml)
+            rescue StandardError
+              yaml
+            end
+          },
+          'base64Binary' => proc { |bin| ::Base64.decode64(bin) },
+          'binary' => proc { |bin, entity| _parse_binary(bin, entity) },
+          'file' => proc { |file, entity| _parse_file(file, entity) },
+          'double' => proc { |float| float.to_f },
+          'dateTime' => proc { |time|
+            begin
+              Time.xmlschema(time).utc
+            rescue StandardError
+              ::DateTime.parse(time).utc
+            end
+          }
+        }.freeze
+
+        def self.included(klass)
+          # :nodoc:
           klass.extend Typecaster::ClassMethods
           klass.class_eval { include Typecaster::InstanceMethods }
           klass.send(:alias_method, :initialize_without_typecasting, :initialize)
@@ -33,39 +75,39 @@ module Wrest
 
         module Helpers
           def as_base64_binary
-            ActiveSupport::XmlMini::PARSING['base64Binary']
+            PARSING['base64Binary']
           end
 
           def as_boolean
-            ActiveSupport::XmlMini::PARSING['boolean']
+            PARSING['boolean']
           end
 
           def as_decimal
-            ActiveSupport::XmlMini::PARSING['decimal']
+            PARSING['decimal']
           end
 
           def as_date
-            ActiveSupport::XmlMini::PARSING['date']
+            PARSING['date']
           end
 
           def as_datetime
-            ActiveSupport::XmlMini::PARSING['datetime']
+            PARSING['datetime']
           end
 
           def as_float
-            ActiveSupport::XmlMini::PARSING['float']
+            PARSING['float']
           end
 
           def as_integer
-            ActiveSupport::XmlMini::PARSING['integer']
+            PARSING['integer']
           end
 
           def as_symbol
-            ActiveSupport::XmlMini::PARSING['symbol']
+            PARSING['symbol']
           end
 
           def as_yaml
-            ActiveSupport::XmlMini::PARSING['yaml']
+            PARSING['yaml']
           end
         end
 
@@ -103,7 +145,7 @@ module Wrest
           #  kai_wren.age           # => 1500
           #  kai_wren.chi           # => #<Chi:0x113af8c @count="1024">
           def typecast(cast_map)
-            @typecast_map = @typecast_map ? @typecast_map.merge(cast_map.symbolize_keys) : cast_map.symbolize_keys
+            @typecast_map = @typecast_map ? @typecast_map.merge(cast_map.transform_keys(&:to_sym)) : cast_map.transform_keys(&:to_sym)
           end
 
           def typecast_map # :nodoc:
@@ -118,7 +160,8 @@ module Wrest
         end
 
         module InstanceMethods # :nodoc:
-          def initialize_with_typecasting(attributes = {}) # :nodoc:
+          def initialize_with_typecasting(attributes = {})
+            # :nodoc:
             initialize_without_typecasting(attributes)
             self.class.typecast_map.each do |key, typecaster|
               value = @attributes[key]

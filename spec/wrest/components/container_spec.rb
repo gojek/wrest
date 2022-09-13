@@ -47,18 +47,16 @@ RSpec.describe Wrest::Components::Container do
 
     it 'knows how to serialise itself given any of the Wrest::Components::Translators' do
       result = HumanBeing.new(age: '70', name: 'Li Piao').serialise_using(Wrest::Components::Translators::Json)
-      expected_permutation_one = '{"age":"70","name":"Li Piao"}'
-      expected_permutation_two = '{"name":"Li Piao","age":"70"}'
+      expected_json = '{"human_being":{"age":"70","name":"Li Piao"}}'
 
-      expect((result == expected_permutation_one || result == expected_permutation_two)).to be_truthy
+      expect(result).to eq(expected_json)
     end
 
-    it 'has a to_xml helper that ensures that the name of the class is the root of the serilised form' do
+    it 'has a to_xml helper that ensures that the name of the class is the root of the serialised form' do
       result = HumanBeing.new(age: '70', name: 'Li Piao').to_xml
-      expected_permutation_one = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <age>70</age>\n  <name>Li Piao</name>\n</human-being>\n"
-      expected_permutation_two = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<human-being>\n  <name>Li Piao</name>\n  <age>70</age>\n</human-being>\n"
+      expected_xml = "<?xml version=\"1.0\"?>\n<human_being>\n  <age>70</age>\n  <name>Li Piao</name>\n</human_being>\n"
 
-      expect((result == expected_permutation_one || result == expected_permutation_two)).to be_truthy
+      expect(result).to eq(expected_xml)
     end
 
     describe 'subclasses' do

@@ -16,7 +16,7 @@ module Wrest
     # created by deserialising an xml using
     # ActiveSupport::XmlMini
     module Mutators
-      class XmlMiniTypeCaster < Mutators::Base
+      class XmlTypeCaster < Mutators::Base
         def do_mutate(tuple)
           out_key, in_value = tuple
 
@@ -47,7 +47,7 @@ module Wrest
         end
 
         def typecast_value(in_value)
-          caster = ActiveSupport::XmlMini::PARSING[in_value['type']]
+          caster = Container::Typecaster::PARSING[in_value['type']]
           caster ? caster.call(in_value['__content__']) : in_value
         end
       end

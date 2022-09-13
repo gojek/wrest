@@ -17,7 +17,7 @@ module Wrest
 
           async_obj = described_class.new
           async_obj.execute(request)
-          sleep 1
+          sleep 0.1
           expect(hash).to be_key('success')
         end
       end

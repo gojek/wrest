@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'time'
+require 'active_support/ordered_hash'
+
 module Factories
   def build_ordered_hash(tuples)
     ActiveSupport::OrderedHash.new.tap do |hash|

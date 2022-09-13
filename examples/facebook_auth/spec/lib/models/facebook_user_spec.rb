@@ -6,12 +6,12 @@ describe FacebookUser do
   context 'authenticated' do
     it 'is not authenticated if access token is not available' do
       user = described_class.new('')
-      user.should_not be_authenticated
+      expect(user).not_to be_authenticated
     end
 
     it 'is authenticate if access token is available' do
       user = described_class.new('access_token')
-      user.should be_authenticated
+      expect(user).to be_authenticated
     end
   end
 
@@ -22,6 +22,6 @@ describe FacebookUser do
     response = double('Response', deserialise: { name: 'Booga' })
     client.should_receive(:authorized_get).with('/me', 'access_token').and_return(response)
     profile = user.profile
-    profile.name.should == 'Booga'
+    expect(profile.name).to eq('Booga')
   end
 end

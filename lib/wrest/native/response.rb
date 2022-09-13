@@ -170,7 +170,7 @@ module Wrest # :nodoc:
         if expires.nil?
           false
         else
-          expires.to_i > Time.now.to_i
+          Utils.datetime_to_i(expires) > Time.now.to_i
         end
       end
 
@@ -190,7 +190,7 @@ module Wrest # :nodoc:
 
         # RFC 2616 13.2.3 Age Calculations. TODO: include response_delay in the calculation as defined in RFC. For this, include original Request with Response.
         date_value = begin
-          DateTime.parse(headers['date']).to_i
+          Utils.datetime_to_i(DateTime.parse(headers['date']))
         rescue StandardError
           current_time
         end
@@ -222,8 +222,8 @@ module Wrest # :nodoc:
       def recalculate_freshness_lifetime
         return max_age if max_age
 
-        response_date = DateTime.parse(headers['date']).to_i
-        expires_date = DateTime.parse(headers['expires']).to_i
+        response_date = Utils.datetime_to_i(DateTime.parse(headers['date']))
+        expires_date = Utils.datetime_to_i(DateTime.parse(headers['expires']))
 
         (expires_date - response_date)
       end

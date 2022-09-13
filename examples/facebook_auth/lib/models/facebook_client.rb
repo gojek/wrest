@@ -10,7 +10,7 @@ class FacebookClient
       client_id: Config['client_id'],
       redirect_uri: redirect_uri
     }.merge(options)
-    "#{base_url['/oauth/authorize'].uri_string}?#{request_params.to_query}"
+    "#{base_url['/oauth/authorize'].uri_string}?#{Wrest::Utils.hash_to_param(request_params)}"
   end
 
   def acquire_access_token(redirect_uri, auth_code)

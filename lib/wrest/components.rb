@@ -18,4 +18,5 @@ module Wrest
 end
 
 require 'wrest/components/container'
+require 'wrest/components/mutators'
 require 'wrest/components/translators'

@@ -11,6 +11,6 @@ class FacebookUser
   end
 
   def authenticated?
-    !@access_token.blank?
+    !@access_token.empty?
   end
 end

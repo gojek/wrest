@@ -10,16 +10,14 @@
 # See the License for the specific language governing permissions and limitations under the License.
 
 require 'spec_helper'
-require 'wrest/components/mutators'
 
 module Wrest
   module Components
     describe Mutators do
       it 'knows how to chain mutators without having to namespace them all' do
-        mutator = described_class.chain(:xml_mini_type_caster, :xml_simple_type_caster, :camel_to_snake_case)
-        expect(mutator.class).to eq(Mutators::XmlMiniTypeCaster)
-        expect(mutator.next_mutator.class).to eq(Mutators::XmlSimpleTypeCaster)
-        expect(mutator.next_mutator.next_mutator.class).to eq(Mutators::CamelToSnakeCase)
+        mutator = described_class.chain(:xml_type_caster, :camel_to_snake_case)
+        expect(mutator.class).to eq(Mutators::XmlTypeCaster)
+        expect(mutator.next_mutator.class).to eq(Mutators::CamelToSnakeCase)
       end
     end
   end

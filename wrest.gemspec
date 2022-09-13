@@ -31,6 +31,9 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
 
   # Test dependencies
+  s.add_development_dependency 'activesupport', ['~> 7']
+  s.add_development_dependency 'rake', ['~> 13.0']
+  s.add_development_dependency 'rdoc', ['~> 6.4']
   s.add_development_dependency 'rspec', ['~> 3.11']
   s.add_development_dependency 'rubocop', ['~> 1.35.0']
   s.add_development_dependency 'rubocop-rake'
@@ -38,11 +41,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sinatra', ['~> 2.0.0']
   s.add_development_dependency 'webrick'
 
-  s.add_runtime_dependency 'activesupport', ['~> 5']
-  s.add_runtime_dependency 'builder', ['> 2.0']
   s.add_runtime_dependency 'concurrent-ruby', ['~> 1.0']
-  s.add_runtime_dependency 'json', ['~> 2.0']
-  s.add_runtime_dependency 'multi_json', ['~> 1.0']
+  s.add_runtime_dependency 'nokogiri', ['~> 1.0']
 
   case RUBY_PLATFORM
   when /java/

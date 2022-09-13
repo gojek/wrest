@@ -20,7 +20,7 @@ module Wrest
           allow(net_response).to receive(:code).and_return(code)
           allow(net_response).to receive(:headers).and_return({})
           allow(net_response).to receive(:status).and_return(code)
-          expect(klass.constantize.send(:new, net_response).send(method)).to be_truthy
+          expect(Utils.string_constantize(klass).send(:new, net_response).send(method)).to be_truthy
         end
 
         it "knows if the response code is not HTTP #{status_message} for #{klass} object" do
@@ -30,7 +30,7 @@ module Wrest
           allow(net_response).to receive(:code).and_return(code)
           allow(net_response).to receive(:headers).and_return({})
           allow(net_response).to receive(:status).and_return(code)
-          expect(klass.constantize.send(:new, net_response).send(method)).to be_falsey
+          expect(Utils.string_constantize(klass).send(:new, net_response).send(method)).to be_falsey
         end
       end
     end

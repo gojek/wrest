@@ -68,7 +68,7 @@ describe Wrest::Uri::Builders do
 
     it 'sets redis as cache store in options hash' do
       cache_enabled_uri = uri.using_redis
-      expect(cache_enabled_uri.instance_variable_get('@options')[:cache_store]).to be_a_kind_of(Wrest::Caching::Redis)
+      expect(cache_enabled_uri.instance_variable_get('@options')[:cache_store]).to be_a(Wrest::Caching::Redis)
     end
   end
 

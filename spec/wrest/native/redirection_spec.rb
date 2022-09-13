@@ -53,7 +53,7 @@ describe Wrest::Native::Redirection do
       expect(after_redirect.body).to eq("You've reached the end of redirection. There is only darkness beyond this.")
 
       no_redirect = 'http://localhost:3000/redirect_n_times/10'.to_uri(follow_redirects: false).get
-      expect(no_redirect.body).to be_blank
+      expect(Wrest::Utils.string_blank?(no_redirect.body)).to be(true)
       expect(no_redirect.http_response.code).to eq('302')
     end
 
@@ -64,7 +64,7 @@ describe Wrest::Native::Redirection do
 
       after_redirect = 'http://localhost:3000/redirect_n_times/4'.to_uri(follow_redirects: true,
                                                                          follow_redirects_limit: 4).get
-      expect(after_redirect.body).not_to be_blank
+      expect(Wrest::Utils.string_blank?(after_redirect.body)).not_to be(true)
       expect(after_redirect.http_response.code).to eq('200')
     end
   end

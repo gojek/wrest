@@ -26,13 +26,13 @@ describe FacebookClient do
 
     facebook_uri = double(Wrest::Uri)
     access_token_uri = double(Wrest::Uri)
-    uri_string.should_receive(:to_uri).and_return(facebook_uri)
+    expect(uri_string).to receive(:to_uri).and_return(facebook_uri)
     facebook_uri.should_receive(:[]).with('/oauth/access_token').and_return(access_token_uri)
     response = double('Response', body: 'access_token=access_token')
     request_params = { client_id: 'id', redirect_uri: 'http://redirect_uri',
                        client_secret: 'secret', code: 'auth_code' }
-    access_token_uri.should_receive(:post_form).with(request_params).and_return(response)
-    client.acquire_access_token('http://redirect_uri', 'auth_code').should == 'access_token'
+    expect(access_token_uri).to receive(:post_form).with(request_params).and_return(response)
+    expect(client.acquire_access_token('http://redirect_uri', 'auth_code')).to eq('access_token')
   end
 
   context 'authorized access' do
@@ -45,7 +45,7 @@ describe FacebookClient do
       facebook_uri.should_receive(:[]).with('/me').and_return(get_uri)
       response = double('Response', body: 'body')
       get_uri.should_receive(:get).with(access_token: 'access_token').and_return(response)
-      client.authorized_get('/me', 'access_token').body.should == 'body'
+      expect(client.authorized_get('/me', 'access_token').body).to eq('body')
     end
   end
 end

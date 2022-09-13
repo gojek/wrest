@@ -16,13 +16,9 @@ require 'cgi'
 require 'base64'
 require 'logger'
 require 'benchmark'
-require 'multi_json'
 require 'concurrent'
-require 'active_support'
-require 'active_support/core_ext/string'
-require 'active_support/core_ext/hash'
-require 'active_support/core_ext/module'
-require 'active_support/core_ext/object'
+require 'nokogiri'
+require 'json'
 
 module Wrest
   Root = File.dirname(__FILE__)
@@ -43,18 +39,21 @@ module Wrest
 
   # Switch Wrest to using Net::HTTP.
   def self.use_native!
-    silence_warnings { Wrest.const_set('Http', Wrest::Native) }
+    old_verbose = $VERBOSE
+    $VERBOSE = nil
+    Wrest.const_set('Http', Wrest::Native)
+  ensure
+    $VERBOSE = old_verbose
   end
 end
 
-Wrest.logger = ActiveSupport::Logger.new($stdout)
+Wrest.logger = Logger.new($stdout)
 Wrest.logger.level = Logger::DEBUG
 
+require 'wrest/utils'
 require 'wrest/core_ext/string'
+require 'wrest/hash_with_indifferent_access'
 require 'wrest/hash_with_case_insensitive_access'
-
-# Load XmlMini Extensions
-require 'wrest/xml_mini'
 
 # Load Wrest Core
 require 'wrest/version'
@@ -76,6 +75,3 @@ require 'wrest/uri'
 require 'wrest/uri_template'
 require 'wrest/exceptions'
 require 'wrest/components'
-
-# Load Wrest::Resource
-# require "wrest/resource"

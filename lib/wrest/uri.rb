@@ -128,7 +128,7 @@ module Wrest # :nodoc:
     # :nodoc:
     def build_post_form(parameters = {}, headers = {}, &block)
       headers = default_headers.merge(headers).merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
-      body = parameters.to_query
+      body = Utils.hash_to_param(parameters)
       Http::Post.new(self, body, headers, {}, block ? @options.merge(callback_block: block) : @options)
     end
 
