@@ -26,8 +26,6 @@ Wrest is a ruby REST/HTTP client library. It is currently in use at 10x🦄 scal
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments
 * Provides convenient HTTP wrappers, redirect handling, serialisation, deserialisation and xpath based lookup
 
-Wrest is currently undergoing a substantial clean-up of syntax and dendencies to bring it up to speed on Ruby 3.x and JRuby 9.3.x. This will be released shortly as version 4.0.0.
-
 ## Examples
 
 For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/kaiwren/wrest/tree/master/examples
