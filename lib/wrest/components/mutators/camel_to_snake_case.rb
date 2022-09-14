@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,9 +15,11 @@ module Wrest
     #
     # Example:
     #  Mutators::CamelToSnakeCase.new.mutate(['Spirit-Sword', 'true'])  # => ['spirit_sword', 'true']**
-    class Mutators::CamelToSnakeCase < Mutators::Base
-      def do_mutate(tuple)
-        [tuple.first.underscore, tuple.last]
+    module Mutators
+      class CamelToSnakeCase < Mutators::Base
+        def do_mutate(tuple)
+          [Utils.string_underscore(tuple.first), tuple.last]
+        end
       end
     end
   end

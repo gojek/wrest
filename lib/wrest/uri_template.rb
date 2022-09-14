@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,12 +12,13 @@
 module Wrest
   class UriTemplate
     attr_reader :uri_pattern
+
     def initialize(uri_pattern, options = {})
       @uri_pattern = uri_pattern.clone
       @options = options.clone
     end
-    
-    # Builds a new Wrest::Uri from this uri template 
+
+    # Builds a new Wrest::Uri from this uri template
     # by replacing the keys in the options that match with
     # the corressponding values.
     #
@@ -40,11 +43,11 @@ module Wrest
     # )
     #  => #<Wrest::Uri:0x18e0bec @uri=#<URI::HTTP:0x18e09a8 URL:http://kaiwren:fupuppies@coathangers.com/portal/1>>
     def to_uri(options = {})
-     merged_options = @options.merge(options) 
-      Wrest::Uri.new(merged_options.inject(uri_pattern.clone) do |uri_string, tuple| 
+      merged_options = @options.merge(options)
+      Wrest::Uri.new(merged_options.inject(uri_pattern.clone) do |uri_string, tuple|
         key, value = tuple
-        uri_string.gsub(":#{key.to_s}", value.to_s)
-      end , @options)
+        uri_string.gsub(":#{key}", value.to_s)
+      end, @options)
     end
 
     def [](path)
@@ -53,7 +56,8 @@ module Wrest
 
     def ==(other)
       return false if other.class != self.class
-      return other.uri_pattern == self.uri_pattern 
+
+      other.uri_pattern == uri_pattern
     end
   end
 end

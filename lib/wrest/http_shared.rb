@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +16,9 @@ module Wrest
   end
 end
 
-require "wrest/http_shared/headers"
-require "wrest/http_shared/standard_headers"
-require "wrest/http_shared/standard_tokens"
+require 'wrest/http_shared/headers'
+require 'wrest/http_shared/standard_headers'
+require 'wrest/http_shared/standard_tokens'
 
 # Set up a shorter convenience API for constants
 Wrest::H = Wrest::HttpShared::StandardHeaders

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'facebook_auth'
 require 'rspec'
 require 'rack/test'

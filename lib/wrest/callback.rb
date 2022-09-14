@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +14,13 @@ module Wrest
     attr_reader :callback_hash
 
     def initialize(callable)
-      if callable.is_a?(Hash)
+      case callable
+      when Hash
         @callback_hash = Callback.ensure_values_are_collections(callable)
-      elsif callable.is_a?(Proc)
+      when Proc
         @callback_hash = {}
         callable.call(self)
-      elsif callable.is_a?(Callback)
+      when Callback
         @callback_hash = callable.callback_hash.dup
       end
     end
@@ -34,12 +37,12 @@ module Wrest
 
     def execute(response)
       callback_hash.each do |code, callback_list|
-        callback_list.each {|callback| callback.call(response)} if case code
-        when Range
-          code.include?(response.code.to_i)
-        when Fixnum
-          code == response.code.to_i
-        end
+        callback_list.each { |callback| callback.call(response) } if case code
+                                                                     when Range
+                                                                       code.include?(response.code.to_i)
+                                                                     when Integer
+                                                                       code == response.code.to_i
+                                                                     end
       end
     end
 
@@ -47,14 +50,14 @@ module Wrest
       @callback_hash[code] ? @callback_hash[code] << block : @callback_hash[code] = [block]
     end
 
-    {200 => "ok", 201 => "created", 202 => "accepted", 204 => "no_content", 301 => "moved_permanently", 302 => "found", 303 => "see_other", 304 => "not_modified",
-      307 => "temporary_redirect", 400 => "bad_request", 401 => "unauthorized", 403 => "forbidden", 404 => "not_found", 405 => "method_not_allowed",
-      406 => "not_acceptable", 422 => "unprocessable_entity", 500 => "internal_server_error"}.each do |code, method|
-        method_name = "on_#{method}".to_sym
-        define_method method_name do |&block|
-          (@callback_hash[code] ? @callback_hash[code] << block : @callback_hash[code] = [block]) if block
-        end
+    { 200 => 'ok', 201 => 'created', 202 => 'accepted', 204 => 'no_content', 301 => 'moved_permanently', 302 => 'found', 303 => 'see_other', 304 => 'not_modified',
+      307 => 'temporary_redirect', 400 => 'bad_request', 401 => 'unauthorized', 403 => 'forbidden', 404 => 'not_found', 405 => 'method_not_allowed',
+      406 => 'not_acceptable', 422 => 'unprocessable_entity', 500 => 'internal_server_error' }.each do |code, method|
+      method_name = "on_#{method}".to_sym
+      define_method method_name do |&block|
+        (@callback_hash[code] ? @callback_hash[code] << block : @callback_hash[code] = [block]) if block
       end
+    end
 
     def self.ensure_values_are_collections(hash)
       result = {}

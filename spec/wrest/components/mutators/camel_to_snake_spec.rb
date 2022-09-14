@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -7,17 +9,19 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-require "spec_helper"
-require "wrest/components/mutators"
+require 'spec_helper'
+require 'wrest/components/mutators'
 
-module Wrest::Components
-  describe Mutators::CamelToSnakeCase do
-    before(:each) do
-      @mutator = Mutators::CamelToSnakeCase.new
-    end
+module Wrest
+  module Components
+    describe Mutators::CamelToSnakeCase do
+      before do
+        @mutator = described_class.new
+      end
 
-    it "should underscore the key in a tuple" do
-      expect(@mutator.mutate(["universe-id", "1"])).to eq(["universe_id", "1"])
+      it 'underscores the key in a tuple' do
+        expect(@mutator.mutate(%w[universe-id 1])).to eq(%w[universe_id 1])
+      end
     end
   end
 end

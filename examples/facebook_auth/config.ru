@@ -1,4 +1,6 @@
-$:.unshift File.dirname(__FILE__) + "/lib/"
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift(File.join(__dir__, 'lib'))
 require 'facebook_auth'
 # use Rack::Static, :urls => ["/images", "/javascript", "/yql"], :root => "public"
 enable  :sessions

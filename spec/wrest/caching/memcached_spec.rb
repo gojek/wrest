@@ -1,41 +1,41 @@
-require "spec_helper"
-require 'rspec'
+# frozen_string_literal: true
+
+require 'spec_helper'
 
 Wrest::Caching.enable_memcached
 
-describe Wrest::Caching do
-  context "functional", :functional => true do
-    before :each do
+RSpec.describe Wrest::Caching::Memcached do
+  context 'functional', functional: true do
+    let(:memcached) { described_class.new }
 
-      @memcached = Wrest::Caching::Memcached.new
-      @memcached["abc"]="xyz"
+    before do
+      memcached['abc'] = 'xyz'
     end
 
-    context "initialization defaults" do
-      it "should always default the list of server urls to nil" do
-        Dalli::Client.should_receive(:new).with(nil, {})
-        client = Wrest::Caching::Memcached.new
+    context 'initialization defaults' do
+      it 'alwayses default the list of server urls to nil' do
+        expect(Dalli::Client).to receive(:new).with(nil, {})
+        described_class.new
       end
-      
-      it "should always default the options to an empty hash" do
-        Dalli::Client.should_receive(:new).with(nil, {})
-        client = Wrest::Caching::Memcached.new
+
+      it 'alwayses default the options to an empty hash' do
+        expect(Dalli::Client).to receive(:new).with(nil, {})
+        client = described_class.new
       end
     end
 
-    it "should know how to retrieve a cache entry" do
-      expect(@memcached["abc"]).to eq("xyz")
+    it 'knows how to retrieve a cache entry' do
+      expect(memcached['abc']).to eq('xyz')
     end
 
-    it "should know how to update a cache entry" do
-      @memcached["abc"] = "123"
-      expect(@memcached["abc"]).to eq("123")
+    it 'knows how to update a cache entry' do
+      memcached['abc'] = '123'
+      expect(memcached['abc']).to eq('123')
     end
 
-    it "should know how to delete a cache entry" do
-      @memcached.delete("abc").should == "xyz"
-      expect(@memcached["abc"]).to eq(nil)
+    it 'knows how to delete a cache entry' do
+      expect(memcached.delete('abc')).to eq('xyz')
+      expect(memcached['abc']).to be_nil
     end
   end
 end
-

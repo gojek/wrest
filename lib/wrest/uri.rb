@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -7,7 +9,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest #:nodoc:
+module Wrest # :nodoc:
   # Wrest::Uri provides a simple api for
   # REST calls. String#to_uri is a convenience
   # method to build a Wrest::Uri from a string url.
@@ -17,13 +19,13 @@ module Wrest #:nodoc:
   # Example:
   #  "http://kaiwren:fupuppies@coathangers.com/portal/1".to_uri
   #  "http://coathangers.com/portal/1".to_uri(:username => 'kaiwren', :password => 'fupuppies')
-  # 
+  #
   # The second form is preferred as it can handle passwords with special characters like ^ and @
   #
   # You can find examples that use real APIs (like delicious) under the wrest/examples directory.
   class Uri
     attr_reader :uri, :username, :password, :uri_string, :uri_path, :query, :default_headers
-    
+
     # Valid tuples for the options are:
     #   :asynchronous_backend => Can currently be set to either Wrest::AsyncRequest::EventMachineBackend.new
     #                            or Wrest::AsyncRequest::ThreadBackend.new. Easier to do using Uri#using_em and
@@ -40,26 +42,17 @@ module Wrest #:nodoc:
     # See Wrest::Native::Request for other available options and their default values.
     def initialize(uri_string, options = {})
       @options = options.clone
-      @uri_string = uri_string.to_s
-      @uri = URI.parse(@uri_string)
-      uri_scheme = URI.split(@uri_string)
-      @uri_path = uri_scheme[-4].split('?').first || ''
-      @uri_path = (@uri_path.empty? ? '/' : @uri_path) 
-      @query = uri_scheme[-2] || ''
-      @username = (@options[:username] ||= @uri.user)
-      @password = (@options[:password] ||= @uri.password)
-      @asynchronous_backend = @options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend
-      @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
-      @default_headers = @options[:default_headers] || {}
-    end 
-    
-    # Builds a Wrest::UriTemplate by extending the current URI 
+      setup_uri_state!(uri_string)
+      setup_request_config!
+    end
+
+    # Builds a Wrest::UriTemplate by extending the current URI
     # with the pattern passed to it.
     def to_template(pattern)
-      template_pattern = URI.join(uri_string,pattern).to_s
+      template_pattern = URI.join(uri_string, pattern).to_s
       UriTemplate.new(template_pattern, @options)
     end
-        
+
     # Build a new Wrest::Uri by appending _path_ to
     # the current uri. If the original Wrest::Uri
     # has a username and password, that will be
@@ -78,11 +71,11 @@ module Wrest #:nodoc:
     def [](path, options = nil)
       Uri.new(uri + File.join(uri_path, path), options || @options)
     end
-    
+
     # Clones a Uri, building a new instance with exactly the same uri string.
     # You can however change the Uri options or add new ones.
     def clone(opts = {})
-      merged_options =  @options.merge(opts)
+      merged_options = @options.merge(opts)
       merged_options[:default_headers] = opts[:default_headers] ? @default_headers.merge(opts[:default_headers]) : {}
       Uri.new(@uri_string, merged_options)
     end
@@ -90,55 +83,61 @@ module Wrest #:nodoc:
     def eql?(other)
       self == other
     end
-    
+
     def ==(other)
       return false if other.class != self.class
-      return other.uri == self.uri && self.username == other.username && self.password == other.password
+
+      other.uri == uri && username == other.username && password == other.password
     end
-    
+
     def hash
-      @uri.hash + @username.hash + @password.hash + 20090423
+      [@uri, @username, @password].hash
     end
-    
+
     # This produces exactly the same string as the Wrest::Uri was constructed with.
     # If the orignial URI contained a HTTP username and password, that too will
     # show up, so be careful if using this for logging.
     def to_s
       uri_string
     end
-    
-    #:nodoc:
+
+    # :nodoc:
     def build_get(parameters = {}, headers = {}, &block)
-      Http::Get.new(self, parameters, default_headers.merge(headers), block ? @options.merge(:callback_block => block) : @options)
+      Http::Get.new(self, parameters, default_headers.merge(headers),
+                    block ? @options.merge(callback_block: block) : @options)
     end
-    
-    #:nodoc:
+
+    # :nodoc:
     def build_put(body = '', headers = {}, parameters = {}, &block)
-      Http::Put.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
+      Http::Put.new(self, body.to_s, default_headers.merge(headers), parameters,
+                    block ? @options.merge(callback_block: block) : @options)
     end
 
-    #:nodoc:
+    # :nodoc:
     def build_patch(body = '', headers = {}, parameters = {}, &block)
-      Http::Patch.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
+      Http::Patch.new(self, body.to_s, default_headers.merge(headers), parameters,
+                      block ? @options.merge(callback_block: block) : @options)
     end
-    
-    #:nodoc:
+
+    # :nodoc:
     def build_post(body = '', headers = {}, parameters = {}, &block)
-      Http::Post.new(self, body.to_s, default_headers.merge(headers), parameters, block ? @options.merge(:callback_block => block) : @options)
+      Http::Post.new(self, body.to_s, default_headers.merge(headers), parameters,
+                     block ? @options.merge(callback_block: block) : @options)
     end
 
-    #:nodoc:
-    def build_post_form(parameters ={}, headers = {}, &block)
+    # :nodoc:
+    def build_post_form(parameters = {}, headers = {}, &block)
       headers = default_headers.merge(headers).merge(Wrest::H::ContentType => Wrest::T::FormEncoded)
-      body = parameters.to_query
-      Http::Post.new(self, body, headers, {}, block ? @options.merge(:callback_block => block) : @options)
+      body = Utils.hash_to_param(parameters)
+      Http::Post.new(self, body, headers, {}, block ? @options.merge(callback_block: block) : @options)
     end
 
-    #:nodoc:
+    # :nodoc:
     def build_delete(parameters = {}, headers = {}, &block)
-      Http::Delete.new(self, parameters, default_headers.merge(headers), block ? @options.merge(:callback_block => block) : @options)
+      Http::Delete.new(self, parameters, default_headers.merge(headers),
+                       block ? @options.merge(callback_block: block) : @options)
     end
-    
+
     # Make a GET request to this URI. This is a convenience API
     # that creates a Wrest::Native::Get, executes it and returns a Wrest::Native::Response.
     #
@@ -149,7 +148,7 @@ module Wrest #:nodoc:
 
     # Make a GET request to this URI. This is a convenience API
     # that creates a Wrest::Native::Get.
-    # 
+    #
     # Remember to escape all parameter strings if necessary, using URI.escape
     #
     # Note: get_async does not return a response and the response should be accessed through callbacks.
@@ -212,9 +211,9 @@ module Wrest #:nodoc:
     def post_async(body = '', headers = {}, parameters = {}, &block)
       @asynchronous_backend.execute(build_post(body, headers, parameters, &block))
     end
-    
+
     # Makes a POST request to this URI. This is a convenience API
-    # that mimics a form being posted; some allegly RESTful APIs like FCBK require 
+    # that mimics a form being posted; some allegly RESTful APIs like FCBK require
     # this.
     #
     # Form encoding involves munging the parameters into a string and placing them
@@ -225,7 +224,7 @@ module Wrest #:nodoc:
     end
 
     # Makes a POST request to this URI. This is a convenience API
-    # that mimics a form being posted; some allegly RESTful APIs like FCBK require 
+    # that mimics a form being posted; some allegly RESTful APIs like FCBK require
     # this.
     #
     # Form encoding involves munging the parameters into a string and placing them
@@ -263,7 +262,7 @@ module Wrest #:nodoc:
       Http::Options.new(self, @options).invoke
     end
 
-    def https? 
+    def https?
       @uri.is_a?(URI::HTTPS)
     end
 
@@ -279,16 +278,35 @@ module Wrest #:nodoc:
     def protocol
       uri.scheme
     end
-    
+
     def host
       uri.host
     end
-    
+
     def port
       uri.port
     end
-    
+
     include Http::ConnectionFactory
     include Uri::Builders
+
+    private
+
+    def setup_request_config!
+      @username = (@options[:username] ||= @uri.user)
+      @password = (@options[:password] ||= @uri.password)
+      @asynchronous_backend = @options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend
+      @options[:callback] = Callback.new(@options[:callback]) if @options[:callback]
+      @default_headers = @options[:default_headers] || {}
+    end
+
+    def setup_uri_state!(uri_string)
+      @uri_string = uri_string.to_s
+      @uri = URI.parse(@uri_string)
+      uri_scheme = URI.split(@uri_string)
+      @uri_path = uri_scheme[-4].split('?').first || ''
+      @uri_path = (@uri_path.empty? ? '/' : @uri_path)
+      @query = uri_scheme[-2] || ''
+    end
   end
 end

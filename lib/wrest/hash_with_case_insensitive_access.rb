@@ -1,5 +1,6 @@
-module Wrest
+# frozen_string_literal: true
 
+module Wrest
   # A hash with case-insensitive key access.
   #
   #   hash = Wrest::HashWithCaseInsensitiveAccess.new 'Abcd' => 1, 'xyz' => 2
@@ -7,14 +8,14 @@ module Wrest
   #   hash['abcd']  #=> 1
   #   hash['aBCd'] #=> 1
   #
-  class HashWithCaseInsensitiveAccess < ::Hash #:nodoc:
-
-    def initialize(hash={})
+  class HashWithCaseInsensitiveAccess < ::Hash # :nodoc:
+    def initialize(hash = {})
       super()
       hash.each do |key, value|
         self[convert_key(key)] = value
       end
     end
+
     def [](key)
       super(convert_key(key))
     end
@@ -44,9 +45,8 @@ module Wrest
 
     protected
 
-      def convert_key(key)
-        key.is_a?(String) ? key.downcase : key
-      end
-
+    def convert_key(key)
+      key.is_a?(String) ? key.downcase : key
+    end
   end
 end

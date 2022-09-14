@@ -1,6 +1,8 @@
-$:.unshift File.dirname(__FILE__) + "/lib/"
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift(File.join(__dir__, 'lib'))
 require 'sample_app'
 # use Rack::Static, :urls => ["/images", "/javascript", "/yql"], :root => "public"
 enable  :sessions
-set :root, File.join(File.dirname(__FILE__), 'lib')
+set :root, File.join(__dir__, 'lib')
 run SampleApp::Application

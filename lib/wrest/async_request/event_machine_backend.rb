@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -10,7 +12,7 @@
 begin
   gem 'eventmachine'
 rescue Gem::LoadError => e
-  Wrest.logger.debug "Eventmachine ~> 0.12.10 not found. Wrest uses Eventmachine to perform evented asynchronous requests"
+  Wrest.logger.debug 'Eventmachine ~> 0.12.10 not found. Wrest uses Eventmachine to perform evented asynchronous requests'
   raise e
 end
 

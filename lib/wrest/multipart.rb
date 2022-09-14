@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 - 2010 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +16,8 @@ rescue Gem::LoadError => e
   raise e
 end
 
-require "wrest/native/post_multipart"
-require "wrest/native/put_multipart"
+require 'wrest/native/post_multipart'
+require 'wrest/native/put_multipart'
 
 module Wrest
   # To enable Multipart support, use
@@ -28,18 +30,19 @@ module Wrest
   # The methods in this module are mixed into Wrest::Uri.
   module Multipart
     # Makes a multipart/form-data encoded POST request to this URI. This is a convenience API
-    # that mimics a multipart form being posted; some allegedly RESTful APIs like FCBK require 
+    # that mimics a multipart form being posted; some allegedly RESTful APIs like FCBK require
     # this for file uploads.
     #
     #   File.open('/path/to/image.jpg') do |file|
     #     'http://localhost:3000/uploads'.to_uri.post_multipart('file' => UploadIO.new(file, "image/jpg", '/path/to/image.jpg'))
     #   end
     def post_multipart(parameters = {}, headers = {}, &block)
-      Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
+      Http::PostMultipart.new(self, parameters, headers,
+                              block ? @options.merge(callback_block: block) : @options).invoke
     end
 
     # Makes a multipart/form-data encoded POST request to this URI. This is a convenience API
-    # that mimics a multipart form being posted; some allegedly RESTful APIs like FCBK require 
+    # that mimics a multipart form being posted; some allegedly RESTful APIs like FCBK require
     # this for file uploads.
     #
     #   File.open('/path/to/image.jpg') do |file|
@@ -49,13 +52,18 @@ module Wrest
     # Note: post_multipart_async does not return a response and the response should be accessed through callbacks.
     # This implementation of asynchronous post_multipart is currently in alpha. Hence, it should not be used in production.
     def post_multipart_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PostMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend)
+        .execute(
+          Http::PostMultipart.new(self,
+                                  parameters, headers, block ? @options.merge(callback_block: block) : @options)
+        )
     end
-    
+
     # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
     # that mimics a multipart form being put. I sincerely hope you never need to use this.
     def put_multipart(parameters = {}, headers = {}, &block)
-      Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options).invoke
+      Http::PutMultipart.new(self, parameters, headers,
+                             block ? @options.merge(callback_block: block) : @options).invoke
     end
 
     # Makes a multipart/form-data encoded PUT request to this URI. This is a convenience API
@@ -64,12 +72,13 @@ module Wrest
     # Note: put_multipart_async does not return a response and the response should be accessed through callbacks
     # This implementation of asynchronous put_multipart is currently in alpha. Hence, it should not be used in production.
     def put_multipart_async(parameters = {}, headers = {}, &block)
-      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(Http::PutMultipart.new(self, parameters, headers, block ? @options.merge(:callback_block => block) : @options))
+      request = Http::PutMultipart.new(self,
+                                       parameters, headers, block ? @options.merge(callback_block: block) : @options)
+      (@options[:asynchronous_backend] || Wrest::AsyncRequest.default_backend).execute(request)
     end
   end
-  
+
   class Uri
     include Multipart
   end
 end
-

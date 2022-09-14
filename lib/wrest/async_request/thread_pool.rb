@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009-2016 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +15,12 @@ module Wrest
       def initialize(number_of_threads)
         @pool = Concurrent::FixedThreadPool.new(number_of_threads)
       end
-      
+
       def execute_eventually(request)
         @pool.post { request.invoke }
         nil
       end
-      
+
       def join_pool_threads!
         @pool.wait_for_termination
       end

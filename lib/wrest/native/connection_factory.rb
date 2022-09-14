@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -7,18 +9,20 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and limitations under the License.
 
-module Wrest::Native
-  module ConnectionFactory
-    def create_connection(options = {:timeout => 60, :verify_mode => OpenSSL::SSL::VERIFY_NONE})
-      options[:timeout] ||= 60
-      connection = Net::HTTP.new(self.host, self.port)
-      connection.read_timeout = options[:timeout]
-      if self.https?
-        connection.use_ssl     = true
-        connection.verify_mode = options[:verify_mode] ? options[:verify_mode] : OpenSSL::SSL::VERIFY_PEER 
-        connection.ca_path = options[:ca_path] if options[:ca_path]
+module Wrest
+  module Native
+    module ConnectionFactory
+      def create_connection(options = { timeout: 60, verify_mode: OpenSSL::SSL::VERIFY_NONE })
+        options[:timeout] ||= 60
+        connection = Net::HTTP.new(host, port)
+        connection.read_timeout = options[:timeout]
+        if https?
+          connection.use_ssl     = true
+          connection.verify_mode = options[:verify_mode] || OpenSSL::SSL::VERIFY_PEER
+          connection.ca_path = options[:ca_path] if options[:ca_path]
+        end
+        connection
       end
-      connection
     end
   end
 end

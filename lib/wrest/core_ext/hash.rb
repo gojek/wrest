@@ -1,5 +1,7 @@
-require "wrest/core_ext/hash/conversions"
+# frozen_string_literal: true
 
-class Hash #:nodoc:
+require 'wrest/core_ext/hash/conversions'
+
+class Hash # :nodoc:
   include Wrest::CoreExt::Hash::Conversions
 end

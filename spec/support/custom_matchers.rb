@@ -1,4 +1,4 @@
-require 'rspec/collection_matchers/have'
+# frozen_string_literal: true
 
 RSpec::Matchers.define :have do |expected|
   chain :callbacks_for do |key|
@@ -6,7 +6,7 @@ RSpec::Matchers.define :have do |expected|
   end
 
   match do |actual|
-    @failure_message = ""
+    @failure_message = ''
     pass = true
     unless actual.key?(@key)
       @failure_message += "no key #{@key} found"
@@ -14,7 +14,7 @@ RSpec::Matchers.define :have do |expected|
     end
 
     if pass
-      unless (actual[@key].size == expected)
+      unless actual[@key].size == expected
         @failure_message += "expected #{expected} callbacks but got #{actual[@key].size}. "
         pass = false
       end
@@ -25,17 +25,17 @@ RSpec::Matchers.define :have do |expected|
           pass = false
           break
         end
-        unless callback.arity == 1
-          @failure_message += "expected callback to have arity 1 but got #{callback.arity}."
-          pass = false
-          break
-        end
+        next if callback.arity == 1
+
+        @failure_message += "expected callback to have arity 1 but got #{callback.arity}."
+        pass = false
+        break
       end
     end
     pass
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |_actual|
     @failure_message
   end
 end

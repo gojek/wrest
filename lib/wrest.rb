@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2009 Sidu Ponnappa
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,18 +16,14 @@ require 'cgi'
 require 'base64'
 require 'logger'
 require 'benchmark'
-require 'multi_json'
 require 'concurrent'
-require 'active_support'
-require 'active_support/core_ext/string'
-require 'active_support/core_ext/hash'
-require 'active_support/core_ext/module'
-require 'active_support/core_ext/object'
+require 'nokogiri'
+require 'json'
 
 module Wrest
   Root = File.dirname(__FILE__)
 
-  $:.unshift Root
+  $LOAD_PATH.unshift Root
 
   def self.logger=(logger)
     @logger = logger
@@ -36,44 +34,44 @@ module Wrest
   end
 
   def self.enable_evented_requests!
-    require "wrest/event_machine_backend"
+    require 'wrest/event_machine_backend'
   end
 
   # Switch Wrest to using Net::HTTP.
   def self.use_native!
-    silence_warnings{ Wrest.const_set('Http', Wrest::Native) }
+    old_verbose = $VERBOSE
+    $VERBOSE = nil
+    Wrest.const_set('Http', Wrest::Native)
+  ensure
+    $VERBOSE = old_verbose
   end
 end
 
-Wrest.logger = ActiveSupport::Logger.new(STDOUT)
+Wrest.logger = Logger.new($stdout)
 Wrest.logger.level = Logger::DEBUG
 
-require "wrest/core_ext/string"
-require "wrest/hash_with_case_insensitive_access"
-
-# Load XmlMini Extensions
-require "wrest/xml_mini"
+require 'wrest/utils'
+require 'wrest/core_ext/string'
+require 'wrest/hash_with_indifferent_access'
+require 'wrest/hash_with_case_insensitive_access'
 
 # Load Wrest Core
-require "wrest/version"
-require "wrest/cache_proxy"
-require "wrest/http_shared"
-require "wrest/http_codes"
-require "wrest/callback"
-require "wrest/native"
+require 'wrest/version'
+require 'wrest/cache_proxy'
+require 'wrest/http_shared'
+require 'wrest/http_codes'
+require 'wrest/callback'
+require 'wrest/native'
 
-require "wrest/async_request/thread_pool"
-require "wrest/async_request/thread_backend"
-require "wrest/async_request"
+require 'wrest/async_request/thread_pool'
+require 'wrest/async_request/thread_backend'
+require 'wrest/async_request'
 
-require "wrest/caching"
+require 'wrest/caching'
 
 # Load Wrest Wrappers
-require "wrest/uri/builders"
-require "wrest/uri"
-require "wrest/uri_template"
-require "wrest/exceptions"
-require "wrest/components"
-
-# Load Wrest::Resource
-# require "wrest/resource"
+require 'wrest/uri/builders'
+require 'wrest/uri'
+require 'wrest/uri_template'
+require 'wrest/exceptions'
+require 'wrest/components'

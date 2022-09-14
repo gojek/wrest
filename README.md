@@ -1,24 +1,46 @@
-[![Build Status](https://travis-ci.org/c42/wrest.svg?branch=master)](https://travis-ci.org/c42/wrest)
+# Wrest 4.0.0
 
-# Wrest 2.2.0
+<p align="center"><img src="docs/wrest-logo-320x320.png" width="320"></p>
+<p align="center">
+  <a href="https://badge.fury.io/rb/wrest">
+    <img src="https://badge.fury.io/rb/wrest.svg" alt="Gem Version" height="18">
+  </a>
+  <a href="https://github.com/kaiwren/wrest/actions/workflows/ruby.yml">
+    <img src="https://github.com/kaiwren/wrest/actions/workflows/ruby.yml/badge.svg" alt="Ruby" style="max-width: 100%;">    
+  </a>
+  <a href="https://github.com/kaiwren/wrest/actions/workflows/jruby.yml">
+    <img src="https://github.com/kaiwren/wrest/actions/workflows/jruby.yml/badge.svg" alt="JRuby" style="max-width: 100%;">
+  </a>
+  <a href="https://codeclimate.com/github/kaiwren/wrest/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/dc0366a60000561951ab/maintainability" />
+  </a>
+</p>
 
-(c) Copyright 2009-2016 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
+Wrest is a ruby REST/HTTP client library. It is currently in use at 10x🦄 scale across all Ruby/JRuby systems at [Gojek](https://twitter.com/GojekTech). 
 
-Wrest is a ruby REST/HTTP client library. It is currently in use at substantial scale across all Ruby/JRuby systems at [GO-JEK](https://twitter.com/GojekTech).
+```ruby
+$ gem install wrest
+$ wrest # interactive shell
+Ruby 3.1.2, 2022-04-12, arm64-darwin21
+Loading Wrest 4.0.0
+>> 'https://api2.binance.com/api/v3/ticker/24hr'.to_uri.get.deserialize
+```
 
-* Allows you to pick your Ruby: use CRuby or JRuby
+In your project Gemfile:
+```ruby
+gem 'wrest', '~> 4.0.0'
+```
+
+* Quick tool to wrangle APIs to powerful library to build complex production grade systems, Wrest does it all
+* Clean, object-oriented API with URLs as first class entities
 * Supports RFC 2616 based [caching](https://github.com/kaiwren/wrest/blob/caching/Caching.markdown)
 * Async http calls using Threads (truly useful only on JRuby due to [GIL](https://en.wikipedia.org/wiki/Global_interpreter_lock) limitations on CRuby) or EventMachine
-* Allows you to quickly build object oriented wrappers around any web service
-* Is designed to be used as a library, not just a command line REST client (fewer class/static methods, more object oriented)
 * Is spec driven, strongly favours immutable objects and avoids class methods and setters making it better suited for use as a library, especially in multi-threaded environments
 * Provides convenient HTTP wrappers, redirect handling, serialisation, deserialisation and xpath based lookup
 
-To receive notifications whenever new features are added to Wrest, please subscribe to my [twitter feed](http://twitter.com/ponnappa).
-
 ## Examples
 
-For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/c42/wrest/tree/master/examples
+For Facebook, Twitter, Delicious, GitHub and other API examples, see http://github.com/kaiwren/wrest/tree/master/examples
 
 ### Basic Http Calls
 
@@ -27,10 +49,10 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Basic API calls
 
     ```
-    # Works with json and xml out of the box
+    # Works with json and xml out of the box to give you a hash
     # See lib/wrest/components/translators to add other formats
     
-    'https://api.github.com/repos/c42/wrest/issues'.to_uri.get.deserialize
+    'https://api.github.com/repos/rails/rails/issues'.to_uri.get.deserialize
     ```
 
 * Timeout support
@@ -52,8 +74,6 @@ For Facebook, Twitter, Delicious, GitHub and other API examples, see http://gith
 * Deserialise with XPath filtering
 
     ```
-    ActiveSupport::XmlMini.backend = 'REXML'
-
     'http://twitter.com/statuses/public_timeline.xml'.to_uri.get.deserialise(
                                                   xpath: '//user/name/text()'
                                                 )
@@ -351,17 +371,6 @@ Detailed http debug logging can be turned on like so (DO NOT USE IN PRODUCTION! 
     'https://api.github.com/repos/c42/wrest/issues'.to_uri(detailed_http_logging: $stdout).get.deserialize
     ```
 
-
-### Json Backend
-
-Wrest uses the multi_json gem to manage Json backends, allowing it to play nice with Rails 3.1. To change the backend used, you can do the following:
-
-```
-  MultiJson.engine = :json_gem
-```
-
-For more information, look up the [multi_json](http://github.com/intridea/multi_json) documentation.
-
 ### Build
 
 Standard options are available and can be listed using `rake -T`. Use rake:rcov for coverage and rake:rdoc to generate documentation. The link to the continuous integration build is over at the C42 Engineering [open source](http://c42.in/open_source) page.
@@ -433,3 +442,5 @@ Run the tests in a different terminal:
 * Jacques Crocker : [railsjedi](http://github.com/railsjedi)
 * Jasim A Basheer: [jasim](http://github.com/jasim)
 * Arvind Laxminarayan: [ardsrk](http://github.com/ardsrk)
+
+©️ Copyright 2009-2022 [Sidu Ponnappa](http://twitter.com/ponnappa). All Rights Reserved.
